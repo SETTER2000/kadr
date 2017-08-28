@@ -44,22 +44,21 @@
                         </div>
 
 
-                        {{item.furlough}}
                         <div ng-controller="ListFurloughController" class="form-group ">
                             <label class="control-label" ng-bind="items[0].sc()"></label>
-                            [ <a href="#" ng-click="addFurlough()">добавить</a> ]
+                            <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
 
-                            <div class="form-inline" ng-repeat="furlough in item.furloughs">
-                                <div class="form-group">
+                            <!--<div class="form-inline" ng-repeat="furlough in item.furloughs">-->
+                                <!--<div class="form-group">-->
                                     <select class="form-control" ng-model="item.furlough">
                                         <option ng-repeat="option in items | filter:{action:true}" value="{{option.id}}">
                                             {{option.name}}
                                         </option>
                                     </select>
-                                </div>
+                                <!--</div>-->
 
-                                <button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>
-                            </div>
+                                <!--<button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>-->
+                            <!--</div>-->
                         </div>
 
                         <div class="form-group">

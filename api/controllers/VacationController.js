@@ -66,7 +66,7 @@ module.exports = {
                 obj.owner = findParam.id;
 
 
-                Furlough.findOne({id: '599d8813b88be82bf00a1771'})
+                Furlough.findOne({id: req.param('furlough')})
                     .populate('vacations')
                     .exec((err, findFurlough)=> {
                         "use strict";
