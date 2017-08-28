@@ -1,4 +1,3 @@
-<!--<h3>LIST {{filtered.length}}</h1>-->
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
@@ -9,9 +8,8 @@
         url-bt="urlBt"
         on-select-page="selectCount=selectCount+1">
 </pagination>
-<!--{{(items | filter:{$:searchText, fired:false} ).length}}-->
+
 <table class="table table-hover">
-    <!--<tr><th colspan="100">Найдено: {{filtered.length}}</th></tr>-->
     <tr>
         <th>#</th>
         <th></th>
@@ -22,40 +20,42 @@
       ng-class="{reverse: reverse}"></span>
             </button>
         </th>
-
+        <th class="text-center">
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('daysSelectHoliday')">
+                {{daysSelectHolidayArea}}
+<span class="sortOrder" ng-show="propertyName === 'daysSelectHoliday'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('tip')">
+                {{tipArea}}
+<span class="sortOrder" ng-show="propertyName === 'tip'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('status')">
+                {{statusArea}}
+<span class="sortOrder" ng-show="propertyName === 'status'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
         <th class="text-center">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('createdAt')">
                 {{createdAt}}
 <span class="sortOrder" ng-show="propertyName === 'createdAt'"
       ng-class="{reverse: reverse}"></span>
             </button>
-
         </th>
-
-        <th class="text-center">
+        <th ng-if="me.admin" class="text-center">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('updatedAt')">
                 {{updatedAt}}
 <span class="sortOrder" ng-show="propertyName === 'updatedAt'"
       ng-class="{reverse: reverse}"></span>
             </button>
-
         </th>
-        <!--<th>-->
-        <!--<button class="btn  btn-sm btn-default not-border" ng-click="sortBy('birthday')">{{drArea}}-->
-        <!--<span class="sortOrder" ng-show="propertyName === 'birthday'"-->
-        <!--ng-class="{reverse: reverse}"></span>-->
-        <!--</button>-->
-
-        <!--</th>-->
-        <!--<th>-->
-        <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('login')">{{loginArea}}-->
-        <!--<span class="sortOrder" ng-show="propertyName === 'login'"-->
-        <!--ng-class="{reverse: reverse}"></span>-->
-        <!--</button>-->
-
-        <!--</th>-->
-
-       <th>
+        <th ng-if="me.admin">
             <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('whomCreated')">
                 {{whomCreatedArea}}
 <span class="sortOrder" ng-show="propertyName === 'whomCreated'"
@@ -63,30 +63,15 @@
             </button>
 
         </th>
-        <th>
+        <th ng-if="me.admin">
             <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('whomUpdated')">
                 {{whomUpdatedArea}}
 <span class="sortOrder" ng-show="propertyName === 'whomUpdatedArea'"
       ng-class="{reverse: reverse}"></span>
             </button>
-
-        </th>
-        <th>
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">
-                {{emailArea}}
-<span class="sortOrder" ng-show="propertyName === 'email'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-
         </th>
 
         <th class="wdt">
-            <!--<button class="btn  btn-sm btn-default" ng-click="sortBy('contacts')">Контакты: {{fieldName}}-->
-            <!--<span class="sortOrder" ng-show="propertyName === 'contacts'"-->
-            <!--ng-class="{reverse: reverse}"></span>-->
-            <!--</button>-->
-            <!-- Single button -->
-            <!-- Split button -->
             <div class="btn-group pull-right">
                 <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">
                     <span class="sortOrder" ng-show="propertyName === 'contacts'" ng-class="{reverse: reverse}"></span>
@@ -98,33 +83,16 @@
                     <span class="sr-only">Контакты: {{fieldName}}</span>
                 </button>
                 <ul class="dropdown-menu">
-                    <!--<li><a href="#" ng-click="fieldName='Email'">Email</a></li>-->
                     <li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>
                     <li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>
                     <li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>
-                    <!--<li role="separator" class="divider"></li>-->
-                    <!--<li><a href="#">Separated link</a></li>-->
                 </ul>
             </div>
         </th>
-        <!--<th>-->
-        <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">Отработанное время-->
-        <!--<span class="sortOrder" ng-show="propertyName === 'email'"-->
-        <!--ng-class="{reverse: reverse}"></span>-->
-        <!--</button>-->
-
-        <!--</th>-->
-        <!--<th></th>-->
-        <!--<th></th>-->
     </tr>
-    <!--| firstChar:param:charText-->
-    <!--ng-class="$even ? 'default' : 'success'"-->
-    <!--<tr><td ng-repeat="(key,property) in item">{{key}}</td></tr>-->
-    <tr ng-repeat="item in filtered=(items | filter:{$:searchText} |
+    <tr ng-repeat="item in filtered=(items | filter:{$:searchText, action:true} |
 orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">
-
         <td>{{$index+1}}</td>
-
         <td><img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}"
                  alt=""></td>
         <td>
@@ -132,38 +100,17 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                 {{item.name}}
             </a>
         </td>
+        <td class="text-center">{{item.daysSelectHoliday}}</td>
+        <td>{{item.tip}}</td>
+        <td>{{item.status}}</td>
         <td class="text-center">{{item.createdAt |date:'dd.MM.yyyy H:mm:ss'}}</td>
-        <td class="text-center">{{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}</td>
-        <td >{{item.whomCreated}}</td>
-        <td >{{item.whomUpdated}}</td>
+        <td ng-if="me.admin" class="text-center">{{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}</td>
+        <td ng-if="me.admin">{{item.whomCreated}}</td>
+        <td ng-if="me.admin">{{item.whomUpdated}}</td>
 
-
-        <td><a href="mailto:{{item.email}}">{{item.email}}</a></td>
         <td width="250px" class="text-right">{{item.getContact(fieldName)}}</td>
-        <!--<td>{{item.diff}}</td>-->
-        <!--<td class="btn-group-xs">-->
-        <!--&lt;!&ndash;<a ng-href="{{item.getShowUrl(item.id)}}" class="btn"&ndash;&gt;-->
-        <!--&lt;!&ndash;ng-class="{'btn-primary': !item.fired, ' btn-danger':item.fired}">&ndash;&gt;-->
-        <!--&lt;!&ndash;<span class="glyphicon"&ndash;&gt;-->
-        <!--&lt;!&ndash;ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"&ndash;&gt;-->
-        <!--&lt;!&ndash;aria-hidden="true"></span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-        <!--&lt;!&ndash;<a ui-sref="admin.users.edit({userId:'588b46b6d20dd30c17b27f03'})">Users Edit</a>&ndash;&gt;-->
-        <!--&lt;!&ndash;<a ui-sref="admin.users.edit({userId:item.id})" class="btn btn-sm btn-warning">&ndash;&gt;-->
-        <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-        <!--&lt;!&ndash;<a ng-href="{{item.getEditUrl(item.id)}}" class="btn btn-warning">&ndash;&gt;-->
-        <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-        <!--</td>-->
-        <!--<td class="btn-group-xs">-->
-        <!--<a href="#">-->
-        <!--<span ng-if="mode" ng-click="delete(item)" class="glyphicon glyphicon-trash"></span>-->
-        <!--</a>-->
-        <!--</td>-->
     </tr>
 </table>
-
 
 <pagination
         limit-rows="limitRows"

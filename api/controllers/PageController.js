@@ -130,7 +130,7 @@ module.exports = {
             // if (!user.admin) return res.backToHomePage();
             if (!user.admin && !user.kadr) {
                 req.session.me = user.id;
-                return res.forbidden("Нет прав для просмотра данной страницы x.");
+                return res.forbidden("Нет прав для просмотра данной страницы.");
             }
 
             user.fullName = user.lastName + ' ' + user.firstName + ' ' + user.patronymicName;

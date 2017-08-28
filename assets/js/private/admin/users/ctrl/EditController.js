@@ -281,8 +281,8 @@ angular.module('UserModule')
                     //}
                 );
 
-                //console.log($scope.item);
-                //console.log($scope.users);
+                console.log('refresh',$scope.item);
+                console.log('refresh1',$scope.users);
             };
 
             $scope.delete2 = function (item) {

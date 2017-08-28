@@ -5,7 +5,7 @@
             <p ng-class="{'fired':!item.action}">{{item.sc()}}: {{item.name}} <span ng-if="!item.action"
                                                                                     ng-bind="item.deactivation()"></span></p>
             <!--<a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">-->
-                <!--сотрудников: </a>-->
+            <!--сотрудников: </a>-->
             <div class="btn-group-xs pull-right">
                 <button ng-click="saveEdit(item)" type="button" class="btn btn-success">
                     <span class="glyphicon glyphicon-check"></span>
@@ -23,73 +23,73 @@
                     <h3 class="panel-title">Редактировать</h3>
                 </div>
                 <div class="panel-body">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" ng-model="item.action">Активность
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="inputSuccess1">Наименование</label>
-                            <input type="text" class="form-control" ng-model="item.name">
-                            <!--<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
-                        </div>
-                        <div class="form-group ">
-                            <div class="form-group " ng-if="item.createdAt">
-                                <label class="control-label" for="inputSuccess18">Зарегистрирован в системе</label>
-                                <div><a href="#" class="btn btn-default  disabled" role="button">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="item.action">Активность
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="inputSuccess1">Наименование</label>
+                        <input type="text" class="form-control" ng-model="item.name">
+                        <!--<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
+                    </div>
+                    <div class="form-group ">
+                        <div class="form-group " ng-if="item.createdAt">
+                            <label class="control-label" for="inputSuccess18">Зарегистрирован в системе</label>
+                            <div><a href="#" class="btn btn-default  disabled" role="button">
                                      <span class="glyphicon " ng-class="{ 'glyphicon-saved':item.createdAt}"
                                            aria-hidden="true"></span>
-                                    {{item.createdAt | date:'dd.MM.yyyy HH:mm'}}
-                                </a></div>
-                                <!--<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
-                            </div>
+                                {{item.createdAt | date:'dd.MM.yyyy HH:mm'}}
+                            </a></div>
+                            <!--<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
                         </div>
-                        <div class="form-group ">
-                            <div class="form-group " ng-if="item.updatedAt">
-                                <label class="control-label" for="inputSuccess18">Последний раз редактировалось</label>
-                                <div><a href="#" class="btn btn-default  disabled" role="button">
+                    </div>
+                    <div class="form-group ">
+                        <div class="form-group " ng-if="item.updatedAt">
+                            <label class="control-label" for="inputSuccess18">Последний раз редактировалось</label>
+                            <div><a href="#" class="btn btn-default  disabled" role="button">
                                      <span class="glyphicon " ng-class="{ 'glyphicon-ok':item.updatedAt}"
                                            aria-hidden="true"></span>
-                                    {{item.updatedAt | date:'dd.MM.yyyy HH:mm'}}
-                                </a></div>
-                                <!--<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
-                            </div>
+                                {{item.updatedAt | date:'dd.MM.yyyy HH:mm'}}
+                            </a></div>
+                            <!--<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
                         </div>
-                        <div class="form-group">
-                            <a ng-click="saveEdit(item)" class="btn  btn-success">
-                                <span class="glyphicon glyphicon-check"></span>
-                                Сохранить
-                            </a>
-                            <!--<a ng-href="{{item.getListUrl()}}" class="btn  btn-warning">-->
-                                <!--<span class="glyphicon glyphicon-list"> </span>-->
-                                <!--Список-->
-                            <!--</a>-->
+                    </div>
+                    <div class="form-group">
+                        <a ng-click="saveEdit(item)" class="btn  btn-success">
+                            <span class="glyphicon glyphicon-check"></span>
+                            Сохранить
+                        </a>
+                        <!--<a ng-href="{{item.getListUrl()}}" class="btn  btn-warning">-->
+                        <!--<span class="glyphicon glyphicon-list"> </span>-->
+                        <!--Список-->
+                        <!--</a>-->
 
-                            <a ng-show="me.admin" ng-if="!item.action" ng-click="delete(item)" class="btn  btn-default pull-right">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </a>
-                        </div>
+                        <a ng-show="me.admin" ng-if="!item.action" ng-click="delete(item)" class="btn  btn-default pull-right">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </div>
 
                 </div>
             </div>
         </div>
-        <!--<div class="col-md-6">-->
-        <!--<div class="panel" ng-class="{'panel-success':item.action, 'panel-default':!item.action}">-->
-        <!--<div class="panel-heading">-->
-        <!--<h3 class="panel-title">Информация</h3>-->
-        <!--</div>-->
-        <!--<div class="panel-body">-->
-        <!--<div class="table-responsive">-->
-        <!--<table class="table">-->
-        <!--<tr ng-repeat="(key, value) in item">-->
-        <!--<th>{{key}}</th>-->
-        <!--<td>{{value | date:'dd.MM.yyyy' }}</td>-->
-        <!--</tr>-->
-        <!--</table>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
+        <div class="col-md-6" ng-if="me.admin">
+            <div class="panel" ng-class="{'panel-success':item.action, 'panel-default':!item.action}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Информация</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr ng-repeat="(key, value) in item">
+                                <th>{{key}}</th>
+                                <td>{{value | date:'dd.MM.yyyy' }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

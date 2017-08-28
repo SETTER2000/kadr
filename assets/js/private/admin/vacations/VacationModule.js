@@ -90,6 +90,10 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
         Vacations.prototype.ok = function () {
             return alert(this.sc() + ': ' + this.name + ' изменёна!');
         };
+
+        //Vacations.prototype.getAction = function (boolean) {
+        //   return  (!boolean) ? true : this.action;
+        //};
         Vacations.prototype.er = function () {
             return alert('ОШИБКА!!! ' + this.sc() + ': ' + this.name + ' - изменения не приняты!');
         };

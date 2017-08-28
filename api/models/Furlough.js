@@ -54,13 +54,9 @@ module.exports = {
         ancestors: {
             type: 'array'
         },
-        users: {
-            collection: 'user',
-            via: 'furloughs'
-        },
+
         vacations: {
-            collection: 'vacation',
-            via: 'furloughs'
+            collection: 'vacation'
         }
         // Добавить ссылку на пользователя
         //users: {

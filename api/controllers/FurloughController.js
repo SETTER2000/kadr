@@ -10,7 +10,9 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        Furlough.find(req.param('id')).exec((err, furlough) => {
+        Furlough.find(req.param('id'))
+            .populate('vacations')
+            .exec((err, furlough) => {
             if (err) return res.negotiate;
             if (!furlough) return res.notFound();
 
@@ -48,7 +50,9 @@ module.exports = {
             action: (req.param('action')) ? req.param('action') : false
         };
 
-        Furlough.findOne({'name':req.param('name')}).exec((err, findParam)=> {
+        Furlough.findOne({'name':req.param('name')})
+            .populate('vacations')
+            .exec((err, findParam)=> {
             "use strict";
             if (err)return res.serverError(err);
 

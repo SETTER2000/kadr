@@ -33,11 +33,13 @@
             $scope.fioArea = 'Период с .. по ..';
             $scope.drArea = 'ДР11';
             $scope.loginArea = 'Логин';
-            $scope.emailArea = 'Email';
+            $scope.tipArea = 'Тип';
+            $scope.statusArea = 'Статус';
             $scope.createdAt = 'Создан';
             $scope.updatedAt = 'Обнавлён';
             $scope.whomUpdatedArea = 'Кем обновлён';
             $scope.whomCreatedArea = 'Кем создан';
+            $scope.daysSelectHolidayArea = 'Дней';
             $scope.added = 'Добавить отпуск';
             $scope.showBt = 1;
             $scope.urlBt = 'home.admin.vacations.create';
@@ -103,14 +105,14 @@
 
             $scope.options =
                 [
-                    {display: "Работают", value: "work"},
-                    {display: "Уволены", value: "list"},
+                    {display: "Активированы", value: "work"},
+                    //{display: "Уволены", value: "list"},
                     {display: "Не активированы / Заблокированы", value: "action"},
                     {display: "Все", value: "table"}
                 ];
             $scope.modeSelect = $scope.options[0];
             $scope.tableView = "/js/private/admin/vacations/views/home.admin.vacations.table.html";
-            $scope.listView = "/js/private/admin/vacations/views/home.admin.vacations.list.html";
+            //$scope.listView = "/js/private/admin/vacations/views/home.admin.vacations.list.html";
             $scope.actionView = "/js/private/admin/vacations/views/home.admin.vacations.action.html";
             $scope.workView = "/js/private/admin/vacations/views/home.admin.vacations.work.html";
 

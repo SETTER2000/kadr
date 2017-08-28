@@ -540,7 +540,6 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.findOne(req.param('id'))
             .populate('positions')
-            .populate('furloughs')
             .exec(function foundUser(err, user) {
                 if (err) return res.serverError(err);
                 if (!user) return res.notFound();
@@ -558,7 +557,7 @@ module.exports = {
         if (req.param('id')) {
             User.findOne(req.param('id'))
                 .populate('positions')
-                .populate('furloughs')
+                .populate('vacations')
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
@@ -576,7 +575,6 @@ module.exports = {
                 q.where = y;
                 User.find(q)
                     .populate('positions')
-                    .populate('furloughs')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -585,7 +583,6 @@ module.exports = {
             } else {
                 User.find()
                     .populate('positions')
-                    .populate('furloughs')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -623,7 +620,6 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.find(req.param('id'))
             .populate('positions')
-            .populate('furloughs')
             .exec((err, user) => {
                 if (err)return next(err);
                 if (!user)return next('User doesn\'t exists.');
@@ -675,7 +671,6 @@ module.exports = {
 
             User.findOne(req.param('id'))
                 .populate('positions')
-                .populate('furloughs')
                 .exec(function (err, user) {
                     if (err) return res.negotiate(err);
                     if (!user) return res.notFound('Не могу');
@@ -993,7 +988,6 @@ module.exports = {
         if (req.param('id')) {
             User.find({where: {subdivision: {id: req.param('id')}, fired: false}})
                 .populate('positions')
-                .populate('furloughs')
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();

@@ -14,15 +14,16 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        Vacation.find(req.param('id')).exec((err, finds) => {
-            if (err) return res.negotiate;
-            if (!finds) return res.notFound();
+        Vacation.find(req.param('id'))
+            .exec((err, finds) => {
+                if (err) return res.negotiate;
+                if (!finds) return res.notFound();
 
-            // return res.redirect('/admin/users/edit/' + req.param('id'));
-            // return res.backToHomePage();
-            //return res.redirect('/admin/users/edit/' + req.param('id'));
-            (req.param('id')) ? res.ok(finds[0]) : res.ok(finds);
-        });
+                // return res.redirect('/admin/users/edit/' + req.param('id'));
+                // return res.backToHomePage();
+                //return res.redirect('/admin/users/edit/' + req.param('id'));
+                (req.param('id')) ? res.ok(finds[0]) : res.ok(finds);
+            });
     },
     create: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
@@ -31,45 +32,68 @@ module.exports = {
         //    //sails.log('is not string');
         //    return res.badRequest('Наименование не заполнено.');
         //}
-        //if (_.isNumber( req.param('name') ) ) {
-        //    //sails.log(req.param('name'));
+        var obj = {
+            section: 'Отпуск',
+            sections: 'Отпуска',
+            name: req.param('name'),
+            daysSelectHoliday: req.param('daysSelectHoliday'),
+            whomCreated: req.session.me,
+            whomUpdated: null,
+            action: req.param('action')
+            //action: (req.param('action')) ? req.param('action') : true
+        };
+
+        //if (_.isNumber(req.param('daysSelectHoliday'))) {
+        //    sails.log('daysSelectHoliday',req.param('daysSelectHoliday'));
         //    //sails.log('is not string');
-        //    return res.badRequest('Наименование не строка!');
+        //    obj.daysSelectHoliday = req.param('daysSelectHoliday');
+        //
+        //} else {
+        //    obj.daysSelectHoliday = '';
+        //    return res.badRequest('Наименование не число!');
         //}
         //if (req.param('name').length < 2 || req.param('name').length > 200) {
         //    return res.badRequest('Наименование должно быть от 2 до 200 знаков!');
         //}
 
-        //console.log('Action', req.param('action'));
-        var obj = {
-            section: 'Отпуск',
-            sections: 'Отпуска',
-            name: req.param('name'),
-            whomCreated: req.session.me,
-            whomUpdated: null,
-            //tip: req.param('tip'),
-            action: (req.param('action')) ? req.param('action') : false
-        };
-
         User.findOne({id: req.session.me})
-            .populate('furloughs')
+            .populate('vacations')
             .exec((err, findParam)=> {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findParam) return res.notFound();
-
                 console.log('findParam', findParam);
+                obj.owner = findParam.id;
 
-                obj.users = findParam.id;
-                //if(findParam) return res.badRequest(req.param('name')+' - дубликат.');
-                Vacation.create(obj).exec(function (err, finn) {
-                    if (err) return res.serverError(err);
-                    console.log('Отпуск создал:', req.session.me);
-                    console.log('Отпуск новый:',finn);
-                    return res.send(finn);
-                });
+
+                Furlough.findOne({id: '599d8813b88be82bf00a1771'})
+                    .populate('vacations')
+                    .exec((err, findFurlough)=> {
+                        "use strict";
+                        if (err) return res.serverError(err);
+                        if (!findFurlough) return res.notFound();
+                        console.log('findFurlough', findFurlough);
+                        obj.furlough = findFurlough.id;
+                        Vacation.create(obj).exec(function (err, finn) {
+                            if (err) return res.serverError(err);
+                            console.log('Отпуск создал:', req.session.me);
+                            console.log('Отпуск новый:', finn);
+                            findParam.vacations.add(finn.id);
+                            findFurlough.vacations.add(finn.id);
+                            findParam.save(function (err) {
+                                if (err) return res.negotiate(err);
+                                console.log('finn-7777777:', finn);
+                                findFurlough.save(function (err) {
+                                    if (err) return res.negotiate(err);
+                                    console.log('finn:', finn);
+                                    return res.send(finn);
+                                });
+                            });
+                        });
+
+
+                    });
             });
-
     },
 
     /**
@@ -80,18 +104,18 @@ module.exports = {
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         var obj = {
-            id:req.param('id'),
+            id: req.param('id'),
             section: req.param('section'),
             sections: req.param('sections'),
             name: req.param('name'),
-            tip: req.param('tip'),
+            daysSelectHoliday: req.param('daysSelectHoliday'),
             whomCreated: req.param('whomCreated'),
             whomUpdated: req.session.me,
             action: req.param('action')
         };
-        Vacation.update(req.param('id'),obj).exec(function updateObj(err, objEdit) {
+        Vacation.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
             console.log('Отпуск обновил:', req.session.me);
-            console.log('Отпуск обновление:',obj);
+            console.log('Отпуск обновление:', obj);
             if (err)return res.negotiate(err);
             res.ok();
         })

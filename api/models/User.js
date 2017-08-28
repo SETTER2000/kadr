@@ -119,7 +119,7 @@ module.exports = {
         //    type: 'date',
         //    defaultsTo: null
         //},
-        decree:{
+        decree: {
             type: 'date',
             defaultsTo: null
         },
@@ -170,23 +170,21 @@ module.exports = {
             via: 'users',
             dominant: true
         },
-        furloughs: {
-            collection: 'furlough',
-            via: 'users',
-            dominant: true
-        },
+        //furloughs: {
+        //    collection: 'furlough',
+        //    via: 'users',
+        //    dominant: true
+        //},
+
+        //vacations: {
+        //    collection: 'vacation',
+        //    via: 'users',
+        //    dominant: true
+        //},
 
         vacations: {
-            collection: 'vacation',
-            via: 'users',
-            dominant: true
+            collection: 'vacation'
         },
-
-        //// Отпуска тестовый
-        //fur: {
-        //    type: 'array',
-        //    defaultsTo: [{"type": "", "value": ""}]
-        //},
 
         getFullName: function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;

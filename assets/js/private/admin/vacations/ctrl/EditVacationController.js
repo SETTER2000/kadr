@@ -3,6 +3,18 @@ angular.module('VacationModule')
     .controller('EditVacationController', ['$scope', '$http', 'toastr', '$interval', '$state', 'Vacations', 'moment', 'Positions', 'Departments', '$stateParams', 'FileUploader', '$rootScope',
         function ($scope, $http, toastr, $interval, $state, Vacations, moment, Positions, Departments, $stateParams, FileUploader, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
+
+            //var t = moment().twix(new Date('2017-08-24T01:00:00'));
+            //console.log('Это текущая дата?: ', t.isCurrent()); // false
+            //console.log('Выбрано дней:', t.count('day')); //=> 1
+            //console.log('Форматирование: ', t.format());  // 'Jan 25, 1982, 9:30 AM - 1:30 PM'
+            //console.log('Простой парсинг времени из даты:', t.simpleFormat("H:mm")); // '9:30 - 1:30'
+            //console.log('1',t.isSame("day"));               //=> true
+            //console.log('2',t.humanizeLength());            //=> "4 hours"
+            //console.log('3',t.count("days"));               //=> 1
+            //console.log('4',t.isPast());                   //=> true
+            //console.log('5',t.contains("2017-10-25T10:00")); //=> true
+
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -37,22 +49,8 @@ angular.module('VacationModule')
                 allowInput: true, // ручной ввод даты
                 inline: true, // календарь открыт
                 onDayCreate: function (dObj, dStr, fp, dayElem) {
-                    // dayElem.dateObj является соответствующей датой
-                    // dObj - массив с выбранными датами
-
-                    //const firstDate = moment();
-                    //const secondDate = moment(dayElem.dateObj);
-                    //
-                    //console.log('DDDD',firstDate.isSameOrBefore(secondDate));
-                    //console.log('dStr', dayElem.dateObj);
-                    //console.log('dayElem.dateObj', a);
-                    //if (t == a) {
-                    //    console.log('dayElem.dateObj', a);
-                    //    //console.log('t', t);
-                    //    dayElem.innerHTML += "<span class='event'></span>";
-                    //}
                     if (Math.random() < 0.15)
-                    dayElem.innerHTML += "<span class='event'></span>";
+                        dayElem.innerHTML += "<span class='event'></span>";
                     else if (Math.random() > 0.85)
                         dayElem.innerHTML += "<span class='event busy'></span>";
                 }
@@ -83,8 +81,13 @@ angular.module('VacationModule')
              */
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
+                //console.log('fpItem.parseDate()', fpItem);
+                //console.log('fpItem.parseDate()', fpItem.selectedDates);
+                var t = moment(fpItem.selectedDates[0]).twix(new Date(fpItem.selectedDates[1]));
+                //console.log('Это текущая дата?: ', t.isCurrent()); // false
+                //console.log('Выбрано дней:', t.count('day')); //=> 1
+                $scope.daysSelectHoliday = t.count('day');
 
-                //console.log('flatpickr', fpItem.parseDate());
                 //console.log('flatpickr', fpItem.redraw());
                 //console.log('$scope.item.location', $scope.item.location);
             };
@@ -98,20 +101,20 @@ angular.module('VacationModule')
             };
 
 
-            //console.log( $stateParams.vacationId);
-            //var item = $scope.item = Vacations.get({id: $stateParams.vacationId}, function (vacations) {
             $scope.refresh = function () {
                 let item = $scope.item = Vacations.get({id: $stateParams.vacationId}, function (vacations) {
                         $scope.vacations = vacations;
-
-                        //$scope.flatpicker.set('currentYear',2017);
                         $scope.flatpicker.setDate(vacations.name);
                         item.getBirthday();
                         item.getDateInWork();
                         item.getFiredDate();
                         item.getDecree();
+                    }, function (err) {
+                        // активируем по умолчанию создаваемую запись
+                        $scope.item.action = true;
                     }
                 );
+
             };
 
             $scope.delete2 = function (item) {
@@ -123,7 +126,6 @@ angular.module('VacationModule')
                     // $scope.$apply(function() { $location.path("/admin/vacations"); });
                     // $scope.refresh();
                 }, function (err) {
-                    //console.log(err);
                     toastr.error(err, info.error + ' 122! ');
                 })
             };
@@ -132,6 +134,7 @@ angular.module('VacationModule')
             $scope.saveEdit = function (item) {
                 if (!angular.isDefined(item))toastr.error('Нет объекта для сохранения.', 'Ошибка!');
                 if (!angular.isDefined(item.name)) return toastr.error('Дата не может быть пустой.', 'Ошибка!');
+                item.daysSelectHoliday = $scope.daysSelectHoliday;
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
@@ -143,6 +146,9 @@ angular.module('VacationModule')
                     );
                 } else {
                     if (angular.isDefined(item)) {
+                        item.daysSelectHoliday = $scope.daysSelectHoliday;
+                        console.log('item:::', item);
+                        console.log('furlough::', $scope.furlough);
                         item.$save(item, function (success) {
                                 toastr.success(info.newUserOk);
                                 //$location.path('/profile') ;
@@ -164,11 +170,14 @@ angular.module('VacationModule')
                     $scope.item.positions = [{}];
                 }
             };
+
             $scope.addFurlough = function () {
+                console.log('$scope.item.furloughs', $scope.item.furloughs);
                 if (angular.isArray($scope.item.furloughs)) {
                     $scope.item.furloughs.push({});
                 } else {
                     $scope.item.furloughs = [{}];
+                    //$scope.item.furloughs = [{id:'599d8813b88be82bf00a1771'}];
                 }
             };
 

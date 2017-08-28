@@ -37,14 +37,14 @@ module.exports = {
     whomCreated:{
       type:'string'
     },
-    furloughs: {
-      collection: 'furlough',
-      via: 'vacations',
-      dominant: true
+    daysSelectHoliday:{
+      type:'string'
     },
-    users: {
-      collection: 'user',
-      via: 'vacations'
+    furlough: {
+      model: 'furlough'
+    },
+    owner: {
+      model: 'user'
     }
   }
 };
