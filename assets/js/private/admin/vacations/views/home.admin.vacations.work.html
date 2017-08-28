@@ -14,6 +14,14 @@
         <th>#</th>
         <th></th>
         <th>
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('owner.lastName')">
+                {{lastNameArea}}
+<span class="sortOrder" ng-show="propertyName === 'owner.lastName'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <th>
             <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('name')">
                 {{fioArea}}
 <span class="sortOrder" ng-show="propertyName === 'name'"
@@ -95,6 +103,11 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <td>{{$index+1}}</td>
         <td><img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}"
                  alt=""></td>
+        <td>
+            <a href="/admin/users/edit/{{item.owner.id}}">
+                {{item.owner.lastName}}
+            </a>
+        </td>
         <td>
             <a href="{{item.getEditUrl(item.id)}}">
                 {{item.name}}

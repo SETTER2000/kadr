@@ -19,11 +19,11 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                     }
                 }
             })
-            .state('home.admin.vacations.settings', {
-                url: '/settings',
-                templateUrl: '/js/private/admin/vacations/views/home.admin.vacations.settings.html',
-                controller: 'ListVacationController'
-            })
+            //.state('home.admin.vacations.settings', {
+            //    url: '/settings',
+            //    templateUrl: '/js/private/admin/vacations/views/home.admin.vacations.settings.html',
+            //    controller: 'ListVacationController'
+            //})
             .state('home.admin.vacation', {
                 url: '/vacation/:vacationId',
                 views: {

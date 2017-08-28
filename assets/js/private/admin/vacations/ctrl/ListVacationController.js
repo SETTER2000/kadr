@@ -35,6 +35,7 @@
             $scope.loginArea = 'Логин';
             $scope.tipArea = 'Тип';
             $scope.statusArea = 'Статус';
+            $scope.lastNameArea = 'Владелец';
             $scope.createdAt = 'Создан';
             $scope.updatedAt = 'Обнавлён';
             $scope.whomUpdatedArea = 'Кем обновлён';

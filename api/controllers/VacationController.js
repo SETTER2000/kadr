@@ -15,6 +15,8 @@ module.exports = {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         Vacation.find(req.param('id'))
+            .populate('furlough')
+            .populate('owner')
             .exec((err, finds) => {
                 if (err) return res.negotiate;
                 if (!finds) return res.notFound();
