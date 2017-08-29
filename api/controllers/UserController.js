@@ -363,6 +363,7 @@ module.exports = {
                     position: req.param('position'),
                     pfr: req.param('pfr'),
                     parking: req.param('parking'),
+                    numCar: req.param('numCar'),
                     dateInWork: req.param('dateInWork'),
                     lastLoggedIn: new Date()
                     //gravatarUrl: gravatarUrl
@@ -658,6 +659,7 @@ module.exports = {
             firedDate: fDt,
             action: req.param('action'),
             parking: req.param('parking'),
+            numCar: req.param('numCar'),
             //pfr: req.param('pfr'),
             avatarUrl: req.param('avatarUrl'),
             room: req.param('room'),

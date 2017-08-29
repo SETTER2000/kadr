@@ -135,6 +135,12 @@ module.exports = {
             type: 'string',
             size: 15
         },
+
+        numCar: {
+            type: 'string',
+            size: 15
+        },
+
         parking: {
             type: 'integer'
         },
