@@ -12,7 +12,12 @@ angular.module('FurloughModule')
                     item.getDateInWork();
                     item.getFiredDate();
                 }, function (err) {
-                    if (err) console.log(err.message);
+                    // активируем по умолчанию создаваемую запись
+                    item.action = true;
+                    item.sc = function () {
+                        return 'Тип отпуска';
+                    };
+
                 });
             };
 
