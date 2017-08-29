@@ -135,7 +135,9 @@ module.exports = {
             type: 'string',
             size: 15
         },
-
+        parking: {
+            type: 'integer'
+        },
         workplace: {
             type: 'string'
         },
@@ -170,11 +172,6 @@ module.exports = {
             via: 'users',
             dominant: true
         },
-        //furloughs: {
-        //    collection: 'furlough',
-        //    via: 'users',
-        //    dominant: true
-        //},
 
         //vacations: {
         //    collection: 'vacation',

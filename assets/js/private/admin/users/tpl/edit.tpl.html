@@ -203,34 +203,34 @@
                             <!--<pre>P O S I T I O N S : {{items | limitTo:5 | json }}</pre>-->
                         </div>
 
-                        <div ng-controller="ListFurloughController" class="form-group ">
-                            <label class="control-label" ng-bind="items[0].sc()"></label>
-                            [ <a href="#" ng-click="addFurlough()">добавить</a> ]
+                        <!--<div ng-controller="ListFurloughController" class="form-group ">-->
+                            <!--<label class="control-label" ng-bind="items[0].sc()"></label>-->
+                            <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
 
-                            <div class="form-inline" ng-repeat="furlough in item.furloughs">
-                                <div class="form-group">
-                                    <select class="form-control" ng-model="furlough.id">
-                                        <option ng-repeat="option in items | filter:{action:true}" value="{{option.id}}">{{option.name}}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="sr-only" for="exampleInputPassword33"></label>
-                                    <!--<input class="form-control" type="text" id="exampleInputPassword33" ng-model="furlough.value" required>-->
-                                    с
-                                    <input type="text" class="form-control flatpickr" ng-flatpickr
-                                           fp-opts="dateOpts2"
-                                           fp-on-setup="toggleBlur(item)"
-                                           ng-model="furlough.from">
-                                    по
-                                    <input type="text" class="form-control flatpickr" ng-flatpickr
-                                           fp-opts="dateOpts2"
-                                           fp-on-setup="toggleBlur(item)"
-                                           ng-model="furlough.to">
-                                </div>
-                                <button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>
-                            </div>
-                        </div>
+                            <!--<div class="form-inline" ng-repeat="furlough in item.furloughs">-->
+                                <!--<div class="form-group">-->
+                                    <!--<select class="form-control" ng-model="furlough.id">-->
+                                        <!--<option ng-repeat="option in items | filter:{action:true}" value="{{option.id}}">{{option.name}}-->
+                                        <!--</option>-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                                <!--<div class="form-group">-->
+                                    <!--<label class="sr-only" for="exampleInputPassword33"></label>-->
+                                    <!--&lt;!&ndash;<input class="form-control" type="text" id="exampleInputPassword33" ng-model="furlough.value" required>&ndash;&gt;-->
+                                    <!--с-->
+                                    <!--<input type="text" class="form-control flatpickr" ng-flatpickr-->
+                                           <!--fp-opts="dateOpts2"-->
+                                           <!--fp-on-setup="toggleBlur(item)"-->
+                                           <!--ng-model="furlough.from">-->
+                                    <!--по-->
+                                    <!--<input type="text" class="form-control flatpickr" ng-flatpickr-->
+                                           <!--fp-opts="dateOpts2"-->
+                                           <!--fp-on-setup="toggleBlur(item)"-->
+                                           <!--ng-model="furlough.to">-->
+                                <!--</div>-->
+                                <!--<button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
 
@@ -264,10 +264,10 @@
                             <!--</div>-->
                         <!--</div>-->
 
-                        <!--<div class="form-group ">-->
-                            <!--<label class="control-label" for="inputSuccess10">ПФР</label>-->
-                            <!--<input type="text" class="form-control" ng-model="item.pfr">-->
-                        <!--</div>-->
+                        <div class="form-group ">
+                            <label class="control-label" for="inputSuccess10">Парковочное место</label>
+                            <input type="number" class="form-control" ng-model="item.parking">
+                        </div>
 
 
                         <div class="form-group ">
