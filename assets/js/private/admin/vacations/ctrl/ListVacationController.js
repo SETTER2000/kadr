@@ -212,20 +212,20 @@
                     property: 'lastName',
                     char: $scope.charText + '%'
                 };
-
+                console.log('QUERY:', $scope.query);
                 $scope.items = Vacations.query($scope.query, function (vacations) {
                     console.log('Vacations ITEMS22:', vacations);
                     //console.log('Owner: ', vacations[0].getOwner());
                     //console.log('eeeeeeeeee111', vacations.length);
                     //$scope.objectName = vacations;
-                    //$scope.objectName = getUsersAll(vacations);
+                    $scope.objectName=[];
 
-                    ////if (!angular.isDefined(vacations)) toastr.error('Нет объекта для обработки.', 'Ошибка!');
+                    //////if (!angular.isDefined(vacations)) toastr.error('Нет объекта для обработки.', 'Ошибка!');
                     for(var u=0; u < vacations.length; u++) {
                         //console.log('Owner: ', vacations[0].getOwner());
                         $scope.objectName.push(vacations[u].getOwner());
                     }
-                    //console.log(vacations.objectName);
+                    ////console.log(vacations.objectName);
                     //$scope.objectName = objectName;
                     console.log('scope.objectName:', $scope.objectName);
                     //$scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;

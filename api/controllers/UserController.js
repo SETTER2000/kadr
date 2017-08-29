@@ -554,6 +554,8 @@ module.exports = {
      */
     findUsers: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        console.log('char: ', req.param('char'));
+        console.log('where: ', req.param('where'));
         if (req.param('id')) {
             User.findOne(req.param('id'))
                 .populate('positions')
@@ -564,7 +566,8 @@ module.exports = {
                     res.ok(user);
 
                 });
-        } else {
+        }
+        else {
             if (!_.isUndefined(req.param('where')) && req.param('char').length > 0) {
                 var q = {
                     limit: req.params.limit,
