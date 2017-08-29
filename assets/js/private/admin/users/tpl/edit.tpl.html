@@ -264,14 +264,7 @@
                             <!--</div>-->
                         <!--</div>-->
 
-                        <div class="form-group ">
-                            <label class="control-label" for="inputSuccess10">Номер машины</label>
-                            <input type="text" class="form-control" ng-model="item.numCar">
-                        </div>
-                        <div class="form-group ">
-                            <label class="control-label" for="inputSuccess10">Парковочное место</label>
-                            <input type="number" class="form-control" ng-model="item.parking">
-                        </div>
+
 
 
                         <div class="form-group ">
@@ -297,22 +290,7 @@
 
 
 
-                        <div class="form-group">
-                            <label class="control-label">
-                                Принят на работу
-                            </label>
-                            <div class="input-group">
-                                <input type="text" class="form-control flatpickr" ng-flatpickr
-                                       fp-opts="dateOpts3"
-                                       fp-on-setup="toggleBlur(item)"
-                                       ng-model="item.dateInWork">
-                            <span class="input-group-btn">
-                              <button class="btn btn-default" type="button" ng-click="removeDateInWork(item)">
-                                  <span class="glyphicon glyphicon-remove"></span>
-                              </button>
-                            </span>
-                            </div>
-                        </div>
+
 
 
                         <div class="form-group">
@@ -331,8 +309,34 @@
                             </span>
                             </div>
                         </div>
-
-
+                        <div class="form-group ">
+                            <label class="control-label" for="inputSuccess10">Номер машины</label>
+                            <input type="text" class="form-control" ng-model="item.numCar">
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label" for="inputSuccess10">Марка машины</label>
+                            <input type="text" class="form-control" ng-model="item.brandCar">
+                        </div>
+                        <div class="form-group ">
+                            <label class="control-label" for="inputSuccess10">Парковочное место</label>
+                            <input type="number" class="form-control" ng-model="item.parking">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                Принят на работу
+                            </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control flatpickr" ng-flatpickr
+                                       fp-opts="dateOpts3"
+                                       fp-on-setup="toggleBlur(item)"
+                                       ng-model="item.dateInWork">
+                            <span class="input-group-btn">
+                              <button class="btn btn-default" type="button" ng-click="removeDateInWork(item)">
+                                  <span class="glyphicon glyphicon-remove"></span>
+                              </button>
+                            </span>
+                            </div>
+                        </div>
                         <div class="form-group ">
                             <label class="checkbox-inline">
                                 <input type="checkbox" ng-model="item.fired">

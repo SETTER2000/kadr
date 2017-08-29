@@ -138,7 +138,11 @@ module.exports = {
 
         numCar: {
             type: 'string',
-            size: 15
+            size: 9
+        },
+        brandCar: {
+            type: 'string',
+            size: 50
         },
 
         parking: {
