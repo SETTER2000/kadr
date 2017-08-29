@@ -677,7 +677,7 @@ module.exports = {
 
                     // console.log('positionRemove:', req.param('positionRemove'));
                     user.positions.add(req.param('positions'));
-                    user.furloughs.add(req.param('furloughs'));
+                    //user.furloughs.add(req.param('furloughs'));
 
                     // if (_.isEmpty(req.param('position'))) {
                     //     user.positions.add({})
@@ -685,9 +685,9 @@ module.exports = {
                     if (req.param('positionRemove')) {
                         user.positions.remove(req.param('positionRemove'));
                     }
-                    if (req.param('furloughRemove')) {
-                        user.furloughs.remove(req.param('furloughRemove'));
-                    }
+                    //if (req.param('furloughRemove')) {
+                    //    user.furloughs.remove(req.param('furloughRemove'));
+                    //}
                     user.save(function (err) {
                         if (err) return res.negotiate('ERR: ' + err);
                         res.ok();

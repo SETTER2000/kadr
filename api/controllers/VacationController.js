@@ -17,13 +17,11 @@ module.exports = {
         Vacation.find(req.param('id'))
             .populate('furlough')
             .populate('owner')
+            .populate('whomCreated')
+            .populate('whomUpdated')
             .exec((err, finds) => {
                 if (err) return res.negotiate;
                 if (!finds) return res.notFound();
-
-                // return res.redirect('/admin/users/edit/' + req.param('id'));
-                // return res.backToHomePage();
-                //return res.redirect('/admin/users/edit/' + req.param('id'));
                 (req.param('id')) ? res.ok(finds[0]) : res.ok(finds);
             });
     },
@@ -34,11 +32,12 @@ module.exports = {
         //    //sails.log('is not string');
         //    return res.badRequest('Наименование не заполнено.');
         //}
+        if(!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
         var obj = {
             section: 'Отпуск',
             sections: 'Отпуска',
             name: req.param('name'),
-            daysSelectHoliday: req.param('daysSelectHoliday'),
+            daysSelectHoliday: +req.param('daysSelectHoliday'),
             whomCreated: req.session.me,
             whomUpdated: null,
             action: req.param('action')
@@ -50,45 +49,44 @@ module.exports = {
         //    //sails.log('is not string');
         //    obj.daysSelectHoliday = req.param('daysSelectHoliday');
         //
-        //} else {
-        //    obj.daysSelectHoliday = '';
-        //    return res.badRequest('Наименование не число!');
-        //}
-        //if (req.param('name').length < 2 || req.param('name').length > 200) {
-        //    return res.badRequest('Наименование должно быть от 2 до 200 знаков!');
         //}
 
         User.findOne({id: req.session.me})
+            .populate('vacationWhomCreated')
             .populate('vacations')
-            .exec((err, findParam)=> {
+            .exec((err, findUser)=> {
                 "use strict";
                 if (err) return res.serverError(err);
-                if (!findParam) return res.notFound();
-                console.log('findParam', findParam);
-                obj.owner = findParam.id;
+                if (!findUser) return res.notFound();
+                console.log('findParam:', findUser);
+                //obj.vacationWhomCreated = findUser.id;
+                obj.owner = findUser.id;
+                obj.whomCreated = findUser.id;
 
 
-                Furlough.findOne({id: req.param('furlough')})
+                Furlough.findOne(req.param('furlough'))
                     .populate('vacations')
                     .exec((err, findFurlough)=> {
                         "use strict";
                         if (err) return res.serverError(err);
-                        if (!findFurlough) return res.notFound();
-                        console.log('findFurlough', findFurlough);
+                        if (!findFurlough) return res.notFound('Не найдено!');
+                        console.log('findFurloughЖЖЖ', findFurlough);
                         obj.furlough = findFurlough.id;
-                        Vacation.create(obj).exec(function (err, finn) {
+                        Vacation.create(obj).exec(function (err, createVacation) {
                             if (err) return res.serverError(err);
                             console.log('Отпуск создал:', req.session.me);
-                            console.log('Отпуск новый:', finn);
-                            findParam.vacations.add(finn.id);
-                            findFurlough.vacations.add(finn.id);
-                            findParam.save(function (err) {
+                            console.log('Отпуск новый:', createVacation);
+                            findUser.vacations.add(createVacation.id);
+                            findUser.vacationWhomCreated.add(createVacation.id);
+                            //findUser.vacationWhomUpdated.add(finn.id);
+                            findFurlough.vacations.add(createVacation.id);
+                            findUser.save(function (err) {
                                 if (err) return res.negotiate(err);
-                                console.log('finn-7777777:', finn);
+                                console.log('finn-7777777:', createVacation);
                                 findFurlough.save(function (err) {
                                     if (err) return res.negotiate(err);
-                                    console.log('finn:', finn);
-                                    return res.send(finn);
+                                    console.log('finn:', createVacation);
+                                    return res.send(createVacation);
                                 });
                             });
                         });
@@ -110,17 +108,34 @@ module.exports = {
             section: req.param('section'),
             sections: req.param('sections'),
             name: req.param('name'),
-            daysSelectHoliday: req.param('daysSelectHoliday'),
+            daysSelectHoliday: +req.param('daysSelectHoliday'),
             whomCreated: req.param('whomCreated'),
             whomUpdated: req.session.me,
             action: req.param('action')
         };
-        Vacation.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
-            console.log('Отпуск обновил:', req.session.me);
-            console.log('Отпуск обновление:', obj);
-            if (err)return res.negotiate(err);
-            res.ok();
-        })
+        User.findOne({id: req.session.me})
+            .populate('vacationWhomUpdated')
+            .populate('vacations')
+            .exec((err, findUser)=> {
+                "use strict";
+                if (err) return res.serverError(err);
+                if (!findUser) return res.notFound();
+                console.log('findParam:', findUser);
+                //obj.vacationWhomCreated = findUser.id;
+                //obj.owner = findUser.id;
+                obj.whomUpdated = findUser.id;
+                Vacation.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
+                    if (err)return res.negotiate(err);
+                    console.log('objEdit: ',objEdit);
+                    console.log('Отпуск обновил:', findUser.lastName +' '+ findUser.firstName);
+                    console.log('Отпуск обновление:', obj);
+                    findUser.vacationWhomUpdated.add(objEdit[0].id);
+                    findUser.save(function (err) {
+                        if (err) return res.negotiate(err);
+                        res.ok();
+                    });
+                });
+            });
     },
 
 

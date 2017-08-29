@@ -31,19 +31,25 @@ module.exports = {
       type:'date',
       defaultsTo:null
     },
-    whomUpdated:{
-      type:'string'
-    },
-    whomCreated:{
-      type:'string'
-    },
+    //whomUpdated:{
+    //  type:'string'
+    //},
+    //whomCreated:{
+    //  type:'string'
+    //},
     daysSelectHoliday:{
-      type:'string'
+      type:'integer'
     },
     furlough: {
       model: 'furlough'
     },
     owner: {
+      model: 'user'
+    },
+    whomCreated: {
+      model: 'user'
+    },
+    whomUpdated: {
       model: 'user'
     }
   }

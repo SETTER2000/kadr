@@ -182,6 +182,12 @@ module.exports = {
         //    dominant: true
         //},
 
+        vacationWhomCreated: {
+            collection: 'vacation'
+        },
+        vacationWhomUpdated: {
+            collection: 'vacation'
+        },
         vacations: {
             collection: 'vacation'
         },

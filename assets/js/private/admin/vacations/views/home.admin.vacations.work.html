@@ -13,13 +13,7 @@
     <tr>
         <th>#</th>
         <th></th>
-        <th>
-            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('owner.lastName')">
-                {{lastNameArea}}
-<span class="sortOrder" ng-show="propertyName === 'owner.lastName'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
+
 
         <th>
             <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('name')">
@@ -28,6 +22,15 @@
       ng-class="{reverse: reverse}"></span>
             </button>
         </th>
+
+        <th>
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('owner.lastName')">
+                {{lastNameArea}}
+<span class="sortOrder" ng-show="propertyName === 'owner.lastName'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
         <th class="text-center">
             <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('daysSelectHoliday')">
                 {{daysSelectHolidayArea}}
@@ -36,9 +39,9 @@
             </button>
         </th>
         <th>
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('tip')">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('furlough.name')">
                 {{tipArea}}
-<span class="sortOrder" ng-show="propertyName === 'tip'"
+<span class="sortOrder" ng-show="propertyName === 'furlough.name'"
       ng-class="{reverse: reverse}"></span>
             </button>
         </th>
@@ -46,6 +49,20 @@
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('status')">
                 {{statusArea}}
 <span class="sortOrder" ng-show="propertyName === 'status'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('actions')">
+                {{actionsArea}}
+<span class="sortOrder" ng-show="propertyName === 'actions'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('info')">
+                {{infoArea}}
+<span class="sortOrder" ng-show="propertyName === 'info'"
       ng-class="{reverse: reverse}"></span>
             </button>
         </th>
@@ -63,7 +80,7 @@
       ng-class="{reverse: reverse}"></span>
             </button>
         </th>
-        <th ng-if="me.admin">
+        <th class="text-center" ng-if="me.admin">
             <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('whomCreated')">
                 {{whomCreatedArea}}
 <span class="sortOrder" ng-show="propertyName === 'whomCreated'"
@@ -71,7 +88,7 @@
             </button>
 
         </th>
-        <th ng-if="me.admin">
+        <th class="text-center" ng-if="me.admin">
             <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('whomUpdated')">
                 {{whomUpdatedArea}}
 <span class="sortOrder" ng-show="propertyName === 'whomUpdatedArea'"
@@ -79,49 +96,40 @@
             </button>
         </th>
 
-        <th class="wdt">
-            <div class="btn-group pull-right">
-                <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">
-                    <span class="sortOrder" ng-show="propertyName === 'contacts'" ng-class="{reverse: reverse}"></span>
-                    Контакты: {{fieldName}}
-                </button>
-                <button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Контакты: {{fieldName}}</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>
-                    <li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>
-                    <li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>
-                </ul>
-            </div>
-        </th>
+
     </tr>
-    <tr ng-repeat="item in filtered=(items | filter:{$:searchText, action:true} |
+    <tr  ng-repeat="item in filtered=(items | filter:{$:searchText, action:true} |
 orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">
         <td>{{$index+1}}</td>
-        <td><img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}"
+        <td><img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.owner.avatarUrl}}"
                  alt=""></td>
-        <td>
-            <a href="/admin/users/edit/{{item.owner.id}}">
-                {{item.owner.lastName}}
-            </a>
-        </td>
-        <td>
+
+        <td  nowrap>
             <a href="{{item.getEditUrl(item.id)}}">
                 {{item.name}}
             </a>
         </td>
-        <td class="text-center">{{item.daysSelectHoliday}}</td>
-        <td>{{item.tip}}</td>
-        <td>{{item.status}}</td>
-        <td class="text-center">{{item.createdAt |date:'dd.MM.yyyy H:mm:ss'}}</td>
-        <td ng-if="me.admin" class="text-center">{{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}</td>
-        <td ng-if="me.admin">{{item.whomCreated}}</td>
-        <td ng-if="me.admin">{{item.whomUpdated}}</td>
 
-        <td width="250px" class="text-right">{{item.getContact(fieldName)}}</td>
+        <td ng-mouseover="vis=1"  ng-mouseleave="vis=0" nowrap>
+
+                {{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}
+
+            <a   ng-if="vis"  class=" btn btn-group-xs pull-right not-border  btn-default text-right" href="/admin/users/edit/{{item.owner.id}}">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+        </td>
+
+        <td class="text-center">{{item.daysSelectHoliday}}</td>
+        <td>{{item.furlough.name}}</td>
+        <td>{{item.status}}</td>
+        <td>{{item.actions}}</td>
+        <td>{{item.info}}</td>
+        <td class="text-center">{{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}</td>
+        <td ng-if="me.admin" class="text-center">{{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}</td>
+        <td class="text-center" ng-if="me.admin">{{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}} {{item.whomCreated.patronymicName[0]}}</td>
+        <td class="text-center" ng-if="me.admin">{{item.whomUpdated.lastName}} {{item.whomUpdated.firstName[0]}} {{item.whomUpdated.patronymicName[0]}}</td>
+
+
     </tr>
 </table>
 

@@ -86,7 +86,7 @@ angular.module('VacationModule')
                 var t = moment(fpItem.selectedDates[0]).twix(new Date(fpItem.selectedDates[1]));
                 //console.log('Это текущая дата?: ', t.isCurrent()); // false
                 //console.log('Выбрано дней:', t.count('day')); //=> 1
-                $scope.daysSelectHoliday = t.count('day');
+                $scope.daysSelectHoliday = +t.count('day');
 
                 //console.log('flatpickr', fpItem.redraw());
                 //console.log('$scope.item.location', $scope.item.location);
@@ -111,7 +111,11 @@ angular.module('VacationModule')
                         item.getDecree();
                     }, function (err) {
                         // активируем по умолчанию создаваемую запись
-                        $scope.item.action = true;
+                        item.action = true;
+                        item.sc = function () {
+                            return 'Отпуск';
+                        };
+
                     }
                 );
 
@@ -135,7 +139,7 @@ angular.module('VacationModule')
                 if (!angular.isDefined(item))toastr.error('Нет объекта для сохранения.', 'Ошибка!');
                 if (!angular.isDefined(item.name)) return toastr.error('Дата не может быть пустой.', 'Ошибка!');
                 if (!angular.isDefined(item.furlough)) return toastr.error('Тип отпуска не может быть пустой.', 'Ошибка!');
-                item.daysSelectHoliday = $scope.daysSelectHoliday;
+                item.daysSelectHoliday = +$scope.daysSelectHoliday;
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
@@ -156,8 +160,9 @@ angular.module('VacationModule')
                                 $state.go('home.admin.vacation', {vacationId: success.id});
                             },
                             function (err) {
-                                toastr.error(err);
-                                //toastr.error(err.data.invalidAttributes, info.error + ' 89336!');
+                                //toastr.error(err, 'Ошибка 3990');
+                                //console.log('err.data',err.data);
+                                toastr.error(err.data, info.error + ' 890');
                             });
                     }
                 }

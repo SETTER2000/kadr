@@ -91,9 +91,11 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
             return alert(this.sc() + ': ' + this.name + ' изменёна!');
         };
 
-        //Vacations.prototype.getAction = function (boolean) {
-        //   return  (!boolean) ? true : this.action;
-        //};
+        Vacations.prototype.getOwner = function () {
+            return this.owner;
+        };
+
+
         Vacations.prototype.er = function () {
             return alert('ОШИБКА!!! ' + this.sc() + ': ' + this.name + ' - изменения не приняты!');
         };
@@ -133,5 +135,6 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
         };
         return Vacations;
     })
+
 ;
 

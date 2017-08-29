@@ -31,7 +31,6 @@
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
 
             $scope.fioArea = 'Период с .. по ..';
-            $scope.drArea = 'ДР11';
             $scope.loginArea = 'Логин';
             $scope.tipArea = 'Тип';
             $scope.statusArea = 'Статус';
@@ -40,6 +39,8 @@
             $scope.updatedAt = 'Обнавлён';
             $scope.whomUpdatedArea = 'Кем обновлён';
             $scope.whomCreatedArea = 'Кем создан';
+            $scope.actionsArea = 'Действие';
+            $scope.infoArea = 'Информация';
             $scope.daysSelectHolidayArea = 'Дней';
             $scope.added = 'Добавить отпуск';
             $scope.showBt = 1;
@@ -196,6 +197,7 @@
                 $scope.refresh(value);
 
             });
+            $scope.objectName = [];
 
             $scope.refresh = function (where) {
                 if (where) {
@@ -212,14 +214,27 @@
                 };
 
                 $scope.items = Vacations.query($scope.query, function (vacations) {
-                    console.log('Vacations ITEMS:', vacations);
-                        $scope.items = vacations;
-                        $scope.objectName = vacations;
-                        //$scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
-                    }, function (err) {
-                        toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
-                    });
+                    console.log('Vacations ITEMS22:', vacations);
+                    //console.log('Owner: ', vacations[0].getOwner());
+                    //console.log('eeeeeeeeee111', vacations.length);
+                    //$scope.objectName = vacations;
+                    //$scope.objectName = getUsersAll(vacations);
+
+                    ////if (!angular.isDefined(vacations)) toastr.error('Нет объекта для обработки.', 'Ошибка!');
+                    for(var u=0; u < vacations.length; u++) {
+                        //console.log('Owner: ', vacations[0].getOwner());
+                        $scope.objectName.push(vacations[u].getOwner());
+                    }
+                    //console.log(vacations.objectName);
+                    //$scope.objectName = objectName;
+                    console.log('scope.objectName:', $scope.objectName);
+                    //$scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
+
+                }, function (err) {
+                    toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
+                });
             };
+
 
             $scope.getMode = function (t) {
                 if (t) {
