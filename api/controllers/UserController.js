@@ -667,17 +667,13 @@ module.exports = {
             room: req.param('room'),
             //fur: req.param('fur'),
             furlough: req.param('furlough')
-
         };
 
         //console.log('Param ID: ', req.param('id'));
         //console.log('objEdit555: ', obj);
         User.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
             if (err)return res.redirect('/admin/users/edit/' + req.param('id'));
-
-
             console.log('objEdit: ', objEdit);
-
             User.findOne(req.param('id'))
                 .populate('positions')
                 .exec(function (err, user) {
@@ -1068,7 +1064,6 @@ module.exports = {
                     });
             });
     },
-
 
 };
 

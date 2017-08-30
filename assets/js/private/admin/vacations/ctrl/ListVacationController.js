@@ -94,16 +94,22 @@
                 time: new Date()
             };
 
-            //$scope.calendar = moment().calendar(null, {
-            //    sameDay: function (now) {
-            //        if (this.isBefore(now)) {
-            //            return '[Случится сегодня]';
-            //        } else {
-            //            return '[Произошло сегодня]';
-            //        }
-            //        /* ... */
-            //    }
-            //});
+            /**
+             * Год
+             * @type {*[]}
+             */
+            $scope.options2 =
+                [
+                    {display: "2015", value: "2015"},
+                    {display: "2016", value: "2016"},
+                    {display: "2017", value: "2017"},
+                    {display: "2018", value: "2018"},
+                    {display: "2019", value: "2019"},
+                    {display: "2020", value: "2020"},
+                    {display: "2021", value: "2021"}
+                ];
+            $scope.modeSelectYear = $scope.options2[2];
+
 
             $scope.options =
                 [
@@ -113,6 +119,7 @@
                     {display: "Все", value: "table"}
                 ];
             $scope.modeSelect = $scope.options[0];
+
             $scope.tableView = "/js/private/admin/vacations/views/home.admin.vacations.table.html";
             //$scope.listView = "/js/private/admin/vacations/views/home.admin.vacations.list.html";
             $scope.actionView = "/js/private/admin/vacations/views/home.admin.vacations.action.html";

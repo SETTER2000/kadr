@@ -114,9 +114,17 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3" ng-show="me.admin">
+        <div class="col-md-1">
             <select  class="form-control" role="group"
-                    ng-model="modeSelect" ng-options="item.display for item in options track by item.value"></select>
+                     ng-model="modeSelectYear"
+                     ng-options="item.display for item in options2 track by item.value">
+            </select>
+        </div>
+        <div class="col-md-2" ng-show="me.admin">
+            <select  class="form-control" role="group"
+                    ng-model="modeSelect"
+                     ng-options="item.display for item in options track by item.value">
+            </select>
             <!--<div ng-switch on="modeSelect.value" style="margin-top:20px;">-->
             <!--<table class="table" ng-switch-when="table">-->
             <!--<thead>-->

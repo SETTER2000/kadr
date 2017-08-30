@@ -22,7 +22,6 @@ module.exports = {
                 var y = {};
                 y[req.param('property')] = {'like': req.param('char')};
                 q.where = y;
-                console.log('Vacation query: ',q);
                 User.find(q)
                     .populate('vacations')
                     .populate('positions')
