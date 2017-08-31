@@ -667,7 +667,6 @@ module.exports = {
             pfr: req.param('pfr'),
             avatarUrl: req.param('avatarUrl'),
             room: req.param('room'),
-            //fur: req.param('fur'),
             furlough: req.param('furlough')
         };
 
@@ -681,10 +680,7 @@ module.exports = {
                 .exec(function (err, user) {
                     if (err) return res.negotiate(err);
                     if (!user) return res.notFound('Не могу');
-
-                    // console.log('positionRemove:', req.param('positionRemove'));
                     user.positions.add(req.param('positions'));
-                    //user.furloughs.add(req.param('furloughs'));
 
                     // if (_.isEmpty(req.param('position'))) {
                     //     user.positions.add({})
@@ -815,17 +811,13 @@ module.exports = {
      * @param res
      */
     updateProfile: function (req, res) {
-
         User.update({
             id: req.session.me
         }, {
             gravatarUrl: req.param('gravatarUrl')
         }, function (err, updatedUser) {
-
             if (err) return res.negotiate(err);
-
             return res.json(updatedUser);
-
         });
     },
 
@@ -852,7 +844,6 @@ module.exports = {
                 return res.serverError(err);
             },
             success: function (encryptedPassword) {
-
                 User.update({id: req.param('id')}, {encryptedPassword: encryptedPassword})
                     .exec(function (err, updatedUser) {
                         if (err) {
@@ -900,7 +891,6 @@ module.exports = {
     },
 
     adminUsers: function (req, res) {
-
         User.find({limit: 1000, sort: 'lastName'}).exec(function (err, users) {
 
             if (err) return res.negotiate(err);

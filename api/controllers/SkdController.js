@@ -167,7 +167,7 @@ module.exports = {
                             Skd.native(function (err, collection) {
                                 if (err) return res.serverError(err);
 
-                                sails.log('req.param_sd:', req.param('sd'));
+                                sails.log('Отработанное время. Поиск по дате:', req.param('sd'));
 
                                 //"2017-06-23"
                                 let searchDate = (req.param('sd')) ? req.param('sd') : '';
