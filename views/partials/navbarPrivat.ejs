@@ -44,7 +44,7 @@
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.positions">Должности</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.structures">Структура компании</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.skds">Отработанное время</a></li>
-                            <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.vacations">Отпуска</a></li>
+                            <li><a ng-if="(me.admin)" ui-sref="home.admin.vacations">Отпуска</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.furloughs">Тип отпуска</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" href="/admin/calendar/58b92215d19963601fad8fec/месяц">Посещаемость</a></li>
                             <li><a ng-if="me.admin" ui-sref="home.admin.users.administration">Группы</a></li>
