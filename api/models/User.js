@@ -148,6 +148,9 @@ module.exports = {
         parking: {
             type: 'integer'
         },
+        park: {
+            type: 'string'
+        },
         workplace: {
             type: 'string'
         },
