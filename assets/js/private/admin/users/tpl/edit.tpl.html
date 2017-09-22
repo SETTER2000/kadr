@@ -4,9 +4,9 @@
     <div class="page-header">
         <h2>
             <p ng-if="item.lastName" ng-class="{'fired':item.fired}">{{item.getFullName()}}<span ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
-                <small class="pull-right top-padding">Руководитель: &nbsp;&nbsp;
-                    <img ng-if="boss.avatarUrl" title="{{boss.positions[0].name}}: {{boss.lastName}} {{boss.firstName}} {{boss.patronymicName}}" alt="{{ boss.getFullName() }}" ng-src="{{ boss.avatarUrl }}" class="photo"/>
-                    <img ng-if="!boss.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>
+                <small  class="pull-right top-padding">{{boss.lastName}} {{boss.firstName}} {{boss.patronymicName}}: &nbsp;&nbsp;
+                    <a href="/admin/users/edit/{{boss.id}}"><img ng-if="boss.avatarUrl" title="{{boss.positions[0].name}}" alt="{{ boss.getFullName() }}" ng-src="{{ boss.avatarUrl }}" class="photo"/>
+                    <img ng-if="!boss.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/></a>
                 </small>
             </p>
             <p ng-if="!item.lastName">Новый сотрудник</p>
