@@ -139,7 +139,12 @@ module.exports = {
                     }
 
                     ldapUser.on('searchEntry', function (entry) {
-                        console.log('Вход в систему: ' + new Date() + ', ' + JSON.stringify(entry.object.displayName + ', ' + entry.object.department + ', ' + entry.object.title + ', ' + entry.object.telephoneNumber + ', ' + entry.object.mail + ', ' + entry.object.physicalDeliveryOfficeName + ', Руководитель: ' + entry.object.manager));
+                        console.log('Вход в систему: ' + new Date() + ', ' +
+                            JSON.stringify(entry.object.displayName + ', ' +
+                                entry.object.department + ', ' + entry.object.title + ', ' +
+                                entry.object.telephoneNumber + ', ' + entry.object.mail + ', ' +
+                                entry.object.physicalDeliveryOfficeName + ', Руководитель: ' +
+                                entry.object.manager));
                         count = 5;
                     });
 
@@ -372,6 +377,7 @@ module.exports = {
                 }, function (err, newUser) {
                     if (err) return res.negotiate(err);
                     sails.log('Создан новый пользователь с логином:' + newUser.login);
+                    Mailer.sendWelcomeMail(newUser);
                     res.send({id: newUser.id});
                 });
             }
@@ -890,16 +896,6 @@ module.exports = {
         });
     },
 
-    adminUsers: function (req, res) {
-        User.find({limit: 1000, sort: 'lastName'}).exec(function (err, users) {
-
-            if (err) return res.negotiate(err);
-
-            return res.json(users);
-
-        });
-    },
-
     /**
      * Установка пользователю прав администратора
      * @param req
@@ -1057,5 +1053,111 @@ module.exports = {
             });
     },
 
+    adminUsers: function (req, res) {
+        User.find({limit: 1000, sort: 'lastName'}).exec(function (err, users) {
+
+            if (err) return res.negotiate(err);
+
+            return res.json(users);
+
+        });
+    },
+
+    /**
+     * Поиск руководителя в LDAP
+     */
+    bossLDAP: function (req, res) {
+        console.log('Поиск руководителя в LDAP: ', req.param('name'));
+        const clientSearchLDAP = ldap.createClient({
+            url: sails.config.ldap.uri
+        });
+        let opts = {
+            scope: 'sub',
+            filter: '(displayName=' + req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName') + ')',
+            //filter: '(mail=apetrov@landata.ru)',
+            //filter: '(sAMAccountName=' + user.login + ')',
+            attributes: sails.config.ldap.attributes,
+            reconnect: false
+            //paged: true,
+            //sizeLimit: 50
+        };
+        /**
+         * Соединение с сервером LDAP
+         */
+        clientSearchLDAP.bind(sails.config.ldap.username, sails.config.ldap.password, function (err) {
+            if (err) {
+                console.log('searchLDAP ошибка входа: ', err);
+                clientSearchLDAP.unbind(function () {
+                    clientSearchLDAP.destroy();
+                });
+
+                //--count;
+                //if (+count < 0)  return res.forbidden('Аккаунт заблокирован! Обращайтесь к системному администратору.');
+                //switch (+count) {
+                //    case 1:
+                //        word = 'попытка';
+                //        break;
+                //    case 0:
+                //        word = 'попыток';
+                //        break;
+                //    default:
+                //        var word = 'попытки';
+                //}
+                return res.forbidden('searchLDAP: Не верный логин или пароль. ');
+            }
+            var empl = '';
+
+            /**
+             * Поиск по dn
+             */
+            clientSearchLDAP.search(sails.config.ldap.dn, opts, function (err, ldapUser) {
+                if (err) {
+                    console.log('searchLDAP ошибка поиска: ', err);
+                    return res.negotiate(err);
+                }
+                ldapUser.on('searchEntry', function (entry) {
+                    console.log('entry: ' + JSON.stringify(entry.object));
+                    empl = entry.object;
+                });
+
+                ldapUser.on('error', function (err) {
+                    console.error('ОШибка-222: ' + err.message);
+                });
+
+                ldapUser.on('end', function (result) {
+                    if (result.status == 0) {
+                        if (empl === undefined) {
+                            clientSearchLDAP.unbind(function () {
+                                clientSearchLDAP.destroy();
+                            });
+                            return res.notFound('Нет таких!');
+                        }
+                        clientSearchLDAP.unbind(function () {
+                            clientSearchLDAP.destroy();
+                        });
+                        console.log('Найден пользователь:', empl);
+                        // CN=Еремин Сергей,OU=Users,OU=Office users,DC=landata,DC=ru
+                        if(empl){
+                            let arr = empl.manager.split(',');
+                            let arr2 = arr[0].split('=');
+                            let arrFi = arr2[1].split(' ');
+                            console.log('arrFi', arrFi);
+                            User.findOne({'lastName':arrFi[0], 'firstName':arrFi[1]})
+                                .populate('positions')
+                                .exec(function foundUser(err, user) {
+                                    if (err) return res.serverError(err);
+                                    if (!user) return res.notFound();
+                                    return res.ok(user);
+                                });
+                            //return res.ok(arr2[1]);
+                        }
+                        //return res.ok();
+                    }
+                    //return res.forbidden(result.errorMessage);
+                });
+
+            });
+        });
+    },
 };
 

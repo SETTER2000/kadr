@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     angular.module('VacationModule')
-        .controller('ListVacationController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$state', 'Vacations', 'Attendances', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $state, Vacations, Attendances) {
+        .controller('ListVacationController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope",'$timeout', '$state', 'Vacations', 'Users', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Vacations, Users) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             //toastr.options = {
@@ -109,7 +109,14 @@
                     {display: "2021", value: "2021"}
                 ];
             $scope.modeSelectYear = $scope.options2[2];
-
+            //$scope.getSelectedText = function() {
+            //    console.log('modeSelect', $scope.modeSelect);
+            //    if (angular.isObject($scope.modeSelect)) {
+            //        return  $scope.modeSelect.display;
+            //    } else {
+            //        return "Выбрать";
+            //    }
+            //};
 
             $scope.options =
                 [
@@ -119,11 +126,29 @@
                     {display: "Все", value: "table"}
                 ];
             $scope.modeSelect = $scope.options[0];
-
+            console.log('$scope.modeSelect', $scope.modeSelect);
             $scope.tableView = "/js/private/admin/vacations/views/home.admin.vacations.table.html";
             //$scope.listView = "/js/private/admin/vacations/views/home.admin.vacations.list.html";
             $scope.actionView = "/js/private/admin/vacations/views/home.admin.vacations.action.html";
             $scope.workView = "/js/private/admin/vacations/views/home.admin.vacations.work.html";
+
+            //$scope.option = null;
+            //$scope.options = null;
+            $scope.loadOptions = function() {
+                // Use timeout to simulate a 650ms request.
+                return $timeout(function () {
+
+                    $scope.options = $scope.options || [
+                            {display: "Активированы", value: "work"},
+                            //{display: "Уволены", value: "list"},
+                            {display: "Не активированы / Заблокированы", value: "action"},
+                            {display: "Все", value: "table"}
+                        ];
+
+                }, 650);
+
+            };
+
 
             $scope.getLastName = function (item) {
                 $http.post('/att', item)

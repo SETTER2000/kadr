@@ -1,4 +1,5 @@
-angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'AttendanceModule', 'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment'])
+angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
+        'AttendanceModule', 'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment'])
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
     }])
@@ -127,6 +128,9 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'AttendanceMo
             if (yy < 10) yy = '0' + yy;
             return yy + '-' + mm + '-' + dd;
         };
+
+
+
 
         Users.prototype.getFullName = function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;
@@ -490,7 +494,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'AttendanceMo
                 scope.getPartText = function (ch) {
                     if (angular.isString(ch)) {
                         let obj = {};
-                        obj[scope.filedName] ={'like': ch + '%'};
+                        obj[scope.filedName] = {'like': ch + '%'};
 
                         scope.where = obj;
                         //scope.where = {"lastName": {'like': ch + '%'}};
@@ -664,7 +668,9 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'AttendanceMo
                 });
             }
         };
-    });
+    })
+
+
 //.directive("fileread", [function () {
 //    return {
 //        scope: {

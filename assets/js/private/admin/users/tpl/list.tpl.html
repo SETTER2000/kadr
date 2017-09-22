@@ -115,8 +115,12 @@
             </div>
         </div>
         <div class="col-md-3">
-            <select class="form-control" role="group"
-                    ng-model="modeSelect" ng-options="item.display for item in options track by item.value"></select>
+            <!--<select class="form-control" role="group"-->
+                    <!--ng-model="modeSelect" ng-options="item.display for item in options track by item.value">-->
+            <!--</select>-->
+            <md-select class="mr0" placeholder="Выбрать" ng-model="modeSelect" md-on-open="loadOptions()" style="min-width: 200px;">
+                <md-option ng-value="item" ng-repeat="item in options">{{item.display}}</md-option>
+            </md-select>
             <!--<div ng-switch on="modeSelect.value" style="margin-top:20px;">-->
             <!--<table class="table" ng-switch-when="table">-->
             <!--<thead>-->

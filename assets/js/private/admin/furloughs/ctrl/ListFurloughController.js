@@ -31,7 +31,7 @@
                  */
                     // Сортировка наоборот sort: 'name DESC'
                 $scope.items = Furloughs.query({limit: $scope.limit, sort: $scope.sort}, function (furloughs) {
-                    console.log('POSITIONS ITEMS:', furloughs);
+                    //console.log('POSITIONS ITEMS:', furloughs);
                     $scope.items = furloughs;
                 }, function (err) {
                     toastr.error(err, 'Ошибка ListPositionController!');

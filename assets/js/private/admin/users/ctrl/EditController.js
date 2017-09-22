@@ -1,7 +1,7 @@
 'use strict';
 angular.module('UserModule')
-    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$state', 'Users', 'moment', 'Positions', 'Departments', '$stateParams', 'FileUploader', '$rootScope',
-        function ($scope, $http, toastr, $interval, $state, Users, moment, Positions, Departments, $stateParams, FileUploader, $rootScope) {
+    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache','$state', 'Users', 'moment', 'Positions', 'Departments', '$stateParams', 'FileUploader', '$rootScope',
+        function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, $stateParams, FileUploader, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             var info = {
                 changed: 'Изменения сохранены!',
@@ -22,7 +22,20 @@ angular.module('UserModule')
 
 
 
-            
+
+            //$http.get('/user/getBoss',{name:'Александр', lname:'Петров', pname:'Вячеславович'})
+            //    .then(function onSuccess(sailsResponse){
+            //        console.log('sailsResponse: ', sailsResponse);
+            //        $scope.userList.contents = sailsResponse.data;
+            //    })
+            //    .catch(function onError(sailsResponse){
+            //        console.log('sailsResponse ERROR:', sailsResponse);
+            //    })
+            //    .finally(function eitherWay(){
+            //        $scope.userList.loading = false;
+            //    });
+
+
             if (!$scope.me.admin && !$scope.me.kadr) $state.go(info.redirectSelf);
 
             $scope.close = 1;
@@ -264,25 +277,29 @@ angular.module('UserModule')
                     $scope.close = true;
                 }
             };
-            //console.log( $stateParams.userId);
-            //var item = $scope.item = Users.get({id: $stateParams.userId}, function (users) {
+            $scope.getBoss = function() {
+                $http.post('/user/getBoss', $scope.item)
+                    .then(function (response) {
+                        console.log('RESPONSORY: ', response);
+                        $scope.boss= response.data;
+                    }, function(response) {
+                        $scope.data = response.data || 'Request failed';
+                        $scope.status = response.status;
+                    });
+            };
             $scope.refresh = function () {
                 let item = $scope.item = Users.get({id: $stateParams.userId}, function (users) {
                         $scope.users = users;
-                        console.log('users', users);
+                        $scope.getBoss();
                         item.getBirthday();
                         item.getDateInWork();
                         item.getFiredDate();
                         item.getDecree();
                     }
-                    //    function (err) {
-                    //
-                    //    toastr.error(err, 'Ошибка! User.EditController.refresh ');
-                    //}
                 );
 
-                console.log('refresh',$scope.item);
-                console.log('refresh1',$scope.users);
+                //console.log('refresh',$scope.item);
+                //console.log('refresh1',$scope.users);
             };
 
             $scope.delete2 = function (item) {

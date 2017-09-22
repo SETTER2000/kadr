@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     angular.module('UserModule')
-        .controller('ListController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$state', 'Users', 'Attendances', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $state, Users, Attendances) {
+        .controller('ListController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Users', 'Attendances', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Users, Attendances) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             //toastr.options = {
@@ -29,6 +29,8 @@
             $scope.defaultRows = 20;
             $scope.limitRows = [30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
+
+
 
             $scope.fioArea = 'ФИО';
             $scope.drArea = 'ДР11';
@@ -112,6 +114,18 @@
             $scope.listView = "/js/private/admin/users/views/home.admin.users.list.html";
             $scope.actionView = "/js/private/admin/users/views/home.admin.users.action.html";
             $scope.workView = "/js/private/admin/users/views/home.admin.users.work.html";
+
+            $scope.loadOptions = function () {
+                return $timeout(function () {
+                    $scope.options = $scope.options || [
+                            {display: "Работают", value: "work"},
+                            {display: "Уволены", value: "list"},
+                            {display: "Не активированы / Заблокированы", value: "action"},
+                            {display: "Все", value: "table"}
+                        ];
+                }, 650);
+            };
+
 
             $scope.getLastName = function (item) {
                 $http.post('/att', item)
@@ -209,12 +223,12 @@
 
                 $scope.items = Users.query($scope.query, function (users) {
                     //console.log('USER ITEMS:', users);
-                        $scope.items = users;
-                        $scope.objectName = users;
-                        //$scope.numPages = Math.floor(users.length / $scope.defaultRows) + 1;
-                    }, function (err) {
-                        toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
-                    });
+                    $scope.items = users;
+                    $scope.objectName = users;
+                    //$scope.numPages = Math.floor(users.length / $scope.defaultRows) + 1;
+                }, function (err) {
+                    toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
+                });
             };
 
             $scope.getMode = function (t) {

@@ -18,6 +18,7 @@
 //@link-hover-color: #286090;
 @link-hover-border-color: #cccccc;
 
+
 .fired {
   //color: @gray-lighter;
   color: @gray-light;
@@ -381,9 +382,6 @@ table.table.not-margin {
   opacity: .4;
 }
 
-.photo {
-  width: 20px;
-}
 
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
   background-color: #fff;
@@ -419,6 +417,51 @@ table.table.not-margin {
   background: #3d8eb9;
 }
 
+.event.celebration {
+  bottom: 40px;
+  content: "";
+  background: white;
+  left: calc(78.5%);
+}
 .event.busy {
   background: #f64747;
 }
+.event.busy.holiday {
+  background: #12b90a;
+}
+.md-select-menu-container {
+  z-index: 9000;
+}
+md-select.mr0{
+  margin: 0;
+}
+.photo {
+  -moz-box-flex: 0;
+  flex: 0 0 auto;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  box-sizing: content-box;
+  //margin-right: 10px;
+  //margin-top: 8px;
+  //margin-bottom: 8px;
+}
+.top-padding{
+  padding-top: 2px;
+}
+
+//.event.busy {
+//  background: rgba(240, 155, 78, 0.23);
+//}
+//
+//.event {
+//  position: absolute;
+//  width: 30px;
+//  height: 30px;
+//  /* border-radius: 150px; */
+//  bottom: 3px;
+//  left: calc(11.5%);
+//  content: " ";
+//  display: block;
+//  background: rgba(61, 142, 185, 0.15);
+//}

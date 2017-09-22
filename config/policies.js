@@ -28,7 +28,7 @@ module.exports.policies = {
     // Ограничение действий controllers
     // '*': true,
     UserController: {
-        '*': 'isLoggedIn',
+        //'*': 'isLoggedIn',
         create: ['isLoggedIn', 'isAdmin'],
         destroy: ['isLoggedIn', 'isAdmin'],
         //update: ['isLoggedIn'],

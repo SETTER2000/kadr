@@ -17,12 +17,12 @@ angular.module('UserModule').controller('AdministrationController', ['$scope', '
       })
       .catch(function onError(sailsResponse){
         console.log(sailsResponse);
-
       })
       .finally(function eitherWay(){
-
         $scope.userList.loading = false;
       });
+
+
 
   $scope.saveAdmin = function(id, change){
 

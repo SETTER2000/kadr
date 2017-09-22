@@ -1,7 +1,7 @@
 <!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
 <div class="col-sm-11  col-md-12  main">
     <div class="page-header">
-        <h2>{{items[0].scs()}}   {{exampleDate | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}<!--({{filtered.length}})-->
+        <h2>{{items[0].scs()}} {{exampleDate | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}<!--({{filtered.length}})-->
             <a ng-cloak href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">
                 всего:
                 <span ng-if="mode">SD{{(items | filter:{fired:true}).length}}</span>
@@ -79,15 +79,15 @@
     <!--searchText: {{searchText}}-->
     <!--LENGTH: {{charText.length}}-{{searchText.length}}-->
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="btn-toolbar" role="toolbar" aria-label="0">
                 <!--<div class="btn-group btn-group-sm " role="group" aria-label="1">-->
-                    <!--<button ng-repeat="ch in alfavit"-->
-                            <!--ng-click="getCharText(ch)" ng-bind="ch" type="button" class="btn btn-default">-->
-                    <!--</button>-->
-                    <!--<button ng-click="getCharText(0)" class="btn btn-default" type="button">-->
-                        <!--<span class="glyphicon glyphicon-remove"></span>-->
-                    <!--</button>-->
+                <!--<button ng-repeat="ch in alfavit"-->
+                <!--ng-click="getCharText(ch)" ng-bind="ch" type="button" class="btn btn-default">-->
+                <!--</button>-->
+                <!--<button ng-click="getCharText(0)" class="btn btn-default" type="button">-->
+                <!--<span class="glyphicon glyphicon-remove"></span>-->
+                <!--</button>-->
                 <!--</div>-->
                 <!--
                                         get-char-text="getCharText(ch)"-->
@@ -114,17 +114,34 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-1">
-            <select  class="form-control" role="group"
-                     ng-model="modeSelectYear"
-                     ng-options="item.display for item in options2 track by item.value">
-            </select>
-        </div>
+        <!--<div class="col-md-2">-->
+            <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
+                <!--&lt;!&ndash;<label>Представлено</label>&ndash;&gt;-->
+                <!--&lt;!&ndash;<md-select ng-model="modeSelect" md-selected-text="getSelectedText()">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<md-optgroup label="Представления">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<md-option ng-value="item.display" ng-repeat="item in options">{{item.display}}</md-option>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</md-optgroup>&ndash;&gt;-->
+                <!--&lt;!&ndash;</md-select>&ndash;&gt;-->
+            <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
+
+
+
+
+        <!--</div>-->
+        <!--<div class="col-md-1">-->
+        <!--<select  class="form-control" role="group"-->
+        <!--ng-model="modeSelectYear"-->
+        <!--ng-options="item.display for item in options2 track by item.value">-->
+        <!--</select>-->
+        <!--</div>-->
         <div class="col-md-2" ng-show="me.admin">
-            <select  class="form-control" role="group"
-                    ng-model="modeSelect"
-                     ng-options="item.display for item in options track by item.value">
-            </select>
+            <!--<select class="form-control" role="group"-->
+                    <!--ng-model="modeSelect"-->
+                    <!--ng-options="item.display for item in options track by item.value">-->
+            <!--</select>-->
+            <md-select class="mr0" placeholder="Выбрать" ng-model="modeSelect" md-on-open="loadOptions()" style="min-width: 200px;">
+                <md-option ng-value="item" ng-repeat="item in options">{{item.display}}</md-option>
+            </md-select>
             <!--<div ng-switch on="modeSelect.value" style="margin-top:20px;">-->
             <!--<table class="table" ng-switch-when="table">-->
             <!--<thead>-->
@@ -162,11 +179,11 @@
     <!--{{charText}}  {{where}}-->
 
     <!--<pagination num-pages="numPages"-->
-                <!--limit-rows="limitRows"-->
-                <!--default-rows="defaultRows"-->
-                <!--length-object="items.length"-->
-                <!--current-page="currentPage"-->
-                <!--on-select-page="selectCount=selectCount+1">-->
+    <!--limit-rows="limitRows"-->
+    <!--default-rows="defaultRows"-->
+    <!--length-object="items.length"-->
+    <!--current-page="currentPage"-->
+    <!--on-select-page="selectCount=selectCount+1">-->
     <!--</pagination>-->
 
     <div class="row">
@@ -194,32 +211,44 @@
     </div>
 
     <!--<div class="row" ng-cloak>-->
-        <!--<div class="col-md-12">-->
-            <!--<div class="panel panel-info">-->
-                <!--<div class="panel-heading">-->
+    <!--<div class="col-md-12">-->
+    <!--<div class="panel panel-info">-->
+    <!--<div class="panel-heading">-->
 
 
-
-
-                <!--</div>-->
-                <!--<div class="panel-body">-->
-                    <div  ng-switch on="modeSelect.value" style="margin-top:20px;">
-                        <div ng-switch-when="table">
-                            <ng-include src="tableView"></ng-include>
-                        </div>
-                        <div ng-switch-when="action">
-                            <ng-include src="actionView"></ng-include>
-                        </div>
-                        <div ng-switch-when="work">
-                            <ng-include src="workView"></ng-include>
-                        </div>
-                    </div>
-                </div>
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-    <div ui-view="list"></div>
-    <div ui-view="attendance"></div>
-
-    <pre class="pull-right" ng-if="debug"><h2>{{items| json}}</h2></pre>
+    <!--</div>-->
+    <!--<div class="panel-body">-->
+    <div ng-switch on="modeSelect.value" style="margin-top:20px;">
+        <div ng-switch-when="table">
+            <ng-include src="tableView"></ng-include>
+        </div>
+        <div ng-switch-when="action">
+            <ng-include src="actionView"></ng-include>
+        </div>
+        <div ng-switch-when="work">
+            <ng-include src="workView"></ng-include>
+        </div>
+    </div>
 </div>
+<!--<md-list ng-controller="ListController" ng-cloak>-->
+    <!--<md-subheader class="md-no-sticky">Avatar with Secondary Action Icon</md-subheader>-->
+    <!--<md-list-item ng-repeat="item in items" ng-click="goToPerson(person.name, $event)" class="noright">-->
+        <!--<img alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="md-avatar" />-->
+        <!--<p>{{ item.getFullName() }}</p>-->
+        <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
+        <!--<md-icon md-svg-icon="communication:email"  ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>-->
+        <!--<md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>-->
+    <!--</md-list-item>-->
+<!--</md-list>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+<div ui-view="list"></div>
+<div ui-view="attendance"></div>
+
+<pre class="pull-right" ng-if="debug"><h2>{{items| json}}</h2></pre>
+
+</div>
+
+

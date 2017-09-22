@@ -244,6 +244,7 @@ module.exports.routes = {
     //'GET /admin/attendances/calendar/:id': 'PageController.showHomePage',
 
     'GET /user/adminUsers': 'UserController.adminUsers',
+    'POST /user/getBoss': 'UserController.bossLDAP',
 
     // !!! НЕ УДАЛЯТЬ !!!
     //'GET /att': 'Attendance.getQuery',

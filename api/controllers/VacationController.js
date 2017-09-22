@@ -82,7 +82,8 @@ module.exports = {
             daysSelectHoliday: +req.param('daysSelectHoliday'),
             whomCreated: req.session.me,
             whomUpdated: null,
-            action: req.param('action')
+            action: req.param('action'),
+            status:  'pending'
             //action: (req.param('action')) ? req.param('action') : true
         };
 

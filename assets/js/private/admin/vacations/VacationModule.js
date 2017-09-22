@@ -42,8 +42,6 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                     }
                 }
             })
-
-
         ;
     })
     .constant('CONF_MODULE_VACATION', {baseUrl: '/vacations/:vacationId'})
@@ -83,6 +81,9 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
         Vacations.prototype.sc = function () {
             return this.section;
         };
+        //Vacations.prototype.getHoliday = function () {
+        //    return this.getHoliday('58a461e66723246b6c2bc61b');
+        //};
         Vacations.prototype.scs = function () {
             return this.sections;
         };
@@ -135,6 +136,46 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
         };
         return Vacations;
     })
+    .filter("getICO", function () {
+        return function (value) {
+            //Одобрено 	    (APPROVE)   approved
+            //Отказано 	    (REJECT)    denied
+            //Подтверждено 	(CONFIRM)   confirmed
+            //Перенесён 	(TRANSFER)  moved
+            //Ожидание 	    (wait_one)  pending
+            let o = {
+                approved: 'glyphicon glyphicon-thumbs-up',
+                denied: 'glyphicon glyphicon-thumbs-down',
+                confirmed: 'glyphicon glyphicon-ok',
+                pending: 'glyphicon glyphicon-hourglass',
+                moved: 'glyphicon glyphicon-share-alt'
+            };
 
+            return o[value];
+
+        }
+    })
+    .filter("changeName", function () {
+        return function (value) {
+            //Одобрено 	    (APPROVE)   approved
+            //Отказано 	    (REJECT)    denied
+            //Подтверждено 	(CONFIRM)   confirmed
+            //Перенесён 	(TRANSFER)  moved
+            //Ожидание 	    (wait_one)  pending
+            let o = {
+                approved: 'Одобрено',
+                denied: 'Отказано',
+                confirmed: 'Подтверждено',
+                moved: 'Перенесён',
+                pending: 'Ожидание'
+            };
+            return o[value];
+        }
+    })
+    .directive('kadrCalendar', function () {
+        return {
+            restrict: 'C',
+        }
+    })
 ;
 

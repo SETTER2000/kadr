@@ -4,6 +4,10 @@
     <div class="page-header">
         <h2>
             <p ng-if="item.lastName" ng-class="{'fired':item.fired}">{{item.getFullName()}}<span ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
+                <small class="pull-right top-padding">Руководитель: &nbsp;&nbsp;
+                    <img ng-if="boss.avatarUrl" title="{{boss.positions[0].name}}: {{boss.lastName}} {{boss.firstName}} {{boss.patronymicName}}" alt="{{ boss.getFullName() }}" ng-src="{{ boss.avatarUrl }}" class="photo"/>
+                    <img ng-if="!boss.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>
+                </small>
             </p>
             <p ng-if="!item.lastName">Новый сотрудник</p>
             <a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button"> Работает c {{item.dateInWork |
@@ -20,7 +24,9 @@
                     <span class="glyphicon glyphicon-list"></span> Список
                 </a>
             </div>
+
         </h2>
+
     </div>
     <div class="row">
 
@@ -57,10 +63,10 @@
 
 
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
-            <!--<div  class="fx-fade-right" ng-class="{'col-md-6':close, 'col-md-12':!close}">-->
-            <!--<div  class="fx-fade-down" ng-class="{'col-md-6':close, 'col-md-12':!close}">-->
-            <!--<div  class="fx-fade-up fx-ease-sine" ng-class="{'col-md-6':close, 'col-md-12':!close}">-->
-            <!--<div  class="fx-fade-normal" ng-class="{'col-md-6':close, 'col-md-12':!close}">-->
+
+
+            <!-- E D I T / C R E A T E  F O R M -->
+
             <div class="panel" ng-class="{'panel-warning':!item.fired, 'panel-default':item.fired}">
                 <div class="panel-heading">
                     <h3 class="panel-title">Редактировать
@@ -96,52 +102,6 @@
                             <input type="text" class="form-control" required ng-model="item.patronymicName">
                             <!--<span id="helpBlock3" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
                         </div>
-                        <!--<div class="row">-->
-                        <!--<div class="col-md-3">-->
-                        <!--<div class="form-group ">-->
-
-                        <!--<label class="control-label inline" for="inputSuccess4">-->
-
-
-                        <!--&lt;!&ndash;<input type="date" min="1950-01-01" max="2003-01-01" class="form-control" ng-model="item.birthday">&ndash;&gt;-->
-                        <!--<input class="form-control  flatpickr " ng-flatpickr-->
-                        <!--fp-opts="dateOpts"-->
-                        <!--fp-on-setup="toggleBlur(item)"-->
-                        <!--ng-model="item.birthday ">-->
-                        <!--</label>-->
-                        <!--&lt;!&ndash;<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>&ndash;&gt;-->
-                        <!--</div>-->
-                        <!--&lt;!&ndash;<div class=flatpickr>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<input ng-flatpickr type="text" placeholder="Select Date.." data-input&ndash;&gt;-->
-                        <!--&lt;!&ndash;fp-opts="dateOpts"&ndash;&gt;-->
-                        <!--&lt;!&ndash;fp-on-setup="toggleBlur(fpItem)"&ndash;&gt;-->
-                        <!--&lt;!&ndash;ng-model="date.current"> &lt;!&ndash; input is mandatory &ndash;&gt;&ndash;&gt;-->
-
-                        <!--&lt;!&ndash;<a class="input-button" title="toggle" data-toggle>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<i class="icon-calendar"></i>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-
-                        <!--&lt;!&ndash;<a class="input-button" title="clear" data-clear>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<spani class="glyphicon glyphicon-remove" ></spani>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                        <!--</div>-->
-                        <!--&lt;!&ndash;<div class="col-md-6">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<div class="form-group " ng-if="item.birthday">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<label class="control-label" for="inputSuccess5">Дата рождения </label>&ndash;&gt;-->
-
-                        <!--&lt;!&ndash;<div><a href="#" class="btn btn-default  disabled" role="button">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<span class="glyphicon " ng-class="{ 'glyphicon-gift':item.birthday}"&ndash;&gt;-->
-                        <!--&lt;!&ndash;aria-hidden="true"></span>&ndash;&gt;-->
-                        <!--&lt;!&ndash;{{item.birthday | date:'dd.MM.yyyy'}}&ndash;&gt;-->
-                        <!--&lt;!&ndash;</a></div>&ndash;&gt;-->
-
-                        <!--&lt;!&ndash;&lt;!&ndash;<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>&ndash;&gt;&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                        <!--</div>-->
-
-
                         <div class="form-group">
                             <label class="control-label">
                                 Дата рождения
@@ -162,7 +122,6 @@
                         <div class="form-group ">
                             <label class="control-label" for="inputSuccess6">Логин</label>
                             <input type="text" class="form-control" ng-model="item.login">
-                            <!--<span id="helpBlock5" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
                         </div>
                         <div class="form-group ">
                             <label class="control-label" for="inputSuccess7">Email</label>
@@ -203,69 +162,6 @@
                             <!--<pre>P O S I T I O N S : {{items | limitTo:5 | json }}</pre>-->
                         </div>
 
-                        <!--<div ng-controller="ListFurloughController" class="form-group ">-->
-                            <!--<label class="control-label" ng-bind="items[0].sc()"></label>-->
-                            <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
-
-                            <!--<div class="form-inline" ng-repeat="furlough in item.furloughs">-->
-                                <!--<div class="form-group">-->
-                                    <!--<select class="form-control" ng-model="furlough.id">-->
-                                        <!--<option ng-repeat="option in items | filter:{action:true}" value="{{option.id}}">{{option.name}}-->
-                                        <!--</option>-->
-                                    <!--</select>-->
-                                <!--</div>-->
-                                <!--<div class="form-group">-->
-                                    <!--<label class="sr-only" for="exampleInputPassword33"></label>-->
-                                    <!--&lt;!&ndash;<input class="form-control" type="text" id="exampleInputPassword33" ng-model="furlough.value" required>&ndash;&gt;-->
-                                    <!--с-->
-                                    <!--<input type="text" class="form-control flatpickr" ng-flatpickr-->
-                                           <!--fp-opts="dateOpts2"-->
-                                           <!--fp-on-setup="toggleBlur(item)"-->
-                                           <!--ng-model="furlough.from">-->
-                                    <!--по-->
-                                    <!--<input type="text" class="form-control flatpickr" ng-flatpickr-->
-                                           <!--fp-opts="dateOpts2"-->
-                                           <!--fp-on-setup="toggleBlur(item)"-->
-                                           <!--ng-model="furlough.to">-->
-                                <!--</div>-->
-                                <!--<button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-
-
-                        <!--<div class="form-group ">-->
-                            <!--<label>Отпуск: </label>-->
-                            <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
-
-                            <!--<div class="form-inline" ng-repeat="furlough in item.fur">-->
-                                <!--<div class="form-group">-->
-                                    <!--<select class="form-control" ng-model="furlough.type">-->
-                                        <!--<option>Очередной отпуск</option>-->
-                                        <!--<option>Отпуск по уходу за ребёнком</option>-->
-                                        <!--<option>Отгул</option>-->
-                                    <!--</select>-->
-                                <!--</div>-->
-                                <!--<div class="form-group">-->
-                                    <!--<label class="sr-only" for="exampleInputPassword33"></label>-->
-                                    <!--&lt;!&ndash;<input class="form-control" type="text" id="exampleInputPassword33" ng-model="furlough.value" required>&ndash;&gt;-->
-                                    <!--с-->
-                                    <!--<input type="text" class="form-control flatpickr" ng-flatpickr-->
-                                           <!--fp-opts="dateOpts2"-->
-                                           <!--fp-on-setup="toggleBlur(item)"-->
-                                           <!--ng-model="furlough.from">-->
-                                    <!--по-->
-                                    <!--<input type="text" class="form-control flatpickr" ng-flatpickr-->
-                                           <!--fp-opts="dateOpts2"-->
-                                           <!--fp-on-setup="toggleBlur(item)"-->
-                                           <!--ng-model="furlough.to">-->
-                                <!--</div>-->
-                                <!--<button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        
-
-
                         <div class="form-group ">
                             <label>Телефон:</label>
                             [ <a href="#" ng-click="addContact()">добавить</a> ]
@@ -286,38 +182,36 @@
                             </div>
                         </div>
 
-                        <!--<div class="form-group">-->
-                            <!--<label class="control-label">-->
-                                <!--Отпуск по уходу за ребенком c-->
-                            <!--</label>-->
-                            <!--<div class="input-group">-->
-                                <!--<input type="text" class="form-control flatpickr" ng-flatpickr-->
-                                       <!--fp-opts="dateOpts4"-->
-                                       <!--fp-on-setup="toggleBlur(item)"-->
-                                       <!--ng-model="item.decree">-->
-                            <!--<span class="input-group-btn">-->
-                              <!--<button class="btn btn-default" type="button" ng-click="removeDecree(item)">-->
-                                  <!--<span class="glyphicon glyphicon-remove"></span>-->
-                              <!--</button>-->
-                            <!--</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
                         <div class="form-group ">
                             <label class="control-label" for="inputSuccess10">Номер машины</label>
                             <input type="text" class="form-control" ng-model="item.numCar">
                         </div>
-                        <div class="form-group ">
-                            <label class="control-label" for="inputSuccess10">Марка машины</label>
-                            <input type="text" class="form-control" ng-model="item.brandCar">
+                        <div ng-if="item.numCar">
+                            <div class="form-group ">
+                                <label class="control-label" for="inputSuccess10">Марка машины</label>
+                                <input type="text" class="form-control" ng-model="item.brandCar">
+                            </div>
+                            <div class="form-group ">
+                                <label class="control-label" for="inputSuccess10">Парковка</label>
+                                <input type="text" class="form-control" ng-model="item.park">
+                            </div>
+                            <div class="form-group ">
+                                <label class="control-label" for="inputSuccess10">Парковочное место</label>
+                                <!--<input type="number" class="form-control" min=0 ng-model="item.parking">-->
+                                <md-slider-container ng-disabled="isDisabled">
+                                    <md-icon md-svg-icon="device:brightness-low"></md-icon>
+                                    <md-slider ng-model="item.parking" min="0" max="1000" step="1" aria-label="Disabled 1" flex md-discrete
+                                               ng-readonly="readonly"></md-slider>
+
+                                    <md-input-container>
+                                        <input flex type="number" min="0" max="1000" step="1" ng-model="item.parking" aria-label="green"
+                                               aria-controls="green-slider">
+                                    </md-input-container>
+                                </md-slider-container>
+                                <!--<md-checkbox ng-model="isDisabled">Is disabled</md-checkbox>-->
+                            </div>
                         </div>
-                        <div class="form-group ">
-                            <label class="control-label" for="inputSuccess10">Парковка</label>
-                            <input type="text" class="form-control" ng-model="item.park">
-                        </div>
-                        <div class="form-group ">
-                            <label class="control-label" for="inputSuccess10">Парковочное место</label>
-                            <input type="number" class="form-control" ng-model="item.parking">
-                        </div>
+
                         <div class="form-group">
                             <label class="control-label">
                                 Принят на работу
@@ -361,7 +255,7 @@
 
                         <div class="form-group">
                             <label class="control-label" for="inputSuccess25">
-                                Комната
+                                Комната   ssss: {{item.getBoss()}}
                             </label>
                             <input required type="text" class="form-control" ng-model="item.room">
                         </div>
@@ -461,85 +355,86 @@
 
         </div>
         <div class="col-md-6" ng-if="item.id">
+
+
+            <!-- U P L O A D E R -->
+
             <div ng-switch on="modeSelect.value">
                 <div ng-switch-when="uploader">
                     <ng-include src="uploaderView"></ng-include>
                 </div>
             </div>
-        </div>
 
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div ng-show="me.admin" class="col-md-6" ng-if="close">
 
-                <div class="panel"
-                     ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Сменить пароль
+            <!-- C H A N G E  P A S S -->
 
-                        </h3>
-                    </div>
-                    <!-- Error state -->
-                    <div class="alert alert-info toggle" ng-show="editProfile.changePassword.errorMsg">
-                        <h4>Oops!</h4>
-                        <code>
-                            {{editProfile.changePassword.errorMsg}}
-                        </code>
-                    </div>
-                    <form ng-submit="changeMyPassword()" name="changePassword">
-                        <div class="control-group form-group col-md-6"
-                             ng-class="{'has-error':changePassword.password.$invalid && changePassword.password.$dirty}">
-                            <label>Новый пароль</label>
-                            <input type="password" class="form-control" placeholder="не менее 6 знаков" name="password"
-                                   ng-model="editProfile.properties.password" id="password" required ng-minlength="6"
-                                   compare-to="editProfile.properties.confirmPassword">
+            <div ng-if="me.admin" class="panel"
+                 ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Сменить пароль
+
+                    </h3>
+                </div>
+                <!-- Error state -->
+                <div class="alert alert-info toggle" ng-show="editProfile.changePassword.errorMsg">
+                    <h4>Oops!</h4>
+                    <code>
+                        {{editProfile.changePassword.errorMsg}}
+                    </code>
+                </div>
+                <form ng-submit="changeMyPassword()" name="changePassword">
+                    <div class="control-group form-group col-md-6"
+                         ng-class="{'has-error':changePassword.password.$invalid && changePassword.password.$dirty}">
+                        <label>Новый пароль</label>
+                        <input type="password" class="form-control" placeholder="не менее 6 знаков" name="password"
+                               ng-model="editProfile.properties.password" id="password" required ng-minlength="6"
+                               compare-to="editProfile.properties.confirmPassword">
                 <span class="help-block has-error" ng-if="changePassword.password.$dirty">
                   <span ng-show="changePassword.password.$error.required">Введите пароль.</span>
                   <span ng-show="changePassword.password.$error.minlength">Пароль должен содержать не менее 6 символов.</span>
                 </span>
-                        </div>
-                        <div class="control-group form-group col-md-6">
-                            <label>Повторить пароль</label>
-                            <input type="password" class="form-control" placeholder="ещё раз" name="confirmation"
-                                   ng-model="editProfile.properties.confirmPassword" required>
+                    </div>
+                    <div class="control-group form-group col-md-6">
+                        <label>Повторить пароль</label>
+                        <input type="password" class="form-control" placeholder="ещё раз" name="confirmation"
+                               ng-model="editProfile.properties.confirmPassword" required>
                 <span class="help-block has-error" ng-if="changePassword.confirmation.$dirty">
                   <span ng-show="changePassword.password.$error.compareTo">Password must match.</span>
                   <span ng-show="changePassword.confirmation.$error.required">Confirmation password is required.</span>
                 </span>
-                        </div>
-                        <button type="submit" class="btn btn-lg not-border btn-default btn-block" ng-disabled="changePassword.$invalid">
-                            <span ng-show="changePasswordForm.saving" class="overlord-loading-spinner fa fa-spinner"></span>
-                            <span ng-show="changePasswordForm.saving">Сохраняю...</span>
-                            <span ng-hide="changePasswordForm.saving" class="btn-text">Сохранить</span>
-                        </button>
-                    </form>
-                </div>
-
-
-                <div class="panel"
-                     ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Информация
-
-                        </h3>
                     </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr ng-repeat="(key, value) in item">
-                                    <th>{{key}}</th>
-                                    <td>{{value | date:'dd.MM.yyyy' }}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-
+                    <button type="submit" class="btn btn-lg not-border btn-default btn-block" ng-disabled="changePassword.$invalid">
+                        <span ng-show="changePasswordForm.saving" class="overlord-loading-spinner fa fa-spinner"></span>
+                        <span ng-show="changePasswordForm.saving">Сохраняю...</span>
+                        <span ng-hide="changePasswordForm.saving" class="btn-text">Сохранить</span>
+                    </button>
+                </form>
             </div>
+
+
+            <!-- I N F O  P A N E L -->
+
+            <div ng-if="me.admin" class="panel"
+                 ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Информация</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr ng-repeat="(key, value) in item">
+                                <th>{{key}}</th>
+                                <td>{{value | date:'dd.MM.yyyy' }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
     </div>
+
 </div>
 
 

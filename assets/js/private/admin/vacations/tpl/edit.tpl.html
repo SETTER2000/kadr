@@ -42,6 +42,9 @@
                                 </label>
                             </div>
                         </div>
+
+
+
                         <div ng-controller="ListFurloughController" class="form-group ">
                             <label class="control-label" ng-bind="items[0].sc()"></label>
                             <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
@@ -118,34 +121,30 @@
                 </div>
             </div>
         </div>
-
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div ng-show="me.admin" class="col-md-6" ng-if="close">
-                <div class="panel"
-                     ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            Информация
-                        </h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr ng-repeat="(key, value) in item">
-                                    <th>{{key}}</th>
-                                    <td>{{value |date:'dd.MM.yyyy H:mm:ss' }}</td>
-                                </tr>
-                            </table>
-                        </div>
+        <div ng-show="me.admin" class="col-md-6" ng-if="close">
+            <div class="panel"
+                 ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Информация
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr ng-repeat="(key, value) in item">
+                                <th>{{key}}</th>
+                                <td>{{value |date:'dd.MM.yyyy H:mm:ss' }}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-
-
             </div>
+
+
         </div>
     </div>
+
 </div>
 
 
