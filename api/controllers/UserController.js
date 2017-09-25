@@ -1116,7 +1116,7 @@ module.exports = {
                     return res.negotiate(err);
                 }
                 ldapUser.on('searchEntry', function (entry) {
-                    console.log('entry: ' + JSON.stringify(entry.object));
+                    //console.log('entry: ' + JSON.stringify(entry.object));
                     empl = entry.object;
                 });
 
@@ -1135,9 +1135,9 @@ module.exports = {
                         clientSearchLDAP.unbind(function () {
                             clientSearchLDAP.destroy();
                         });
-                        console.log('Найден пользователь:', empl);
+                        console.log('Найден пользователь:', empl.manager);
                         // CN=Еремин Сергей,OU=Users,OU=Office users,DC=landata,DC=ru
-                        if(empl){
+                        if(!empl.manager) return res.forbidden(result.errorMessage);
                             let arr = empl.manager.split(',');
                             let arr2 = arr[0].split('=');
                             let arrFi = arr2[1].split(' ');
@@ -1150,7 +1150,7 @@ module.exports = {
                                     return res.ok(user);
                                 });
                             //return res.ok(arr2[1]);
-                        }
+
                         //return res.ok();
                     }
                     //return res.forbidden(result.errorMessage);

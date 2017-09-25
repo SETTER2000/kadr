@@ -4,9 +4,9 @@
     <div class="page-header">
         <h2>
             <p ng-if="item.lastName" ng-class="{'fired':item.fired}">{{item.getFullName()}}<span ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
-                <small  class="pull-right top-padding">{{boss.lastName}} {{boss.firstName}} {{boss.patronymicName}}: &nbsp;&nbsp;
-                    <a href="/admin/users/edit/{{boss.id}}"><img ng-if="boss.avatarUrl" title="{{boss.positions[0].name}}" alt="{{ boss.getFullName() }}" ng-src="{{ boss.avatarUrl }}" class="photo"/>
-                    <img ng-if="!boss.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/></a>
+                <small   class="pull-right top-padding">{{boss.lastName}} {{boss.firstName}} {{boss.patronymicName}} &nbsp;&nbsp;
+                    <a  href="/admin/users/edit/{{boss.id}}"><img  ng-if="boss.avatarUrl" title="{{boss.positions[0].name}}" alt="{{ boss.getFullName() }}" ng-src="{{ boss.avatarUrl }}" class="photo"/>
+                   <span ng-if="!(item.positions[0].name == 'Генеральный директор')"> <img ng-if="!boss.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/></span></a>
                 </small>
             </p>
             <p ng-if="!item.lastName">Новый сотрудник</p>
@@ -29,39 +29,6 @@
 
     </div>
     <div class="row">
-
-
-        <!---->
-        <!---->
-        <!--<form action="/user/avatarUpload" enctype="multipart/form-data" method="post">-->
-        <!--<input type="file" name="avatar" multiple="multiple"><br>-->
-        <!--<input type="submit" value="Загрузить">-->
-        <!--</form>-->
-
-        <!--<div ng-show="uploader.isHTML5">-->
-        <!--&lt;!&ndash; 3. nv-file-over uploader="link" over-class="className" &ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="well my-drop-zone" nv-file-over="" uploader="uploader">&ndash;&gt;-->
-        <!--&lt;!&ndash;Зона перетаскивания без фильтра&ndash;&gt;-->
-        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-        <!--&lt;!&ndash; Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" &ndash;&gt;-->
-        <!--<div nv-file-drop="" uploader="uploader" options="{ url: '/file/upload' }">-->
-        <!--<div nv-file-over="" uploader="uploader" over-class="another-file-over-class" class="well my-drop-zone">-->
-        <!--Перетащи аватар сюда-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-
-        <!--<div ui-view="uploader"></div>-->
-        <!--<div class="file-upload">-->
-        <!--<label>-->
-        <!--<input type="file"  nv-file-select="" uploader="uploader" multiple />-->
-        <!--<span>Выбрать прайс</span>-->
-        <!--</label>-->
-        <!--</div>-->
-
-
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
 
 
