@@ -365,7 +365,7 @@ module.exports = {
                     birthday: req.param('birthday'),
                     contacts: req.param('contacts'),
                     subdivision: req.param('subdivision'),
-                    position: req.param('position'),
+                    positions: req.param('positions'),
                     pfr: req.param('pfr'),
                     parking: req.param('parking'),
                     park: req.param('park'),

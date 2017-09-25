@@ -222,9 +222,9 @@
 
                         <div class="form-group">
                             <label class="control-label" for="inputSuccess25">
-                                Комната   ssss: {{item.getBoss()}}
+                                Комната:
                             </label>
-                            <input required type="text" class="form-control" ng-model="item.room">
+                            <input  type="text" class="form-control" ng-model="item.room">
                         </div>
                         <div ng-if="(me.admin)" class="row" ng-if="item.id">
                             <div class="col-md-5">
@@ -321,12 +321,12 @@
             </div>
 
         </div>
-        <div class="col-md-6" ng-if="item.id">
+        <div class="col-md-6" >
 
 
             <!-- U P L O A D E R -->
 
-            <div ng-switch on="modeSelect.value">
+            <div ng-if="item.id" ng-switch on="modeSelect.value">
                 <div ng-switch-when="uploader">
                     <ng-include src="uploaderView"></ng-include>
                 </div>
