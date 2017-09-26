@@ -130,8 +130,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
         };
 
 
-
-
         Users.prototype.getFullName = function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;
         };
@@ -286,12 +284,30 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             }
         }
     })
+    .filter('ownerVacation', function () {
+        /**
+         * Фильтр отдаёт персонажей с моментом загрузки больше или равно 6 месяцам
+         */
+        return function (value) {
+            // isArray - проверка, что переменная является массивом
+            if (angular.isArray(value)) {
+                var arr = [];
+                value.forEach(function (v, k, ar) {
+                    if (moment().diff(moment(v.dateInWork), 'months') >= 6)arr.push(v);
+                });
+                return arr;
+            }
+            return value;
+        }
+    })
     .directive('pagination', function () { // функция компиляции директивы (фабричная функция)
         return {
             restrict: 'E',
             scope: {
                 //numPages: '=', // кол-во страниц (кнопок)
                 showBt: '=',// true|false показывать или нет кнопку добавления объекта, например юзера.
+                showStr: '=',// true|false показывать или нет строку об отпусках. =?bind - не обязательная привязка значения
+                days: '=', // кол-во дней взятых на отпуск в текущем году
                 urlBt: '=',// ссылка для кнопки.
                 defaultRows: '=', // по умолчанию сколько строк должно показываться на одной странице
                 limitRows: '=',  // массив содержащий значения кол-ва строк для одной страницы [20,30,50,70,100]
@@ -304,18 +320,23 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             templateUrl: '/js/private/admin/users/views/pagination.html',
             replace: true,
             link: function (scope) {
-
                 scope.$watch('added', function (value) {
                     scope.added = value;
                 });
-
                 scope.$watch('showBt', function (value) {
                     scope.showBt = value;
+                });
+                scope.$watch('showStr', function (value) {
+                    console.log('showStr: ', value);
+                    scope.showStr = value;
+                });
+                scope.$watch('days', function (value) {
+                    console.log('days: ', value);
+                    scope.days = value;
                 });
                 scope.$watch('urlBt', function (value) {
                     scope.urlBt = value;
                 });
-
                 scope.$watch('lengthObject', function (value) {
                     scope.numPages = Math.floor(value / scope.defaultRows) + 1;
                     //scope.pages = [];
@@ -326,7 +347,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     //    scope.selectPage(value);
                     //}
                 });
-
 
                 scope.$watch('numPages', function (value) {
                     scope.pages = [];
@@ -349,6 +369,21 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                         scope.numPages = Math.floor(scope.lengthObject / scope.defaultRows) + 1;
                     }
                 });
+
+
+                //scope.getDays= function () {
+                //    $http.get('/vacation/getDays').then(function succesCallback(response) {
+                //            console.log('RESP11:',response.data);
+                //            //if (response.data === '00:00:00') {
+                //            //    $scope.uploaderButtonPrice = true;
+                //            //}
+                //            //$scope.datePrice = response.data;
+                //        },
+                //        function errorCallback(response) {
+                //            console.log('RESP00:',response);
+                //        }
+                //    );
+                //};
                 scope.noPrevious = function () {
                     return scope.currentPage === 1;
                 };
@@ -361,9 +396,15 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 scope.isActiveRow = function (row) {
                     return scope.defaultRows === row;
                 };
-
                 scope.showBtn = function () {
                     return scope.showBt;
+                };
+
+                scope.showString = function () {
+                    return scope.showStr;
+                };
+                scope.getDays = function () {
+                    return scope.days;
                 };
                 scope.urlBtn = function () {
                     return scope.urlBt;

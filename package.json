@@ -49,6 +49,7 @@
     "moment-recur": "^1.0.5",
     "moment-weekday-calc": "^1.1.3",
     "mongo": "^0.1.0",
+    "mongodb": "^2.2.31",
     "mongoose": "^4.11.3",
     "multer": "^1.3.0",
     "mysql": "^2.13.0",

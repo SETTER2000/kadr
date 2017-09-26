@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     angular.module('VacationModule')
-        .controller('ListVacationController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope",'$timeout', '$state', 'Vacations', 'Users', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Vacations, Users) {
+        .controller('ListVacationController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Vacations', 'Users', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Vacations, Users) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             //toastr.options = {
@@ -36,14 +36,15 @@
             $scope.statusArea = 'Статус';
             $scope.lastNameArea = 'Владелец';
             $scope.createdAt = 'Создан';
-            $scope.updatedAt = 'Обнавлён';
-            $scope.whomUpdatedArea = 'Кем обновлён';
+            $scope.updatedAt = 'Изменён';
+            $scope.whomUpdatedArea = 'Кем изменён';
             $scope.whomCreatedArea = 'Кем создан';
             $scope.actionsArea = 'Действие';
             $scope.infoArea = 'Информация';
             $scope.daysSelectHolidayArea = 'Дней';
             $scope.added = 'Добавить отпуск';
             $scope.showBt = 1;
+            $scope.showStr = 1;
             $scope.urlBt = 'home.admin.vacations.create';
 
             $scope.sort = 'lastName';
@@ -109,15 +110,22 @@
                     {display: "2021", value: "2021"}
                 ];
             $scope.modeSelectYear = $scope.options2[2];
-            //$scope.getSelectedText = function() {
-            //    console.log('modeSelect', $scope.modeSelect);
-            //    if (angular.isObject($scope.modeSelect)) {
-            //        return  $scope.modeSelect.display;
-            //    } else {
-            //        return "Выбрать";
-            //    }
-            //};
 
+            $scope.getDays = function () {
+                $http.get('/vacation/getDays').then(function success(response) {
+                        console.log('RESP11:', response.data);
+                        $scope.days = 28-response.data.count;
+                        //if (response.data === '00:00:00') {
+                        //    $scope.uploaderButtonPrice = true;
+                        //}
+                        //$scope.datePrice = response.data;
+                    },
+                    function errorCallback(response) {
+                        console.log('RESP00:', response);
+                    }
+                );
+            };
+            $scope.getDays();
             $scope.options =
                 [
                     {display: "Активированы", value: "work"},
@@ -134,7 +142,7 @@
 
             //$scope.option = null;
             //$scope.options = null;
-            $scope.loadOptions = function() {
+            $scope.loadOptions = function () {
                 // Use timeout to simulate a 650ms request.
                 return $timeout(function () {
 
@@ -250,10 +258,10 @@
                     //console.log('Owner: ', vacations[0].getOwner());
                     //console.log('eeeeeeeeee111', vacations.length);
                     //$scope.objectName = vacations;
-                    $scope.objectName=[];
+                    $scope.objectName = [];
 
                     //////if (!angular.isDefined(vacations)) toastr.error('Нет объекта для обработки.', 'Ошибка!');
-                    for(var u=0; u < vacations.length; u++) {
+                    for (var u = 0; u < vacations.length; u++) {
                         //console.log('Owner: ', vacations[0].getOwner());
                         $scope.objectName.push(vacations[u].getOwner());
                     }

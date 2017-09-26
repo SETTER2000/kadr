@@ -3,11 +3,13 @@
 <div class="col-sm-11  col-md-12  main">
     <div class="page-header">
         <h2>
-            <p ng-class="{'fired':!item.action}">{{item.sc()}}: {{item.name}} <span ng-if="daysSelectHoliday">({{daysSelectHoliday}})</span><span ng-if="!item.action"
-                                                                                                           ng-bind="item.deactivation()"></span>
+            <p ng-class="{'fired':!item.action}">{{item.sc()}}: {{item.name}} <span ng-if="daysSelectHoliday">({{daysSelectHoliday}})</span><span
+                    ng-if="!item.action"
+                    ng-bind="item.deactivation()"></span>
             </p>
 
-            <a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.owner.fired" role="button"> Работает c {{item.owner.dateInWork |
+            <a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.owner.fired" role="button"> Работает c {{item.owner.dateInWork
+                |
                 date:'dd.MM.yyyy' }} <span ng-if="item.periodWork()">({{item.periodWork()}})</span></a>
             <a href="#" class="btn btn-info btn-xs " ng-if="item.decree"
                title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>
@@ -44,23 +46,40 @@
                         </div>
 
 
+                        <!-- T Y P E  F U R L O U G H -->
 
                         <div ng-controller="ListFurloughController" class="form-group ">
                             <label class="control-label" ng-bind="items[0].sc()"></label>
                             <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
 
                             <!--<div class="form-inline" ng-repeat="furlough in item.furloughs">-->
-                                <!--<div class="form-group">-->
-                                    <select ng-disabled="edit" class="form-control" ng-model="item.furlough.id">
-                                        <option ng-repeat="option in items | filter:{action:true}" value="{{option.id}}">
-                                            {{option.name}}
-                                        </option>
-                                    </select>
-                                <!--</div>-->
+                            <!--<div class="form-group">-->
+                            <select ng-disabled="edit" class="form-control" ng-model="item.furlough.id">
+                                <option ng-repeat="option in items | filter:{action:true} | orderBy: 'name'" value="{{option.id}}">
+                                    {{option.name}}
+                                </option>
+                            </select>
+                            <!--</div>-->
 
-                                <!--<button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>-->
+                            <!--<button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>-->
                             <!--</div>-->
                         </div>
+
+
+                        <!--  O W N E R  -->
+
+                        <div ng-controller="ListController" class="form-group ">
+                            <label class="control-label" ng-bind="items[0].sc()"></label> <span ng-if="me.admin">{{filtered.length}}</span>
+                            <select ng-disabled="edit" class="form-control" ng-model="item.owner.id">
+                                <option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )" value="{{option.id}}">
+                                    {{option.getFullName()}}
+                                </option>
+                            </select>
+
+                        </div>
+
+
+                        <!-- C A L E N D A R -->
 
                         <div class="form-group">
                             <label class="sr-only" for="exampleInputPassword33"></label>

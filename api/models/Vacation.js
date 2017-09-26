@@ -41,9 +41,9 @@ module.exports = {
       defaultsTo:'pending',
       enum: ['approved', 'denied', 'confirmed', 'moved', 'pending']
     },
-    //whomUpdated:{
-    //  type:'string'
-    //},
+    name:{
+      type:'string'
+    },
     //whomCreated:{
     //  type:'string'
     //},

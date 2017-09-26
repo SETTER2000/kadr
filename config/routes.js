@@ -79,6 +79,13 @@ module.exports.routes = {
     'GET /getStructure/:id': 'StructureController.get',
 
 
+
+    /**
+     * Vacation
+     */
+    'GET /vacation/getDays': 'VacationController.daysInYear',
+
+
     // !!!! НЕ УДАЛЯТЬ РОУТ!
     //'POST /user/signup': 'UserController.signup',
 

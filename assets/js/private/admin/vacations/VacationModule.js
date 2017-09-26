@@ -172,10 +172,19 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
             return o[value];
         }
     })
-    .directive('kadrCalendar', function () {
-        return {
-            restrict: 'C',
+    .filter("checkPeriodBetween", function () {
+        return function (value) {
+
+            moment('2010-10-20').isBetween('2009-12-31', '2012-01-01', 'year'); // true
+
         }
+
     })
+
+    //.directive('kadrCalendar', function () {
+    //    return {
+    //        restrict: 'C',
+    //    }
+    //})
 ;
 

@@ -286,7 +286,33 @@ angular.module('VacationModule')
                     }
                     return count;
                 }
+            };
 
+            /**
+             * Метод проверяет,
+             * пересекается ли выбраный период с уже созданными ранее периодами
+             * @param selectedDates
+             */
+            Calendar.prototype.checkBetween= function (selectedDates) {
+                if (angular.isArray(selectedDates) && selectedDates.length == 2) {
+
+                    return selectedDates;
+                    //let h = this.getHoliday();
+                    //let t = moment(arr[0]).twix(new Date(arr[1]));
+                    //let count = +t.count('day');
+                    //for (let i in h) {
+                    //    if (moment(h[i], 'DD.MM.YYYY').isBetween(arr[0], arr[1])) {
+                    //        count--
+                    //    }
+                    //    if (moment(h[i], 'DD.MM.YYYY').isSame(arr[0])) {
+                    //        count--
+                    //    }
+                    //    if (moment(h[i], 'DD.MM.YYYY').isSame(arr[1])) {
+                    //        count--
+                    //    }
+                    //}
+                    //return count;
+                }
             };
 
             let Working = new Calendar();
@@ -360,7 +386,11 @@ angular.module('VacationModule')
              */
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
+                /**
+                 * Кол-во выбраных дней
+                 */
                 $scope.daysSelectHoliday = Working.getCountDay(fpItem.selectedDates);
+                console.log('checkBetween',Working.checkBetween(fpItem.selectedDates));
                 //console.log('flatpickr', fpItem.redraw());
                 //console.log('$scope.item.location', $scope.item.location);
             };
