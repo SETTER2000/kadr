@@ -27,17 +27,17 @@ var jsFilesToInject = [
     'js/dependencies/sails.io.js',
     'js/dependencies/jquery.min.js',
     'js/dependencies/bootstrap.min.js',
-    'js/dependencies/angular.js', // Dependencies like jQuery, or Angular are brought in here
-    'js/dependencies/angular-ui-router.js',
+    'js/dependencies/angular.min.js', // Dependencies like jQuery, or Angular are brought in here
+    'js/dependencies/angular-ui-router.min.js',
     //'js/dependencies/angular-translate.js',
     //'js/dependencies/angular-translate-loader-url.js',
-    'js/dependencies/angular-resource.js',
+    'js/dependencies/angular-resource.min.js',
     'js/dependencies/moment.min.js',
-    'js/dependencies/moment-precise-range.js',
+    //'js/dependencies/moment-precise-range.js',
     'js/dependencies/twix.js',
-    'js/dependencies/moment-recur.min.js',
+    'js/dependencies/moment-recur.js',
     'js/dependencies/ru.js',
-    'js/dependencies/angular-moment.js',
+    'js/dependencies/angular-moment.min.js',
 
     'js/dependencies/**/*.js',
     'js/private/admin/skds/SkdModule.js',

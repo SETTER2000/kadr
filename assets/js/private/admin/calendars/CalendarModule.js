@@ -420,8 +420,8 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                             //  limit: scope.limit
                         });
 
-                        console.log('daysPeriod.data[0]',daysPeriod.data[0].format('MMMM'));
-                        console.log(moment.locale());
+                        //console.log('daysPeriod.data[0]',daysPeriod.data[0].format('MMMM'));
+                        //console.log(moment.locale());
 
                         // Сегодняшняя дата (16.03.2017)
                         daysPeriod.currentDate = moment().format('DD.MM.YYYY');
