@@ -17,20 +17,9 @@ module.exports.bootstrap = function (cb) {
     const Watcher = require('listener-dir');
     const fs = require('fs');
     const mime = require('mime');
-    const memwatch = require('memwatch-next');
     const moment = require('moment');
     const crypto = require('crypto');
 
-
-    memwatch.gc('leak', function (info) {
-        console.log('Информация о куче gc leak: ', info);
-    });
-    memwatch.on('leak', function (info) {
-        console.log('ВНИМАНИЕ! Память течёт. : ', info);
-    });
-    //memwatch.on('stats', function(stats) {
-    //    console.log('Статистика кучи: ', stats);
-    //});
 
 
     Array.prototype.diff = function (a) {
