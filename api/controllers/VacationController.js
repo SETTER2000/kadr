@@ -8,19 +8,7 @@ const ObjectId = require('mongodb').ObjectId;
 const moment = require('moment');
 const _ = require('lodash');
 moment.locale('ru');
-//moment.config({
-//    packages: [{
-//        name: 'moment',
-//        // This location is relative to baseUrl. Choose bower_components
-//        // or node_modules, depending on how moment was installed.
-//        location: 'node_modules/moment',
-//        main: 'moment'
-//    }]
-//});
-//moment(['moment/locale/ru'], function(localeModule) {
-//    moment.locale('ru');
-//    // Use moment now that the locale has been properly set.
-//});
+
 module.exports = {
     /**
      * Получить объект
@@ -309,13 +297,13 @@ module.exports = {
                         //}
                     ]).toArray(function (err, results) {
                         if (err) return res.serverError(err);
-                        if(!results.length)   return res.ok({count:0});
+                        if (!results.length)   return res.ok({count: 0});
+                        let obYear = {};
                         _.forEach(results, function (value, key) {
-                            console.log('VALUE', value['_id'].year);
-                            console.log('value.count',value.count);
-                            if(value['_id'].year == year) return res.ok(value);
-                            return res.ok();
+                            console.log('VALUE', value);
+                            if (value['_id'].year == year) obYear = value;
                         });
+                        return res.ok(obYear);
                     });
                 });
             });

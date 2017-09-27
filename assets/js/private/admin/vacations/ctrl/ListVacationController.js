@@ -90,10 +90,6 @@
 
             $scope.yearLeap = moment(1316116057189).fromNow();
 
-            $scope.message = {
-                text: 'hello world!',
-                time: new Date()
-            };
 
             /**
              * Год
@@ -268,8 +264,8 @@
                     ////console.log(vacations.objectName);
                     //$scope.objectName = objectName;
                     console.log('scope.objectName:', $scope.objectName);
-                    //$scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
-
+                    $scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
+                    console.log('NUM PAGES',  $scope.numPages);
                 }, function (err) {
                     toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
                 });

@@ -8,10 +8,10 @@
                         {{added}}
                     </button>
                     <!--<button type="button" class="btn btn-default btn-group dropdown-toggle" role="group" data-toggle="dropdown"-->
-                            <!--aria-haspopup="true"-->
-                            <!--aria-expanded="false">-->
-                        <!--Количество: {{defaultRows}}-->
-                        <!--<span class="caret"></span>-->
+                    <!--aria-haspopup="true"-->
+                    <!--aria-expanded="false">-->
+                    <!--Количество: {{defaultRows}}-->
+                    <!--<span class="caret"></span>-->
                     <!--</button>-->
                     <ul class="dropdown-menu">
                         <li><input ng-model="defaultRows" class="form-control"></li>
@@ -20,16 +20,13 @@
                         </li>
                         <li><a ng-click="getLimitRows(lengthObject)" href="#">Все</a></li>
                     </ul>
-
-
-
                 </div>
             </div>
         </div>
     </div>
-<div class="col-md-4" >
-    <div ng-if="showString()" class="pagination"><p>Осталось в текущем году:{{getDays()}}</p></div>
-</div>
+    <div class="col-md-4">
+        <div ng-if="showString()" class="pagination"><p>Осталось в текущем году:{{getDays()}}</p></div>
+    </div>
     <div class="col-md-6">
         <nav class="pull-right">
             <ul class="pagination">
