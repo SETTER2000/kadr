@@ -300,12 +300,24 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             return value;
         }
     })
+    .filter("firedUser", function () {
+        return function (value) {
+            if(!angular.isArray(value)) return value;
+            let arr=[];
+            value.forEach(function (v, k, a) {
+                console.log('FIRED USER:',v['owner'].fired);
+                if(!v['owner'].fired) arr.push(v);
+            });
+            return arr;
+        }
+    })
     .directive('pagination', function () { // функция компиляции директивы (фабричная функция)
         return {
             restrict: 'E',
             scope: {
                 //numPages: '=', // кол-во страниц (кнопок)
                 showBt: '=',// true|false показывать или нет кнопку добавления объекта, например юзера.
+                showContIt: '=',// true|false показывать или нет формочку выбора кол-ва строк
                 showStr: '=',// true|false показывать или нет строку об отпусках. =?bind - не обязательная привязка значения
                 days: '=', // кол-во дней взятых на отпуск в текущем году
                 urlBt: '=',// ссылка для кнопки.
@@ -325,6 +337,9 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 });
                 scope.$watch('showBt', function (value) {
                     scope.showBt = value;
+                });
+                scope.$watch('showContIt', function (value) {
+                    scope.showContIt = value;
                 });
                 scope.$watch('showStr', function (value) {
                     console.log('showStr: ', value);
@@ -398,6 +413,9 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 };
                 scope.showBtn = function () {
                     return scope.showBt;
+                };
+                scope.showContItem = function () {
+                    return scope.showContIt;
                 };
 
                 scope.showString = function () {
@@ -710,7 +728,20 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             }
         };
     })
-
+    .directive('customSelect', function () {
+        return {
+            restrict: "E",
+            replace: true,
+            scope: {
+                'ngModel': '=',
+                'options': '='
+            },
+            templateUrl: '/js/private/admin/users/views/select.view.html',
+            link: function (scope, $element, attributes) {
+                scope.selectable_options = scope.options;
+            }
+        };
+    })
 
 //.directive("fileread", [function () {
 //    return {

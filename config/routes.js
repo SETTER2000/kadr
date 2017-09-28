@@ -39,6 +39,7 @@ module.exports.routes = {
     'PUT /user/restore-profile': 'UserController.restoreProfile',
     'PUT /user/restore-gravatar-URL': 'UserController.restoreGravatarURL',
     'PUT /user/update-profile': 'UserController.updateProfile',
+    'PUT /user/updateInterface': 'UserController.updateInterface',
     'PUT /user/change-password': 'UserController.changePasswordProfile',
     'PUT /user/generate-recovery-email': 'UserController.generateRecoveryEmail',
     'PUT /user/update-admin/:id': 'UserController.updateAdmin',
@@ -47,6 +48,8 @@ module.exports.routes = {
     'PUT /user/update-action/:id': 'UserController.updateAction',
     'PUT /user/update-deleted/:id': 'UserController.updateDeleted',
     'PUT /user/updateProfile/:id': 'UserController.updateProfile',
+    'PUT /user/updateInterface/:id': 'UserController.updateInterface',
+
     'POST /file/upload': 'UserController.upload',
     // 'GET /user/getUsersDepartment': 'UserController.getUsersDepartment',
     'GET /user/getUsersDepartment/:id': 'UserController.getUsersDepartment',

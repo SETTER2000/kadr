@@ -178,9 +178,39 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
             moment('2010-10-20').isBetween('2009-12-31', '2012-01-01', 'year'); // true
 
         }
-
     })
+    .filter("interfaceYear", function () {
+        /**
+         * Фильтр отбирает объекты согласно сохранённому году интерфейса пользователя
+         */
+        return function (value,me) {
+            if (!angular.isArray(value)) return value;
+            let arr = [];
+            value.forEach(function (v, k, a) {
+                let startOff = moment(me['interface'], ['YYYY']).startOf('year');
+                let endOff = moment(me['interface'], ['YYYY']).endOf('year');
+                console.log('***************************************');
+                console.log('FIRED USER:', me['interface']);
+                console.log('START OFF:', startOff);
+                console.log('END OFF:', endOff);
 
+                console.log('isSameOrAfter', moment(v['from']).isSameOrAfter(startOff, 'year'));
+                console.log('ЗНАЧЕНИЕ, ПЕРИОД: ', ' c ' + moment(v['from']).format('LLL')+ ' по ' + moment(v['to']).format('LLL'));
+                console.log('isSameOrBefore', moment(v['to']).isSameOrBefore(endOff, 'year'));
+                console.log('---------------------------------------------***');
+
+                /**
+                 *  То же или после  &&  То же или до
+                 *  В общем случаи между )
+                 */
+                if (moment(v['from']).isSameOrAfter(startOff, 'year') && moment(v['to']).isSameOrBefore(endOff, 'year')) {
+                    console.log('ВЫБРАН: ', v);
+                    arr.push(v);
+                }
+            });
+            return arr;
+        }
+    })
     //.directive('kadrCalendar', function () {
     //    return {
     //        restrict: 'C',

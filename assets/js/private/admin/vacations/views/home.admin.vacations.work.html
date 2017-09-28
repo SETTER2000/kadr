@@ -1,23 +1,20 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="(items | filter:{$:searchText, fired:false} ).length"
+        length-object="countCurrentView=(items | firedUser | filter:{$:searchText, action:true} ).length"
         current-page="currentPage"
         added="added"
         show-bt="showBt"
+        show-cont-it="showContIt"
         show-str="showStr"
         days="days"
         url-bt="urlBt"
         on-select-page="selectCount=selectCount+1">
 </pagination>
-
-
 <table class="table table-hover">
     <tr>
         <th>#</th>
-        <th></th>
-
-
+        <th class="text-center">{{countCurrentView}}</th>
         <th>
             <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('name')">
                 {{fioArea}}
@@ -98,7 +95,7 @@
             </button>
         </th>
     </tr>
-    <tr ng-repeat="item in filtered=(items | filter:{$:searchText, action:true} |
+    <tr ng-repeat="item in filtered=(items | interfaceYear:me | firedUser | filter:{$:searchText, action:true}  |
 orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
         <td>{{$index+1}}</td>
         <td>
@@ -136,10 +133,10 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitT
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="(items | filter:{$:searchText, fired:false} ).length"
+        length-object="countCurrentView=(items | firedUser | filter:{$:searchText, action:true} ).length"
         current-page="currentPage"
         added="added"
-        show-bt="showBt"
+        show-bt="showBt" show-cont-it="showContIt"
         show-str="showStr"
         days="days"
         url-bt="urlBt"

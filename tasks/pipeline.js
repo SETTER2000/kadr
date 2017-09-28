@@ -16,7 +16,12 @@
 //
 // (if you're using LESS with the built-in default config, you'll want
 //  to change `assets/styles/importer.less` instead.)
-var cssFilesToInject = ['styles/**/*.css'];
+var cssFilesToInject = [
+    'styles/bootstrap.css',
+    'js/dependencies/toastr/*.css',
+    'styles/**/*.css'
+
+];
 
 
 // Client-side javascript files to inject in order
@@ -39,6 +44,7 @@ var jsFilesToInject = [
     'js/dependencies/ru.js',
     'js/dependencies/angular-moment.min.js',
 
+    'js/dependencies/toastr/*.js',
     'js/dependencies/**/*.js',
     'js/private/admin/skds/SkdModule.js',
     'js/private/admin/structures/StructureModule.js',

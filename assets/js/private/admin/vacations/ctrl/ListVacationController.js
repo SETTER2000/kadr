@@ -44,6 +44,9 @@
             $scope.daysSelectHolidayArea = 'Дней';
             $scope.added = 'Добавить отпуск';
             $scope.showBt = 1;
+            $scope.countHolidayRF = 28;
+            // показать формочку выбора кол-ва строк на странице
+            $scope.showContIt = ($scope.me.admin) ? 1 : 0;
             $scope.showStr = 1;
             $scope.urlBt = 'home.admin.vacations.create';
 
@@ -89,32 +92,65 @@
             }
 
             $scope.yearLeap = moment(1316116057189).fromNow();
-
-
+            //
+            //$scope.$watch('countCurrentView', function (value) {
+            //    $scope.countCurrentView = value;
+            //});
             /**
              * Год
              * @type {*[]}
              */
             $scope.options2 =
                 [
-                    {display: "2015", value: "2015"},
-                    {display: "2016", value: "2016"},
-                    {display: "2017", value: "2017"},
-                    {display: "2018", value: "2018"},
-                    {display: "2019", value: "2019"},
-                    {display: "2020", value: "2020"},
-                    {display: "2021", value: "2021"}
+                    {id: "2017", name: "2017"},
+                    {id: "2018", name: "2018"},
+                    {id: "2019", name: "2019"}
                 ];
             $scope.modeSelectYear = $scope.options2[2];
+            $scope.$watch('item', function () {
+                $scope.interface();
+            });
+            $scope.interface = function () {
+                $http.put('/user/updateInterface', {
+                        year: $scope.item.interface
+                    })
+                    .then(function onSuccess(sailsResponse){
+                        //console.log(sailsResponse);
+                        toastr.info('Сохранения интерфейса.','', { timeOut: 1000 });
+                        //$scope.refresh();
+                        //$scope.$apply();
+                        //$state.go('home.admin.vacations.edit');
+                        //$state.go('^');
+                        //$state.go('home.admin.vacations');
+                        window.location = '/admin/vacations';
+                        //toastr.info('Сохранения интерфейса.','', { timeOut: 1000 });
 
+                        //$scope.refresh({action:true});
+                        // window.location = '/' + sailsResponse.data.username;
+                    })
+                    .catch(function onError(sailsResponse) {
+                        console.error('sailsresponse: ', sailsResponse);
+                        // Otherwise, display generic error if the error is unrecognized.
+                        // $scope.restoreProfileForm.errorMsg = 'Email/Password combination does not match profile';
+                        if (sailsResponse.data.status >= 400 < 404) {
+                            $scope.restoreProfileForm.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
+                            toastr.error('The email/password combination did not match a user profile.','', { timeOut: 1000 });
+                            return;
+                        }
+
+                    })
+                    .finally(function eitherWay() {
+
+                    });
+            };
+
+            /**
+             * Кол-во дн. отпуска выбранных в конкретном году
+             */
             $scope.getDays = function () {
-                $http.get('/vacation/getDays').then(function success(response) {
+                $http.get('/vacation/getDays/?year=' + 2017).then(function success(response) {
                         console.log('RESP11:', response.data);
-                        $scope.days = 28-response.data.count;
-                        //if (response.data === '00:00:00') {
-                        //    $scope.uploaderButtonPrice = true;
-                        //}
-                        //$scope.datePrice = response.data;
+                        $scope.days = $scope.countHolidayRF - response.data.count;
                     },
                     function errorCallback(response) {
                         console.log('RESP00:', response);
@@ -122,6 +158,7 @@
                 );
             };
             $scope.getDays();
+
             $scope.options =
                 [
                     {display: "Активированы", value: "work"},
@@ -130,7 +167,7 @@
                     {display: "Все", value: "table"}
                 ];
             $scope.modeSelect = $scope.options[0];
-            console.log('$scope.modeSelect', $scope.modeSelect);
+            //console.log('$scope.modeSelect', $scope.modeSelect);
             $scope.tableView = "/js/private/admin/vacations/views/home.admin.vacations.table.html";
             //$scope.listView = "/js/private/admin/vacations/views/home.admin.vacations.list.html";
             $scope.actionView = "/js/private/admin/vacations/views/home.admin.vacations.action.html";
@@ -245,7 +282,7 @@
                     where: $scope.where,
                     sort: $scope.sort,
                     limit: $scope.limitAll,
-                    property: 'lastName',
+                    property: 'from',
                     char: $scope.charText + '%'
                 };
                 console.log('QUERY:', $scope.query);
@@ -265,7 +302,7 @@
                     //$scope.objectName = objectName;
                     console.log('scope.objectName:', $scope.objectName);
                     $scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
-                    console.log('NUM PAGES',  $scope.numPages);
+                    console.log('NUM PAGES', $scope.numPages);
                 }, function (err) {
                     toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
                 });

@@ -4,9 +4,9 @@
         <h2>{{items[0].scs()}} {{exampleDate | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}<!--({{filtered.length}})-->
             <a ng-cloak href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">
                 всего:
-                <span ng-if="mode">SD{{(items | filter:{fired:true}).length}}</span>
+                <span ng-if="mode">SD{{(items | firedUser | filter:{fired:true}).length}}</span>
                 <!--<span ng-if="!mode">{{(items | filter:{fired:false}).length}}</span>-->
-                <span ng-if="!mode">{{items.length}}</span>
+                <span ng-if="!mode">{{(items | firedUser ).length}}</span>
             </a>
             <span ng-if="mode" ng-bind="items[0].deactivation()"></span>
             <div class="btn-group-xs pull-right">
@@ -113,6 +113,12 @@
                             class="btn " ng-class="{'btn-danger':enabledButton, 'btn-default':!enabledButton}"></button>
                 </div>
             </div>
+        </div>
+
+
+        <div class="form-group form-inline">
+            <custom-select class="form-control" name="interface"  ng-model="item.interface"
+                           options="options2"></custom-select>
         </div>
         <!--<div class="col-md-2">-->
             <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->

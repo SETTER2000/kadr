@@ -274,27 +274,14 @@ module.exports = {
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
 
+                year = findUser.interface;
                 Vacation.native(function (err, collection) {
                     if (err) return res.serverError(err);
-
                     collection.aggregate([
-                        {$match: {owner: ObjectId(findUser.id)}},
+                        {$match: {owner: ObjectId(findUser.id), action: true}},
                         {$group: {_id: {year: {$year: "$from"}, owner: "$owner"}, count: {$sum: "$daysSelectHoliday"}}},
                         {$project: {'_id.year': 1, count: 1}},
                         {$sort: {'_id.year': 1}}
-                        //{
-                        //    $group: {
-                        //        _id: {year: {$year: "$from"}, owner: findUser.id},
-                        //        count: {$sum: "$daysSelectHoliday"}
-                        //    }
-                        //
-                        //},
-                        //{
-                        //    $sort: {'_id.year': 1}
-                        //},
-                        //{
-                        //    $project:{}
-                        //}
                     ]).toArray(function (err, results) {
                         if (err) return res.serverError(err);
                         if (!results.length)   return res.ok({count: 0});
@@ -303,6 +290,7 @@ module.exports = {
                             console.log('VALUE', value);
                             if (value['_id'].year == year) obYear = value;
                         });
+                        console.log('RESPONSE YEARS ARR: ',obYear);
                         return res.ok(obYear);
                     });
                 });

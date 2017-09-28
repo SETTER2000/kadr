@@ -227,12 +227,12 @@ angular.module('UserModule')
                 $scope.uploaderButtonPrice = false;
             };
 
-            console.log('UPLOADER:');
-            console.log(uploader);
+            //console.log('UPLOADER:');
+            //console.log(uploader);
 
             $scope.getDatePrice = function () {
                 $http.get('/price/date').then(function succesCallback(response) {
-                        console.log(response.data);
+                        //console.log(response.data);
                         if (response.data === '00:00:00') {
                             $scope.uploaderButtonPrice = true;
                         }

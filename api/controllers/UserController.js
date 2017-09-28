@@ -1159,5 +1159,21 @@ module.exports = {
             });
         });
     },
+
+    /**
+     * Обновить интерфейс отображаемый пользователю
+     * @param req
+     * @param res
+     */
+    updateInterface: function (req, res) {
+        User.update({
+            id: req.session.me
+        }, {
+            interface: +req.param('year')
+        }, function (err, updatedUser) {
+            if (err) return res.negotiate(err);
+            return res.json(updatedUser);
+        });
+    }
 };
 

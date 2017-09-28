@@ -1,6 +1,6 @@
 'use strict';
 angular.module('UserModule')
-    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache','$state', 'Users', 'moment', 'Positions', 'Departments', '$stateParams', 'FileUploader', '$rootScope',
+    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', '$stateParams', 'FileUploader', '$rootScope',
         function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, $stateParams, FileUploader, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             var info = {
@@ -12,15 +12,22 @@ angular.module('UserModule')
                 ok: 'OK!',
                 objectDelete: 'Объект удалён.',
                 newUserOk: 'Новый пользователь создан.',
-                passDefault:'111111',
-                redirectSelf:'home.admin.users',
-                ru:'ru',
-                dateFormat:"d.m.Y",
-                minDate:"01-01-1950",
-                maxDate:"31-12-2002"
+                passDefault: '111111',
+                redirectSelf: 'home.admin.users',
+                ru: 'ru',
+                dateFormat: "d.m.Y",
+                minDate: "01-01-1950",
+                maxDate: "31-12-2002"
             };
 
-
+            $scope.radioData = [
+                //{label: 'испытательный срок', value: false},
+                { label: 'работает',  value: false},
+                //{ label: 'работает',  value: false, isDisabled: true },
+                {label: 'уволен', value: true},
+                //{label: 'временно включён', value: false},
+                //{ label: '4', value: '4' }
+            ];
 
 
             //$http.get('/user/getBoss',{name:'Александр', lname:'Петров', pname:'Вячеславович'})
@@ -54,7 +61,7 @@ angular.module('UserModule')
             };
 
             $scope.dateOpts2 = {
-                locale:info.ru,
+                locale: info.ru,
                 //mode: "range",
                 dateFormat: info.dateFormat,
                 minDate: info.minDate
@@ -277,12 +284,12 @@ angular.module('UserModule')
                     $scope.close = true;
                 }
             };
-            $scope.getBoss = function() {
+            $scope.getBoss = function () {
                 $http.post('/user/getBoss', $scope.item)
                     .then(function (response) {
                         console.log('RESPONSORY: ', response);
-                        $scope.boss= response.data;
-                    }, function(response) {
+                        $scope.boss = response.data;
+                    }, function (response) {
                         $scope.data = response.data || 'Request failed';
                         $scope.status = response.status;
                     });

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="pull-left">
             <div class="pagination">
                 <div class="btn-toolbar " role="toolbar">
@@ -7,12 +7,12 @@
                             type="button">
                         {{added}}
                     </button>
-                    <!--<button type="button" class="btn btn-default btn-group dropdown-toggle" role="group" data-toggle="dropdown"-->
-                    <!--aria-haspopup="true"-->
-                    <!--aria-expanded="false">-->
-                    <!--Количество: {{defaultRows}}-->
-                    <!--<span class="caret"></span>-->
-                    <!--</button>-->
+                    <button ng-if="showContItem()" type="button" class="btn btn-default btn-group dropdown-toggle" role="group" data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        Количество: {{defaultRows}}
+                        <span class="caret"></span>
+                    </button>
                     <ul class="dropdown-menu">
                         <li><input ng-model="defaultRows" class="form-control"></li>
                         <li ng-repeat="row in rows" ng-class="{active: isActiveRow(row)}">
@@ -24,7 +24,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div ng-if="showString()" class="pagination"><p>Осталось в текущем году:{{getDays()}}</p></div>
     </div>
     <div class="col-md-6">

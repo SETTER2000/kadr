@@ -186,6 +186,9 @@ module.exports = {
             dominant: true
         },
 
+        interface:{
+            type: 'integer'
+        },
         //vacations: {
         //    collection: 'vacation',
         //    via: 'users',
