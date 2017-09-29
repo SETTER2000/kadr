@@ -92,10 +92,8 @@
             }
 
             $scope.yearLeap = moment(1316116057189).fromNow();
-            //
-            //$scope.$watch('countCurrentView', function (value) {
-            //    $scope.countCurrentView = value;
-            //});
+
+
             /**
              * Год
              * @type {*[]}
@@ -107,37 +105,24 @@
                     {id: "2019", name: "2019"}
                 ];
             $scope.modeSelectYear = $scope.options2[2];
-            $scope.$watch('item', function () {
-                $scope.interface();
+            $scope.$watch('me.interface', function (newValue, oldValue) {
+                $scope.interface(newValue);
             });
-            $scope.interface = function () {
+            $scope.interface = function (year) {
                 $http.put('/user/updateInterface', {
-                        year: $scope.item.interface
+                        year: year
                     })
                     .then(function onSuccess(sailsResponse){
-                        //console.log(sailsResponse);
-                        toastr.info('Сохранения интерфейса.','', { timeOut: 1000 });
-                        //$scope.refresh();
-                        //$scope.$apply();
-                        //$state.go('home.admin.vacations.edit');
-                        //$state.go('^');
-                        //$state.go('home.admin.vacations');
-                        window.location = '/admin/vacations';
                         //toastr.info('Сохранения интерфейса.','', { timeOut: 1000 });
-
-                        //$scope.refresh({action:true});
+                        //$scope.refresh();
                         // window.location = '/' + sailsResponse.data.username;
                     })
                     .catch(function onError(sailsResponse) {
-                        console.error('sailsresponse: ', sailsResponse);
-                        // Otherwise, display generic error if the error is unrecognized.
-                        // $scope.restoreProfileForm.errorMsg = 'Email/Password combination does not match profile';
-                        if (sailsResponse.data.status >= 400 < 404) {
+                         if (sailsResponse.data.status >= 400 < 404) {
                             $scope.restoreProfileForm.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
                             toastr.error('The email/password combination did not match a user profile.','', { timeOut: 1000 });
                             return;
                         }
-
                     })
                     .finally(function eitherWay() {
 
@@ -282,7 +267,7 @@
                     where: $scope.where,
                     sort: $scope.sort,
                     limit: $scope.limitAll,
-                    property: 'from',
+                    property: 'lastName',
                     char: $scope.charText + '%'
                 };
                 console.log('QUERY:', $scope.query);
@@ -302,7 +287,7 @@
                     //$scope.objectName = objectName;
                     console.log('scope.objectName:', $scope.objectName);
                     $scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
-                    console.log('NUM PAGES', $scope.numPages);
+                    //console.log('NUM PAGES', $scope.numPages);
                 }, function (err) {
                     toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
                 });

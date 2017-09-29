@@ -21,6 +21,8 @@ const ldap = require('ldapjs');
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const moment = require('moment');
+moment.locale('ru');
 //var URI = require('urijs');
 //const URITemplate = require('urijs/src/URITemplate');
 var count = 5;
@@ -255,6 +257,104 @@ module.exports = {
         });
 
 
+    },
+
+    /**
+     * Поиск руководителя в LDAP
+     */
+    bossLDAP: function (req, res) {
+        console.log('Поиск руководителя в LDAP: ', req.param('name'));
+        const clientSearchLDAP = ldap.createClient({
+            url: sails.config.ldap.uri
+        });
+        let opts = {
+            scope: 'sub',
+            filter: '(displayName=' + req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName') + ')',
+            //filter: '(mail=apetrov@landata.ru)',
+            //filter: '(sAMAccountName=' + user.login + ')',
+            attributes: sails.config.ldap.attributes,
+            reconnect: false
+            //paged: true,
+            //sizeLimit: 50
+        };
+        /**
+         * Соединение с сервером LDAP
+         */
+        clientSearchLDAP.bind(sails.config.ldap.username, sails.config.ldap.password, function (err) {
+            if (err) {
+                console.log('searchLDAP ошибка входа: ', err);
+                clientSearchLDAP.unbind(function () {
+                    clientSearchLDAP.destroy();
+                });
+
+                //--count;
+                //if (+count < 0)  return res.forbidden('Аккаунт заблокирован! Обращайтесь к системному администратору.');
+                //switch (+count) {
+                //    case 1:
+                //        word = 'попытка';
+                //        break;
+                //    case 0:
+                //        word = 'попыток';
+                //        break;
+                //    default:
+                //        var word = 'попытки';
+                //}
+                return res.forbidden('searchLDAP: Не верный логин или пароль. ');
+            }
+            var empl = '';
+
+            /**
+             * Поиск по dn
+             */
+            clientSearchLDAP.search(sails.config.ldap.dn, opts, function (err, ldapUser) {
+                if (err) {
+                    console.log('searchLDAP ошибка поиска: ', err);
+                    return res.negotiate(err);
+                }
+                ldapUser.on('searchEntry', function (entry) {
+                    //console.log('entry: ' + JSON.stringify(entry.object));
+                    empl = entry.object;
+                });
+
+                ldapUser.on('error', function (err) {
+                    console.error('ОШибка-222: ' + err.message);
+                });
+
+                ldapUser.on('end', function (result) {
+                    if (result.status == 0) {
+                        if (empl.manager === undefined) {
+                            clientSearchLDAP.unbind(function () {
+                                clientSearchLDAP.destroy();
+                            });
+                            return res.ok();
+                            //return res.ok({'lastName':'Директор!'});
+                        }
+                        clientSearchLDAP.unbind(function () {
+                            clientSearchLDAP.destroy();
+                        });
+                        console.log('Найден руководитель:', empl.manager);
+                        // CN=Еремин Сергей,OU=Users,OU=Office users,DC=landata,DC=ru
+                        if (!empl.manager) return res.forbidden(result.errorMessage);
+                        let arr = empl.manager.split(',');
+                        let arr2 = arr[0].split('=');
+                        let arrFi = arr2[1].split(' ');
+                        console.log('arrFi', arrFi);
+                        User.findOne({'lastName': arrFi[0], 'firstName': arrFi[1]})
+                            .populate('positions')
+                            .exec(function foundUser(err, user) {
+                                if (err) return res.serverError(err);
+                                if (!user) return res.notFound();
+                                return res.ok(user);
+                            });
+                        //return res.ok(arr2[1]);
+
+                        //return res.ok();
+                    }
+                    //return res.forbidden(result.errorMessage);
+                });
+
+            });
+        });
     },
 
     /**
@@ -564,8 +664,8 @@ module.exports = {
      */
     findUsers: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('char: ', req.param('char'));
-        console.log('where: ', req.param('where'));
+        //console.log('char: ', req.param('char'));
+        //console.log('where: ', req.param('where'));
         if (req.param('id')) {
             User.findOne(req.param('id'))
                 .populate('positions')
@@ -588,6 +688,7 @@ module.exports = {
                 q.where = y;
                 User.find(q)
                     .populate('positions')
+                    .populate('vacations')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -596,6 +697,7 @@ module.exports = {
             } else {
                 User.find()
                     .populate('positions')
+                    .populate('vacations')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -1064,116 +1166,28 @@ module.exports = {
     },
 
     /**
-     * Поиск руководителя в LDAP
-     */
-    bossLDAP: function (req, res) {
-        console.log('Поиск руководителя в LDAP: ', req.param('name'));
-        const clientSearchLDAP = ldap.createClient({
-            url: sails.config.ldap.uri
-        });
-        let opts = {
-            scope: 'sub',
-            filter: '(displayName=' + req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName') + ')',
-            //filter: '(mail=apetrov@landata.ru)',
-            //filter: '(sAMAccountName=' + user.login + ')',
-            attributes: sails.config.ldap.attributes,
-            reconnect: false
-            //paged: true,
-            //sizeLimit: 50
-        };
-        /**
-         * Соединение с сервером LDAP
-         */
-        clientSearchLDAP.bind(sails.config.ldap.username, sails.config.ldap.password, function (err) {
-            if (err) {
-                console.log('searchLDAP ошибка входа: ', err);
-                clientSearchLDAP.unbind(function () {
-                    clientSearchLDAP.destroy();
-                });
-
-                //--count;
-                //if (+count < 0)  return res.forbidden('Аккаунт заблокирован! Обращайтесь к системному администратору.');
-                //switch (+count) {
-                //    case 1:
-                //        word = 'попытка';
-                //        break;
-                //    case 0:
-                //        word = 'попыток';
-                //        break;
-                //    default:
-                //        var word = 'попытки';
-                //}
-                return res.forbidden('searchLDAP: Не верный логин или пароль. ');
-            }
-            var empl = '';
-
-            /**
-             * Поиск по dn
-             */
-            clientSearchLDAP.search(sails.config.ldap.dn, opts, function (err, ldapUser) {
-                if (err) {
-                    console.log('searchLDAP ошибка поиска: ', err);
-                    return res.negotiate(err);
-                }
-                ldapUser.on('searchEntry', function (entry) {
-                    //console.log('entry: ' + JSON.stringify(entry.object));
-                    empl = entry.object;
-                });
-
-                ldapUser.on('error', function (err) {
-                    console.error('ОШибка-222: ' + err.message);
-                });
-
-                ldapUser.on('end', function (result) {
-                    if (result.status == 0) {
-                        if (empl === undefined) {
-                            clientSearchLDAP.unbind(function () {
-                                clientSearchLDAP.destroy();
-                            });
-                            return res.notFound('Нет таких!');
-                        }
-                        clientSearchLDAP.unbind(function () {
-                            clientSearchLDAP.destroy();
-                        });
-                        console.log('Найден пользователь:', empl.manager);
-                        // CN=Еремин Сергей,OU=Users,OU=Office users,DC=landata,DC=ru
-                        if(!empl.manager) return res.forbidden(result.errorMessage);
-                            let arr = empl.manager.split(',');
-                            let arr2 = arr[0].split('=');
-                            let arrFi = arr2[1].split(' ');
-                            console.log('arrFi', arrFi);
-                            User.findOne({'lastName':arrFi[0], 'firstName':arrFi[1]})
-                                .populate('positions')
-                                .exec(function foundUser(err, user) {
-                                    if (err) return res.serverError(err);
-                                    if (!user) return res.notFound();
-                                    return res.ok(user);
-                                });
-                            //return res.ok(arr2[1]);
-
-                        //return res.ok();
-                    }
-                    //return res.forbidden(result.errorMessage);
-                });
-
-            });
-        });
-    },
-
-    /**
      * Обновить интерфейс отображаемый пользователю
      * @param req
      * @param res
      */
     updateInterface: function (req, res) {
-        User.update({
-            id: req.session.me
-        }, {
-            interface: +req.param('year')
-        }, function (err, updatedUser) {
-            if (err) return res.negotiate(err);
-            return res.json(updatedUser);
-        });
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        let year = (req.param('year')) ? req.param('year') : moment().year();
+        User.update({id: req.session.me}, {interface: year})
+            .exec(
+                function (err, updatedUser) {
+                    if (err) return res.negotiate(err);
+                    if (!updatedUser) return res.notFound();
+                    //return res.ok(updatedUser);
+                    User.find(updatedUser)
+                        .populate('positions')
+                        .populate('vacations')
+                        .exec(function foundUser(err, users) {
+                            if (err) return res.serverError(err);
+                            if (!users) return res.notFound();
+                            return res.ok(users);
+                        });
+                });
     }
 };
 

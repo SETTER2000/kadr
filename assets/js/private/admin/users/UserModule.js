@@ -305,8 +305,10 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             if(!angular.isArray(value)) return value;
             let arr=[];
             value.forEach(function (v, k, a) {
-                console.log('FIRED USER:',v['owner'].fired);
+                //console.log('OBJECT:', v);
+                //console.log('FIRED USER:',v['owner'].fired);
                 if(!v['owner'].fired) arr.push(v);
+                //arr.push(v);
             });
             return arr;
         }

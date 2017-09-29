@@ -285,6 +285,7 @@ angular.module('UserModule')
                 }
             };
             $scope.getBoss = function () {
+                console.log('$scope.item', $scope.item);
                 $http.post('/user/getBoss', $scope.item)
                     .then(function (response) {
                         console.log('RESPONSORY: ', response);

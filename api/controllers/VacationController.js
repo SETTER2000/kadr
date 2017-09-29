@@ -6,8 +6,9 @@
  */
 const ObjectId = require('mongodb').ObjectId;
 const moment = require('moment');
-const _ = require('lodash');
 moment.locale('ru');
+const _ = require('lodash');
+
 
 module.exports = {
     /**

@@ -106,7 +106,11 @@
                            char-text="charText"
                            get-char-text="getCharText(ch)">
                 </word-part>
-
+                {{item.interface}}
+                <div class="form-group form-inline" >
+                    <custom-select class="form-control" name="interface"  ng-model="me.interface"
+                                   options="options2"></custom-select>
+                </div>
                 <div ng-if="!searchText" ng-repeat="it in arrButton" class="btn-group btn-group-sm"
                      role="group" aria-label="4">
                     <button ng-click="getPage(it.numberPage)" type="button" ng-bind="it.numberPage"
@@ -116,10 +120,6 @@
         </div>
 
 
-        <div class="form-group form-inline">
-            <custom-select class="form-control" name="interface"  ng-model="item.interface"
-                           options="options2"></custom-select>
-        </div>
         <!--<div class="col-md-2">-->
             <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
                 <!--&lt;!&ndash;<label>Представлено</label>&ndash;&gt;-->
