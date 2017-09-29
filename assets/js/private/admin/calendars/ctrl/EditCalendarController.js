@@ -13,8 +13,8 @@ angular.module('CalendarModule')
             $scope.refresh = function () {
                 var item = $scope.item = Calendars.get({id: $stateParams.calendarId}, 
                     function (calendars) {
-                        console.log("CALENDAR");
-                        console.log(calendars);
+                        // console.log("CALENDAR");
+                        // console.log(calendars);
                         $scope.item =calendars;
                     $scope.calendars = calendars;
                 }, function (err) {
@@ -38,7 +38,7 @@ angular.module('CalendarModule')
                     $scope.refresh();
                     item.$save(item, function (success) {
                             $scope.refresh();
-                            console.log('SUCCESS: OK!');
+                            // console.log('SUCCESS: OK!');
                             item.ok();
                         },
                         function (err) {

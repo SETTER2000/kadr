@@ -11,7 +11,7 @@
                 $scope.solo = true;
                 $scope.inDate = '';
 
-                moment.defineLocale('ru', {
+                moment.updateLocale('ru', {
                     parentLocale: 'ru',
                     months : [
                             "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
@@ -81,7 +81,7 @@
                 $scope.refresh = function () {
                     $scope.item = Calendars.get({id: $stateParams.calendarId}, function (calendars) {
                         $scope.calendars = calendars;
-                        $scope.newData();
+                        // $scope.newData();
                         $scope.restart();
                         console.log('ITEM ID');
                         console.log($scope.item);

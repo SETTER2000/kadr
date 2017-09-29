@@ -64,8 +64,8 @@
 
                 // конструктор хлебных крошек
                 function BreadCrumb() {
-                    var name;
-                    var path;
+                    let name;
+                    let path;
                     this.arr = [];
                 }
 
@@ -81,7 +81,7 @@
                     return this.arr;
                 };
 
-                var breadcrumb = new BreadCrumb();
+                const breadcrumb = new BreadCrumb();
                 breadcrumb.set('Home', '/');
                 breadcrumb.set('Admin', '/admin');
                 breadcrumb.set('Calendars', '/calendars/' + $state.current.url);
