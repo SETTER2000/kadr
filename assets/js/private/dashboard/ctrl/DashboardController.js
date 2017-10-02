@@ -14,6 +14,7 @@ angular.module('DashboardModule')
             //     });
             // };
             //$scope.itemsResource = $resource(baseUrl);
+
             console.log($window.SAILS_LOCALS.me);
             $scope.data = $window.SAILS_LOCALS.me;
 

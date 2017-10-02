@@ -24,6 +24,27 @@
 
 
             /**
+             * Просто проверочнпая функция, которая
+             * проверяет кол-во наблюдателей (watchers) в модуле.
+             * При кол-ве 2000, нужно уже беспокоиться о производительности.
+             */
+            (function () {
+                var root = $(document.getElementsByTagName('body'));
+                var watchers = [];
+                var f = function (element) {
+                    if (element.data().hasOwnProperty('$scope')) {
+                        angular.forEach(element.data().$scope.$$watchers, function (watcher) {
+                            watchers.push(watcher);
+                        });
+                    }
+                    angular.forEach(element.children(), function (childElement) {
+                        f($(childElement));
+                    });
+                };
+                f(root);
+                console.log('WATCHERS.LENGTH',watchers.length);
+            })();
+            /**
              * PAGINATION
              */
             $scope.defaultRows = 20;

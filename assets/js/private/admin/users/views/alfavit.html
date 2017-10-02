@@ -1,9 +1,19 @@
-<div class="col-md-12"><div class="btn-group btn-group-sm " role="group" aria-label="1">
-    <button ng-repeat="ch in parts"
-            ng-click="getCharText(ch)" ng-bind="ch" type="button" class="btn btn-default">
-    </button>
-    <button ng-click="getCharText(0)" class="btn btn-default" type="button">
-        <span class="glyphicon glyphicon-remove"></span>
-    </button>
-</div>
+<div>
+    <div class="col-md-10">
+        <div class="btn-group btn-group-sm " role="group" aria-label="1">
+            <button ng-repeat="ch in parts"
+                    ng-click="getCharText(ch)" ng-bind="ch" type="button" class="btn btn-default">
+            </button>
+            <button ng-click="getCharText(0)" class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+        </div>
+    </div>
+    <!--{{item.interface}}-->
+    <!--<div class="col-md-2">-->
+        <!--<div class="form-group form-inline">-->
+            <!--<custom-select class="form-control" name="interface" ng-model="me.interface"-->
+                           <!--options="options2"></custom-select>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
