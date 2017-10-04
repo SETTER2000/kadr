@@ -276,7 +276,8 @@ module.exports = {
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
 
-                year = findUser.interface;
+                year = findUser.interface.name;
+                console.log('year:', year);
                 Vacation.native(function (err, collection) {
                     if (err) return res.serverError(err);
                     collection.aggregate([
