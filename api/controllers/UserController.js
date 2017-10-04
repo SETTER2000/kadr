@@ -13,6 +13,7 @@
  * res.forbidden () [403 ошибки], res.notFound () [404 ошибки] или res.serverError () [500 ошибок].
  */
 //var Emailaddresses = require('machinepack-emailaddresses');
+const ObjectId = require('mongodb').ObjectId;
 const Passwords = require('machinepack-passwords');
 const Gravatar = require('machinepack-gravatar');
 const _ = require('lodash');
@@ -1172,22 +1173,50 @@ module.exports = {
      */
     updateInterface: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        let year = (req.param('year')) ? req.param('year') : moment().year();
-        User.update({id: req.session.me}, {interface: year})
-            .exec(
-                function (err, updatedUser) {
-                    if (err) return res.negotiate(err);
-                    if (!updatedUser) return res.notFound();
-                    //return res.ok(updatedUser);
-                    User.find(updatedUser)
-                        .populate('positions')
-                        .populate('vacations')
-                        .exec(function foundUser(err, users) {
-                            if (err) return res.serverError(err);
-                            if (!users) return res.notFound();
-                            return res.ok(users);
-                        });
-                });
+        //let year = (req.param('year')) ? req.param('year') : moment().year();
+        //console.log('YEE:', req.param('year'));
+        //User.native(function (err, collection) {
+        //    if (err) return res.serverError(err);
+        //    console.log('WEEE', req.param('year'));
+        //    collection.update({"_id" : ObjectId(req.session.me)}, {$push:{interface:{$each:req.param('year'),$slice:-1} }},
+        //        function (err, result) {
+        //            if (err) return res.serverError(err);
+        //
+        //            //console.log('RESULT: ', result);
+        //            return res.ok();
+        //        }
+        //    );
+        //
+        //});
+        User.native(function (err, collection) {
+            if (err) return res.serverError(err);
+            //console.log('WEEE', req.param('year'));
+            collection.update({"_id" : ObjectId(req.session.me)},{$set:{interface:req.param('year')}},
+                function (err, result) {
+                    if (err) return res.serverError(err);
+                    return res.ok();
+                }
+            )
+        });
+        //User.update({id: req.session.me}, {interface: req.param('year')})
+        //    .exec(
+        //        function (err, updatedUser) {
+        //            if (err) {
+        //                console.log('Ошибочка', err);
+        //                return res.negotiate(err);
+        //            }
+        //            return res.ok(users);
+        //            //return res.ok(updatedUser);
+        //            //User.find(updatedUser)
+        //            //    .populate('positions')
+        //            //    .populate('vacations')
+        //            //    .exec(function foundUser(err, users) {
+        //            //        if (err) return res.serverError(err);
+        //            //        if (!users) return res.notFound();
+        //            //        return res.ok(users);
+        //            //    });
+        //        });
     }
 };
 
+//

@@ -10,10 +10,15 @@
         </div>
     </div>
     <!--{{item.interface}}-->
-    <!--<div class="col-md-2">-->
-        <!--<div class="form-group form-inline">-->
-            <!--<custom-select class="form-control" name="interface" ng-model="me.interface"-->
-                           <!--options="options2"></custom-select>-->
-        <!--</div>-->
-    <!--</div>-->
+    <div class="col-md-2">
+        <div class="form-group form-inline" >
+            <!--<custom-select class="form-control" name="interface"  ng-model="me.interface"-->
+            <!--options="options2"></custom-select>-->
+
+            <label> Год:
+                <select class="form-control" ng-model="me.interface" ng-options="option as option.name  for option in options2 track by option.id">
+                </select>
+            </label>
+        </div>
+    </div>
 </div>

@@ -187,7 +187,7 @@ module.exports = {
         },
 
         interface:{
-            type: 'integer'
+            type: 'string'
         },
         //vacations: {
         //    collection: 'vacation',

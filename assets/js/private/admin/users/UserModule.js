@@ -161,10 +161,8 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             if (this.birthday) {
                 var tm;
                 tm = new Date(this.birthday);
-                //console.log('TMMM: ', tm);
                 var month = ((+tm.getMonth() + 1) < 10) ? '0' + (+tm.getMonth() + 1) : (+tm.getMonth() + 1);
                 var date = (+tm.getDate() < 10) ? '0' + tm.getDate() : tm.getDate();
-                //console.log('day: ', tm.getUTCDate());
                 tm = date + '.' + month + '.' + tm.getFullYear();
                 this.birthday = tm;
             }
@@ -175,7 +173,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 tm = new Date(this.dateInWork);
                 var month = ((+tm.getMonth() + 1) < 10) ? '0' + (+tm.getMonth() + 1) : (+tm.getMonth() + 1);
                 var date = (+tm.getDate() < 10) ? '0' + tm.getDate() : tm.getDate();
-                //console.log('day: ', tm.getUTCDate());
                 tm = date + '.' + month + '.' + tm.getFullYear();
                 this.dateInWork = tm;
             }
@@ -186,7 +183,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 tm = new Date(this.firedDate);
                 var month = ((+tm.getMonth() + 1) < 10) ? '0' + (+tm.getMonth() + 1) : (+tm.getMonth() + 1);
                 var date = (+tm.getDate() < 10) ? '0' + tm.getDate() : tm.getDate();
-                //console.log('day: ', tm.getUTCDate());
                 tm = date + '.' + month + '.' + tm.getFullYear();
                 this.firedDate = tm;
             }
@@ -197,7 +193,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 tm = new Date(this.decree);
                 var month = ((+tm.getMonth() + 1) < 10) ? '0' + (+tm.getMonth() + 1) : (+tm.getMonth() + 1);
                 var date = (+tm.getDate() < 10) ? '0' + tm.getDate() : tm.getDate();
-                //console.log('day: ', tm.getUTCDate());
                 tm = date + '.' + month + '.' + tm.getFullYear();
                 this.decree = tm;
             }
@@ -216,13 +211,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
         Users.prototype.periodWork = function () {
             var now = moment();
             var event = moment(this.dateInWork, ["DD.MM.YYYY"]);
-
-            //console.log('Сегодня: ' + now.format('YYYY-MM-DD HH:mm:ss'));
-            //console.log('Дата события: ' + event.format('YYYY-MM-DD HH:mm:ss'));
-            //console.log('Событие произошло ' + event.fromNow());
-            //console.log('Разница во времени: ' +moment.preciseDiff(now, event));
             return moment.preciseDiff(now, event);
-            //return  moment(this.dateInWork,["DD.MM.YYYY"]).fromNow(true);
         };
         Users.prototype.getListUrl = function () {
             return '/admin/users';
@@ -258,7 +247,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 if (angular.isArray(value) && angular.isString(param)) {
                     var arr = [];
                     for (var i = 0, ii = value.length; i < ii; i++) {
-                        // console.log(value[i].getFullName()[0]);
                         if (value[i].getFullName()[0] === char) {
                             arr.push(value[i]);
                         }
@@ -302,13 +290,10 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
     })
     .filter("firedUser", function () {
         return function (value) {
-            if(!angular.isArray(value)) return value;
-            let arr=[];
+            if (!angular.isArray(value)) return value;
+            let arr = [];
             value.forEach(function (v, k, a) {
-                //console.log('OBJECT:', v);
-                //console.log('FIRED USER:',v['owner'].fired);
-                if(!v['owner'].fired) arr.push(v);
-                //arr.push(v);
+                if (!v['owner'].fired) arr.push(v);
             });
             return arr;
         }
@@ -344,11 +329,9 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     scope.showContIt = value;
                 });
                 scope.$watch('showStr', function (value) {
-                    console.log('showStr: ', value);
                     scope.showStr = value;
                 });
                 scope.$watch('days', function (value) {
-                    console.log('days: ', value);
                     scope.days = value;
                 });
                 scope.$watch('urlBt', function (value) {
@@ -387,20 +370,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     }
                 });
 
-
-                //scope.getDays= function () {
-                //    $http.get('/vacation/getDays').then(function succesCallback(response) {
-                //            console.log('RESP11:',response.data);
-                //            //if (response.data === '00:00:00') {
-                //            //    $scope.uploaderButtonPrice = true;
-                //            //}
-                //            //$scope.datePrice = response.data;
-                //        },
-                //        function errorCallback(response) {
-                //            console.log('RESP00:',response);
-                //        }
-                //    );
-                //};
                 scope.noPrevious = function () {
                     return scope.currentPage === 1;
                 };
@@ -488,10 +457,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             replace: true,
             link: function (scope) {
                 scope.$watch('objectName', function (value) {
-
-                    //console.log('OBJECT NAME');
-                    //console.log(value);
-
                     scope.objectName = value;
                     scope.checkArray();
                 });
@@ -501,9 +466,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     var v = scope.objectName;
                     for (var key in v) {
                         var obj = v[key];
-
-                        //console.log(obj);
-
                         for (var prop in obj) {
                             var chars;
                             if (prop === scope.filedName) {
@@ -512,11 +474,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                             }
                         }
                     }
-                    //console.log('PARTS');
-                    //console.log(parts);
                     scope.parts = scope.uniqueValue(parts);
-                    //console.log('UNIQUE PARTS');
-                    //console.log(scope.parts);
                 };
 
                 scope.uniqueValue = function (arr) {
@@ -560,8 +518,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                         scope.where = obj;
                         //scope.where = {"lastName": {'like': ch + '%'}};
                         scope.charText = ch;
-                        //console.log('WHERE');
-                        //console.log(scope.where);
                     } else {
                         // $scope.defaultRows;
                         scope.charText = '';
@@ -612,9 +568,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             link: function (scope) {
 
                 scope.$watch('objectName', function (value) {
-                    //console.log('OBJECT NAME33');
-                    //console.log(value);
-
                     scope.objectName = value;
                     scope.checkArray();
                 });
@@ -622,13 +575,8 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 scope.checkArray = function () {
                     var parts = [];
                     var v = scope.objectName;
-                    //console.log('obj - v');
-                    //console.log(v);
                     for (var key in v) {
                         var obj = v[key];
-                        //
-                        //console.log('obj');
-                        //console.log(obj);
                         for (var prop in obj) {
                             var chars;
                             if (prop === scope.filedName) {
@@ -637,11 +585,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                             }
                         }
                     }
-                    //console.log('PARTS');
-                    //console.log(parts);
                     scope.parts = scope.uniqueValue(parts).sort();
-                    //console.log('UNIQUE2 PARTS2');
-                    //console.log(scope.parts);
                 };
 
                 scope.uniqueValue = function (arr) {
@@ -692,8 +636,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 };
 
                 scope.getCharText = function (ch) {
-                    //console.log(ch);
-
                     if (angular.isString(ch) && ch.length > 0) {
                         scope.where = {lastName: {'like': ch + '%'}};
                         scope.charText = ch;
@@ -730,20 +672,41 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             }
         };
     })
+    /**
+     * При использовании в директиве изолированного скоупа
+     * директиву можно многократно использовать в одном контролере
+     * сразным набором входящих данных.
+     */
     .directive('customSelect', function () {
         return {
             restrict: "E",
             replace: true,
+            // то, что мы передали в директиву custom-select
             scope: {
                 'ngModel': '=',
                 'options': '='
             },
-            templateUrl: '/js/private/admin/users/views/select.view.html',
+            //transclude: true,
+            templateUrl: function (elem, attr) {
+                return '/js/private/admin/users/views/select.view.html';
+            },
             link: function (scope, $element, attributes) {
                 scope.selectable_options = scope.options;
             }
         };
     })
+    /**
+     * Не используя в директиве изолированного скоупа
+     * директиву можно многократно использовать в разных контролерах.
+     */
+    .directive('headTable', function () {
+        return {
+            templateUrl: function (elem, attr) {
+                return '/js/private/admin/users/views/' + attr.type + '-head-table.html';
+            }
+        };
+    })
+
 
 //.directive("fileread", [function () {
 //    return {

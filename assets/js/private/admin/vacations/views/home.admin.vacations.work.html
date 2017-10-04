@@ -1,7 +1,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=(items | firedUser | filter:{$:searchText, action:true} ).length"
+        length-object="countCurrentView=(items | interfaceYear:me | firedUser | filter:{$:searchText, action:true} ).length"
         current-page="currentPage"
         added="added"
         show-bt="showBt"
@@ -12,92 +12,12 @@
         on-select-page="selectCount=selectCount+1">
 </pagination>
 <table class="table table-hover">
-    <tr>
-        <th>#</th>
-        <th class="text-center">{{countCurrentView}}</th>
-        <th>
-            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('name')">
-                {{fioArea}}
-<span class="sortOrder" ng-show="propertyName === 'name'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-
-        <th>
-            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('owner.lastName')">
-                {{lastNameArea}}
-<span class="sortOrder" ng-show="propertyName === 'owner.lastName'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-
-        <th class="text-center">
-            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('daysSelectHoliday')">
-                {{daysSelectHolidayArea}}
-<span class="sortOrder" ng-show="propertyName === 'daysSelectHoliday'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th>
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('furlough.name')">
-                {{tipArea}}
-<span class="sortOrder" ng-show="propertyName === 'furlough.name'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th>
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('status')">
-                {{statusArea}}
-<span class="sortOrder" ng-show="propertyName === 'status'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th>
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('actions')">
-                {{actionsArea}}
-<span class="sortOrder" ng-show="propertyName === 'actions'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th>
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('info')">
-                {{infoArea}}
-<span class="sortOrder" ng-show="propertyName === 'info'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th class="text-center">
-            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('createdAt')">
-                {{createdAt}}
-<span class="sortOrder" ng-show="propertyName === 'createdAt'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th ng-if="me.admin" class="text-center">
-            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('updatedAt')">
-                {{updatedAt}}
-<span class="sortOrder" ng-show="propertyName === 'updatedAt'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th class="text-center" ng-if="me.admin">
-            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('whomCreated')">
-                {{whomCreatedArea}}
-<span class="sortOrder" ng-show="propertyName === 'whomCreated'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <th class="text-center" ng-if="me.admin">
-            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('whomUpdated')">
-                {{whomUpdatedArea}}
-<span class="sortOrder" ng-show="propertyName === 'whomUpdatedArea'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-    </tr>
+    <tr head-table type="vacation"></tr>
     <tr ng-repeat="item in filtered=(items | interfaceYear:me | firedUser | filter:{$:searchText, action:true}  |
-orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
-        <td>{{$index+1}}</td>
+       orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
+        <td>
+            {{$index+1}}
+        </td>
         <td>
             <!--<pre>{{item.owner.avatarUrl | json}}</pre>-->
             <a    href="/admin/users/edit/{{item.owner.id}}">
@@ -107,24 +27,40 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitT
             </a>
         </td>
         <td nowrap>
-            <a href="{{item.getEditUrl(item.id)}}">
+            <a class="position" href="{{item.getEditUrl(item.id)}}">
                 {{item.name}}
             </a>
         </td>
         <td  nowrap>
-            {{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}
+            <span class="position">{{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}</span>
         </td>
-        <td class="text-center">{{item.daysSelectHoliday}}</td>
-        <td>{{item.furlough.name}}</td>
-        <td class="text-center"><span title="{{item.status | changeName}}" ng-class="item.status | getICO"></span></td>
-        <td>{{item.actions}}</td>
-        <td>{{item.info}}</td>
-        <td class="text-center">{{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}</td>
-        <td ng-if="me.admin" class="text-center">{{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}</td>
-        <td class="text-center" ng-if="me.admin">{{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}}
+        <td class="text-center">
+            {{item.daysSelectHoliday}}
+        </td>
+        <td>
+            <span class="position">{{item.furlough.name}}</span>
+        </td>
+        <td class="text-center">
+            <span title="{{item.status | changeName}}" ng-class="item.status | getICO"></span>
+        </td>
+        <td>
+            {{item.actions}}
+        </td>
+        <td>
+            {{item.info}}
+        </td>
+        <td class="text-center">
+            {{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}
+        </td>
+        <td ng-if="me.admin" class="text-center">
+            {{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}
+        </td>
+        <td class="text-center" ng-if="me.admin">
+            {{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}}
             {{item.whomCreated.patronymicName[0]}}
         </td>
-        <td class="text-center" ng-if="me.admin">{{item.whomUpdated.lastName}} {{item.whomUpdated.firstName[0]}}
+        <td class="text-center" ng-if="me.admin">
+            {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName[0]}}
             {{item.whomUpdated.patronymicName[0]}}
         </td>
     </tr>

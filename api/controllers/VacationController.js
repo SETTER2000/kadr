@@ -148,7 +148,8 @@ module.exports = {
                                         ]
                                     }
                                 }
-                            ]).toArray(function (err, results) {
+                            ])
+                                .toArray(function (err, results) {
                                 if (err) return res.serverError(err);
 
                                 console.log('RESULT: ', results);

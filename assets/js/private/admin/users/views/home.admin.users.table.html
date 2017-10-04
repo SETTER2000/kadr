@@ -11,103 +11,18 @@
 </pagination>
 
 <table class="table table-hover">
-    <!--<tr><th colspan="100">Найдено: {{filtered.length}}</th></tr>-->
-    <tr>
-        <th>#</th><th></th>
-        <th>
-            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('lastName')">{{fioArea}}
-<span class="sortOrder" ng-show="propertyName === 'lastName'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
-        <!--<th>-->
-        <!--<button class="btn  btn-sm btn-default" ng-click="sortBy('birthday')">{{drArea}}-->
-        <!--<span class="sortOrder" ng-show="propertyName === 'birthday'"-->
-        <!--ng-class="{reverse: reverse}"></span>-->
-        <!--</button>-->
-
-        <!--</th>-->
-        <!--<th>-->
-        <!--<button class="btn  btn-sm btn-default" ng-click="sortBy('login')">{{loginArea}}-->
-        <!--<span class="sortOrder" ng-show="propertyName === 'login'"-->
-        <!--ng-class="{reverse: reverse}"></span>-->
-        <!--</button>-->
-
-        <!--</th>-->
-
-        <th>
-            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('departments[0].name')">{{departmentArea}}
-<span class="sortOrder" ng-show="propertyName === 'departments[0].name'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-
-        </th>
-        <th>
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('positions[0].name')">{{positionArea}}
-<span class="sortOrder" ng-show="propertyName === 'positions[0].name'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-
-        </th>
-        <th>
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">{{emailArea}}
-<span class="sortOrder" ng-show="propertyName === 'email'"
-      ng-class="{reverse: reverse}"></span>
-            </button>
-
-        </th>
-
-        <th class="wdt">
-            <!--<button class="btn  btn-sm btn-default" ng-click="sortBy('contacts')">Контакты: {{fieldName}}-->
-            <!--<span class="sortOrder" ng-show="propertyName === 'contacts'"-->
-            <!--ng-class="{reverse: reverse}"></span>-->
-            <!--</button>-->
-            <!-- Single button -->
-            <!-- Split button -->
-            <div class="btn-group pull-right">
-                <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">
-<span class="sortOrder" ng-show="propertyName === 'contacts'"
-      ng-class="{reverse: reverse}"></span>
-                    Контакты: {{fieldName}}
-                </button>
-                <button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Контакты: {{fieldName}}</span>
-                </button>
-                <ul class="dropdown-menu">
-                    <!--<li><a href="#" ng-click="fieldName='Email'">Email</a></li>-->
-                    <li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>
-                    <li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>
-                    <li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>
-                    <!--<li role="separator" class="divider"></li>-->
-                    <!--<li><a href="#">Separated link</a></li>-->
-                </ul>
-            </div>
-        </th>
-        <!--<th>-->
-        <!--<button class="btn  btn-sm btn-default" ng-click="sortBy('email')">Отработанное время-->
-        <!--<span class="sortOrder" ng-show="propertyName === 'email'"-->
-        <!--ng-class="{reverse: reverse}"></span>-->
-        <!--</button>-->
-
-        <!--</th>-->
-        <!--<th></th>-->
-        <!--<th></th>-->
-    </tr>
-    <!--| firstChar:param:charText-->
-    <!--ng-class="$even ? 'default' : 'success'"-->
-    <!--<tr><td ng-repeat="(key,property) in item">{{key}}</td></tr>-->
+    <tr head-table type="user"></tr>
     <tr ng-repeat="item in filtered=(items | filter:{$:searchText, fired:mode} |
 orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">
-
-        <td>{{$index+1}}</td>
+        <td>
+            {{$index+1}}
+        </td>
         <td>
             <img ng-if="item.avatarUrl" alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="photo"/>
             <img ng-if="!item.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>
         </td>
         <td>
-            <a href="{{item.getEditUrl(item.id)}}">
+            <a class="position" href="{{item.getEditUrl(item.id)}}">
                 {{item.getFullName()}}
             </a>
             <!--<button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>-->
@@ -115,6 +30,9 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             <!--<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">-->
             <!--{{item.getFullName()}}-->
             <!--</button>-->
+        </td>
+        <td class="text-center">
+            {{item.room}}
         </td>
         <!--<td><a href='#' ng-click="getLastName(item)">{{item.getFullName()}}</a></td>-->
         <!--<td ng-if="">{{item.getFullName()}}</td>-->
@@ -150,9 +68,12 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                 </li>
             </ul>
         </td>
-
-        <td> <a href="mailto:{{item.email}}">{{item.email}}</a></td>
-        <td width="250px" class="text-right">{{item.getContact(fieldName)}}</td>
+        <td>
+            <a class="position" href="mailto:{{item.email}}">{{item.email}}</a>
+        </td>
+        <td width="250px" class="text-right">
+            {{item.getContact(fieldName)}}
+        </td>
         <!--<td>{{item.diff}}</td>-->
         <!--<td class="btn-group-xs">-->
             <!--<a ng-href="{{item.getShowUrl(item.id)}}" class="btn"-->

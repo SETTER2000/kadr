@@ -4,6 +4,12 @@
         .controller('ListVacationController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Vacations', 'Users', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Vacations, Users) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
+
+            //$scope.trackexpr = $scope.me.interface;
+            //$scope.$watch('trackexpr', function (value) {
+            //    $scope.interface(value);
+            //    $scope.refresh();
+            //});
             //toastr.options = {
             //    "closeButton": false,
             //    "debug": false,
@@ -104,23 +110,27 @@
                     {id: "2018", name: "2018"},
                     {id: "2019", name: "2019"}
                 ];
-            $scope.modeSelectYear = $scope.options2[2];
+            $scope.modeSelectYear = $scope.options2[0];
             $scope.$watch('me.interface', function (newValue, oldValue) {
                 $scope.interface(newValue);
             });
             $scope.interface = function (year) {
+                //let ar = [];
+                //(angular.isArray(year)) ? ar = year : ar.push(year);
+
+
                 $http.put('/user/updateInterface', {
                         year: year
                     })
-                    .then(function onSuccess(sailsResponse){
+                    .then(function onSuccess(sailsResponse) {
                         //toastr.info('Сохранения интерфейса.','', { timeOut: 1000 });
                         //$scope.refresh();
                         // window.location = '/' + sailsResponse.data.username;
                     })
                     .catch(function onError(sailsResponse) {
-                         if (sailsResponse.data.status >= 400 < 404) {
+                        if (sailsResponse.data.status >= 400 < 404) {
                             $scope.restoreProfileForm.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
-                            toastr.error('The email/password combination did not match a user profile.','', { timeOut: 1000 });
+                            toastr.error('The email/password combination did not match a user profile.', '', {timeOut: 1000});
                             return;
                         }
                     })
@@ -134,11 +144,10 @@
              */
             $scope.getDays = function () {
                 $http.get('/vacation/getDays/?year=' + 2017).then(function success(response) {
-                        console.log('RESP11:', response.data);
                         $scope.days = $scope.countHolidayRF - response.data.count;
                     },
                     function errorCallback(response) {
-                        console.log('RESP00:', response);
+
                     }
                 );
             };
@@ -152,7 +161,6 @@
                     {display: "Все", value: "table"}
                 ];
             $scope.modeSelect = $scope.options[0];
-            //console.log('$scope.modeSelect', $scope.modeSelect);
             $scope.tableView = "/js/private/admin/vacations/views/home.admin.vacations.table.html";
             //$scope.listView = "/js/private/admin/vacations/views/home.admin.vacations.list.html";
             $scope.actionView = "/js/private/admin/vacations/views/home.admin.vacations.action.html";
@@ -270,24 +278,15 @@
                     property: 'lastName',
                     char: $scope.charText + '%'
                 };
-                console.log('QUERY:', $scope.query);
+
                 $scope.items = Vacations.query($scope.query, function (vacations) {
                     console.log('Vacations ITEMS22:', vacations);
-                    //console.log('Owner: ', vacations[0].getOwner());
-                    //console.log('eeeeeeeeee111', vacations.length);
-                    //$scope.objectName = vacations;
                     $scope.objectName = [];
-
-                    //////if (!angular.isDefined(vacations)) toastr.error('Нет объекта для обработки.', 'Ошибка!');
                     for (var u = 0; u < vacations.length; u++) {
-                        //console.log('Owner: ', vacations[0].getOwner());
                         $scope.objectName.push(vacations[u].getOwner());
                     }
-                    ////console.log(vacations.objectName);
-                    //$scope.objectName = objectName;
-                    console.log('scope.objectName:', $scope.objectName);
+                    console.log('$scope.objectName', $scope.objectName);
                     $scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
-                    //console.log('NUM PAGES', $scope.numPages);
                 }, function (err) {
                     toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
                 });
