@@ -87,6 +87,9 @@
   },
   "homepage": "https://github.com/SETTER2000/kadr#readme",
   "devDependencies": {
-    "longjohn": "^0.2.12"
+    "longjohn": "^0.2.12",
+    "mocha": "^4.0.0",
+    "sails-memory": "^0.10.7",
+    "supertest": "^3.0.0"
   }
 }
