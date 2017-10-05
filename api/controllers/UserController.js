@@ -456,31 +456,45 @@ module.exports = {
                 return res.negotiate(err);
             },
             success: function (encryptedPassword) {
-                User.create({
-                    login: req.param('login'),
-                    email: req.param('email'),
-                    firstName: req.param('firstName'),
-                    lastName: req.param('lastName'),
-                    patronymicName: req.param('patronymicName'),
-                    encryptedPassword: encryptedPassword,
-                    birthday: req.param('birthday'),
-                    contacts: req.param('contacts'),
-                    subdivision: req.param('subdivision'),
-                    positions: req.param('positions'),
-                    pfr: req.param('pfr'),
-                    parking: req.param('parking'),
-                    park: req.param('park'),
-                    numCar: req.param('numCar'),
-                    brandCar: req.param('brandCar'),
-                    dateInWork: req.param('dateInWork'),
-                    lastLoggedIn: new Date()
-                    //gravatarUrl: gravatarUrl
-                }, function (err, newUser) {
-                    if (err) return res.negotiate(err);
-                    sails.log('Создан новый пользователь с логином:' + newUser.login);
-                    Mailer.sendWelcomeMail(newUser);
-                    res.send({id: newUser.id});
-                });
+                Interface.create({year: moment().year()})
+                    .exec((err, createInterface)=> {
+                        if (err) {
+                            console.log('ОШибка в User.createUser', err);
+                            return res.negotiate(err);
+                        }
+                        User.create({
+                            login: req.param('login'),
+                            email: req.param('email'),
+                            firstName: req.param('firstName'),
+                            lastName: req.param('lastName'),
+                            patronymicName: req.param('patronymicName'),
+                            encryptedPassword: encryptedPassword,
+                            birthday: req.param('birthday'),
+                            contacts: req.param('contacts'),
+                            subdivision: req.param('subdivision'),
+                            positions: req.param('positions'),
+                            pfr: req.param('pfr'),
+                            parking: req.param('parking'),
+                            park: req.param('park'),
+                            numCar: req.param('numCar'),
+                            brandCar: req.param('brandCar'),
+                            dateInWork: req.param('dateInWork'),
+                            lastLoggedIn: new Date()
+                            //gravatarUrl: gravatarUrl
+                        }, function (err, newUser) {
+                            if (err) return res.negotiate(err);
+                            sails.log('Создан новый пользователь с логином:' + newUser.login);
+
+                            newUser.interfaces.add(createInterface.id);
+                            newUser.save(function (err) {
+                                if (err) return res.negotiate(err);
+                                Mailer.sendWelcomeMail(newUser);
+                                res.send({id: newUser.id});
+                            });
+                        });
+                    });
+
+
             }
         });
     },
@@ -651,6 +665,7 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.findOne(req.param('id'))
             .populate('positions')
+            .populate('interfaces')
             .exec(function foundUser(err, user) {
                 if (err) return res.serverError(err);
                 if (!user) return res.notFound();
@@ -671,6 +686,7 @@ module.exports = {
             User.findOne(req.param('id'))
                 .populate('positions')
                 .populate('vacations')
+                .populate('interfaces')
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
@@ -690,6 +706,7 @@ module.exports = {
                 User.find(q)
                     .populate('positions')
                     .populate('vacations')
+                    .populate('interfaces')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -699,6 +716,7 @@ module.exports = {
                 User.find()
                     .populate('positions')
                     .populate('vacations')
+                    .populate('interfaces')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -736,6 +754,8 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.find(req.param('id'))
             .populate('positions')
+            .populate('vacations')
+            .populate('interfaces')
             .exec((err, user) => {
                 if (err)return next(err);
                 if (!user)return next('User doesn\'t exists.');
@@ -786,6 +806,8 @@ module.exports = {
             console.log('objEdit: ', objEdit);
             User.findOne(req.param('id'))
                 .populate('positions')
+                .populate('vacations')
+                .populate('interfaces')
                 .exec(function (err, user) {
                     if (err) return res.negotiate(err);
                     if (!user) return res.notFound('Не могу');
@@ -816,15 +838,19 @@ module.exports = {
      */
     destroy: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        User.findOne(req.param('id'), function foundUser(err, user) {
-            if (err)return next(err);
-            if (!user)return next('User doesn\'t exists.');
-            User.destroy(req.param('id'), function userDestroyed(err) {
+        User.findOne(req.param('id'))
+            .populate('positions')
+            .populate('vacations')
+            .populate('interfaces')
+            .exec((err, user)=> {
                 if (err)return next(err);
+                if (!user)return next('User doesn\'t exists.');
+                User.destroy(req.param('id'))
+                    .exec((err) => {
+                    if (err)return next(err);
+                });
+                res.ok();
             });
-            // res.redirect('/admin/users');
-            res.ok();
-        });
     },
 
     /**
@@ -1191,7 +1217,7 @@ module.exports = {
         User.native(function (err, collection) {
             if (err) return res.serverError(err);
             //console.log('WEEE', req.param('year'));
-            collection.update({"_id" : ObjectId(req.session.me)},{$set:{interface:req.param('year')}},
+            collection.update({"_id": ObjectId(req.session.me)}, {$set: {interface: req.param('year')}},
                 function (err, result) {
                     if (err) return res.serverError(err);
                     return res.ok();

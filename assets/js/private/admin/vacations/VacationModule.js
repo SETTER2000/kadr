@@ -182,19 +182,28 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
     .filter("interfaceYear", function () {
         /**
          * Фильтр отбирает объекты согласно сохранённому году интерфейса пользователя
+         * т.е. с какого года начинать выводить отпуска
          */
         return function (value, me) {
             if (!angular.isArray(value)) return value;
             let arr = [];
             value.forEach(function (v, k, a) {
-                let startOff = moment(me['interface'].name, ['YYYY']).startOf('year');
-                let endOff = moment(me['interface'].name, ['YYYY']).endOf('year');
+                let startOff = moment(me.year, ['YYYY']).startOf('year');
+                let endOff = moment(me.year, ['YYYY']).endOf('year');
 
                 /**
+                 * !!! НЕ УДАЛЯТЬ ЗАПРОС
                  *  То же или после  &&  То же или до
                  *  В общем случаи между )
                  */
-                if (moment(v['from']).isSameOrAfter(startOff, 'year') && moment(v['to']).isSameOrBefore(endOff, 'year')) {
+                //if (moment(v['from']).isSameOrAfter(startOff, 'year') && moment(v['to']).isSameOrBefore(endOff, 'year')) {
+                //    arr.push(v);
+                //}
+
+                /**
+                 * То же или после
+                 */
+                if (moment(v['from']).isSameOrAfter(startOff, 'year')) {
                     arr.push(v);
                 }
             });

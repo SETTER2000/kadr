@@ -186,8 +186,11 @@ module.exports = {
             dominant: true
         },
 
-        interface:{
-            type: 'string'
+        //interface:{
+        //    type: 'string'
+        //},
+        interfaces:{
+            collection: 'interface'
         },
         //vacations: {
         //    collection: 'vacation',

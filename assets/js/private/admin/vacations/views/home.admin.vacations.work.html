@@ -13,7 +13,7 @@
 </pagination>
 <table class="table table-hover">
     <tr head-table type="vacation"></tr>
-    <tr ng-repeat="item in filtered=(items | interfaceYear:me | firedUser | filter:{$:searchText, action:true}  |
+    <tr ng-repeat="item in filtered=(items | interfaceYear:inter | firedUser | filter:{$:searchText, action:true}  |
        orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
         <td>
             {{$index+1}}

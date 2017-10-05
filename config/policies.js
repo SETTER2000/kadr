@@ -69,6 +69,11 @@ module.exports.policies = {
         //find:   ['isLoggedIn', 'isAdmin','isKadr'],
     },
 
+    InterfaceController: {
+        //'*': true
+        //update: ['isLoggedIn'],
+        //create: ['isLoggedIn']
+    },
     //FurloughController: {
     //    '*': 'isLoggedIn',
     //    //'*': false,
@@ -76,11 +81,6 @@ module.exports.policies = {
     //    destroy: ['isLoggedIn', 'isAdmin'],
     //    update: ['isLoggedIn', 'isAdminOrKadr']
     //}
-
-
-
-
-
 
 
     /***************************************************************************

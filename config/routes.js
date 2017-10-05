@@ -89,6 +89,15 @@ module.exports.routes = {
     'GET /vacation/getDays': 'VacationController.daysInYear',
 
 
+
+    /**
+     * Interface
+     */
+    'GET /interface/create': 'InterfaceController.create',
+    'GET /interface/get': 'InterfaceController.get',
+    'PUT /interface/update': 'InterfaceController.update',
+
+
     // !!!! НЕ УДАЛЯТЬ РОУТ!
     //'POST /user/signup': 'UserController.signup',
 

@@ -139,51 +139,57 @@ module.exports = {
                              */
 
                             collection.aggregate([
-                                {
-                                    $match: {
-                                        $or: [
-                                            {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                            {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                            {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                        ]
+                                    {
+                                        $match: {
+                                            $or: [
+                                                {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                                {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                                {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
+                                            ]
+                                        }
                                     }
-                                }
-                            ])
+                                ])
                                 .toArray(function (err, results) {
-                                if (err) return res.serverError(err);
+                                    if (err) return res.serverError(err);
 
-                                console.log('RESULT: ', results);
-                                if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
+                                    //console.log('RESULT: ', results);
+                                    if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
 
-                                Vacation.findOne({'name': req.param('name'), 'owner': obj.owner.id})
-                                    .exec((err, findParam)=> {
-                                        "use strict";
-                                        if (err)return res.serverError(err);
-                                        if (findParam) return res.badRequest(req.param('name') + ' - дубликат.');
+                                    Vacation.findOne({'name': req.param('name'), 'owner': obj.owner.id})
+                                        .exec((err, findParam)=> {
+                                            "use strict";
+                                            if (err)return res.serverError(err);
+                                            if (findParam) return res.badRequest(req.param('name') + ' - дубликат.');
 
-                                        console.log('findParam: ', findParam);
-                                        console.log('=============================================*');
+                                            //console.log('findParam: ', findParam);
+                                            console.log('=============================================*');
 
-                                        Vacation.create(obj).exec(function (err, createVacation) {
-                                            if (err) return res.serverError(err);
-                                            console.log('Отпуск создал:', req.session.me);
-                                            //console.log('Отпуск новый:', createVacation);
-                                            findUser.vacations.add(createVacation.id);
-                                            findUser.vacationWhomCreated.add(createVacation.id);
-                                            //findUser.vacationWhomUpdated.add(finn.id);
-                                            findFurlough.vacations.add(createVacation.id);
-                                            findUser.save(function (err) {
-                                                if (err) return res.negotiate(err);
-                                                //console.log('finn-7777777:', createVacation);
-                                                findFurlough.save(function (err) {
-                                                    if (err) return res.negotiate(err);
-                                                    //console.log('finn:', createVacation);
-                                                    return res.send(createVacation);
+                                            Vacation.create(obj).exec(function (err, createVacation) {
+                                                if (err) return res.serverError(err);
+                                                console.log('Отпуск создал:', req.session.me);
+                                                //console.log('Отпуск новый:', createVacation);
+                                                findUser.vacations.add(createVacation.id);
+                                                findUser.vacationWhomCreated.add(createVacation.id);
+                                                //findUser.vacationWhomUpdated.add(finn.id);
+                                                findFurlough.vacations.add(createVacation.id);
+
+                                                //console.log('ОБЪЕКТ USER:', findUser);
+
+                                                findUser.save(function (err) {
+                                                    if (err) {
+                                                        console.log('ОШИБКИ ЮЗЕРА:', err);
+                                                        return res.negotiate(err);
+                                                    }
+                                                    //console.log('finn-7777777:', createVacation);
+                                                    findFurlough.save(function (err) {
+                                                        if (err) return res.negotiate(err);
+                                                        //console.log('finn:', createVacation);
+                                                        return res.send(createVacation);
+                                                    });
                                                 });
                                             });
                                         });
-                                    });
-                            });
+                                });
                         });
 
                     });
@@ -271,12 +277,18 @@ module.exports = {
         User.findOne({id: req.session.me})
             .populate('vacationWhomCreated')
             .populate('vacations')
+            .populate('interfaces')
             .exec((err, findUser)=> {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
 
-                year = findUser.interface.name;
+                if (!findUser.interfaces.length) {
+                    return console.log('ОШИБКА! Нет свойства "год" в коллекции Interface, у пользователя ' +
+                        findUser.lastName + ' ' + findUser.firstName +
+                        '. Перейдите по ссылке http://'+ req.headers.host +'/interface/create');
+                }
+                year = findUser.interfaces[0].year;
                 console.log('year:', year);
                 Vacation.native(function (err, collection) {
                     if (err) return res.serverError(err);
@@ -288,12 +300,12 @@ module.exports = {
                     ]).toArray(function (err, results) {
                         if (err) return res.serverError(err);
                         if (!results.length)   return res.ok({count: 0});
-                        let obYear = {};
+                        let obYear = {count:0};
                         _.forEach(results, function (value, key) {
                             console.log('VALUE', value);
                             if (value['_id'].year == year) obYear = value;
                         });
-                        console.log('RESPONSE YEARS ARR: ',obYear);
+                        console.log('RESPONSE YEARS ARR: ', obYear);
                         return res.ok(obYear);
                     });
                 });

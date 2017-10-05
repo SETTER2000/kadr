@@ -106,25 +106,23 @@
              */
             $scope.options2 =
                 [
-                    {id: "2015", name: "2015"},
-                    {id: "2016", name: "2016"},
-                    {id: "2017", name: "2017"},
-                    {id: "2018", name: "2018"},
-                    {id: "2019", name: "2019"}
+                    {id: "2015", year: "2015"},
+                    {id: "2016", year: "2016"},
+                    {id: "2017", year: "2017"},
+                    {id: "2018", year: "2018"},
+                    {id: "2019", year: "2019"}
                 ];
             $scope.modeSelectYear = $scope.options2[0];
-            $scope.$watch('me.interface', function (newValue, oldValue) {
-                $scope.interface(newValue);
-            });
-            $scope.interface = function (year) {
-                //let ar = [];
-                //(angular.isArray(year)) ? ar = year : ar.push(year);
 
 
-                $http.put('/user/updateInterface', {
-                        year: year
+            $scope.inter = {year:moment().year()};
+            $scope.$watch('interface', function (value, old) {
+                $http.put('/interface/update', {
+                        year: value.year
                     })
                     .then(function onSuccess(sailsResponse) {
+                        console.log('sailsResponse: ', sailsResponse);
+                        $scope.inter = sailsResponse.data[0];
                         //toastr.info('Сохранения интерфейса.','', { timeOut: 1000 });
                         //$scope.refresh();
                         // window.location = '/' + sailsResponse.data.username;
@@ -139,13 +137,12 @@
                     .finally(function eitherWay() {
 
                     });
-            };
-
+            });
             /**
              * Кол-во дн. отпуска выбранных в конкретном году
              */
             $scope.getDays = function () {
-                $http.get('/vacation/getDays/?year=' + 2017).then(function success(response) {
+                $http.get('/vacation/getDays/?year=' + moment().year()).then(function success(response) {
                         $scope.days = $scope.countHolidayRF - response.data.count;
                     },
                     function errorCallback(response) {
@@ -153,6 +150,23 @@
                     }
                 );
             };
+
+            /**
+             *  год
+             */
+            $scope.getInterface = function () {
+                $http.get('/interface/get').then(function success(response) {
+                    $scope.interface = {name:response.data.year, id:response.data.year};
+                        console.log('INTERFACES+: ',$scope.interface);
+                    $scope.me.intarface['name'] = response.data.year;
+                    $scope.me.intarface['id'] = response.data.year;
+                    },
+                    function errorCallback(response) {
+
+                    }
+                );
+            };
+            $scope.getInterface();
             $scope.getDays();
 
             $scope.options =
@@ -284,6 +298,7 @@
                 $scope.items = Vacations.query($scope.query, function (vacations) {
                     console.log('Vacations ITEMS22:', vacations);
                     $scope.objectName = [];
+                    //$scope.me.interface = vacations.interfaces[0].year;
                     for (var u = 0; u < vacations.length; u++) {
                         $scope.objectName.push(vacations[u].getOwner());
                     }
