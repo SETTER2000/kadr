@@ -190,7 +190,9 @@ module.exports = {
         //    type: 'string'
         //},
         interfaces:{
-            collection: 'interface'
+            collection: 'interface',
+            via: 'users',
+            dominant: true
         },
         //vacations: {
         //    collection: 'vacation',

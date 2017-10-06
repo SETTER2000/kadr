@@ -8,6 +8,8 @@ const ObjectId = require('mongodb').ObjectId;
 const moment = require('moment');
 moment.locale('ru');
 const _ = require('lodash');
+const path = require('path');
+const fs = require('fs');
 
 
 module.exports = {
@@ -19,50 +21,63 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        var q = {
+            //where:{lastName:'Абрамов'},
+            limit: req.param('limit'),
+            sort: req.param('sort')
+        };
         if (!_.isUndefined(req.param('where')) && req.param('char').length > 1) {
-            var q = {
-                limit: req.params.limit,
-                sort: req.params.sort
-            };
             var y = {};
             y[req.param('property')] = {'like': req.param('char')};
             q.where = y;
-            User.find(q)
-                .populate('vacations')
-                .populate('positions')
-                .exec(function foundUser(err, users) {
-                    if (err) return res.serverError(err);
-                    if (!users) return res.notFound();
-                    let us = [];
-                    _.forEach(users, function (user) {
-                        us.push({'owner': user.id});
+        }
+        //console.log('SORT USER:', q);
+        User.find(q)
+            .populate('vacations')
+            .populate('positions')
+            .populate('interfaces')
+            .exec(function foundUser(err, users) {
+                if (err) return res.serverError(err);
+                if (!users) return res.notFound();
+                let us = [];
+                _.forEach(users, function (user) {
+                    //console.log('UIP: ', user);
+                    //console.log('LENGTH: ', user.vacations.length);
+                    //if (user.vacations.length > 0) us.push({'owner': user.id});
+                    us.push({'owner': user.id});
+                });
+
+                //console.log('ОТОБРАННЫЕ:', us);
+                //console.log('SORT VACATION:', q);
+
+                Vacation.find(us)
+                    .populate('furlough')
+                    .populate('owner')
+                    .populate('whomCreated')
+                    .populate('whomUpdated')
+                    .exec(function foundVacation(err, vacations) {
+                        if (err) return res.serverError(err);
+                        if (!vacations) return res.notFound();
+                        //console.log('vacations RESPONS:', vacations);
+                        (req.param('id')) ? res.ok(vacations[0]) : res.ok(vacations);
                     });
-                    Vacation.find(us)
-                        .populate('furlough')
-                        .populate('owner')
-                        .populate('whomCreated')
-                        .populate('whomUpdated')
-                        .exec(function foundVacation(err, vacations) {
-                            if (err) return res.serverError(err);
-                            if (!vacations) return res.notFound();
-                            return res.ok(vacations);
-                        });
-                });
-        }
-        else {
-            Vacation.find(req.param('id'))
-                .populate('furlough')
-                .populate('owner')
-                .populate('whomCreated')
-                .populate('whomUpdated')
-                .exec(function foundVacation(err, vacations) {
-                    if (err) return res.serverError(err);
-                    if (!vacations) return res.notFound();
-                    if (err) return res.negotiate;
-                    if (!vacations) return res.notFound();
-                    (req.param('id')) ? res.ok(vacations[0]) : res.ok(vacations);
-                });
-        }
+            });
+        //}
+        //else {
+        //    console.log('XXXXXXXXXX:', req.body);
+        //    Vacation.find(req.param('id'))
+        //        .populate('furlough')
+        //        .populate('owner')
+        //        .populate('whomCreated')
+        //        .populate('whomUpdated')
+        //        .exec(function foundVacation(err, vacations) {
+        //            if (err) return res.serverError(err);
+        //            if (!vacations) return res.notFound();
+        //            if (err) return res.negotiate;
+        //            if (!vacations) return res.notFound();
+        //            (req.param('id')) ? res.ok(vacations[0]) : res.ok(vacations);
+        //        });
+        //}
     },
 
 
@@ -106,25 +121,18 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-                //console.log('findParam:', findUser);
-                //obj.vacationWhomCreated = findUser.id;
-                //console.log('OWNER:' , req.param('owner'));
                 obj.owner = (req.param('owner')) ? req.param('owner').id : findUser.id;
                 obj.whomCreated = findUser.id;
-
                 Furlough.findOne(req.param('furlough'))
                     .populate('vacations')
                     .exec((err, findFurlough)=> {
                         "use strict";
                         if (err) return res.serverError(err);
                         if (!findFurlough) return res.notFound('Не найдено!');
-
                         console.log('---------------------------------------------**');
                         obj.furlough = findFurlough.id;
                         obj.from = new Date(moment(req.param('name').split(' ')[0], ['DD.MM.YYYY']));
                         obj.to = new Date(moment(req.param('name').split(' ')[2], ['DD.MM.YYYY']));
-
-
                         Vacation.native(function (err, collection) {
                             if (err) return res.serverError(err);
 
@@ -212,7 +220,9 @@ module.exports = {
             daysSelectHoliday: +req.param('daysSelectHoliday'),
             whomCreated: req.param('whomCreated'),
             whomUpdated: req.session.me,
-            action: req.param('action')
+            action: req.param('action'),
+            from: req.param('from'),
+            to: req.param('to')
         };
         User.findOne({id: req.session.me})
             .populate('vacationWhomUpdated')
@@ -286,10 +296,10 @@ module.exports = {
                 if (!findUser.interfaces.length) {
                     return console.log('ОШИБКА! Нет свойства "год" в коллекции Interface, у пользователя ' +
                         findUser.lastName + ' ' + findUser.firstName +
-                        '. Перейдите по ссылке http://'+ req.headers.host +'/interface/create');
+                        '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
                 }
                 year = findUser.interfaces[0].year;
-                console.log('year:', year);
+                console.log('YEAR Vacation :', year);
                 Vacation.native(function (err, collection) {
                     if (err) return res.serverError(err);
                     collection.aggregate([
@@ -299,8 +309,9 @@ module.exports = {
                         {$sort: {'_id.year': 1}}
                     ]).toArray(function (err, results) {
                         if (err) return res.serverError(err);
+                        console.log('Выбраные года:', results);
                         if (!results.length)   return res.ok({count: 0});
-                        let obYear = {count:0};
+                        let obYear = {count: 0};
                         _.forEach(results, function (value, key) {
                             console.log('VALUE', value);
                             if (value['_id'].year == year) obYear = value;

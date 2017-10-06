@@ -527,11 +527,16 @@ angular.module('VacationModule')
 
 
             $scope.saveEdit = function (item) {
+                //console.log("ITEM SAVE EDIT: ", item);
+                //console.log("ITEM SAVE EDIT2: ", $scope.flatpicker);
+
                 if (!angular.isDefined(item))toastr.error('Нет объекта для сохранения.', 'Ошибка!');
                 if (!angular.isDefined(item.name)) return toastr.error('Дата не может быть пустой.', 'Ошибка!');
                 if (!angular.isDefined(item.furlough)) return toastr.error('Тип отпуска не может быть пустой.', 'Ошибка!');
                 item.daysSelectHoliday = +$scope.daysSelectHoliday;
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
+                    item.from = $scope.flatpicker.selectedDates[0];
+                    item.to = $scope.flatpicker.selectedDates[1];
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $scope.refresh();

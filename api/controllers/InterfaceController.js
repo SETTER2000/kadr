@@ -57,16 +57,20 @@ module.exports = {
                         //return res.send(createInterface);
                         return res.backToHomePage();
                     });
-                    //Interface.native((err, collection) => {
-                    //    if (err) return res.serverError(err);
-                    //    //console.log('WEEE', req.param('year'));
-                    //    collection.update({"_id": ObjectId(req.session.me)}, {$set: {interface: req.param('year')}},
-                    //        function (err, result) {
-                    //            if (err) return res.serverError(err);
-                    //            return res.ok();
-                    //        }
-                    //    )
-                    //});
+                    //User.findOne(req.param('id')).exec(function (err, user) {
+                    //    if (err) return next(err);
+                    //
+                    //    // Queue up a new pet to be added and a record to be created in the join table
+                    //    user.positions.add({name: 'Программисты'});
+                    //
+                    //    // Save the user, creating the new pet and associations in the join table
+                    //    user.save(function (err) {
+                    //        if (err) return next(err);
+                    //
+                    //        res.send('OK!!!!!');
+                    //    });
+                    //
+                    //})
                 });
 
             });
@@ -81,22 +85,22 @@ module.exports = {
         console.log('BODY REQ: ', req.body);
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
-        if (!_.isString(req.param('year'))) {
+        if (!_.isString(req.param('year').year)) {
             return res.badRequest('Отсутствует год.');
         }
         let obj = {
-            year: req.param('year')
+            year: req.param('year').year
         };
-        console.log('DDDD: ', req.session.me);
+
         User.findOne({id: req.session.me})
             .populate('interfaces')
             .exec((err, findUser)=> {
                 "use strict";
                 if (err) return res.serverError(err);
                 if(!findUser) res.notFound();
-                console.log('FINOV: ', findUser);
+                console.log('FINOV: ', findUser.interfaces[0]);
 
-                Interface.update(findUser.interfaces[0], obj)
+                Interface.update(findUser.interfaces[0].id, obj)
                     .exec((err, updateInterface)=> {
                         "use strict";
                         if (err) return res.serverError(err);

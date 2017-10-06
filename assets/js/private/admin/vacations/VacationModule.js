@@ -188,6 +188,7 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
             if (!angular.isArray(value)) return value;
             let arr = [];
             value.forEach(function (v, k, a) {
+                console.log('YEARSSSS: ', me);
                 let startOff = moment(me.year, ['YYYY']).startOf('year');
                 let endOff = moment(me.year, ['YYYY']).endOf('year');
 

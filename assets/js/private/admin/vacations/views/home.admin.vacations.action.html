@@ -1,7 +1,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=(items | interfaceYear:me   | firedUser | filter:{$:searchText, action:false} ).length"
+        length-object="countCurrentView=(items | interfaceYear:inter   | firedUser | filter:{$:searchText, action:false} ).length"
         current-page="currentPage"
         added="added"
         show-bt="showBt"
@@ -14,7 +14,7 @@
 
 <table class="table table-hover">
     <tr head-table type="vacation"></tr>
-    <tr ng-repeat="item in filtered=(items | interfaceYear:me  | filter:{$:searchText, action:false} |
+    <tr ng-repeat="item in filtered=(items | interfaceYear:inter  | filter:{$:searchText, action:false} |
       orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
         <td>
             {{$index+1}}

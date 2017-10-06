@@ -21,9 +21,10 @@ module.exports = {
     year:{
       type:'string'
     },
-    //owner: {
-    //  model: 'user'
-    //},
+    users: {
+      collection: 'user',
+      via: 'interfaces'
+    }
 
   }
 };

@@ -106,13 +106,14 @@
                            char-text="charText"
                            get-char-text="getCharText(ch)">
                 </word-part>
-                <!--{{ interface.year}}-->
+                {{ interface.year}}
                 <div class="form-group form-inline" >
                     <!--<custom-select class="form-control" name="interface"  ng-model="me.interface"-->
                                    <!--options="options2"></custom-select>-->
 
                     <label> Год:
-                        <select class="form-control" ng-model="interface" ng-options="option as option.year  for option in options2 track by option.id">
+                        <select class="form-control" ng-model="interface"
+                                ng-options="option as option.year  for option in options2 track by option.id">
                         </select>
                     </label>
                 </div>

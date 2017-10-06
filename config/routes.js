@@ -179,7 +179,7 @@ module.exports.routes = {
     /**
      * Vacation
      */
-    'GET /vacations': 'VacationController.get', //получить все записи или одну по http://localhost:1338/furloughs?id=599c4aefc97f011f70a2359b
+    'GET /vacations': 'VacationController.get', //получить все записи или одну по http://localhost:1338/vacations?id=599c4aefc97f011f70a2359b
     'POST /vacations': 'VacationController.create', // создать запись
     'DELETE /vacations/:id': 'VacationController.destroy', // удалить
     'PUT /vacations/:id': 'VacationController.update', // обновить

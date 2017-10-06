@@ -56,8 +56,10 @@
             $scope.showStr = 1;
             $scope.urlBt = 'home.admin.vacations.create';
 
-            $scope.sort = 'lastName';
+            $scope.sort = 'updatedAt DESC';
             $scope.param = 'lastName';
+            $scope.propertyName = 'updatedAt';
+            //$scope.propertyName = 'owner.lastName';
             $scope.fieldName = 'Внутренний телефон';
             $scope.charText = '';
             $scope.searchText = '';
@@ -117,26 +119,26 @@
 
             $scope.inter = {year:moment().year()};
             $scope.$watch('interface', function (value, old) {
-                $http.put('/interface/update', {
-                        year: value.year
-                    })
-                    .then(function onSuccess(sailsResponse) {
-                        console.log('sailsResponse: ', sailsResponse);
-                        $scope.inter = sailsResponse.data[0];
-                        //toastr.info('Сохранения интерфейса.','', { timeOut: 1000 });
-                        //$scope.refresh();
-                        // window.location = '/' + sailsResponse.data.username;
-                    })
-                    .catch(function onError(sailsResponse) {
-                        if (sailsResponse.data.status >= 400 < 404) {
-                            $scope.restoreProfileForm.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
-                            toastr.error('The email/password combination did not match a user profile.', '', {timeOut: 1000});
-                            return;
-                        }
-                    })
-                    .finally(function eitherWay() {
+                console.log('HHO', value);
+                if(value) {
+                    $http.put('/interface/update', {
+                            year: value
+                        })
+                        .then(function onSuccess(sailsResponse) {
+                            console.log('sailsResponse: ', sailsResponse);
+                            $scope.inter = sailsResponse.data[0];
+                        })
+                        .catch(function onError(sailsResponse) {
+                            if (sailsResponse.data.status >= 400 < 404) {
+                                $scope.restoreProfileForm.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
+                                toastr.error('The email/password combination did not match a user profile.', '', {timeOut: 1000});
+                                return;
+                            }
+                        })
+                        .finally(function eitherWay() {
 
-                    });
+                        });
+                }
             });
             /**
              * Кол-во дн. отпуска выбранных в конкретном году
@@ -269,7 +271,7 @@
                 return milliseconds;
             };
 
-            $scope.str = 'Петров';
+            //$scope.str = 'Петров';
             $scope.countChar = '4';
             $scope.filedName = 'lastName';
 
@@ -294,7 +296,7 @@
                     property: 'lastName',
                     char: $scope.charText + '%'
                 };
-
+                console.log(' MY QUERY:', $scope.query);
                 $scope.items = Vacations.query($scope.query, function (vacations) {
                     console.log('Vacations ITEMS22:', vacations);
                     $scope.objectName = [];
@@ -332,12 +334,14 @@
                 })
             };
 
-            $scope.propertyName = 'lastName';
+//$scope.$watch('countCurrentView', function (value) {
+//   return $scope.countCurrentView = value;
+//});
 
-            $scope.reverse = false;
+            $scope.reverse = true;
 
             $scope.sortBy = function (propertyName) {
-                $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+                $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : true;
                 $scope.propertyName = propertyName;
             };
 

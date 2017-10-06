@@ -35,9 +35,9 @@ module.exports.bootstrap = function (cb) {
     //const sourceReportSkd = 'F:/!_NODE_PROJECTS/KADR/skd-report/';
     //const targetReportSkd = 'F:/host/home/kadr/www/assets/images/skd/xlsx/';
     const sourceReportSkd = sails.config.skd.sourceReportSkd;
-    const reportFileBad = sails.config.skd.sourceReportSkdErr;
-    const reportFileOk = sails.config.skd.targetReportOk;
-    const targetReportSkd = sails.config.skd.targetReportSkd;
+    const reportFileBad = sails.config.appUrl.rootDir+sails.config.skd.sourceReportSkdErr;
+    const reportFileOk = sails.config.appUrl.rootDir+sails.config.skd.targetReportOk;
+    const targetReportSkd = sails.config.appUrl.rootDir+sails.config.skd.targetReportSkd;
 
     /**
      *  После определения класса Watcher можно воспользоваться им,
