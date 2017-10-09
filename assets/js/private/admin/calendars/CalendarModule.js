@@ -393,8 +393,8 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                         recurrence = moment().recur(start, end).every(1).days(1);
 
                         // subtract - вычитание
-                        recurrence.start.subtract(1, 'days');
-                        recurrence.end.subtract(1, 'days');
+                        //recurrence.start.subtract(1, 'days');
+                        //recurrence.end.subtract(1, 'days');
 
                         /**
                          *  Массив объектов moment в количестве 31 дня
