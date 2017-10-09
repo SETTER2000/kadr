@@ -41,10 +41,8 @@
 //    BUTTON_LANG_RU: 'Russian'
 //};
 
-
-
-angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angularMoment', 'AttendanceModule'])
-    .config(['$stateProvider', function ($stateProvider) {
+angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angularMoment','AttendanceModule'])
+    .config(['$stateProvider',  function ($stateProvider) {
 
         $stateProvider
             .state('home.admin.calendars', {
@@ -180,7 +178,7 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
 
         return Calendars;
     })
-    .directive("attendanceCalendar", function (moment) {
+    .directive("attendanceCalendar", function () {
         return {
             link: function (scope, element, attributes) {
                 scope.data = scope[attributes["attendanceCalendar"]];
@@ -192,7 +190,6 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                     getDtForm();
                     //console.log('HHHH');
                 });
-
                 function getDtForm(item) {
                     return item;
                     if (angular.isDefined(item) && angular.isDefined(scope.dataPeriod)) {
@@ -269,7 +266,7 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
             //replace:true
         }
     })
-    .directive('calendar', function (Attendances,moment) { // функция компиляции директивы (фабричная функция)
+    .directive('calendar', function (Attendances) { // функция компиляции директивы (фабричная функция)
         return {
             restrict: 'E',
             scope: {
@@ -289,7 +286,7 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                 scope.nedela = 'неделя';
                 scope.mesiac = 'месяц';
 
-                const interval = {
+                var interval = {
                     start: moment().startOf(scope.globalPeriod).date(1).hours(0).minutes(0).seconds(0).milliseconds(0),
                     end: moment().endOf(scope.globalPeriod)
                 };
@@ -297,7 +294,7 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                 scope.getQuery = function (query) {
                     //console.log('query:');
                     //console.log(query);
-                    if (!angular.isDefined(query)) return;
+                    if (!angular.isDefined(query))return;
                     scope.attendance = Attendances.query(
                         query,
                         function (attendanceEmployees, err) {
@@ -306,20 +303,22 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                             scope.attendance = attendanceEmployees;
                             scope.attendance.$promise
                                 .then(function group(result) {
-                                    const data = [];
+                                    var data = [];
                                     /**
                                      * store - получаем массив уникальных ФИО
                                      * data - начинаем формировать данные для вывода в календарь
                                      */
-                                    const store = {};
+
+                                    var store = {};
                                     scope.nameArray = result.map(function (item, i) {
-                                        const key = item.getShortName2();
+                                        var key = item.getShortName2();
                                         store[key] = true;
+
                                     });
 
-                                    const str = Object.keys(store);
-                                    const lengthDForm = scope.daysPeriod.dForm.length;
-                                    for (let i = 0; i < str.length; i++) {
+                                    var str = Object.keys(store);
+                                    var lengthDForm = scope.daysPeriod.dForm.length;
+                                    for (var i = 0; i < str.length; i++) {
                                         data.push({'fio': str[i], 'data': [], 'objData': new Array(lengthDForm)});
                                     }
 
@@ -360,7 +359,7 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                                             }
                                         }
                                     }
-                                    console.log('result.data', result.data);
+                                    console.log('result.data',result.data);
 
                                     scope.data = result.data;
                                 })
@@ -379,23 +378,23 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
 
 
                 scope.restart = function () {
-                    let recurrence;
+                    var recurrence;
 
-                    const dForm = [];
-                    const daysPeriod = {data: []};
+                    var dForm = [];
+                    var daysPeriod = {data: []};
 
                     //console.log('momentrecur:',  moment().recur({
                     //    start: "01/01/2014",
                     //    end: "01/01/2015"
                     //}));
                     if (angular.isDefined(scope.interval)) {
-                        const start = scope.interval.start;
-                        const end = scope.interval.end;
+                        var start = scope.interval.start;
+                        var end = scope.interval.end;
                         recurrence = moment().recur(start, end).every(1).days(1);
 
                         // subtract - вычитание
-                        // recurrence.start.subtract(1, 'days');
-                        // recurrence.end.subtract(1, 'days');
+                        recurrence.start.subtract(1, 'days');
+                        recurrence.end.subtract(1, 'days');
 
                         /**
                          *  Массив объектов moment в количестве 31 дня
@@ -421,8 +420,8 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                             //  limit: scope.limit
                         });
 
-                        //console.log('daysPeriod.data[0]',daysPeriod.data[0].format('MMMM'));
-                        //console.log(moment.locale());
+                        console.log('daysPeriod.data[0]',daysPeriod.data[0].format('MMMM'));
+                        console.log(moment.locale());
 
                         // Сегодняшняя дата (16.03.2017)
                         daysPeriod.currentDate = moment().format('DD.MM.YYYY');

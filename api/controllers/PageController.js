@@ -212,102 +212,102 @@ module.exports = {
 
     profile: function (req, res) {
 
-        var FAKE_DATA = {
-            frontEnd: {
-                numOfTutorials: 11,
-                numOfFollowers: 0,
-                numOfFollowing: 0
-            },
-            tutorials: [{
-                id: 1,
-                title: 'The best of Douglas Crockford on JavaScript.',
-                description: 'Understanding JavasScript the good parts.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 2,
-                title: 'Understanding Angular 2.0',
-                description: 'Different sides of Angular 2.0',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 3,
-                title: 'Biology 101.',
-                description: 'The best biology teacher on the planet.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 4,
-                title: 'Dog Training.',
-                description: 'A great series on getting your dog to stop biting, sit, come, and stay.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 5,
-                title: 'How to play famous songs on the Ukulele.',
-                description: 'You\'ll learn songs like Love me Tender, Sea of Love, and more.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 6,
-                title: 'Character development 101.',
-                description: 'Writing better and more interesting characters.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 7,
-                title: 'Drawing Cartoons.',
-                description: 'Drawing techniques for the beginning cartoonist.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 8,
-                title: 'How to make whisky.',
-                description: 'Distilling corn into whisky.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 9,
-                title: 'How do toilets work.',
-                description: 'Everything you never thought you needed to know about how toilets flush.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 10,
-                title: 'Making fire.',
-                description: 'Techniques for making fire without a match.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }, {
-                id: 11,
-                title: 'Making homemade beef jerky.',
-                description: 'Everything you need to know to make some jerky.',
-                owner: 'sailsinaction',
-                averageRating: 3,
-                created: 'a few seconds ago',
-                totalTime: '1h 2m 3s'
-            }]
-        };
+        //var FAKE_DATA = {
+        //    frontEnd: {
+        //        numOfTutorials: 11,
+        //        numOfFollowers: 0,
+        //        numOfFollowing: 0
+        //    },
+        //    tutorials: [{
+        //        id: 1,
+        //        title: 'The best of Douglas Crockford on JavaScript.',
+        //        description: 'Understanding JavasScript the good parts.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 2,
+        //        title: 'Understanding Angular 2.0',
+        //        description: 'Different sides of Angular 2.0',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 3,
+        //        title: 'Biology 101.',
+        //        description: 'The best biology teacher on the planet.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 4,
+        //        title: 'Dog Training.',
+        //        description: 'A great series on getting your dog to stop biting, sit, come, and stay.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 5,
+        //        title: 'How to play famous songs on the Ukulele.',
+        //        description: 'You\'ll learn songs like Love me Tender, Sea of Love, and more.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 6,
+        //        title: 'Character development 101.',
+        //        description: 'Writing better and more interesting characters.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 7,
+        //        title: 'Drawing Cartoons.',
+        //        description: 'Drawing techniques for the beginning cartoonist.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 8,
+        //        title: 'How to make whisky.',
+        //        description: 'Distilling corn into whisky.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 9,
+        //        title: 'How do toilets work.',
+        //        description: 'Everything you never thought you needed to know about how toilets flush.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 10,
+        //        title: 'Making fire.',
+        //        description: 'Techniques for making fire without a match.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }, {
+        //        id: 11,
+        //        title: 'Making homemade beef jerky.',
+        //        description: 'Everything you need to know to make some jerky.',
+        //        owner: 'sailsinaction',
+        //        averageRating: 3,
+        //        created: 'a few seconds ago',
+        //        totalTime: '1h 2m 3s'
+        //    }]
+        //};
 
         // Look up the user record for the `username` parameter
         User.findOne({
@@ -332,14 +332,14 @@ module.exports = {
 
                     // This is for profile body
                     username: foundByUsername.username,
-                    gravatarURL: foundByUsername.gravatarURL,
-                    frontEnd: {
-                        numOfTutorials: FAKE_DATA.frontEnd.numOfTutorials,
-                        numOfFollowers: FAKE_DATA.frontEnd.numOfFollowers,
-                        numOfFollowing: FAKE_DATA.frontEnd.numOfFollowing
-                    },
-                    // This is for the list of tutorials
-                    tutorials: FAKE_DATA.tutorials
+                    gravatarURL: foundByUsername.gravatarURL
+                    //frontEnd: {
+                    //    numOfTutorials: FAKE_DATA.frontEnd.numOfTutorials,
+                    //    numOfFollowers: FAKE_DATA.frontEnd.numOfFollowers,
+                    //    numOfFollowing: FAKE_DATA.frontEnd.numOfFollowing
+                    //},
+                    //// This is for the list of tutorials
+                    //tutorials: FAKE_DATA.tutorials
                 });
             }
 
