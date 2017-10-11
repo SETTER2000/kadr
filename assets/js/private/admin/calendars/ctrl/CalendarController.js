@@ -83,8 +83,8 @@
                         $scope.calendars = calendars;
                         // $scope.newData();
                         $scope.restart();
-                        console.log('ITEM ID');
-                        console.log($scope.item);
+                        //console.log('ITEM ID');
+                        //console.log($scope.item);
                     }, function (err) {
                         if (err) console.log(err.message);
                     });

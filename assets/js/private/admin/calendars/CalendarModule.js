@@ -41,8 +41,8 @@
 //    BUTTON_LANG_RU: 'Russian'
 //};
 
-angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angularMoment','AttendanceModule'])
-    .config(['$stateProvider',  function ($stateProvider) {
+angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate', 'angularMoment', 'AttendanceModule'])
+    .config(['$stateProvider', function ($stateProvider) {
 
         $stateProvider
             .state('home.admin.calendars', {
@@ -278,19 +278,26 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
             templateUrl: '/js/private/admin/calendars/views/home.admin.calendar.month.html',
             replace: true,
             link: function (scope) {
-
                 scope.limit = 2000;
                 scope.numPage = 1;
                 scope.week = 'week';
                 scope.month = 'month';
                 scope.nedela = 'неделя';
                 scope.mesiac = 'месяц';
+                //moment().utcOffset(3);
 
-                var interval = {
+                let interval = {
                     start: moment().startOf(scope.globalPeriod).date(1).hours(0).minutes(0).seconds(0).milliseconds(0),
                     end: moment().endOf(scope.globalPeriod)
                 };
 
+                //console.log('Первый интервал: ', interval);
+
+
+                /**
+                 * Запрос к БД
+                 * @param query
+                 */
                 scope.getQuery = function (query) {
                     //console.log('query:');
                     //console.log(query);
@@ -304,16 +311,15 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                             scope.attendance.$promise
                                 .then(function group(result) {
                                     var data = [];
+
                                     /**
                                      * store - получаем массив уникальных ФИО
                                      * data - начинаем формировать данные для вывода в календарь
                                      */
-
                                     var store = {};
                                     scope.nameArray = result.map(function (item, i) {
                                         var key = item.getShortName2();
                                         store[key] = true;
-
                                     });
 
                                     var str = Object.keys(store);
@@ -331,9 +337,7 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                                     for (var ie = 0; ie < scope.daysPeriod.dForm.length; ie++) {
                                         var k = scope.daysPeriod.dForm[ie]; // для каждого элемента создаём свойство
                                         periodDate[k] = true; // значение здесь не важно
-
                                     }
-
                                     for (var i = 0; i < result.length; i++) {
                                         var shortName = result[i].getShortName2();
                                         var dateResult = result[i].date;
@@ -353,48 +357,53 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                                                  *  объект с результатом на эту дату или вставить пустой результат,
                                                  *  чтоб не выводилась в ячейки ни какая информация
                                                  */
-
                                                 var key = scope.daysPeriod.dForm.indexOf(result[i].date);
                                                 result.data[j].objData.splice(key, 1, t);
                                             }
                                         }
                                     }
-                                    console.log('result.data',result.data);
-
+                                    //console.log('result.data',result.data);
                                     scope.data = result.data;
                                 })
                         }
                     );
                 };
 
+
+                /**
+                 * Текущий период
+                 * @param period
+                 */
                 scope.currentPeriod = function (period) {
+                    //console.log(' *********************** ФУНКЦИЯ currentPeriod **********************');
                     scope.globalPeriod = (period === scope.week) ? scope.week : scope.month;
                     scope.section = (period === scope.week) ? scope.nedela : scope.mesiac;
                     scope.interval = {};
                     scope.interval = interval;
                     scope.interval.start = moment().startOf(scope.globalPeriod).date(1);
+                    //console.log('Текущий период start', scope.interval.start.format('l'));
+                    //console.log('Текущий период end', scope.interval.end.format('l'));
                     scope.restart();
+                    //console.log(' *********************** ФУНКЦИЯ currentPeriod отработала **********************');
                 };
 
 
+                /**
+                 * Перезагрузка интерфейса
+                 */
                 scope.restart = function () {
-                    var recurrence;
-
+                    //console.log(' *********************** ФУНКЦИЯ RESTART **********************');
+                    let recurrence;
                     var dForm = [];
                     var daysPeriod = {data: []};
-
-                    //console.log('momentrecur:',  moment().recur({
-                    //    start: "01/01/2014",
-                    //    end: "01/01/2015"
-                    //}));
                     if (angular.isDefined(scope.interval)) {
-                        var start = scope.interval.start;
-                        var end = scope.interval.end;
-                        recurrence = moment().recur(start, end).every(1).days(1);
+                        //console.log('START', scope.interval.start.format('l'));
+                        //console.log('END', scope.interval.end.format('l'));
+                        recurrence = moment().recur(scope.interval.start,scope.interval.end).every(1).day();
 
-                        // subtract - вычитание
-                        //recurrence.start.subtract(1, 'days');
-                        //recurrence.end.subtract(1, 'days');
+                        //console.log('recurrence start:', recurrence.start.format('l'));
+                        //console.log('recurrence end:', recurrence.end.format('l'));
+
 
                         /**
                          *  Массив объектов moment в количестве 31 дня
@@ -402,27 +411,22 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                          *  либо по 01 следующего месяца, если месяц 30 дней
                          */
                         daysPeriod.data = recurrence.next(31);
+                        //console.log('1-й день в выводе месяца: ', daysPeriod.data[0].format('YYYY-MM-DD'));
+                        //console.log('31-й день в выводе месяца: ', daysPeriod.data[30].format('YYYY-MM-DD'));
 
-                        //console.log('daysPeriod.data[0]: ',daysPeriod.data[0]);
-                        scope.getQuery({
+                        let u = {
                             /**
                              *  timeClear: 1 - чистое время прибывания на работе за день
                              *  timeClear: 0 - общее время на работе за день
                              *  по умолчанию чистое, т.е. true
                              */
-
                             timeClear: 0,
                             startDate: daysPeriod.data[0].format('YYYY-MM-DD'),
                             endDate: daysPeriod.data[30].format('YYYY-MM-DD')
-                            //startDate: '2016-10-01',
-                            //endDate: '2016-11-01',
-                            // Кол-во строк показываемых на странице
-                            //  limit: scope.limit
-                        });
+                        };
+                        //console.log('ОБЪЕКТ запроса к db', u);
 
-                        console.log('daysPeriod.data[0]',daysPeriod.data[0].format('MMMM'));
-                        console.log(moment.locale());
-
+                        scope.getQuery(u);
                         // Сегодняшняя дата (16.03.2017)
                         daysPeriod.currentDate = moment().format('DD.MM.YYYY');
                         // Текущий месяц (март)
@@ -430,10 +434,6 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                         // Текущий год (2017)
                         daysPeriod.periodYear = daysPeriod.data[0].format('YYYY');
                     }
-                    else {
-                        scope.currentPeriod();
-                    }
-
                     daysPeriod.data.forEach(function (item, i) {
                         if (item.format('YYYY-MM-DD')) {
                             dForm.push(item.format('YYYY-MM-DD'));
@@ -441,32 +441,58 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate',  'angu
                     });
                     daysPeriod.dForm = dForm;
                     scope.daysPeriod = daysPeriod;
+                    //console.log('Третий интервал:', scope.interval);
+                    //console.log('Третий интервал:', scope.interval);
+                    //console.log(' *********************** ФУНКЦИЯ RESTART отработала **********************');
                 };
 
+
+                /**
+                 * Функция перехода по периодам вперёд и назад
+                 * @param n
+                 * @param operator
+                 */
                 scope.periodPrevNext = function (n, operator) {
+                    //console.log(' *********************** ФУНКЦИЯ periodPrevNext **********************');
                     var t = 0;
-                    var y = scope.interval.end;
+                    let s = scope.interval.start;
+                    let e = scope.interval.end;
+                    //console.log('START s:', s.format('l'));
+                    //console.log('END e:', e.format('l'));
                     if (operator == 1) {
-                        t = (n) ? (t + n) : t++;
+                        scope.interval.start =  s.add(1, scope.globalPeriod);
+                        scope.interval.end= e.add(1, scope.globalPeriod).endOf(scope.globalPeriod);
+                        //console.log('ВПЕРЁД ДВИГАЕМСЯ интервал start:', s.format('l'));
+                        //console.log('ВПЕРЁД ДВИГАЕМСЯ интервал end:',e.format('l'));
+                        //console.log('ЭНД b JAS  start: ', scope.interval.start.format('l'));
+                        //console.log('ЭНД b JAS  end: ', scope.interval.end.format('l'));
                     } else {
-                        t = (n) ? (t - n) : t--;
+                        s.subtract(1, scope.globalPeriod);
+                        //console.log('НАЗАД ДВИГАЕМСЯ интервал start:', s.format('l'));
                     }
 
                     if (scope.globalPeriod === scope.week) {
-                        scope.interval = scope.interval.start.recur().every(1).weeks();
-                        scope.interval.end = y.recur().every(1).weeks().start;
+                        scope.interval = s.recur().every(1).weeks();
+                        scope.interval.end = e.recur().every(1).weeks().start;
                     }
-                    if (scope.globalPeriod === scope.month) {
-                        scope.interval = scope.interval.start.recur().every(1).months();
-                        scope.interval.end = y.recur().every(1).months().start;
-                    }
-
-                    scope.interval.start.add(t, scope.globalPeriod);
-                    scope.interval.end.add(t, scope.globalPeriod);
                     scope.restart();
+                    //console.log(' *********************** ФУНКЦИЯ periodPrevNext отработала **********************');
                 };
+
+
+                /**
+                 * Текущий период
+                 * @param period
+                 */
                 scope.currentPeriod();
-                scope.restart();
+
+
+
+                //console.log('');
+                //console.log('* --------------------------- ЦЫКЛ ЗАВЕРШЁН! ---------------------------- *');
+                //console.log('');
+                //console.log('');
+                //console.log('');
             }
         };
     })
