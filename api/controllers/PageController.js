@@ -312,7 +312,14 @@ module.exports = {
         // Look up the user record for the `username` parameter
         User.findOne({
             login: req.param('login')
-        }).exec(function (err, foundByUsername) {
+        })
+            .populate('positions')
+            .populate('interfaces')
+            .populate('vacations')
+            .populate('departments')
+            .populate('vacationWhomCreated')
+            .populate('vacationWhomUpdated')
+            .exec(function (err, foundByUsername) {
             if (err) {
                 return res.negotiate(err);
             }
@@ -349,6 +356,12 @@ module.exports = {
             User.findOne({
                     id: req.session.me
                 })
+                .populate('positions')
+                .populate('interfaces')
+                .populate('vacations')
+                .populate('departments')
+                .populate('vacationWhomCreated')
+                .populate('vacationWhomUpdated')
                 .exec(function (err, foundUser) {
                     if (err) {
                         return res.negotiate(err);

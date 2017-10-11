@@ -31,37 +31,75 @@ module.exports = {
             y[req.param('property')] = {'like': req.param('char')};
             q.where = y;
         }
-        //console.log('SORT USER:', q);
-        User.find(q)
-            .populate('vacations')
-            .populate('positions')
-            .populate('interfaces')
-            .exec(function foundUser(err, users) {
-                if (err) return res.serverError(err);
-                if (!users) return res.notFound();
-                let us = [];
-                _.forEach(users, function (user) {
-                    //console.log('UIP: ', user);
-                    //console.log('LENGTH: ', user.vacations.length);
-                    //if (user.vacations.length > 0) us.push({'owner': user.id});
-                    us.push({'owner': user.id});
+        if (req.param('id')) {
+            //console.log('VACTION ID:', req.param('id'));
+            Vacation.findOne(req.param('id'))
+                .populate('furlough')
+                .populate('owner')
+                .populate('whomCreated')
+                .populate('whomUpdated')
+                .exec(function foundVacation(err, vacations) {
+                    if (err) return res.serverError(err);
+                    if (!vacations) return res.notFound();
+                    console.log('vacations RESPONS one :', vacations);
+
+                    return res.ok(vacations);
                 });
+        } else {
+            //console.log('SORT USER:', q);
+            User.findOne({id: req.session.me})
+                .populate('vacations')
+                .populate('positions')
+                .populate('interfaces')
+                .exec(function foundVacation(err, findOneUser) {
+                    if (err) return res.serverError(err);
+                    if (!findOneUser) return res.notFound();
+                    console.log('findOneUser :', findOneUser.interfaces[0].year);
+                    let from = {$gte:new Date(moment(findOneUser.interfaces[0].year, ["YYYY"]).startOf("year"))};
+                    User.find(q)
+                        .populate('vacations')
+                        .populate('positions')
+                        .populate('interfaces')
+                        .exec(function foundUser(err, users) {
+                            if (err) return res.serverError(err);
+                            if (!users) return res.notFound();
+                            let us = [];
+                            _.forEach(users, function (user) {
+                                let ob = {};
+                                ob.from = from;
+                                ob.owner = user.id;
+                                //console.log('user.id === req.session.me', user.id +'=== '+req.session.me);
+                                //if (user.id === req.session.me) {
+                                //    console.log('FIO:::', ob.from= new Date(moment(user.interfaces[0].year, ["YYYY"]).startOf("year")));
+                                //}
+                                //console.log('UIP: ', user);
+                                //console.log('LENGTH: ', user.vacations.length);
+                                //if (user.vacations.length > 0) us.push({'owner': user.id});
+                                us.push(ob);
+                            });
 
-                //console.log('ОТОБРАННЫЕ:', us);
-                //console.log('SORT VACATION:', q);
+                            //console.log('ОТОБРАННЫЕ:', us);
+                            //console.log('USER ODIN:', users[0]);
+                            //console.log('DDDDDDDDDDDDDDASreq.session :', req.session.me);
+                            Vacation.find(us)
+                                .populate('furlough')
+                                .populate('owner')
+                                .populate('whomCreated')
+                                .populate('whomUpdated')
+                                .exec(function foundVacation(err, vacations) {
+                                    if (err) return res.serverError(err);
+                                    if (!vacations) return res.notFound();
 
-                Vacation.find(us)
-                    .populate('furlough')
-                    .populate('owner')
-                    .populate('whomCreated')
-                    .populate('whomUpdated')
-                    .exec(function foundVacation(err, vacations) {
-                        if (err) return res.serverError(err);
-                        if (!vacations) return res.notFound();
-                        //console.log('vacations RESPONS:', vacations);
-                        (req.param('id')) ? res.ok(vacations[0]) : res.ok(vacations);
-                    });
-            });
+                                    _.forEach(vacations, function (vaca) {
+                                        console.log('FROMUSHKA: ',vaca.from); 
+                                    });
+                                    //console.log('VACA', vacations);
+                                    res.ok(vacations);
+                                });
+                        });
+                });
+        }
+
         //}
         //else {
         //    console.log('XXXXXXXXXX:', req.body);

@@ -5,30 +5,6 @@
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
 
-            //$scope.trackexpr = $scope.me.interface;
-            //$scope.$watch('trackexpr', function (value) {
-            //    $scope.interface(value);
-            //    $scope.refresh();
-            //});
-            //toastr.options = {
-            //    "closeButton": false,
-            //    "debug": false,
-            //    "newestOnTop": false,
-            //    "progressBar": false,
-            //    "positionClass": "toast-top-full-width",
-            //    "preventDuplicates": true,
-            //    "onclick": null,
-            //    "showDuration": "300",
-            //    "hideDuration": "1000",
-            //    "timeOut": "5000",
-            //    "extendedTimeOut": "1000",
-            //    "showEasing": "swing",
-            //    "hideEasing": "linear",
-            //    "showMethod": "fadeIn",
-            //    "hideMethod": "fadeOut"
-            //};
-
-
             /**
              * PAGINATION
              */
@@ -304,7 +280,7 @@
                     for (var u = 0; u < vacations.length; u++) {
                         $scope.objectName.push(vacations[u].getOwner());
                     }
-                    console.log('$scope.objectName', $scope.objectName);
+                    //console.log('$scope.objectName', $scope.objectName);
                     $scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
                 }, function (err) {
                     toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);

@@ -184,13 +184,13 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
          * Фильтр отбирает объекты согласно сохранённому году интерфейса пользователя
          * т.е. с какого года начинать выводить отпуска
          */
-        return function (value, me) {
+        return function (value, obj) {
             if (!angular.isArray(value)) return value;
             let arr = [];
             value.forEach(function (v, k, a) {
-                console.log('YEARSSSS: ', me);
-                let startOff = moment(me.year, ['YYYY']).startOf('year');
-                let endOff = moment(me.year, ['YYYY']).endOf('year');
+                //console.log('YEARSSSS: ', me);
+                let startOff = moment(obj.year, ['YYYY']).startOf('year');
+                let endOff = moment(obj.year, ['YYYY']).endOf('year');
 
                 /**
                  * !!! НЕ УДАЛЯТЬ ЗАПРОС

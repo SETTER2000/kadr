@@ -85,7 +85,14 @@ module.exports = {
                 {email: req.param('email')},
                 {login: req.param('email')}
             ]
-        }).exec((err, user)=> {
+        })
+            .populate('positions')
+            .populate('interfaces')
+            .populate('vacations')
+            .populate('departments')
+            .populate('vacationWhomCreated')
+            .populate('vacationWhomUpdated')
+            .exec((err, user)=> {
             if (err) return res.negotiate(err);
             if (!user) return res.notFound('Пользователь не найден.');
 
@@ -342,6 +349,11 @@ module.exports = {
                         console.log('arrFi', arrFi);
                         User.findOne({'lastName': arrFi[0], 'firstName': arrFi[1]})
                             .populate('positions')
+                            .populate('interfaces')
+                            .populate('vacations')
+                            .populate('departments')
+                            .populate('vacationWhomCreated')
+                            .populate('vacationWhomUpdated')
                             .exec(function foundUser(err, user) {
                                 if (err) return res.serverError(err);
                                 if (!user) return res.notFound();
