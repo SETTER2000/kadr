@@ -100,11 +100,6 @@
              */
             $scope.getYears = function () {
                 $http.get('/vacation/getYears').then(function success(response) {
-                        //let ar = [];
-                        //response.data.forEach(function (v, k, arr) {
-                        //    ar.push({id: v['id'].toString(), year: v['year'].toString()});
-                        //});
-                        console.log('DATEEE',response.data );
                         $scope.options2 = response.data;
                     },
                     function errorCallback(response) {
@@ -133,7 +128,7 @@
             $scope.getInterface = function () {
                 $http.get('/interface/get').then(function success(response) {
                         $scope.interface = {name: response.data.year, id: response.data.year};
-                        console.log('INTERFACES+: ', $scope.interface);
+                        //console.log('INTERFACES+: ', $scope.interface);
                         $scope.me.intarface['name'] = response.data.year;
                         $scope.me.intarface['id'] = response.data.year;
                     },
@@ -292,7 +287,7 @@
                     property: 'lastName',
                     char: $scope.charText + '%'
                 };
-                console.log(' MY QUERY:', $scope.query);
+                //console.log(' MY QUERY:', $scope.query);
                 $scope.items = Vacations.query($scope.query, function (vacations) {
                     console.log('Vacations ITEMS22:', vacations);
                     $scope.objectName = [];
