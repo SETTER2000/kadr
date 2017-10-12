@@ -560,6 +560,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 filedName: '=', // из какого поля берутся начальные буквы
                 interface: '=', // год
                 selectYear: '=', // список годов
+                showInterfaceYear: '=',
                 getCharText: '&',
                 charText: '=',
                 where: '='

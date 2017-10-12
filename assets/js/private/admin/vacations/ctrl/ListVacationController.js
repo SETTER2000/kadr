@@ -31,7 +31,7 @@
             $scope.showContIt = ($scope.me.admin) ? 1 : 0;
             $scope.showStr = 1;
             $scope.urlBt = 'home.admin.vacations.create';
-
+            $scope.showInterfaceYear = true; // показать селектор года
             $scope.sort = 'updatedAt DESC';
             $scope.param = 'lastName';
             $scope.propertyName = 'updatedAt';
@@ -240,7 +240,7 @@
                         .then(function onSuccess(sailsResponse) {
                             console.log('sailsResponse: ', sailsResponse);
                             $scope.inter = sailsResponse.data[0];
-                            $scope.where = {from:{'>=':moment(value['year'],['YYYY'])}};
+                            $scope.where = {from: {'>=': moment(value['year'], ['YYYY'])}};
                         })
                         .catch(function onError(sailsResponse) {
 

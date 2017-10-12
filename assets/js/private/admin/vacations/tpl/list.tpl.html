@@ -3,7 +3,7 @@
     <div class="page-header">
         <h2>{{items[0].scs()}} {{exampleDate | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}<!--({{filtered.length}})-->
             <a ng-cloak href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">
-                всего:
+                всего за год:
                 <span ng-if="mode">SD{{(items | firedUser | filter:{fired:true}).length}}</span>
                 <!--<span ng-if="!mode">{{(items | filter:{fired:false}).length}}</span>-->
                 <span ng-if="!mode">{{(items | firedUser ).length}}</span>
@@ -98,6 +98,7 @@
                         where="where"
                         interface="interface"
                         select-year="options2"
+                        show-interface-year="showInterfaceYear"
                         char-text="charText"
                         count-char="countChar">
                 </alfavit>
