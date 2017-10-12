@@ -55,7 +55,6 @@ module.exports = {
         //    });
 
 
-
         if (req.param('id')) {
             //console.log('VACTION ID:', req.param('id'));
             Vacation.findOne(req.param('id'))
@@ -369,6 +368,37 @@ module.exports = {
                     });
                 });
             });
+    },
+
+    /**
+     * писок годов доступных для вывода в селектор годо
+     */
+    getYears: function (req, res) {
+
+        Vacation.native(function (err, collection) {
+            if (err) return res.serverError(err);
+            collection.aggregate(
+                [
+                    {
+                        $group: {
+                            _id: {year: {$year: "$from"}}
+                        }
+                    },
+                    {$sort: {'_id.year': -1}},
+                    {
+                        $project: {
+                            id: "$_id.year",
+                            year: "$_id.year",
+                            "_id": 0
+                        }
+                    }
+                ]
+            ).toArray(function (err, results) {
+                if (err) return res.serverError(err);
+                console.log(results);
+                return res.send(results);
+            });
+        });
     }
 };
 

@@ -559,7 +559,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 countChar: '=', // по умолчанию сколько строк должно показываться на одной странице
                 filedName: '=', // из какого поля берутся начальные буквы
                 interface: '=', // год
-                selectYear: '=', // список годов
+                selectYear: '=', // селектор годов
                 showInterfaceYear: '=',
                 getCharText: '&',
                 charText: '=',
@@ -568,12 +568,10 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             templateUrl: '/js/private/admin/users/views/alfavit.html',
             replace: true,
             link: function (scope) {
-
                 scope.$watch('objectName', function (value) {
                     scope.objectName = value;
                     scope.checkArray();
                 });
-
                 scope.checkArray = function () {
                     var parts = [];
                     var v = scope.objectName;

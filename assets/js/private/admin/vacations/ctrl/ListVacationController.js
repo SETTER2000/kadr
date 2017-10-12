@@ -82,18 +82,36 @@
              * Год
              * @type {*[]}
              */
-            $scope.options2 =
-                [
-                    {id: "2015", year: "2015"},
-                    {id: "2016", year: "2016"},
-                    {id: "2017", year: "2017"},
-                    {id: "2018", year: "2018"},
-                    {id: "2019", year: "2019"}
-                ];
-            $scope.modeSelectYear = $scope.options2[0];
+                //$scope.options2 =
+                //    [
+                //        {id: "2015", year: "2015"},
+                //        {id: "2016", year: "2016"},
+                //        {id: "2017", year: "2017"},
+                //        {id: "2018", year: "2018"},
+                //        {id: "2019", year: "2019"}
+                //    ];
+                //$scope.modeSelectYear = $scope.options2[0];
 
 
             $scope.inter = {year: moment().year()};
+
+            /**
+             * Получить список доступных годов
+             */
+            $scope.getYears = function () {
+                $http.get('/vacation/getYears').then(function success(response) {
+                        //let ar = [];
+                        //response.data.forEach(function (v, k, arr) {
+                        //    ar.push({id: v['id'].toString(), year: v['year'].toString()});
+                        //});
+                        console.log('DATEEE',response.data );
+                        $scope.options2 = response.data;
+                    },
+                    function errorCallback(response) {
+
+                    }
+                );
+            };
 
 
             /**
@@ -239,8 +257,10 @@
                         })
                         .then(function onSuccess(sailsResponse) {
                             console.log('sailsResponse: ', sailsResponse);
+                            $scope.getYears();
                             $scope.inter = sailsResponse.data[0];
                             $scope.getDays();
+
                             $scope.where = {from: {'>=': moment(value['year'], ['YYYY'])}};
                         })
                         .catch(function onError(sailsResponse) {

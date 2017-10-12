@@ -87,6 +87,7 @@ module.exports.routes = {
      * Vacation
      */
     'GET /vacation/getDays': 'VacationController.daysInYear',
+    'GET /vacation/getYears': 'VacationController.getYears',
 
 
 

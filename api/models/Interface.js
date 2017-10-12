@@ -19,7 +19,7 @@ module.exports = {
       required: true
     },
     year:{
-      type:'string'
+      type:'integer'
     },
     users: {
       collection: 'user',

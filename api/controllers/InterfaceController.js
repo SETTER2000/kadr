@@ -85,7 +85,7 @@ module.exports = {
         //console.log('BODY REQ: ', req.body);
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
-        if (!_.isString(req.param('year').year)) {
+        if (!_.isNumber(req.param('year').year)) {
             return res.ok('Год остался без изменений.');
         }
         let obj = {
