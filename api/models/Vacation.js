@@ -7,6 +7,7 @@
 
 module.exports = {
     connection: 'userMongodbServer',
+    schema: true,
     attributes: {
         section: {
             type: 'string',

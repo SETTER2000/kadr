@@ -558,7 +558,8 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 objectName: '=', // Массив оъектов с фамилиями
                 countChar: '=', // по умолчанию сколько строк должно показываться на одной странице
                 filedName: '=', // из какого поля берутся начальные буквы
-                //onSelectPart: '&',
+                interface: '=', // год
+                selectYear: '=', // список годов
                 getCharText: '&',
                 charText: '=',
                 where: '='

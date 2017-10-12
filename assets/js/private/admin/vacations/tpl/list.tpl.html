@@ -96,6 +96,8 @@
                         get-char-text="getCharText(ch)"
                         filed-name="filedName"
                         where="where"
+                        interface="interface"
+                        select-year="options2"
                         char-text="charText"
                         count-char="countChar">
                 </alfavit>
@@ -106,17 +108,20 @@
                            char-text="charText"
                            get-char-text="getCharText(ch)">
                 </word-part>
-                {{ interface.year}}
-                <div class="form-group form-inline" >
-                    <!--<custom-select class="form-control" name="interface"  ng-model="me.interface"-->
-                                   <!--options="options2"></custom-select>-->
 
-                    <label> Год:
-                        <select class="form-control" ng-model="interface"
-                                ng-options="option as option.year  for option in options2 track by option.id">
-                        </select>
-                    </label>
-                </div>
+
+                <!--&lt;!&ndash; Г О Д &ndash;&gt;-->
+
+                <!--&lt;!&ndash;{{ interface.year}}&ndash;&gt;-->
+                <!--<div class="form-group form-inline">-->
+                    <!--<label> Год:-->
+                        <!--<select class="form-control" ng-model="interface"-->
+                                <!--ng-options="option as option.year  for option in options2 track by option.id">-->
+                        <!--</select>-->
+                    <!--</label>-->
+                <!--</div>-->
+
+
                 <div ng-if="!searchText" ng-repeat="it in arrButton" class="btn-group btn-group-sm"
                      role="group" aria-label="4">
                     <button ng-click="getPage(it.numberPage)" type="button" ng-bind="it.numberPage"
@@ -127,16 +132,14 @@
 
 
         <!--<div class="col-md-2">-->
-            <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
-                <!--&lt;!&ndash;<label>Представлено</label>&ndash;&gt;-->
-                <!--&lt;!&ndash;<md-select ng-model="modeSelect" md-selected-text="getSelectedText()">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<md-optgroup label="Представления">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<md-option ng-value="item.display" ng-repeat="item in options">{{item.display}}</md-option>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</md-optgroup>&ndash;&gt;-->
-                <!--&lt;!&ndash;</md-select>&ndash;&gt;-->
-            <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
-
-
+        <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
+        <!--&lt;!&ndash;<label>Представлено</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;<md-select ng-model="modeSelect" md-selected-text="getSelectedText()">&ndash;&gt;-->
+        <!--&lt;!&ndash;<md-optgroup label="Представления">&ndash;&gt;-->
+        <!--&lt;!&ndash;<md-option ng-value="item.display" ng-repeat="item in options">{{item.display}}</md-option>&ndash;&gt;-->
+        <!--&lt;!&ndash;</md-optgroup>&ndash;&gt;-->
+        <!--&lt;!&ndash;</md-select>&ndash;&gt;-->
+        <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
 
 
         <!--</div>-->
@@ -148,8 +151,8 @@
         <!--</div>-->
         <div class="col-md-2" ng-show="me.admin">
             <!--<select class="form-control" role="group"-->
-                    <!--ng-model="modeSelect"-->
-                    <!--ng-options="item.display for item in options track by item.value">-->
+            <!--ng-model="modeSelect"-->
+            <!--ng-options="item.display for item in options track by item.value">-->
             <!--</select>-->
             <md-select class="mr0" placeholder="Выбрать" ng-model="modeSelect" md-on-open="loadOptions()" style="min-width: 200px;">
                 <md-option ng-value="item" ng-repeat="item in options">{{item.display}}</md-option>
@@ -243,14 +246,14 @@
     </div>
 </div>
 <!--<md-list ng-controller="ListController" ng-cloak>-->
-    <!--<md-subheader class="md-no-sticky">Avatar with Secondary Action Icon</md-subheader>-->
-    <!--<md-list-item ng-repeat="item in items" ng-click="goToPerson(person.name, $event)" class="noright">-->
-        <!--<img alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="md-avatar" />-->
-        <!--<p>{{ item.getFullName() }}</p>-->
-        <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
-        <!--<md-icon md-svg-icon="communication:email"  ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>-->
-        <!--<md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>-->
-    <!--</md-list-item>-->
+<!--<md-subheader class="md-no-sticky">Avatar with Secondary Action Icon</md-subheader>-->
+<!--<md-list-item ng-repeat="item in items" ng-click="goToPerson(person.name, $event)" class="noright">-->
+<!--<img alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="md-avatar" />-->
+<!--<p>{{ item.getFullName() }}</p>-->
+<!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
+<!--<md-icon md-svg-icon="communication:email"  ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>-->
+<!--<md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>-->
+<!--</md-list-item>-->
 <!--</md-list>-->
 <!--</div>-->
 <!--</div>-->

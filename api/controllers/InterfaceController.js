@@ -82,11 +82,11 @@ module.exports = {
      * @param res
      */
     update: function (req, res) {
-        console.log('BODY REQ: ', req.body);
+        //console.log('BODY REQ: ', req.body);
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
         if (!_.isString(req.param('year').year)) {
-            return res.badRequest('Отсутствует год.');
+            return res.ok('Год остался без изменений.');
         }
         let obj = {
             year: req.param('year').year
@@ -98,7 +98,7 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if(!findUser) res.notFound();
-                console.log('FINOV: ', findUser.interfaces[0]);
+                //console.log('FINOV: ', findUser.interfaces[0]);
 
                 Interface.update(findUser.interfaces[0].id, obj)
                     .exec((err, updateInterface)=> {

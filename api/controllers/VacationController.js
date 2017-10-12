@@ -21,16 +21,41 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
+
         var q = {
-            //where:{lastName:'Абрамов'},
             limit: req.param('limit'),
             sort: req.param('sort')
         };
-        if (!_.isUndefined(req.param('where')) && req.param('char').length > 1) {
+        if (!_.isUndefined(req.param('where')) && !_.isUndefined(req.param('char'))) {
             var y = {};
             y[req.param('property')] = {'like': req.param('char')};
             q.where = y;
         }
+        //if (!_.isUndefined(req.param('where'))){
+        //    q.where = JSON.parse(req.param('where'));
+        //}
+        //console.log('Q: ', q);
+        //console.log('REQ_ALL:',req.allParams());
+
+        //Vacation.find(q)
+        //    .populate('furlough')
+        //    .populate('owner')
+        //    .populate('whomCreated')
+        //    .populate('whomUpdated')
+        //    .exec(function foundVacation(err, vacations) {
+        //        if (err) return res.serverError(err);
+        //        if (!vacations) return res.notFound();
+        //
+        //        _.forEach(vacations, function (vaca) {
+        //            console.log('FROMUSHKA: ', vaca.from);
+        //        });
+        //        //console.log('VACA', vacations);
+        //    return    res.send(vacations);
+        //    });
+
+
+
         if (req.param('id')) {
             //console.log('VACTION ID:', req.param('id'));
             Vacation.findOne(req.param('id'))
@@ -45,7 +70,8 @@ module.exports = {
 
                     return res.ok(vacations);
                 });
-        } else {
+        }
+        else {
             //console.log('SORT USER:', q);
             User.findOne({id: req.session.me})
                 .populate('vacations')
@@ -55,7 +81,7 @@ module.exports = {
                     if (err) return res.serverError(err);
                     if (!findOneUser) return res.notFound();
                     console.log('findOneUser :', findOneUser.interfaces[0].year);
-                    let from = {$gte:new Date(moment(findOneUser.interfaces[0].year, ["YYYY"]).startOf("year"))};
+                    let from = {$gte: new Date(moment(findOneUser.interfaces[0].year, ["YYYY"]).startOf("year"))};
                     User.find(q)
                         .populate('vacations')
                         .populate('positions')
@@ -90,9 +116,9 @@ module.exports = {
                                     if (err) return res.serverError(err);
                                     if (!vacations) return res.notFound();
 
-                                    _.forEach(vacations, function (vaca) {
-                                        console.log('FROMUSHKA: ',vaca.from); 
-                                    });
+                                    //_.forEach(vacations, function (vaca) {
+                                    //    console.log('FROMUSHKA: ', vaca.from);
+                                    //});
                                     //console.log('VACA', vacations);
                                     res.ok(vacations);
                                 });
@@ -100,22 +126,6 @@ module.exports = {
                 });
         }
 
-        //}
-        //else {
-        //    console.log('XXXXXXXXXX:', req.body);
-        //    Vacation.find(req.param('id'))
-        //        .populate('furlough')
-        //        .populate('owner')
-        //        .populate('whomCreated')
-        //        .populate('whomUpdated')
-        //        .exec(function foundVacation(err, vacations) {
-        //            if (err) return res.serverError(err);
-        //            if (!vacations) return res.notFound();
-        //            if (err) return res.negotiate;
-        //            if (!vacations) return res.notFound();
-        //            (req.param('id')) ? res.ok(vacations[0]) : res.ok(vacations);
-        //        });
-        //}
     },
 
 
@@ -337,7 +347,7 @@ module.exports = {
                         '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
                 }
                 year = findUser.interfaces[0].year;
-                console.log('YEAR Vacation :', year);
+                //console.log('YEAR Vacation :', year);
                 Vacation.native(function (err, collection) {
                     if (err) return res.serverError(err);
                     collection.aggregate([
@@ -347,14 +357,14 @@ module.exports = {
                         {$sort: {'_id.year': 1}}
                     ]).toArray(function (err, results) {
                         if (err) return res.serverError(err);
-                        console.log('Выбраные года:', results);
+                        //console.log('Выбраные года:', results);
                         if (!results.length)   return res.ok({count: 0});
                         let obYear = {count: 0};
                         _.forEach(results, function (value, key) {
-                            console.log('VALUE', value);
+                            //console.log('VALUE', value);
                             if (value['_id'].year == year) obYear = value;
                         });
-                        console.log('RESPONSE YEARS ARR: ', obYear);
+                        //console.log('RESPONSE YEARS ARR: ', obYear);
                         return res.ok(obYear);
                     });
                 });

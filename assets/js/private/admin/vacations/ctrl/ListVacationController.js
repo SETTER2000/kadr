@@ -93,29 +93,9 @@
             $scope.modeSelectYear = $scope.options2[0];
 
 
-            $scope.inter = {year:moment().year()};
-            $scope.$watch('interface', function (value, old) {
-                console.log('HHO', value);
-                if(value) {
-                    $http.put('/interface/update', {
-                            year: value
-                        })
-                        .then(function onSuccess(sailsResponse) {
-                            console.log('sailsResponse: ', sailsResponse);
-                            $scope.inter = sailsResponse.data[0];
-                        })
-                        .catch(function onError(sailsResponse) {
-                            if (sailsResponse.data.status >= 400 < 404) {
-                                $scope.restoreProfileForm.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
-                                toastr.error('The email/password combination did not match a user profile.', '', {timeOut: 1000});
-                                return;
-                            }
-                        })
-                        .finally(function eitherWay() {
+            $scope.inter = {year: moment().year()};
 
-                        });
-                }
-            });
+
             /**
              * Кол-во дн. отпуска выбранных в конкретном году
              */
@@ -130,14 +110,14 @@
             };
 
             /**
-             *  год
+             * Получить год с коллекции интерфейса пользователя
              */
             $scope.getInterface = function () {
                 $http.get('/interface/get').then(function success(response) {
-                    $scope.interface = {name:response.data.year, id:response.data.year};
-                        console.log('INTERFACES+: ',$scope.interface);
-                    $scope.me.intarface['name'] = response.data.year;
-                    $scope.me.intarface['id'] = response.data.year;
+                        $scope.interface = {name: response.data.year, id: response.data.year};
+                        console.log('INTERFACES+: ', $scope.interface);
+                        $scope.me.intarface['name'] = response.data.year;
+                        $scope.me.intarface['id'] = response.data.year;
                     },
                     function errorCallback(response) {
 
@@ -160,21 +140,15 @@
             $scope.actionView = "/js/private/admin/vacations/views/home.admin.vacations.action.html";
             $scope.workView = "/js/private/admin/vacations/views/home.admin.vacations.work.html";
 
-            //$scope.option = null;
-            //$scope.options = null;
             $scope.loadOptions = function () {
-                // Use timeout to simulate a 650ms request.
                 return $timeout(function () {
-
                     $scope.options = $scope.options || [
                             {display: "Активированы", value: "work"},
                             //{display: "Уволены", value: "list"},
                             {display: "Не активированы / Заблокированы", value: "action"},
                             {display: "Все", value: "table"}
                         ];
-
                 }, 650);
-
             };
 
 
@@ -256,6 +230,31 @@
 
                 $scope.refresh(value);
 
+            });
+
+            $scope.$watch('interface', function (value, old) {
+                if (value) {
+                    $http.put('/interface/update', {
+                            year: value
+                        })
+                        .then(function onSuccess(sailsResponse) {
+                            console.log('sailsResponse: ', sailsResponse);
+                            $scope.inter = sailsResponse.data[0];
+                            $scope.where = {from:{'>=':moment(value['year'],['YYYY'])}};
+                        })
+                        .catch(function onError(sailsResponse) {
+
+                            if (sailsResponse.data.status >= 400 < 404) {
+                                console.log('ERROR /interface/update:', sailsResponse);
+                                //$scope.restoreProfileForm.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
+                                //toastr.error('The email/password combination did not match a user profile.', '', {timeOut: 1000});
+                                return;
+                            }
+                        })
+                        .finally(function eitherWay() {
+
+                        });
+                }
             });
             $scope.objectName = [];
 
