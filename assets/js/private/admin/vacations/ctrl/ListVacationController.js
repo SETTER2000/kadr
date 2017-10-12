@@ -100,7 +100,7 @@
              * Кол-во дн. отпуска выбранных в конкретном году
              */
             $scope.getDays = function () {
-                $http.get('/vacation/getDays/?year=' + moment().year()).then(function success(response) {
+                $http.get('/vacation/getDays/?year=' + $scope.interface).then(function success(response) {
                         $scope.days = $scope.countHolidayRF - response.data.count;
                     },
                     function errorCallback(response) {
@@ -125,7 +125,7 @@
                 );
             };
             $scope.getInterface();
-            $scope.getDays();
+
 
             $scope.options =
                 [
@@ -240,6 +240,7 @@
                         .then(function onSuccess(sailsResponse) {
                             console.log('sailsResponse: ', sailsResponse);
                             $scope.inter = sailsResponse.data[0];
+                            $scope.getDays();
                             $scope.where = {from: {'>=': moment(value['year'], ['YYYY'])}};
                         })
                         .catch(function onError(sailsResponse) {
