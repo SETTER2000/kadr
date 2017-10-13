@@ -143,13 +143,13 @@
             $scope.options =
                 [
                     {display: "Активированы", value: "work"},
-                    //{display: "Уволены", value: "list"},
+                    {display: "C детьми", value: "children"},
                     {display: "Не активированы / Заблокированы", value: "action"},
                     {display: "Все", value: "table"}
                 ];
             $scope.modeSelect = $scope.options[0];
             $scope.tableView = "/js/private/admin/vacations/views/home.admin.vacations.table.html";
-            //$scope.listView = "/js/private/admin/vacations/views/home.admin.vacations.list.html";
+            $scope.childrenView = "/js/private/admin/vacations/views/home.admin.vacations.children.html";
             $scope.actionView = "/js/private/admin/vacations/views/home.admin.vacations.action.html";
             $scope.workView = "/js/private/admin/vacations/views/home.admin.vacations.work.html";
 
@@ -157,7 +157,7 @@
                 return $timeout(function () {
                     $scope.options = $scope.options || [
                             {display: "Активированы", value: "work"},
-                            //{display: "Уволены", value: "list"},
+                            {display: "C детьми", value: "children"},
                             {display: "Не активированы / Заблокированы", value: "action"},
                             {display: "Все", value: "table"}
                         ];
@@ -298,7 +298,7 @@
                     //console.log('$scope.objectName', $scope.objectName);
                     $scope.numPages = Math.floor(vacations.length / $scope.defaultRows) + 1;
                 }, function (err) {
-                    toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
+                    toastr.error(err.data, 'Ошибка! ');
                 });
             };
 

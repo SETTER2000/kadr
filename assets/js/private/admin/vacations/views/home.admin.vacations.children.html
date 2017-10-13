@@ -1,7 +1,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=(items  | firedUser | filter:{$:searchText} ).length"
+        length-object="countCurrentView=(items  | firedUser | filter:{$:searchText, action:true} ).length"
         current-page="currentPage"
         added="added"
         show-bt="showBt"
@@ -11,10 +11,9 @@
         url-bt="urlBt"
         on-select-page="selectCount=selectCount+1">
 </pagination>
-
 <table class="table table-hover">
     <tr head-table type="vacation"></tr>
-    <tr ng-repeat="item in filtered=(items  | firedUser | filter:{$:searchText} |
+    <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true } | searchObjectVal:'furlough':'name':['Отпуск по беременности и родам','Отпуск по уходу за ребенком'] |
        orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
         <td>
             {{$index+1}}
@@ -39,20 +38,43 @@
             {{item.daysSelectHoliday}}
         </td>
         <td>
-            <span>  {{item.furlough.name}}</span>
+            <span>{{item.furlough.name}}</span>
         </td>
         <td class="text-center">
-            <span class="position" title="{{item.status | changeName}}" ng-class="item.status | getICO"></span>
+            <span title="{{item.status | changeName}}" ng-class="item.status | getICO"></span>
         </td>
-        <td>{{item.actions}}</td>
-        <td>{{item.info}}</td>
-        <td class="text-center">{{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}</td>
-        <td ng-if="me.admin" class="text-center">{{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}</td>
-        <td class="text-center" ng-if="me.admin">{{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}}
+        <td>
+            {{item.actions}}
+        </td>
+        <td>
+            {{item.info}}
+        </td>
+        <td class="text-center">
+            {{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}
+        </td>
+        <td ng-if="me.admin" class="text-center">
+            {{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}
+        </td>
+        <td class="text-center" ng-if="me.admin">
+            {{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}}
             {{item.whomCreated.patronymicName[0]}}
         </td>
-        <td class="text-center" ng-if="me.admin">{{item.whomUpdated.lastName}} {{item.whomUpdated.firstName[0]}}
+        <td class="text-center" ng-if="me.admin">
+            {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName[0]}}
             {{item.whomUpdated.patronymicName[0]}}
         </td>
     </tr>
 </table>
+
+<pagination
+        limit-rows="limitRows"
+        default-rows="defaultRows"
+        length-object="countCurrentView=(items | firedUser | filter:{$:searchText, action:true} ).length"
+        current-page="currentPage"
+        added="added"
+        show-bt="showBt" show-cont-it="showContIt"
+        show-str="showStr"
+        days="days"
+        url-bt="urlBt"
+        on-select-page="selectCount=selectCount+1">
+</pagination>

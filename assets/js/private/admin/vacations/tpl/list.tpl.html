@@ -115,11 +115,11 @@
 
                 <!--&lt;!&ndash;{{ interface.year}}&ndash;&gt;-->
                 <!--<div class="form-group form-inline">-->
-                    <!--<label> Год:-->
-                        <!--<select class="form-control" ng-model="interface"-->
-                                <!--ng-options="option as option.year  for option in options2 track by option.id">-->
-                        <!--</select>-->
-                    <!--</label>-->
+                <!--<label> Год:-->
+                <!--<select class="form-control" ng-model="interface"-->
+                <!--ng-options="option as option.year  for option in options2 track by option.id">-->
+                <!--</select>-->
+                <!--</label>-->
                 <!--</div>-->
 
 
@@ -234,17 +234,28 @@
 
     <!--</div>-->
     <!--<div class="panel-body">-->
-    <div ng-switch on="modeSelect.value" style="margin-top:20px;">
-        <div ng-switch-when="table">
-            <ng-include src="tableView"></ng-include>
+    <div class="row">
+        <div class="col-md-10">
+            <div ng-switch on="modeSelect.value">
+                <div ng-switch-when="table">
+                    <ng-include src="tableView"></ng-include>
+                </div>
+                <div ng-switch-when="action">
+                    <ng-include src="actionView"></ng-include>
+                </div>
+                <div ng-switch-when="children">
+                    <ng-include src="childrenView"></ng-include>
+                </div>
+                <div ng-switch-when="work">
+                    <ng-include src="workView"></ng-include>
+                </div>
+            </div>
         </div>
-        <div ng-switch-when="action">
-            <ng-include src="actionView"></ng-include>
-        </div>
-        <div ng-switch-when="work">
-            <ng-include src="workView"></ng-include>
+        <div class="col-md-2"  style="margin-top:20px;">
+            <div ui-view="sidebar-right"></div>
         </div>
     </div>
+
 </div>
 <!--<md-list ng-controller="ListController" ng-cloak>-->
 <!--<md-subheader class="md-no-sticky">Avatar with Secondary Action Icon</md-subheader>-->

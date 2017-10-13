@@ -85,9 +85,9 @@ angular.module('Holiday', [
 //                    // <div ui-view/> внутри contacts.html
 //                    // "@contacts" : { }
 //
-//                    // Абсолютное позиционирование вида 'status' в корневом безымянном состоянии.
-//                    // <div ui-view='status'/> внутри index.html
-//                    // "status@" : { }
+//                    // Абсолютное позиционирование вида 'sidebar' в корневом безымянном состоянии.
+//                    // <div ui-view='sidebar'/> внутри index.html (views/page/showhomepage.ejs)
+//                    // "sidebar@" : { }
 //
 //                    // Абсолютное позиционирование безымянного вида в корневом безымянном состоянии.
 //                    // <div ui-view/> внутри index.html

@@ -7,6 +7,9 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                     '@': {
                         templateUrl: '/js/private/admin/vacations/tpl/list.tpl.html',
                         controller: 'ListVacationController'
+                    },
+                    'sidebar-right@home.admin.vacations': {
+                        templateUrl: '/js/private/admin/vacations/views/sidebar-right.html'
                     }
                 }
             })
@@ -205,6 +208,25 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                  * То же или после
                  */
                 if (moment(v['from']).isSameOrAfter(startOff, 'year')) {
+                    arr.push(v);
+                }
+            });
+            return arr;
+        }
+    })
+    .filter("searchObjectVal", function () {
+        /**
+         * Фильтр отбирает объекты после проверки на соответствие
+         * определенного поля коллекции и нахождения в нем соответствующих
+         * значений из входящего массива
+         * Например: в поле furlough, должен находиться объект со свойством name, которое
+         * содержит значение 'Отпуск по беременности и родам' или 'Отпуск по уходу за ребенком'
+         */
+        return function (value, nameProperty, nameColllectionProperty, valueArr) {
+            if (!angular.isArray(value) || !angular.isArray(valueArr)) return value;
+            let arr = [];
+            value.forEach(function (v, k, a) {
+                if(valueArr.indexOf(v[nameProperty][nameColllectionProperty]) !== -1){
                     arr.push(v);
                 }
             });

@@ -79,7 +79,14 @@ module.exports = {
                 .exec(function foundVacation(err, findOneUser) {
                     if (err) return res.serverError(err);
                     if (!findOneUser) return res.notFound();
-                    console.log('findOneUser :', findOneUser.interfaces[0].year);
+                    if (!findOneUser.interfaces.length) {
+                         console.log('ОШИБКА! Нет свойства "год" в коллекции Interface, у пользователя ' +
+                            findOneUser.lastName + ' ' + findOneUser.firstName +
+                            '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
+
+                      return  res.badRequest('ВНИМАНИЕ! Отсутствует свойство "год" в коллекции' +
+                            '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
+                    }
                     let from = {$gte: new Date(moment(findOneUser.interfaces[0].year, ["YYYY"]).startOf("year"))};
                     User.find(q)
                         .populate('vacations')
