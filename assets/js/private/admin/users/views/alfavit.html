@@ -15,7 +15,7 @@
             <!--<custom-select class="form-control" name="interface"  ng-model="me.interface"-->
             <!--options="options2"></custom-select>-->
 
-            <label>
+            <label ng-if="selectYear">
                 <!--Год:-->
                 <select class="form-control" ng-model="interface"
                         ng-options="option as option.year  for option in selectYear track by option.id">
