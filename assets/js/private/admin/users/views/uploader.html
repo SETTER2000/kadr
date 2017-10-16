@@ -1,14 +1,14 @@
-<div class="panel panel-default" >
+<div class="panel panel-default">
     <div class="panel-header"><h3 class="panel-title"></h3></div>
     <div class="panel-body">
 
         <div class="col-sm-6 col-md-4" ng-class="{'col-md-offset-4':!item.avatarUrl}">
-            <div  class="delete-button" ng-class="{'thumbnail':item.avatarUrl}" ng-mouseover="shows=1" ng-mouseleave="shows=0">
+            <div class="delete-button" ng-class="{'thumbnail':item.avatarUrl}" ng-mouseover="shows=1" ng-mouseleave="shows=0">
                 <a href="#" ng-click="delFoto(item)" ng-if="shows" class="btn btn-default delete-img" role="button">Удалить</a>
                 <!--<a href="#">-->
-                    <img ng-src="{{item.avatarUrl}}">
-                    <!--<img src="/images/user/avatar/58e35656594105801c9d9203/105.jpg" alt="">-->
-                    <!--<img src="http://via.placeholder.com/242x200/EEEEEE/AAAAAA">-->
+                <img ng-src="{{item.avatarUrl}}">
+                <!--<img src="/images/user/avatar/58e35656594105801c9d9203/105.jpg" alt="">-->
+                <!--<img src="http://via.placeholder.com/242x200/EEEEEE/AAAAAA">-->
                 <!--</a>-->
                 <div class="caption">
 
@@ -25,7 +25,7 @@
                     <!--</tbody>-->
                     <!--</table>-->
 
-                    <div class="file-upload " >
+                    <div class="file-upload ">
                         <label class="text-left">
                             <input type="file" nv-file-select="" uploader="uploader" multiple/>
                             <span ng-if="!item.avatarUrl" class="btn btn-default" role="button">Выбрать фото</span>
@@ -34,12 +34,57 @@
                         </label>
 
                     </div>
-                    <p> </p>
+                    <p></p>
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Согласующие
+                        <!--<a class="pull-right" href="">-->
+                            <!--<small class="glyphicon glyphicon-pencil"></small>-->
+                        <!--</a>-->
+                        <a class="pull-right" href="">
+                            <small class="glyphicon glyphicon-plus"></small>
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-body" ng-repeat="itm in item.matchings">
 
+                    <div class="media">
+                        <div class="media-left media-middle">
+                            <a href="{{item.getEditUrl(itm.id)}}"><img alt="64x64" class="photo" ng-src="{{itm.avatarUrl}}"
+                                                                       data-holder-rendered="true"></a>
+                            <!--<img alt="64x64" class="media-object" data-src="holder.js/64x64" style="width: 32px; height: 32px;" ng-src="{{itm.avatarUrl}}" data-holder-rendered="true">-->
+                        </div>
+                        <div class="media-body">
+                            <h5 class="media-heading"><strong>{{itm.lastName}}</strong><br>{{itm.firstName}} {{itm.patronymicName}}</h5>
+                            <!--bla-bla-bla-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>Оповещаемые</h4></div>
+                <div class="panel-body" ng-repeat="itm in item.matchings">
 
+                    <div class="media">
+                        <div class="media-left media-middle">
+                            <a href="{{item.getEditUrl(itm.id)}}"><img alt="64x64" class="photo" ng-src="{{itm.avatarUrl}}"
+                                                                       data-holder-rendered="true"></a>
+                            <!--<img alt="64x64" class="media-object" data-src="holder.js/64x64" style="width: 32px; height: 32px;" ng-src="{{itm.avatarUrl}}" data-holder-rendered="true">-->
+                        </div>
+                        <div class="media-body">
+                            <h5 class="media-heading"><strong>{{itm.lastName}}</strong><br>{{itm.firstName}} {{itm.patronymicName}}</h5>
+                            <!--bla-bla-bla-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -200,6 +200,17 @@ module.exports = {
         //    dominant: true
         //},
 
+        /**
+         * согласующий
+         */
+        matchings:{
+            collection: 'user',
+            via: 'owner'
+        },
+        owner: {
+            collection: 'user',
+            via: 'matchings'
+        },
         vacationWhomCreated: {
             collection: 'vacation'
         },

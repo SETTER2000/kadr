@@ -13,7 +13,7 @@ angular.module('VacationModule')
             //console.log('2',t.humanizeLength());            //=> "4 hours"
             //console.log('3',t.count("days"));               //=> 1
             //console.log('4',t.isPast());                   //=> true
-            //console.log('5',t.contains("2017-10-25T10:00")); //=> true
+            //console.log('5',t.contains("2017-10-25T10:00"А)); //=> true
 
 
             //$scope.changed = function () {

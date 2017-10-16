@@ -699,6 +699,7 @@ module.exports = {
                 .populate('positions')
                 .populate('vacations')
                 .populate('interfaces')
+                .populate('matchings')
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
@@ -1049,6 +1050,52 @@ module.exports = {
         }).exec(function (err, update) {
             if (err) return res.negotiate(err);
             return res.ok();
+        });
+    },
+
+  /**
+     * Обновить пользователю согласующего
+     * @param req
+     * @param res
+     */
+    updateMatching: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
+
+      console.log('req.param(matching):',req.param('matching'));
+      
+        User.update(req.param('id'), {
+            matchings: req.param('matching')
+        })
+            .populate('matchings')
+            .exec(function (err, update) {
+            if (err) return res.negotiate(err);
+            return res.ok(update);
+        });
+    },
+
+  /**
+     * Установка пользователю согласующего
+     * @param req
+     * @param res
+     */
+  addMatching: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
+
+      console.log('req.param(matching add):',req.param('matching'));
+
+        User.findOne(req.param('id'))
+            .populate('matchings')
+            .exec(function (err, findOneUser) {
+            if (err) return res.negotiate(err);
+                findOneUser.matchings.add(req.param('matching'));
+                findOneUser.save(function (err) {
+                    if (err) return res.negotiate(err);
+                    Mailer.sendWelcomeMail(findOneUser);
+                    return res.ok(findOneUser);
+                });
+
         });
     },
 
