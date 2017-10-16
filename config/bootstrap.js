@@ -102,7 +102,7 @@ module.exports.bootstrap = function (cb) {
         function process(file) {
             const watchFile = this.watchDir + '/' + file;
             const processedFile = this.processedDir + '/' + file;
-            const reportOk = sails.config.skd.targetReportOk + '/' + file;
+            const reportOk = reportFileOk + '/' + file;
             const pathToXlsxFile = watchFile;
             console.log("pathToXlsxFile", pathToXlsxFile);
             fs.open(pathToXlsxFile, 'r', (err, fd) => {
@@ -425,7 +425,7 @@ module.exports.bootstrap = function (cb) {
                                             if (err) sails.log('Проблемы с закрытием файла II:' + pathToXlsxFile);
                                             fs.unlink(pathToReport, (err)=> {
                                                 if (err) console.log('Ошибка удаления файла! ' + pathToReport);
-                                                workbook.toFileAsync(sails.config.skd.targetReportOk + '/' + file).then((response)=> {
+                                                workbook.toFileAsync(reportFileOk + '/' + file).then((response)=> {
                                                 }).catch((error) => {
                                                     //console.log(error, 'Promise error 0007788');
                                                 });
