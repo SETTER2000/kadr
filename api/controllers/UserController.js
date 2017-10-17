@@ -81,11 +81,11 @@ module.exports = {
      */
     loginLDAP: function (req, res) {
         User.findOne({
-            or: [
-                {email: req.param('email')},
-                {login: req.param('email')}
-            ]
-        })
+                or: [
+                    {email: req.param('email')},
+                    {login: req.param('email')}
+                ]
+            })
             .populate('positions')
             .populate('interfaces')
             .populate('vacations')
@@ -93,93 +93,93 @@ module.exports = {
             .populate('vacationWhomCreated')
             .populate('vacationWhomUpdated')
             .exec((err, user)=> {
-            if (err) return res.negotiate(err);
-            if (!user) return res.notFound('Пользователь не найден.');
+                if (err) return res.negotiate(err);
+                if (!user) return res.notFound('Пользователь не найден.');
 
-            if (user.deleted) {
-                return res.forbidden("Ваша учетная запись удалена. " +
-                    "Перейдите на страницу 'Восстановить профиль'.");
-            }
-            if (!user.action) {
-                return res.forbidden("Ваша учетная запись заблокирована, " +
-                    "пожалуйста свяжитесь с администратором: " + sails.config.admin.email);
-            }
-
-            const clientLDAP = ldap.createClient({
-                url: sails.config.ldap.uri
-            });
-
-            var opts = {
-                scope: 'sub',
-                filter: '(sAMAccountName=' + user.login + ')',
-                attributes: sails.config.ldap.attributes,
-                reconnect: false
-                //paged: true,
-                //sizeLimit: 50
-                //idleTimeout: 3000
-            };
-
-            /**
-             * Соединение с сервером LDAP
-             */
-            clientLDAP.bind(user.login + '@' + sails.config.admin.company, req.param('password'), function (err) {
-                if (err) {
-                    console.log('LDAP ошибка входа: ', err);
-                    clientLDAP.unbind(function () {
-                        clientLDAP.destroy();
-                    });
-                    --count;
-                    if (+count < 0)  return res.forbidden('Аккаунт заблокирован! Обращайтесь к системному администратору или через 10 мин. блокировка будет снята автоматически.');
-                    switch (+count) {
-                        case 1:
-                            word = 'попытка';
-                            break;
-                        case 0:
-                            word = 'попыток';
-                            break;
-                        default:
-                            var word = 'попытки';
-                    }
-                    return res.forbidden('Не верный логин или пароль. У вас осталось ' + count + ' ' + word + '.');
+                if (user.deleted) {
+                    return res.forbidden("Ваша учетная запись удалена. " +
+                        "Перейдите на страницу 'Восстановить профиль'.");
                 }
-                clientLDAP.search(sails.config.ldap.dn, opts, function (err, ldapUser) {
+                if (!user.action) {
+                    return res.forbidden("Ваша учетная запись заблокирована, " +
+                        "пожалуйста свяжитесь с администратором: " + sails.config.admin.email);
+                }
+
+                const clientLDAP = ldap.createClient({
+                    url: sails.config.ldap.uri
+                });
+
+                var opts = {
+                    scope: 'sub',
+                    filter: '(sAMAccountName=' + user.login + ')',
+                    attributes: sails.config.ldap.attributes,
+                    reconnect: false
+                    //paged: true,
+                    //sizeLimit: 50
+                    //idleTimeout: 3000
+                };
+
+                /**
+                 * Соединение с сервером LDAP
+                 */
+                clientLDAP.bind(user.login + '@' + sails.config.admin.company, req.param('password'), function (err) {
                     if (err) {
-                        console.log('LDAP ошибка поиска: ', err);
-                        return res.negotiate(err);
-                    }
-
-                    ldapUser.on('searchEntry', function (entry) {
-                        console.log('Вход в систему: ' + new Date() + ', ' +
-                            JSON.stringify(entry.object.displayName + ', ' +
-                                entry.object.department + ', ' + entry.object.title + ', ' +
-                                entry.object.telephoneNumber + ', ' + entry.object.mail + ', ' +
-                                entry.object.physicalDeliveryOfficeName + ', Руководитель: ' +
-                                entry.object.manager));
-                        count = 5;
-                    });
-
-                    //ldapUser.on('searchReference', function (referral) {
-                    //    console.log('referral: ' + referral.uris.join());
-                    //});
-
-                    ldapUser.on('error', function (err) {
-                        //if (err) return res.forbidden('Ошибка поиска в соединение LDAP: ' + err.message);
-                        console.warn('LDAP connection failed, but fear not, it will reconnect No', err);
-                    });
-
-                    ldapUser.on('end', function (result) {
-                        if (result.status == 0) {
-                            req.session.me = user.id;
-                            clientLDAP.unbind(function () {
-                                clientLDAP.destroy();
-                            });
-                            return res.ok();
+                        console.log('LDAP ошибка входа: ', err);
+                        clientLDAP.unbind(function () {
+                            clientLDAP.destroy();
+                        });
+                        --count;
+                        if (+count < 0)  return res.forbidden('Аккаунт заблокирован! Обращайтесь к системному администратору или через 10 мин. блокировка будет снята автоматически.');
+                        switch (+count) {
+                            case 1:
+                                word = 'попытка';
+                                break;
+                            case 0:
+                                word = 'попыток';
+                                break;
+                            default:
+                                var word = 'попытки';
                         }
-                        return res.forbidden(result.errorMessage);
+                        return res.forbidden('Не верный логин или пароль. У вас осталось ' + count + ' ' + word + '.');
+                    }
+                    clientLDAP.search(sails.config.ldap.dn, opts, function (err, ldapUser) {
+                        if (err) {
+                            console.log('LDAP ошибка поиска: ', err);
+                            return res.negotiate(err);
+                        }
+
+                        ldapUser.on('searchEntry', function (entry) {
+                            console.log('Вход в систему: ' + new Date() + ', ' +
+                                JSON.stringify(entry.object.displayName + ', ' +
+                                    entry.object.department + ', ' + entry.object.title + ', ' +
+                                    entry.object.telephoneNumber + ', ' + entry.object.mail + ', ' +
+                                    entry.object.physicalDeliveryOfficeName + ', Руководитель: ' +
+                                    entry.object.manager));
+                            count = 5;
+                        });
+
+                        //ldapUser.on('searchReference', function (referral) {
+                        //    console.log('referral: ' + referral.uris.join());
+                        //});
+
+                        ldapUser.on('error', function (err) {
+                            //if (err) return res.forbidden('Ошибка поиска в соединение LDAP: ' + err.message);
+                            console.warn('LDAP connection failed, but fear not, it will reconnect No', err);
+                        });
+
+                        ldapUser.on('end', function (result) {
+                            if (result.status == 0) {
+                                req.session.me = user.id;
+                                clientLDAP.unbind(function () {
+                                    clientLDAP.destroy();
+                                });
+                                return res.ok();
+                            }
+                            return res.forbidden(result.errorMessage);
+                        });
                     });
                 });
             });
-        });
     },
 
     /**
@@ -860,8 +860,8 @@ module.exports = {
                 if (!user)return next('User doesn\'t exists.');
                 User.destroy(req.param('id'))
                     .exec((err) => {
-                    if (err)return next(err);
-                });
+                        if (err)return next(err);
+                    });
                 res.ok();
             });
     },
@@ -1053,51 +1053,6 @@ module.exports = {
         });
     },
 
-  /**
-     * Обновить пользователю согласующего
-     * @param req
-     * @param res
-     */
-    updateMatching: function (req, res) {
-        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
-
-      console.log('req.param(matching):',req.param('matching'));
-      
-        User.update(req.param('id'), {
-            matchings: req.param('matching')
-        })
-            .populate('matchings')
-            .exec(function (err, update) {
-            if (err) return res.negotiate(err);
-            return res.ok(update);
-        });
-    },
-
-  /**
-     * Установка пользователю согласующего
-     * @param req
-     * @param res
-     */
-  addMatching: function (req, res) {
-        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
-
-      console.log('req.param(matching add):',req.param('matching'));
-
-        User.findOne(req.param('id'))
-            .populate('matchings')
-            .exec(function (err, findOneUser) {
-            if (err) return res.negotiate(err);
-                findOneUser.matchings.add(req.param('matching'));
-                findOneUser.save(function (err) {
-                    if (err) return res.negotiate(err);
-                    Mailer.sendWelcomeMail(findOneUser);
-                    return res.ok(findOneUser);
-                });
-
-        });
-    },
 
     /**
      * Установка пользователю прав кадровика
@@ -1258,21 +1213,6 @@ module.exports = {
      */
     updateInterface: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //let year = (req.param('year')) ? req.param('year') : moment().year();
-        //console.log('YEE:', req.param('year'));
-        //User.native(function (err, collection) {
-        //    if (err) return res.serverError(err);
-        //    console.log('WEEE', req.param('year'));
-        //    collection.update({"_id" : ObjectId(req.session.me)}, {$push:{interface:{$each:req.param('year'),$slice:-1} }},
-        //        function (err, result) {
-        //            if (err) return res.serverError(err);
-        //
-        //            //console.log('RESULT: ', result);
-        //            return res.ok();
-        //        }
-        //    );
-        //
-        //});
         User.native(function (err, collection) {
             if (err) return res.serverError(err);
             //console.log('WEEE', req.param('year'));
@@ -1283,24 +1223,100 @@ module.exports = {
                 }
             )
         });
-        //User.update({id: req.session.me}, {interface: req.param('year')})
-        //    .exec(
-        //        function (err, updatedUser) {
-        //            if (err) {
-        //                console.log('Ошибочка', err);
-        //                return res.negotiate(err);
-        //            }
-        //            return res.ok(users);
-        //            //return res.ok(updatedUser);
-        //            //User.find(updatedUser)
-        //            //    .populate('positions')
-        //            //    .populate('vacations')
-        //            //    .exec(function foundUser(err, users) {
-        //            //        if (err) return res.serverError(err);
-        //            //        if (!users) return res.notFound();
-        //            //        return res.ok(users);
-        //            //    });
-        //        });
+    },
+
+    /**
+     * Получить список пользователей в усечёном виде
+     * @param req
+     * @param res
+     */
+    getAllUsersName: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.native(function (err, collection) {
+            if (err) return res.serverError(err);
+            //console.log('WEEE', req.param('year'));
+            collection.aggregate([{$sort: {lastName: 1}}, {
+                    $project: {
+                        lastName: 1,
+                        firstName: 1,
+                        patronymicName: 1,
+                        avatarUrl: 1,
+                        getShortName: 1
+                    }
+                }])
+                .toArray(function (err, results) {
+                    if (err) return res.serverError(err);
+                    return res.ok(results);
+                });
+        });
+    },
+
+
+
+    /**
+     * Обновить согласующего пользователю
+     * @param req
+     * @param res
+     */
+    updateMatching: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        console.log('req.param(matching):', req.param('matching'));
+        User.update(req.param('id'), {
+                matchings: req.param('matching')
+            })
+            .populate('matchings')
+            .exec(function (err, update) {
+                if (err) return res.negotiate(err);
+                return res.ok(update);
+            });
+    },
+
+
+    /**
+     * Добавить согласующего пользователю
+     * @param req
+     * @param res
+     */
+    addMatching: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        //console.log('req.param(matching add):', req.param('matching'));
+        User.findOne(req.param('id'))
+            .populate('matchings')
+            .exec(function (err, findOneUser) {
+                if (err) return res.negotiate(err);
+                findOneUser.matchings.add(req.param('value'));
+                findOneUser.save(function (err) {
+                    if (err) return res.negotiate(err);
+                    Mailer.sendWelcomeMail(findOneUser);
+                    return res.ok(findOneUser);
+                });
+            });
+    },
+
+
+    /**
+     * Удалить согласующего у пользователя
+     * @param req
+     * @param res
+     */
+    deleteMatching: function (req, res) {
+        console.log('VALIDATIO:', req.param('matchingDel'));
+        console.log('У кого удаляем:', req.param('value'));
+        console.log('Кого удаляем:', req.param('id'));
+        User.findOne({id:req.param('value')})
+            .populate('matchings')
+            .exec((err, user)=> {
+                if (err) return req.serverError(err);
+                if(!user) return res.badRequest(req.param('value'));
+                if (req.param('matchingDel')) {
+                    user.matchings.remove(req.param('id'));
+                }
+                user.save(function (err) {
+                    if (err) return res.negotiate('ERR: ' + err);
+                    res.ok(req.param('id'));
+                });
+            });
+
     }
 };
 

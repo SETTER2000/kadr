@@ -46,7 +46,9 @@ module.exports.policies = {
         updateAction: ['isLoggedIn', 'isAdmin'],
         updateDeleted: ['isLoggedIn', 'isAdmin'],
         updateMatching:true,
-        addMatching:true
+        addMatching:true,
+        deleteMatching:true,
+        getAllUsersName:true
     },
 
 

@@ -1,7 +1,7 @@
 'use strict';
 angular.module('UserModule')
-    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', '$stateParams', 'FileUploader', '$rootScope',
-        function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, $stateParams, FileUploader, $rootScope) {
+    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
+        function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             var info = {
                 changed: 'Изменения сохранены!',
@@ -22,12 +22,192 @@ angular.module('UserModule')
 
             $scope.radioData = [
                 //{label: 'испытательный срок', value: false},
-                { label: 'работает',  value: false},
+                {label: 'работает', value: false},
                 //{ label: 'работает',  value: false, isDisabled: true },
                 {label: 'уволен', value: true},
                 //{label: 'временно включён', value: false},
                 //{ label: '4', value: '4' }
             ];
+
+
+            $scope.simulateQuery = false;
+            $scope.isDisabled = false;
+
+            // list of `state` value/display objects
+
+            $scope.states = loadAll();
+            $scope.newState = function (state) {
+                alert("Sorry! You'll need to create a Constitution for " + state + " first!");
+            };
+
+            // ******************************
+            // Internal methods
+            // ******************************
+
+            /**
+             * Search for states... use $timeout to simulate
+             * remote dataservice call.
+             */
+            $scope.querySearch = function (query) {
+
+                console.log('$scope.states', $scope.states);
+
+                var results = query ? $scope.states.filter(createFilterFor(query)) : $scope.states,
+                    deferred;
+                if ($scope.simulateQuery) {
+                    deferred = $q.defer();
+                    $timeout(function () {
+                        deferred.resolve(results);
+                    }, Math.random() * 1000, false);
+                    return deferred.promise;
+                } else {
+                    return results;
+                }
+            };
+            $scope.selectedItem = {value: "58a461e66723246b6c2bc634", display: "Авилкин А.В."};
+            $scope.searchTextChange = function (text) {
+                //$log.info('Text changed to ' + text);
+                console.log('SEARCH', text);
+            };
+
+            $scope.selectedItemChange = function (obj) {
+                //$log.info('Item changed to ' + JSON.stringify(item));
+                console.log('SELECT', obj);
+                if (angular.isDefined(obj.email)) {
+
+                    //console.log('У кого удалять', $scope.item.lastName);
+                    //console.log('Кого удалять', obj.id);
+
+                    obj.matchingDel = true;
+                    obj.value = $scope.item.id; // у кого удалить
+                    //obj.value = obj.id; // кого удалить
+                    $http.post('/user/delete-matching', obj).then(function (success) {
+                        toastr.success(info.changed, success);
+                        $scope.refresh();
+                    });
+                } else {
+                    obj.id = $scope.item.id;
+                    $http.post('/user/add-matching', obj).then(function (success) {
+                        toastr.success(info.changed, success);
+                        $scope.refresh();
+                    });
+                }
+
+                //if (angular.isDefined(item.email)) {
+                //    item.$update(item, function (success) {
+                //            toastr.success(info.changed);
+                //            $scope.refresh();
+                //            //$scope.item.firedDate = success.getFiredDate;
+                //        },
+                //        function (err) {
+                //            console.log(info.error, err);
+                //            toastr.error(err.data.invalidAttributes, info.error + ' 90!');
+                //        });
+                //}
+                console.log('item.matchings', $scope.item.matchings);
+
+                //$scope.item.matchings.map(function (state) {
+                //    if( $scope.item.matchings.split())
+                //});
+                //
+
+
+                $scope.selectedItem = obj;
+            };
+
+            /**
+             * Build `states` list of key/value pairs
+             */
+            function loadAll() {
+
+                //var allStates = 'Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware,\
+                //  Florida, Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana,\
+                //  Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana,\
+                //  Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina,\
+                //  North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina,\
+                //  South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia,\
+                //  Wisconsin, Wyoming';
+                //return $http.get('/user/get-all').then(function (response) {
+                return $http.get('/user/get-all').then(function (response) {
+
+                    console.log('FFFFF', response.data);
+                    //
+                    //return response.data;
+                    var a = [];
+
+                    response.data.map(function (state) {
+                        //console.log('allStates', state);
+                        a.push({
+                            value: state._id,
+                            display: state.lastName + ' ' + state.firstName.substr(0, 1) + '.' + state.patronymicName.substr(0, 1) + '.'
+                        });
+                    });
+                    return a;
+                });
+                //return allStates.split(/, +/g).map(function (state) {
+                //    //console.log('allStates', state);
+                //    return {
+                //        value: state.toLowerCase(),
+                //        display: state
+                //    };
+                //});
+            }
+
+
+            //function loadAll() {
+            //    $http.get('/users').then(function onSuccess(sailsResponse) {
+            //
+            //        return sailsResponse.data.map(function (state) {
+            //            //console.log('allStates', state);
+            //            return {
+            //                value: state.id,
+            //                display: state.lastName
+            //            };
+            //        });
+            //    });
+            //}
+
+            //
+            //$scope.allStates = function () {
+            //    $http.get('/users').then(function onSuccess(sailsResponse) {
+            //        let ar = [];
+            //        sailsResponse.data.map(function (state) {
+            //            //console.log('allStates',state);
+            //            ar.push({
+            //                value: state.lastName,
+            //                display: state.lastName
+            //            });
+            //        });
+            //        return ar;
+            //    });
+            //};
+
+            //function loadAll() {
+//let r = $scope.allStates();
+            //r.data.map(function (st) {
+            //    //console.log('GETTERR', st);
+            //
+            //    return {
+            //        value: st.lastName,
+            //        display: st.lastName
+            //    };
+            //});
+
+
+            //}
+
+            //loadAll_o();
+            /**
+             * Create filter function for a query string
+             */
+            function createFilterFor(query) {
+                var lowercaseQuery = angular.lowercase(query);
+
+                return function filterFn(state) {
+                    return (state.value.indexOf(lowercaseQuery) === 0);
+                };
+
+            }
 
 
             //$http.get('/user/getBoss',{name:'Александр', lname:'Петров', pname:'Вячеславович'})
@@ -288,7 +468,7 @@ angular.module('UserModule')
                 console.log('$scope.item', $scope.item);
                 $http.post('/user/getBoss', $scope.item)
                     .then(function (response) {
-                        console.log('RESPONSORY: ', response);
+                        //console.log('RESPONSORY: ', response);
                         $scope.boss = response.data;
                     }, function (response) {
                         $scope.data = response.data || 'Request failed';
@@ -609,4 +789,5 @@ angular.module('UserModule')
             };
 
             $scope.refresh();
-        }]);
+        }
+    ]);

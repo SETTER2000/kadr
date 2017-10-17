@@ -45,7 +45,10 @@ module.exports.routes = {
     'PUT /user/update-admin/:id': 'UserController.updateAdmin',
     'PUT /user/update-matching/:id': 'UserController.updateMatching',
     'POST /user/add-matching': 'UserController.addMatching',
+    'POST /user/delete-matching': 'UserController.deleteMatching',
+
     'PUT /user/update-kadr/:id': 'UserController.updateKadr',
+
     //'PUT /user/update-leader/:id': 'UserController.updateLeader',
     'PUT /user/update-action/:id': 'UserController.updateAction',
     'PUT /user/update-deleted/:id': 'UserController.updateDeleted',
@@ -55,6 +58,7 @@ module.exports.routes = {
     'POST /file/upload': 'UserController.upload',
     // 'GET /user/getUsersDepartment': 'UserController.getUsersDepartment',
     'GET /user/getUsersDepartment/:id': 'UserController.getUsersDepartment',
+    'GET /user/get-all': 'UserController.getAllUsersName',
     'POST /users/ldap': 'UserController.searchLDAP',
 
     /**

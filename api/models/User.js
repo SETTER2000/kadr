@@ -223,6 +223,9 @@ module.exports = {
 
         getFullName: function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;
+        },
+        getShortName: function () {
+            return this.lastName + ' ' + this.firstName.substr(0, 1) + '.' + this.patronymicName.substr(0, 1) + '.';
         }
 
     }
