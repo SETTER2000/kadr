@@ -41,7 +41,7 @@ module.exports = {
                 {email: req.param('email')},
                 {login: req.param('email')}
             ]
-        }, function foundUser(err, user) {
+        }).exec((err, user)=> {
             if (err) return res.negotiate(err);
             if (!user) return res.notFound();
             Passwords.checkPassword({
@@ -678,6 +678,8 @@ module.exports = {
         User.findOne(req.param('id'))
             .populate('positions')
             .populate('interfaces')
+            .populate('matchings')
+            .populate('announced')
             .exec(function foundUser(err, user) {
                 if (err) return res.serverError(err);
                 if (!user) return res.notFound();
@@ -692,14 +694,13 @@ module.exports = {
      */
     findUsers: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //console.log('char: ', req.param('char'));
-        //console.log('where: ', req.param('where'));
         if (req.param('id')) {
             User.findOne(req.param('id'))
                 .populate('positions')
                 .populate('vacations')
                 .populate('interfaces')
                 .populate('matchings')
+                .populate('announced')
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
@@ -720,6 +721,8 @@ module.exports = {
                     .populate('positions')
                     .populate('vacations')
                     .populate('interfaces')
+                    .populate('matchings')
+                    .populate('announced')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -730,6 +733,8 @@ module.exports = {
                     .populate('positions')
                     .populate('vacations')
                     .populate('interfaces')
+                    .populate('matchings')
+                    .populate('announced')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -747,14 +752,17 @@ module.exports = {
      */
     show: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        User.findOne(req.param('id'), function foundUser(err, user) {
-            if (err) return next(err);
-            if (!user) return next();
+        User.findOne(req.param('id'))
+            .populate('matchings')
+            .populate('announced')
+            .exec((err, user) => {
+                if (err) return next(err);
+                if (!user) return next();
 
-            res.view({
-                user: user, me: req.session.me
+                res.view({
+                    user: user, me: req.session.me
+                });
             });
-        });
     },
 
     /**
@@ -769,6 +777,8 @@ module.exports = {
             .populate('positions')
             .populate('vacations')
             .populate('interfaces')
+            .populate('matchings')
+            .populate('announced')
             .exec((err, user) => {
                 if (err)return next(err);
                 if (!user)return next('User doesn\'t exists.');
@@ -1235,7 +1245,7 @@ module.exports = {
         User.native(function (err, collection) {
             if (err) return res.serverError(err);
             //console.log('WEEE', req.param('year'));
-            collection.aggregate([{$sort: {lastName: 1}}, {
+            collection.aggregate([{$match: {fired: false}}, {$sort: {lastName: 1}}, {
                     $project: {
                         lastName: 1,
                         firstName: 1,
@@ -1250,7 +1260,6 @@ module.exports = {
                 });
         });
     },
-
 
 
     /**
@@ -1303,13 +1312,81 @@ module.exports = {
         console.log('VALIDATIO:', req.param('matchingDel'));
         console.log('У кого удаляем:', req.param('value'));
         console.log('Кого удаляем:', req.param('id'));
-        User.findOne({id:req.param('value')})
+        User.findOne({id: req.param('value')})
             .populate('matchings')
             .exec((err, user)=> {
                 if (err) return req.serverError(err);
-                if(!user) return res.badRequest(req.param('value'));
+                if (!user) return res.badRequest(req.param('value'));
                 if (req.param('matchingDel')) {
                     user.matchings.remove(req.param('id'));
+                }
+                user.save(function (err) {
+                    if (err) return res.negotiate('ERR: ' + err);
+                    res.ok(req.param('id'));
+                });
+            });
+
+    },
+
+
+
+    /**
+     * Обновить оповещающего пользователю
+     * @param req
+     * @param res
+     */
+    updateAnnounced: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        console.log('req.param(announced):', req.param('announced'));
+        User.update(req.param('id'), {
+                announced: req.param('announced')
+            })
+            .populate('announced')
+            .exec(function (err, update) {
+                if (err) return res.negotiate(err);
+                return res.ok(update);
+            });
+    },
+
+
+    /**
+     * Добавить оповещающего пользователю
+     * @param req
+     * @param res
+     */
+    addAnnounced: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        //console.log('req.param(matching add):', req.param('matching'));
+        User.findOne(req.param('id'))
+            .populate('announced')
+            .exec(function (err, findOneUser) {
+                if (err) return res.negotiate(err);
+                findOneUser.announced.add(req.param('value'));
+                findOneUser.save(function (err) {
+                    if (err) return res.negotiate(err);
+                    Mailer.sendWelcomeMail(findOneUser);
+                    return res.ok(findOneUser);
+                });
+            });
+    },
+
+
+    /**
+     * Удалить оповещающего у пользователя
+     * @param req
+     * @param res
+     */
+    deleteAnnounced: function (req, res) {
+        console.log('VALIDATIO:', req.param('announcedDel'));
+        console.log('У кого удаляем:', req.param('value'));
+        console.log('Кого удаляем:', req.param('id'));
+        User.findOne({id: req.param('value')})
+            .populate('announced')
+            .exec((err, user)=> {
+                if (err) return req.serverError(err);
+                if (!user) return res.badRequest(req.param('value'));
+                if (req.param('announcedDel')) {
+                    user.announced.remove(req.param('id'));
                 }
                 user.save(function (err) {
                     if (err) return res.negotiate('ERR: ' + err);

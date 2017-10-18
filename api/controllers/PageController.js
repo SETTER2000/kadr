@@ -40,7 +40,13 @@ module.exports = {
             return res.view('public/header', {layout: 'homepage', me: null});
         }
 
-        User.findOne(req.session.me, function (err, user) {
+        User.findOne(req.session.me)
+            .populate('positions')
+            .populate('vacations')
+            .populate('interfaces')
+            .populate('matchings')
+            .populate('announced')
+            .exec((err, user) =>{
             if (err) {
                 return res.negotiate(err);
             }

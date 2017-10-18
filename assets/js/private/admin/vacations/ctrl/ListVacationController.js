@@ -272,6 +272,10 @@
                         });
                 }
             });
+
+
+
+
             $scope.objectName = [];
 
             $scope.refresh = function (where) {

@@ -48,7 +48,10 @@ module.exports.policies = {
         updateMatching:true,
         addMatching:true,
         deleteMatching:true,
-        getAllUsersName:true
+        getAllUsersName:true,
+        updateAnnounced:true,
+        addAnnounced:true,
+        deleteAnnounced:true
     },
 
 

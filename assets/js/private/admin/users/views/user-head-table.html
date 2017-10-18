@@ -44,10 +44,19 @@
       ng-class="{reverse: reverse}"></span>
         </button>
     </th>
+
+
     <th>
         <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">
             {{emailArea}}
 <span class="sortOrder" ng-show="propertyName === 'email'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th  ng-if="me.admin" class="text-center">
+        <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('updatedAt')">
+            {{updatedAtArea}}
+<span class="sortOrder" ng-show="propertyName === 'updatedAt'"
       ng-class="{reverse: reverse}"></span>
         </button>
     </th>

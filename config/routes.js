@@ -43,9 +43,14 @@ module.exports.routes = {
     'PUT /user/change-password': 'UserController.changePasswordProfile',
     'PUT /user/generate-recovery-email': 'UserController.generateRecoveryEmail',
     'PUT /user/update-admin/:id': 'UserController.updateAdmin',
+
     'PUT /user/update-matching/:id': 'UserController.updateMatching',
     'POST /user/add-matching': 'UserController.addMatching',
     'POST /user/delete-matching': 'UserController.deleteMatching',
+
+    'PUT /user/update-announced/:id': 'UserController.updateAnnounced',
+    'POST /user/add-announced': 'UserController.addAnnounced',
+    'POST /user/delete-announced': 'UserController.deleteAnnounced',
 
     'PUT /user/update-kadr/:id': 'UserController.updateKadr',
 

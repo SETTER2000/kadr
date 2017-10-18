@@ -47,6 +47,9 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <td>
             <a class="position" href="mailto:{{item.email}}">{{item.email}}</a>
         </td>
+        <td ng-if="me.admin" class="text-center">
+            {{item.updatedAt | date:"dd.MM.yyyy hh:mm:ss"}}
+        </td>
         <td width="250px" class="text-right">
             {{item.getContact(fieldName)}}
         </td>

@@ -57,6 +57,7 @@
             $scope.drArea = 'ДР11';
             $scope.loginArea = 'Логин';
             $scope.emailArea = 'Email';
+            $scope.updatedAtArea = 'Update';
             $scope.roomArea = 'Комната';
             $scope.departmentArea = 'Отдел';
             $scope.positionArea = 'Должность';

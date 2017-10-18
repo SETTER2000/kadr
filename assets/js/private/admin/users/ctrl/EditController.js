@@ -29,7 +29,8 @@ angular.module('UserModule')
                 //{ label: '4', value: '4' }
             ];
 
-
+            $scope.addPersonName = 'Выбрать согласующих для';
+            $scope.addPersonAnnounced = 'Выбрать оповещаемых для';
             $scope.simulateQuery = false;
             $scope.isDisabled = false;
 
@@ -49,9 +50,6 @@ angular.module('UserModule')
              * remote dataservice call.
              */
             $scope.querySearch = function (query) {
-
-                console.log('$scope.states', $scope.states);
-
                 var results = query ? $scope.states.filter(createFilterFor(query)) : $scope.states,
                     deferred;
                 if ($scope.simulateQuery) {
@@ -64,26 +62,19 @@ angular.module('UserModule')
                     return results;
                 }
             };
-            $scope.selectedItem = {value: "58a461e66723246b6c2bc634", display: "Авилкин А.В."};
+
             $scope.searchTextChange = function (text) {
-                //$log.info('Text changed to ' + text);
                 console.log('SEARCH', text);
             };
 
             $scope.selectedItemChange = function (obj) {
-                //$log.info('Item changed to ' + JSON.stringify(item));
-                console.log('SELECT', obj);
                 if (angular.isDefined(obj.email)) {
-
-                    //console.log('У кого удалять', $scope.item.lastName);
-                    //console.log('Кого удалять', obj.id);
-
                     obj.matchingDel = true;
                     obj.value = $scope.item.id; // у кого удалить
                     //obj.value = obj.id; // кого удалить
                     $http.post('/user/delete-matching', obj).then(function (success) {
                         toastr.success(info.changed, success);
-                        $scope.refresh();
+                        //$scope.refresh();
                     });
                 } else {
                     obj.id = $scope.item.id;
@@ -92,49 +83,32 @@ angular.module('UserModule')
                         $scope.refresh();
                     });
                 }
-
-                //if (angular.isDefined(item.email)) {
-                //    item.$update(item, function (success) {
-                //            toastr.success(info.changed);
-                //            $scope.refresh();
-                //            //$scope.item.firedDate = success.getFiredDate;
-                //        },
-                //        function (err) {
-                //            console.log(info.error, err);
-                //            toastr.error(err.data.invalidAttributes, info.error + ' 90!');
-                //        });
-                //}
-                console.log('item.matchings', $scope.item.matchings);
-
-                //$scope.item.matchings.map(function (state) {
-                //    if( $scope.item.matchings.split())
-                //});
-                //
-
-
                 $scope.selectedItem = obj;
             };
-
+            $scope.selectedItemChangeAnnounced = function (obj) {
+                if (angular.isDefined(obj.email)) {
+                    obj.announcedDel = true;
+                    obj.value = $scope.item.id; // у кого удалить
+                    //obj.value = obj.id; // кого удалить
+                    $http.post('/user/delete-announced', obj).then(function (success) {
+                        toastr.success(info.changed, success);
+                        //$scope.refresh();
+                    });
+                } else {
+                    obj.id = $scope.item.id;
+                    $http.post('/user/add-announced', obj).then(function (success) {
+                        toastr.success(info.changed, success);
+                        $scope.refresh();
+                    });
+                }
+                $scope.selectedItem = obj;
+            };
             /**
              * Build `states` list of key/value pairs
              */
             function loadAll() {
-
-                //var allStates = 'Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware,\
-                //  Florida, Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana,\
-                //  Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana,\
-                //  Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina,\
-                //  North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina,\
-                //  South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia,\
-                //  Wisconsin, Wyoming';
-                //return $http.get('/user/get-all').then(function (response) {
                 return $http.get('/user/get-all').then(function (response) {
-
-                    console.log('FFFFF', response.data);
-                    //
-                    //return response.data;
                     var a = [];
-
                     response.data.map(function (state) {
                         //console.log('allStates', state);
                         a.push({

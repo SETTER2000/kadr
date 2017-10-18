@@ -211,6 +211,18 @@ module.exports = {
             collection: 'user',
             via: 'matchings'
         },
+
+        /**
+         * Оповещаемые
+         */
+        announced:{
+            collection: 'user',
+            via: 'announcedOwner'
+        },
+        announcedOwner: {
+            collection: 'user',
+            via: 'announced'
+        },
         vacationWhomCreated: {
             collection: 'vacation'
         },
