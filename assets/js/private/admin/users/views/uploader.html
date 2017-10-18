@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
+        <div  ng-class="{'col-md-12':!item.avatarUrl,'col-md-8':item.avatarUrl}">
             <div ng-cloak>
                 <h4 class="text-center"> {{item.positions[0].name}}</h4>
                 <md-content>
@@ -209,26 +209,171 @@
                                 </div>
                             </md-content>
                         </md-tab>
-                        <!--<md-tab label="Пересечения">-->
-                            <!--<md-content class="md-padding">-->
-                                <!--&lt;!&ndash;<h1 class="md-display-2">Пересечения</h1>&ndash;&gt;-->
-                                <!--<div class="panel-body" ng-repeat="itm in item.matchings">-->
-                                    <!--<div class="media">-->
-                                        <!--<div class="media-left media-middle">-->
-                                            <!--<a href="{{item.getEditUrl(itm.id)}}"><img alt="64x64" class="photo" ng-src="{{itm.avatarUrl}}"-->
-                                                                                       <!--data-holder-rendered="true"></a>-->
-                                            <!--&lt;!&ndash;<img alt="64x64" class="media-object" data-src="holder.js/64x64" style="width: 32px; height: 32px;" ng-src="{{itm.avatarUrl}}" data-holder-rendered="true">&ndash;&gt;-->
-                                        <!--</div>-->
-                                        <!--<div class="media-body">-->
-                                            <!--<h5 class="media-heading"><strong>{{itm.lastName}}</strong><br>{{itm.firstName}}-->
-                                                <!--{{itm.patronymicName}}-->
-                                            <!--</h5>-->
-                                            <!--&lt;!&ndash;bla-bla-bla&ndash;&gt;-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</md-content>-->
-                        <!--</md-tab>-->
+                        <md-tab label="Пересечения">
+                            <md-content class="md-padding">
+                                <div ng-repeat="inter in item.intersections | filter:{fired:false}" layout="column" ng-cloak>
+                                    <md-content class="md-padding">
+                                        <form ng-submit="$event.preventDefault()">
+                                            <div class="media">
+                                                <div class="media-left media-middle">
+                                                    <a href="{{item.getEditUrl(inter.id)}}">
+                                                        <img alt="64x64" class="photo" ng-src="{{inter.avatarUrl}}"
+                                                             data-holder-rendered="true">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <!--<h5 class="media-heading"><strong>{{itm.lastName}}</strong><br>{{itm.firstName}} {{itm.patronymicName}}-->
+                                                    <!--</h5>-->
+                                                    <!--md-selected-item="itm.lastName +' '+itm.firstName.substr(0,1)+'. '+itm.patronymicName.substr(0,1)+'.'"-->
+                                                    <md-autocomplete
+                                                            ng-disabled="isDisabled"
+                                                            md-no-cache="noCache"
+                                                            md-selected-item="inter.lastName"
+                                                            md-search-text-change="searchTextChange(searchText)"
+                                                            md-search-text="searchText"
+                                                            md-selected-item-change="selectedItemChangeIntersections(inter)"
+                                                            md-items="inter in querySearch(searchText)"
+                                                            md-item-text="inter.display"
+                                                            md-min-length="0"
+                                                            placeholder="{{addPersonIntersections}} {{item.getShortName()}}">
+                                                        <md-item-template>
+                                                            <span md-highlight-text="searchText"
+                                                                  md-highlight-flags="^i">{{inter.display}}</span>
+                                                        </md-item-template>
+                                                        <md-not-found>
+                                                            No states matching "{{searchText}}" were found.
+                                                            <a ng-click="newState(searchText)">Create a new one!</a>
+                                                        </md-not-found>
+                                                    </md-autocomplete>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </md-content>
+                                </div>
+                                <div layout="column" ng-cloak>
+                                    <md-content class="md-padding">
+                                        <form ng-submit="$event.preventDefault()">
+                                            <div class="media">
+                                                <div class="media-left media-middle">
+                                                    <!--<a href="{{item.getEditUrl(itm.id)}}">-->
+                                                    <!--<img alt="64x64" class="photo" ng-src="{{itm.avatarUrl}}"-->
+                                                    <!--data-holder-rendered="true">-->
+                                                    <!--</a>-->
+                                                    <!--<img alt="64x64" class="media-object" data-src="holder.js/64x64" style="width: 32px; height: 32px;" ng-src="{{itm.avatarUrl}}" data-holder-rendered="true">-->
+                                                </div>
+                                                <div class="media-body">
+                                                    <md-autocomplete
+                                                            ng-disabled="isDisabled"
+                                                            md-no-cache="noCache"
+                                                            md-selected-item="inter.lastName"
+                                                            md-search-text-change="searchTextChange(searchText)"
+                                                            md-search-text="searchText"
+                                                            md-selected-item-change="selectedItemChangeIntersections(inter)"
+                                                            md-items="inter in querySearch(searchText)"
+                                                            md-item-text="inter.display"
+                                                            md-min-length="0"
+                                                            placeholder="{{addPersonIntersections}} {{item.getShortName()}}">
+                                                        <md-item-template>
+                                                            <span md-highlight-text="searchText"
+                                                                  md-highlight-flags="^i">{{inter.display}}</span>
+                                                        </md-item-template>
+                                                        <md-not-found>
+                                                            No states matching "{{searchText}}" were found.
+                                                            <a ng-click="newState(searchText)">Create a new one!</a>
+                                                        </md-not-found>
+                                                    </md-autocomplete>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </md-content>
+                                </div>
+                            </md-content>
+                        </md-tab>
+                        <md-tab label="Я согласуйщий">
+                            <md-content class="md-padding">
+                                <div ng-repeat="iag in item.iagree | filter:{fired:false}" layout="column" ng-cloak>
+                                    <md-content class="md-padding">
+                                        <form ng-submit="$event.preventDefault()">
+                                            <div class="media">
+                                                <div class="media-left media-middle">
+                                                    <a href="{{item.getEditUrl(iag.id)}}">
+                                                        <img alt="64x64" class="photo" ng-src="{{iag.avatarUrl}}"
+                                                             data-holder-rendered="true">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <!--<h5 class="media-heading"><strong>{{itm.lastName}}</strong><br>{{itm.firstName}} {{itm.patronymicName}}-->
+                                                    <!--</h5>-->
+                                                    <!--md-selected-item="itm.lastName +' '+itm.firstName.substr(0,1)+'. '+itm.patronymicName.substr(0,1)+'.'"-->
+                                                    <md-autocomplete
+                                                            ng-disabled="isDisabled"
+                                                            md-no-cache="noCache"
+                                                            md-selected-item="iag.lastName"
+                                                            md-search-text-change="searchTextChange(searchText)"
+                                                            md-search-text="searchText"
+                                                            md-selected-item-change="selectedItemChangeIAgree(iag)"
+                                                            md-items="iag in querySearch(searchText)"
+                                                            md-item-text="iag.display"
+                                                            md-min-length="0"
+                                                            placeholder="{{addPersonIAgree}} {{item.getShortName()}}">
+                                                        <md-item-template>
+                                                            <span md-highlight-text="searchText"
+                                                                  md-highlight-flags="^i">{{iag.display}}</span>
+                                                        </md-item-template>
+                                                        <md-not-found>
+                                                            No states matching "{{searchText}}" were found.
+                                                            <a ng-click="newState(searchText)">Create a new one!</a>
+                                                        </md-not-found>
+                                                    </md-autocomplete>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </md-content>
+                                </div>
+                                <div layout="column" ng-cloak>
+                                    <md-content class="md-padding">
+                                        <form ng-submit="$event.preventDefault()">
+                                            <div class="media">
+                                                <div class="media-left media-middle">
+                                                    <!--<a href="{{item.getEditUrl(itm.id)}}">-->
+                                                    <!--<img alt="64x64" class="photo" ng-src="{{itm.avatarUrl}}"-->
+                                                    <!--data-holder-rendered="true">-->
+                                                    <!--</a>-->
+                                                    <!--<img alt="64x64" class="media-object" data-src="holder.js/64x64" style="width: 32px; height: 32px;" ng-src="{{itm.avatarUrl}}" data-holder-rendered="true">-->
+                                                </div>
+                                                <div class="media-body">
+                                                    <md-autocomplete
+                                                            ng-disabled="isDisabled"
+                                                            md-no-cache="noCache"
+                                                            md-selected-item="iag.lastName"
+                                                            md-search-text-change="searchTextChange(searchText)"
+                                                            md-search-text="searchText"
+                                                            md-selected-item-change="selectedItemChangeIAgree(iag)"
+                                                            md-items="iag in querySearch(searchText)"
+                                                            md-item-text="iag.display"
+                                                            md-min-length="0"
+                                                            placeholder="{{addPersonIAgree}} {{item.getShortName()}}">
+                                                        <md-item-template>
+                                                            <span md-highlight-text="searchText"
+                                                                  md-highlight-flags="^i">{{iag.display}}</span>
+                                                        </md-item-template>
+                                                        <md-not-found>
+                                                            No states matching "{{searchText}}" were found.
+                                                            <a ng-click="newState(searchText)">Create a new one!</a>
+                                                        </md-not-found>
+                                                    </md-autocomplete>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </md-content>
+                                </div>
+                            </md-content>
+                        </md-tab>
+
                         <!--<md-tab label="Я согласующий">-->
                             <!--<md-content class="md-padding">-->
                                 <!--&lt;!&ndash;<h1 class="md-display-2">Я согласующий</h1>&ndash;&gt;-->

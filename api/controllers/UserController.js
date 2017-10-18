@@ -680,6 +680,7 @@ module.exports = {
             .populate('interfaces')
             .populate('matchings')
             .populate('announced')
+            .populate('iagree')
             .exec(function foundUser(err, user) {
                 if (err) return res.serverError(err);
                 if (!user) return res.notFound();
@@ -701,6 +702,8 @@ module.exports = {
                 .populate('interfaces')
                 .populate('matchings')
                 .populate('announced')
+                .populate('intersections')
+                .populate('iagree')
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
@@ -723,6 +726,8 @@ module.exports = {
                     .populate('interfaces')
                     .populate('matchings')
                     .populate('announced')
+                    .populate('intersections')
+                    .populate('iagree')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -735,6 +740,8 @@ module.exports = {
                     .populate('interfaces')
                     .populate('matchings')
                     .populate('announced')
+                    .populate('intersections')
+                    .populate('iagree')
                     .exec(function foundUser(err, users) {
                         if (err) return res.serverError(err);
                         if (!users) return res.notFound();
@@ -755,6 +762,8 @@ module.exports = {
         User.findOne(req.param('id'))
             .populate('matchings')
             .populate('announced')
+            .populate('intersections')
+            .populate('iagree')
             .exec((err, user) => {
                 if (err) return next(err);
                 if (!user) return next();
@@ -1269,7 +1278,6 @@ module.exports = {
      */
     updateMatching: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('req.param(matching):', req.param('matching'));
         User.update(req.param('id'), {
                 matchings: req.param('matching')
             })
@@ -1287,8 +1295,7 @@ module.exports = {
      * @param res
      */
     addMatching: function (req, res) {
-        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //console.log('req.param(matching add):', req.param('matching'));
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.findOne(req.param('id'))
             .populate('matchings')
             .exec(function (err, findOneUser) {
@@ -1309,15 +1316,13 @@ module.exports = {
      * @param res
      */
     deleteMatching: function (req, res) {
-        console.log('VALIDATIO:', req.param('matchingDel'));
-        console.log('У кого удаляем:', req.param('value'));
-        console.log('Кого удаляем:', req.param('id'));
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.findOne({id: req.param('value')})
             .populate('matchings')
             .exec((err, user)=> {
                 if (err) return req.serverError(err);
                 if (!user) return res.badRequest(req.param('value'));
-                if (req.param('matchingDel')) {
+                if (req.param('del')) {
                     user.matchings.remove(req.param('id'));
                 }
                 user.save(function (err) {
@@ -1377,15 +1382,12 @@ module.exports = {
      * @param res
      */
     deleteAnnounced: function (req, res) {
-        console.log('VALIDATIO:', req.param('announcedDel'));
-        console.log('У кого удаляем:', req.param('value'));
-        console.log('Кого удаляем:', req.param('id'));
         User.findOne({id: req.param('value')})
             .populate('announced')
             .exec((err, user)=> {
                 if (err) return req.serverError(err);
                 if (!user) return res.badRequest(req.param('value'));
-                if (req.param('announcedDel')) {
+                if (req.param('del')) {
                     user.announced.remove(req.param('id'));
                 }
                 user.save(function (err) {
@@ -1394,6 +1396,127 @@ module.exports = {
                 });
             });
 
+    },
+
+
+    /**
+     * Обновить пересечения пользователю
+     * @param req
+     * @param res
+     */
+    updateIntersections: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.update(req.param('id'), {
+                intersections: req.param('intersections')
+            })
+            .populate('intersections')
+            .exec(function (err, update) {
+                if (err) return res.negotiate(err);
+                return res.ok(update);
+            });
+    },
+
+
+    /**
+     * Добавить пересечения пользователю
+     * @param req
+     * @param res
+     */
+    addIntersections: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.findOne(req.param('id'))
+            .populate('intersections')
+            .exec(function (err, findOneUser) {
+                if (err) return res.negotiate(err);
+                findOneUser.intersections.add(req.param('value'));
+                findOneUser.save(function (err) {
+                    if (err) return res.negotiate(err);
+                    Mailer.sendWelcomeMail(findOneUser);
+                    return res.ok(findOneUser);
+                });
+            });
+    },
+
+
+    /**
+     * Удалить пересечения у пользователя
+     * @param req
+     * @param res
+     */
+    deleteIntersections: function (req, res) {
+        User.findOne({id: req.param('value')})
+            .populate('intersections')
+            .exec((err, user)=> {
+                if (err) return req.serverError(err);
+                if (!user) return res.badRequest(req.param('value'));
+                if (req.param('del')) {
+                    user.intersections.remove(req.param('id'));
+                }
+                user.save(function (err) {
+                    if (err) return res.negotiate('ERR: ' + err);
+                    res.ok(req.param('id'));
+                });
+            });
+    },
+
+    /**
+     * Обновить 'я согласующий' пользователю
+     * @param req
+     * @param res
+     */
+    updateIAgree: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.update(req.param('id'), {
+                iagree: req.param('iagree')
+            })
+            .populate('iagree')
+            .exec(function (err, update) {
+                if (err) return res.negotiate(err);
+                return res.ok(update);
+            });
+    },
+
+
+    /**
+     * Добавить 'я согласующий' пользователю
+     * @param req
+     * @param res
+     */
+    addIAgree: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.findOne(req.param('id'))
+            .populate('iagree')
+            .exec(function (err, findOneUser) {
+                if (err) return res.negotiate(err);
+                findOneUser.iagree.add(req.param('value'));
+                findOneUser.save(function (err) {
+                    if (err) return res.negotiate(err);
+                    Mailer.sendWelcomeMail(findOneUser);
+                    return res.ok(findOneUser);
+                });
+            });
+    },
+
+
+    /**
+     * Удалить 'я согласующий' у пользователя
+     * @param req
+     * @param res
+     */
+    deleteIAgree: function (req, res) {
+        User.findOne({id: req.param('value')})
+            .populate('iagree')
+            .exec((err, user)=> {
+                if (err) return req.serverError(err);
+                if (!user) return res.badRequest(req.param('value'));
+                if (req.param('del')) {
+                    user.iagree.remove(req.param('id'));
+                }
+                user.save(function (err) {
+                    if (err) return res.negotiate('ERR: ' + err);
+                    res.ok(req.param('id'));
+                });
+            });
     }
 };
 

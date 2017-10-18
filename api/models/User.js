@@ -223,6 +223,34 @@ module.exports = {
             collection: 'user',
             via: 'announced'
         },
+
+        /**
+         * Пересечения
+         */
+        intersections:{
+            collection: 'user',
+            via: 'intersectionsOwner'
+        },
+        intersectionsOwner: {
+            collection: 'user',
+            via: 'intersections'
+        },
+
+        /**
+         * Я согласующий
+         */
+        iagree:{
+            collection: 'user',
+            via: 'iagreeOwner'
+        },
+        iagreeOwner: {
+            collection: 'user',
+            via: 'iagree'
+        },
+
+
+
+
         vacationWhomCreated: {
             collection: 'vacation'
         },

@@ -1,7 +1,7 @@
 'use strict';
 angular.module('UserModule')
-    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
-        function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
+    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', 'Vacations', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
+        function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, Vacations, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             var info = {
                 changed: 'Изменения сохранены!',
@@ -31,6 +31,8 @@ angular.module('UserModule')
 
             $scope.addPersonName = 'Выбрать согласующих для';
             $scope.addPersonAnnounced = 'Выбрать оповещаемых для';
+            $scope.addPersonIntersections = 'Выбрать "пересечения" для';
+            $scope.addPersonIAgree = 'Выбрать "я согласующий" для';
             $scope.simulateQuery = false;
             $scope.isDisabled = false;
 
@@ -69,7 +71,7 @@ angular.module('UserModule')
 
             $scope.selectedItemChange = function (obj) {
                 if (angular.isDefined(obj.email)) {
-                    obj.matchingDel = true;
+                    obj.del = true;
                     obj.value = $scope.item.id; // у кого удалить
                     //obj.value = obj.id; // кого удалить
                     $http.post('/user/delete-matching', obj).then(function (success) {
@@ -87,7 +89,7 @@ angular.module('UserModule')
             };
             $scope.selectedItemChangeAnnounced = function (obj) {
                 if (angular.isDefined(obj.email)) {
-                    obj.announcedDel = true;
+                    obj.del = true;
                     obj.value = $scope.item.id; // у кого удалить
                     //obj.value = obj.id; // кого удалить
                     $http.post('/user/delete-announced', obj).then(function (success) {
@@ -97,6 +99,42 @@ angular.module('UserModule')
                 } else {
                     obj.id = $scope.item.id;
                     $http.post('/user/add-announced', obj).then(function (success) {
+                        toastr.success(info.changed, success);
+                        $scope.refresh();
+                    });
+                }
+                $scope.selectedItem = obj;
+            };
+            $scope.selectedItemChangeIntersections = function (obj) {
+                if (angular.isDefined(obj.email)) {
+                    obj.del = true;
+                    obj.value = $scope.item.id; // у кого удалить
+                    //obj.value = obj.id; // кого удалить
+                    $http.post('/user/delete-intersections', obj).then(function (success) {
+                        toastr.success(info.changed, success);
+                        //$scope.refresh();
+                    });
+                } else {
+                    obj.id = $scope.item.id;
+                    $http.post('/user/add-intersections', obj).then(function (success) {
+                        toastr.success(info.changed, success);
+                        $scope.refresh();
+                    });
+                }
+                $scope.selectedItem = obj;
+            };
+            $scope.selectedItemChangeIAgree = function (obj) {
+                if (angular.isDefined(obj.email)) {
+                    obj.del = true;
+                    obj.value = $scope.item.id; // у кого удалить
+                    //obj.value = obj.id; // кого удалить
+                    $http.post('/user/delete-iagree', obj).then(function (success) {
+                        toastr.success(info.changed, success);
+                        //$scope.refresh();
+                    });
+                } else {
+                    obj.id = $scope.item.id;
+                    $http.post('/user/add-iagree', obj).then(function (success) {
                         toastr.success(info.changed, success);
                         $scope.refresh();
                     });

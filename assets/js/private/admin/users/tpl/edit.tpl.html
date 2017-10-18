@@ -18,8 +18,9 @@
             <p ng-if="!item.lastName">Новый сотрудник</p>
             <a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button"> Работает c {{item.dateInWork |
                 date:'dd.MM.yyyy' }} ({{item.periodWork()}})</a>
-            <a href="#" class="btn btn-info btn-xs " ng-if="item.decree"
-               title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>
+
+
+            <!--<a href="#" class="btn btn-info btn-xs " ng-if="item.decree"  title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>-->
             <a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |
                 date:'dd.MM.yyyy'}}</a>
             <div class="btn-group-xs pull-right">
@@ -33,6 +34,7 @@
 
         </h2>
     </div>
+
     <div class="row">
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
 
@@ -345,6 +347,27 @@
 
         </div>
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+
+
+            <!-- D E C R E E -->
+            <div ng-controller="ListVacationController">
+            <div ng-if="me.admin || me.kadr" class="panel"
+                 ng-class="{'panel-danger':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}"
+                 ng-repeat="vac in   filtered=(items  | searchObjectVal:'furlough':'name':['Отпуск по беременности и родам','Отпуск по уходу за ребенком'] |  filter:{owner: {login:item.login}}) ">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{vac.furlough['name']}}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <h3 class="text-center">c {{vac.name}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
 
 
             <!-- U P L O A D E R -->

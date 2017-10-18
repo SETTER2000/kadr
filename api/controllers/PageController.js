@@ -46,6 +46,8 @@ module.exports = {
             .populate('interfaces')
             .populate('matchings')
             .populate('announced')
+            .populate('intersections')
+            .populate('iagree')
             .exec((err, user) =>{
             if (err) {
                 return res.negotiate(err);

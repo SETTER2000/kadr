@@ -36,6 +36,42 @@
                 </div>
             </div>
         </div>
+        <div ng-if="item.intersections.length" class="panel panel-default">
+            <div class="panel-heading"><h4>Пересечения</h4></div>
+            <div class="panel-body" ng-repeat="inter in item.intersections">
+                <div class="media">
+                    <div class="media-left media-middle">
+                        <a href="{{item.getEditUrl(inter.id)}}">
+                            <img class="media-object" style="width: 32px; height: 32px;"
+                                 ng-src="{{inter.avatarUrl}}"
+                                 data-holder-rendered="true">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h5 class="media-heading">{{inter.lastName}} </h5>
+                        <!--bla-bla-bla-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="item.iagree.length" class="panel panel-default">
+            <div class="panel-heading"><h4>Я согласующий</h4></div>
+            <div class="panel-body" ng-repeat="iag in item.iagree">
+                <div class="media">
+                    <div class="media-left media-middle">
+                        <a href="{{item.getEditUrl(iag.id)}}">
+                            <img class="media-object" style="width: 32px; height: 32px;"
+                                 ng-src="{{iag.avatarUrl}}"
+                                 data-holder-rendered="true">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h5 class="media-heading">{{iag.lastName}} </h5>
+                        <!--bla-bla-bla-->
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--<div class="panel panel-default">-->
         <!--<div class="panel-heading"><h4>Наблюдения за пересечениями</h4></div>-->
         <!--<div class="panel-body">-->

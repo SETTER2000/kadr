@@ -52,6 +52,14 @@ module.exports.routes = {
     'POST /user/add-announced': 'UserController.addAnnounced',
     'POST /user/delete-announced': 'UserController.deleteAnnounced',
 
+    'PUT /user/update-intersections/:id': 'UserController.updateIntersections',
+    'POST /user/add-intersections': 'UserController.addIntersections',
+    'POST /user/delete-intersections': 'UserController.deleteIntersections',
+
+    'PUT /user/update-iagree/:id': 'UserController.updateIAgree',
+    'POST /user/add-iagree': 'UserController.addIAgree',
+    'POST /user/delete-iagree': 'UserController.deleteIAgree',
+
     'PUT /user/update-kadr/:id': 'UserController.updateKadr',
 
     //'PUT /user/update-leader/:id': 'UserController.updateLeader',
