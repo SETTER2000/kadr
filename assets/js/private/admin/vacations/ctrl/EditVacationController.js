@@ -54,7 +54,7 @@ angular.module('VacationModule')
             if (!$scope.me.admin && !$scope.me.kadr) $state.go(info.redirectSelf);
 
             $scope.close = 1;
-
+            $scope.intersect = false;
             $scope.loginAdmin = false;
 
             $scope.edit = $state.includes('home.admin.vacations.edit');
@@ -193,6 +193,7 @@ angular.module('VacationModule')
                     return holiday;
                 };
             }
+
             Calendar.prototype.showData = function () {
                 return console.log('Доступные данные:', this.getData());
             };
@@ -303,10 +304,11 @@ angular.module('VacationModule')
              * пересекается ли выбраный период с уже созданными ранее периодами
              * @param selectedDates
              */
-            Calendar.prototype.checkBetween= function (selectedDates) {
+            Calendar.prototype.checkBetween = function (selectedDates) {
                 if (angular.isArray(selectedDates) && selectedDates.length == 2) {
 
-                    return selectedDates;
+
+
                     //let h = this.getHoliday();
                     //let t = moment(arr[0]).twix(new Date(arr[1]));
                     //let count = +t.count('day');
@@ -334,7 +336,7 @@ angular.module('VacationModule')
             //var dayOff = ['09.09.2017', '10.09.2017', '2.12.2017', '23.09.2017', '24.09.2017']; // выходной
             let dayOff = Working.getDayOff(); //праздники и выходные
             let holiday = Working.getHoliday(); // праздник
-            console.log('holiday:', holiday);
+            //console.log('holiday:', holiday);
             //var holiday = ['01.01.2018', '23.02.2018']; // праздник
             let celebration = Working.getCelebration(); // пораньше на час
 
@@ -386,10 +388,8 @@ angular.module('VacationModule')
              * по сути это обработчик события onChange в документации Flatpickr
              * https://chmln.github.io/flatpickr/options/#eventsAPI
              *
-             * изменяет текущий месяц на один вперед
-             * console.log('changeMonth', fpItem.changeMonth(1));
-             * изменяет текущий месяц на январь, после каждого клика
-             * console.log('changeMonth', fpItem.changeMonth(0, false));
+             * console.log('changeMonth', fpItem.changeMonth(1)) - изменяет текущий месяц на один вперед
+             * console.log('changeMonth', fpItem.changeMonth(0, false)) - изменяет текущий месяц на январь, после каждого клика
              *
              * @param fpItem
              * @returns {*}
@@ -400,10 +400,36 @@ angular.module('VacationModule')
                  * Кол-во выбраных дней
                  */
                 $scope.daysSelectHoliday = Working.getCountDay(fpItem.selectedDates);
-                console.log('checkBetween',Working.checkBetween(fpItem.selectedDates));
+
+                console.log('Текущие пересечения', $scope.intersection);
+
+                console.log('Выбранный период', fpItem.selectedDates);
+                if ($scope.intersection) {
+                    $scope.intersection.forEach(function (val, key, arr) {
+                        (moment(fpItem.selectedDates[0]).isBetween(val.from, val.to)) ? arr[key].inr = 1 : arr[key].inr = 0;
+
+
+                        //if (!moment(fpItem.selectedDates[0]).isBetween(val.from, val.to))
+                        //if (moment(fpItem.selectedDates[0]).isSame(val.from))arr[key].inr2 = 1;
+                        //if (!moment(fpItem.selectedDates[0]).isSame(val.from))arr[key].inr2 = 0;
+                        //if (moment(fpItem.selectedDates[0]).isSame(val.to)) arr[key].inr3 = 1;
+                        //if (!moment(fpItem.selectedDates[0]).isSame(val.to)) arr[key].inr3 = 0;
+                        //if (moment(fpItem.selectedDates[1]).isBetween(val.from, val.to))arr[key].intersect = 1;
+                        //if (!moment(fpItem.selectedDates[1]).isBetween(val.from, val.to))arr[key].intersect = 0;
+                        //arr[key].intersect = 0;
+
+                        //arr[key]
+                        //val.intersect = $scope.intersect;
+                    });
+                }
+
+
                 //console.log('flatpickr', fpItem.redraw());
                 //console.log('$scope.item.location', $scope.item.location);
             };
+            $scope.$watch('intersection', function (value) {
+                console.log('NPR: ', value);
+            });
 
             /**
              * Очищает непосредственно объект Flatpicker в отличие
@@ -413,82 +439,24 @@ angular.module('VacationModule')
                 $scope.flatpicker.clear();
             };
 
+            $scope.$watch('item.owner.id', function (value) {
+                console.log('NEW', value);
+                $scope.getIntersections(value);
+            });
 
-            //var url = 'http://data.gov.ru/api/?access_token=2eace3b1564af9461d112b0ec65e98ba&json';
-//$scope.url = 'http://data.gov.ru/api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content?access_token=2eace3b1564af9461d112b0ec65e98ba&json';
-//let url = 'http://data.gov.ru/api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content?access_token=2eace3b1564af9461d112b0ec65e98ba&json';
-//            function createCORSRequest(method, url) {
-//                var xhr = new XMLHttpRequest();
-//                if ("withCredentials" in xhr) {
-//
-//                    // Check if the XMLHttpRequest object has a "withCredentials" property.
-//                    // "withCredentials" only exists on XMLHTTPRequest2 objects.
-//                    xhr.open(method, url, true);
-//
-//                } else if (typeof XDomainRequest != "undefined") {
-//
-//                    // Otherwise, check if XDomainRequest.
-//                    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
-//                    xhr = new XDomainRequest();
-//                    xhr.open(method, url);
-//
-//                } else {
-//
-//                    // Otherwise, CORS is not supported by the browser.
-//                    xhr = null;
-//
-//                }
-//                return xhr;
-//            }
-
-            // Make the actual CORS request.
-            //function makeCorsRequest() {
-            //    var url = 'http://data.gov.ru/api/?access_token=2eace3b1564af9461d112b0ec65e98ba';
-            //    // This is a sample server that supports CORS.
-            //    //var url = 'http://html5rocks-cors.s3-website-us-east-1.amazonaws.com/index.html';
-            //
-            //    var xhr = createCORSRequest('GET', url);
-            //    if (!xhr) {
-            //        alert('CORS not supported');
-            //        return;
-            //    }
-            //
-            //    // Response handlers.
-            //    xhr.onload = function () {
-            //        var text = xhr.responseText;
-            //        //var title = getTitle(text);
-            //        console.log('RESPONSE: ',text );
-            //        //alert('Response from CORS request to ' + url + ': ' + text);
-            //    };
-            //
-            //    xhr.onerror = function () {
-            //        alert('Упс, произошла ошибка, вызвавшая запрос.');
-            //    };
-            //
-            //    xhr.send();
-            //}
-            //
-            //makeCorsRequest();
-//$http.get('http://data.gov.ru/api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content?access_token=2eace3b1564af9461d112b0ec65e98ba&json')
-//    .then(function onSuccess(sailsResponse) {
-//        console.log('gggg');
-//        // console.log('sailsResponse: ', sailsResponse);
-//        // $scope.userProfile.properties.gravatarURL = sailsResponse.data.gravatarURL;
-//        //window.location = '/profile/restore';
-//        //
-//        // toastr.success('Password Updated!');
-//
-//        $scope.userProfile.loading = false;
-//    })
-//    .catch(function onError(sailsResponse) {
-//        // console.log('sailsresponse: ', sailsResponse)
-//        // Otherwise, display generic error if the error is unrecognized.
-//        $scope.userProfile.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
-//
-//    })
-//    .finally(function eitherWay() {
-//        $scope.loading = false;
-//    });
+            /**
+             * Отпуска из списка пересечений
+             */
+            $scope.getIntersections = function (id) {
+                let query = (id) ? '/vacation/get-intersections/' + id : '/vacation/get-intersections';
+                $http.get(query).then(function (response) {
+                    console.log('GET-INTERFACE', response.data);
+                    $scope.intersection = response.data;
+                }, function errorCallback(err) {
+                    console.log('ERROR:', err);
+                });
+            };
+            $scope.getIntersections();
 
             $scope.refresh = function () {
                 let item = $scope.item = Vacations.get({id: $stateParams.vacationId}, function (vacations) {
@@ -509,7 +477,6 @@ angular.module('VacationModule')
 
                     }
                 );
-                //console.log('USSSS: ',item.getHoliday());
             };
 
             $scope.delete2 = function (item) {
@@ -527,9 +494,6 @@ angular.module('VacationModule')
 
 
             $scope.saveEdit = function (item) {
-                //console.log("ITEM SAVE EDIT: ", item);
-                //console.log("ITEM SAVE EDIT2: ", $scope.flatpicker);
-
                 if (!angular.isDefined(item))toastr.error('Нет объекта для сохранения.', 'Ошибка!');
                 if (!angular.isDefined(item.name)) return toastr.error('Дата не может быть пустой.', 'Ошибка!');
                 if (!angular.isDefined(item.furlough)) return toastr.error('Тип отпуска не может быть пустой.', 'Ошибка!');
@@ -548,7 +512,6 @@ angular.module('VacationModule')
                 } else {
                     if (angular.isDefined(item)) {
                         item.daysSelectHoliday = $scope.daysSelectHoliday;
-
                         console.log('item:::', item);
                         console.log('furlough::', $scope.furlough);
                         item.$save(item, function (success) {

@@ -80,11 +80,11 @@ module.exports = {
                     if (err) return res.serverError(err);
                     if (!findOneUser) return res.notFound();
                     if (!findOneUser.interfaces.length) {
-                         console.log('ОШИБКА! Нет свойства "год" в коллекции Interface, у пользователя ' +
+                        console.log('ОШИБКА! Нет свойства "год" в коллекции Interface, у пользователя ' +
                             findOneUser.lastName + ' ' + findOneUser.firstName +
                             '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
 
-                      return  res.badRequest('ВНИМАНИЕ! Отсутствует свойство "год" в коллекции' +
+                        return res.badRequest('ВНИМАНИЕ! Отсутствует свойство "год" в коллекции' +
                             '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
                     }
                     let from = {$gte: new Date(moment(findOneUser.interfaces[0].year, ["YYYY"]).startOf("year"))};
@@ -143,11 +143,6 @@ module.exports = {
      */
     create: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //if (!_.isString( req.param('name') ) ) {
-        //    //sails.log(req.param('name'));
-        //    //sails.log('is not string');
-        //    return res.badRequest('Наименование не заполнено.');
-        //}
         if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
         var obj = {
             section: 'Отпуск',
@@ -160,13 +155,6 @@ module.exports = {
             status: 'pending'
             //action: (req.param('action')) ? req.param('action') : true
         };
-
-        //if (_.isNumber(req.param('daysSelectHoliday'))) {
-        //    sails.log('daysSelectHoliday',req.param('daysSelectHoliday'));
-        //    //sails.log('is not string');
-        //    obj.daysSelectHoliday = req.param('daysSelectHoliday');
-        //
-        //}
 
         User.findOne({id: req.session.me})
             .populate('vacationWhomCreated')
@@ -406,6 +394,45 @@ module.exports = {
                 return res.send(results);
             });
         });
+    },
+
+
+    /**
+     * Отпуска из списка пересечений
+     */
+    getIntersections: function (req, res) {
+        //console.log('INTERSECTIO:', req.param('id'));
+        let userID = (req.param('id')) ? req.param('id') : req.session.me;
+        //(req.param('id')) ? res.ok(req.param('id')) : res.ok(req.session.me);
+        console.log('IDDD:', userID);
+        User.findOne({id: userID})
+            .populate('intersections')
+            .populate('vacations')
+            .exec((err, user)=> {
+                "use strict";
+                if (err) return res.serverError(err);
+                if (!user) return res.badRequest();
+                if (!user.intersections.length) return res.ok();
+                console.log('GETTT', user.getShortName());
+                //return res.ok(user.intersections);
+                let ar = [];
+                _.forEach(user.intersections, function (val, key) {
+                    ar.push(val.id);
+                });
+                console.log('user.intersections', user.intersections);
+                console.log('ar', ar);
+                Vacation.find({where: {owner: ar}},{sort:'from'})
+                    .populate('furlough')
+                    .populate('owner',{sort:'lastName'})
+                    .exec((err, vacationsFind)=> {
+                        if (err) return res.serverError(err);
+
+                        console.log('RESPONSE: ', vacationsFind);
+
+                        res.ok(vacationsFind);
+                    });
+            });
+
     }
 };
 

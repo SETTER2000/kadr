@@ -107,6 +107,8 @@ module.exports.routes = {
      */
     'GET /vacation/getDays': 'VacationController.daysInYear',
     'GET /vacation/getYears': 'VacationController.getYears',
+    'GET /vacation/get-intersections/:id': 'VacationController.getIntersections',
+    'GET /vacation/get-intersections': 'VacationController.getIntersections',
 
 
 
