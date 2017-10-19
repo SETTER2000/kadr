@@ -13,7 +13,7 @@
 <table class="table table-hover">
     <tr head-table type="user"></tr>
     <tr ng-repeat="item in filtered=(items | filter:{$:searchText, action:false} |
-orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">
+orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)" ng-cloak>
         <td>
             {{$index+1}}
         </td>
@@ -32,14 +32,14 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <td>
             <ul class="position" ng-controller="ListDepartmentController"
                 ng-repeat="subdivision in item.subdivision | filter:{$:searchText}">
-                <li ng-repeat="option in items | filter:{$:searchText,id:subdivision.id}">
+                <li ng-repeat="option in items | filter:{$:searchText,id:subdivision.id}" ng-cloak>
                     {{option.name}}
                 </li>
             </ul>
         </td>
         <td>
             <ul class="position" ng-controller="ListPositionController" ng-repeat="position in item.positions">
-                <li ng-repeat="option in items | filter:position.id">
+                <li ng-repeat="option in items | filter:position.id" ng-cloak>
                     {{option.name}}
                 </li>
             </ul>

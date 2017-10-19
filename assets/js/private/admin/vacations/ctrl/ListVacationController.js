@@ -251,7 +251,7 @@
                             year: value
                         })
                         .then(function onSuccess(sailsResponse) {
-                            console.log('sailsResponse: ', sailsResponse);
+                            //console.log('sailsResponse: ', sailsResponse);
                             $scope.getYears();
                             $scope.inter = sailsResponse.data[0];
                             $scope.getDays();
@@ -293,7 +293,7 @@
                 };
                 //console.log(' MY QUERY:', $scope.query);
                 $scope.items = Vacations.query($scope.query, function (vacations) {
-                    console.log('Vacations ITEMS22:', vacations);
+                    //console.log('Vacations ITEMS22:', vacations);
                     $scope.objectName = [];
                     //$scope.me.interface = vacations.interfaces[0].year;
                     for (var u = 0; u < vacations.length; u++) {

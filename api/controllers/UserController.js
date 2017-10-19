@@ -340,13 +340,13 @@ module.exports = {
                         clientSearchLDAP.unbind(function () {
                             clientSearchLDAP.destroy();
                         });
-                        console.log('Найден руководитель:', empl.manager);
+                        //console.log('Найден руководитель:', empl.manager);
                         // CN=Еремин Сергей,OU=Users,OU=Office users,DC=landata,DC=ru
                         if (!empl.manager) return res.forbidden(result.errorMessage);
                         let arr = empl.manager.split(',');
                         let arr2 = arr[0].split('=');
                         let arrFi = arr2[1].split(' ');
-                        console.log('arrFi', arrFi);
+                        //console.log('arrFi', arrFi);
                         User.findOne({'lastName': arrFi[0], 'firstName': arrFi[1]})
                             .populate('positions')
                             .populate('interfaces')
@@ -408,12 +408,12 @@ module.exports = {
                             },
                             function userCreated(err, newUser) {
                                 if (err) {
-                                    console.log('err:', err);
+                                    //console.log('err:', err);
                                     if (err.invalidAttributes && err.invalidAttributes.email && err.invalidAttributes.email[0] && err.invalidAttributes.email[0].rule === 'unique') {
                                         return res.emailAddressInUse();
                                     }
                                     if (err.invalidAttributes && err.invalidAttributes.login && err.invalidAttributes.login[0] && err.invalidAttributes.login[0].rule === 'unique') {
-                                        console.log('err.invalidAttributes: ', err.invalidAttributes);
+                                        //console.log('err.invalidAttributes: ', err.invalidAttributes);
                                         return res.loginInUse();
                                     }
                                     return res.negotiate(err);
@@ -471,7 +471,7 @@ module.exports = {
                 Interface.create({year: moment().year()})
                     .exec((err, createInterface)=> {
                         if (err) {
-                            console.log('ОШибка в User.createUser', err);
+                            //console.log('ОШибка в User.createUser', err);
                             return res.negotiate(err);
                         }
                         User.create({
@@ -835,7 +835,7 @@ module.exports = {
         //console.log('objEdit555: ', obj);
         User.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
             if (err)return res.redirect('/admin/users/edit/' + req.param('id'));
-            console.log('objEdit: ', objEdit);
+            //console.log('objEdit: ', objEdit);
             User.findOne(req.param('id'))
                 .populate('positions')
                 .populate('vacations')

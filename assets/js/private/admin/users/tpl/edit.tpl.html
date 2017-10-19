@@ -1,6 +1,6 @@
 <!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
 
-<div class="col-sm-11  col-md-12  main">
+<div class="col-sm-11  col-md-12  main" ng-cloak>
     <div class="page-header">
         <h2>
             <p ng-if="item.lastName" ng-class="{'fired':item.fired}">{{item.getFullName()}}<span ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="row">
-        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}" ng-cloak>
 
 
             <!-- E D I T / C R E A T E  F O R M -->
@@ -44,7 +44,7 @@
             <div class="panel" ng-class="{'panel-warning':!item.fired, 'panel-default':item.fired}">
                 <div class="panel-heading">
                     <h3 class="panel-title">Редактировать
-                        <a href="#" ng-click="closed()" class="pull-right">
+                        <a href="#" class="pull-right">
                             <span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>
                         </a>
                     </h3>
@@ -346,33 +346,39 @@
             </div>
 
         </div>
-        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+        <div  ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
 
 
             <!-- D E C R E E -->
-            <div ng-controller="ListVacationController">
-            <div ng-if="me.admin || me.kadr" class="panel"
-                 ng-class="{'panel-danger':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}"
-                 ng-repeat="vac in   filtered=(items  | searchObjectVal:'furlough':'name':['Отпуск по беременности и родам','Отпуск по уходу за ребенком'] |  filter:{owner: {login:item.login}}) ">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{vac.furlough['name']}}</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div>
-                                <h3 class="text-center">c {{vac.name}}</h3>
+
+            <div ng-if="(me.admin || me.kadr) && edit" ng-controller="ListVacationController">
+                <div ng-repeat="vac in   filtered=(items |  filter:{owner: {login:item.login}} | searchObjectVal:'furlough':'name':['Отпуск по беременности и родам','Отпуск по уходу за ребенком'] ) " ng-cloak>
+                    <div class="panel" ng-if="filtered.length"
+                         ng-class="{'panel-danger':!item.fired, 'panel-default':item.fired}">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{vac.furlough['name']}}
+                                <a href="{{vac.getEditUrl(vac.id)}}" class="pull-right">
+                                    <span class="glyphicon glyphicon-new-window pull-right"></span>
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div>
+                                        <h3 class="text-center">c {{vac.name}} </h3>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
 
 
             <!-- U P L O A D E R -->
 
-            <div ng-if="item.id" ng-switch on="modeSelect.value">
+            <div ng-if="item.id" ng-switch on="modeSelect.value" ng-cloak>
                 <div ng-switch-when="uploader">
                     <ng-include src="uploaderView"></ng-include>
                 </div>
@@ -435,7 +441,7 @@
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table">
-                            <tr ng-repeat="(key, value) in item">
+                            <tr ng-repeat="(key, value) in item" ng-cloak>
                                 <th>{{key}}</th>
                                 <td>{{value | date:'dd.MM.yyyy' }}</td>
                             </tr>

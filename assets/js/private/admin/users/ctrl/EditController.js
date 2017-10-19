@@ -66,7 +66,7 @@ angular.module('UserModule')
             };
 
             $scope.searchTextChange = function (text) {
-                console.log('SEARCH', text);
+                //console.log('SEARCH', text);
             };
 
             $scope.selectedItemChange = function (obj) {
@@ -409,7 +409,7 @@ angular.module('UserModule')
 
                         $scope.editProfile.loading = false;
                     }, function (err) {
-                        console.log(info.error, err);
+                        //console.log(info.error, err);
                     })
                     .catch(function onError(sailsResponse) {
                         // console.log('sailsresponse: ', sailsResponse)
@@ -477,7 +477,7 @@ angular.module('UserModule')
                 }
             };
             $scope.getBoss = function () {
-                console.log('$scope.item', $scope.item);
+                //console.log('$scope.item', $scope.item);
                 $http.post('/user/getBoss', $scope.item)
                     .then(function (response) {
                         //console.log('RESPONSORY: ', response);
@@ -735,7 +735,7 @@ angular.module('UserModule')
                             //$scope.item.firedDate = success.getFiredDate;
                         },
                         function (err) {
-                            console.log(info.error, err);
+                            //console.log(info.error, err);
                             toastr.error(err.data.invalidAttributes, info.error + ' 90!');
                         });
                 }
