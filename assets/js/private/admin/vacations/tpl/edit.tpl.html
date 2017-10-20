@@ -37,15 +37,25 @@
                 </div>
                 <div class="panel-body">
                     <form name="userForm" novalidate ng-submit="saveEdit(item)" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <div ng-if="(me.admin)" class="checkbox">
-                                <label>
-                                    <input type="checkbox" ng-model="item.action">Активность
-                                </label>
+                        <div class="form-inline">
+
+                            <!-- A C T I O N -->
+
+                            <div class="form-group">
+                                <div ng-if="(me.admin)" class="checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="item.action">Активность
+                                    </label>
+                                </div>
                             </div>
+
+                            <!-- P H O T O -->
+
+                       <div class=" pull-right">
+                                <img class="img-thumbnail" width="80px" ng-src="{{selectAvatarUrl}}" alt="">
+                            </div>
+                            <div class="clearfix"></div>
                         </div>
-
-
                         <!-- T Y P E  F U R L O U G H -->
 
                         <div ng-controller="ListFurloughController" class="form-group ">
@@ -71,29 +81,16 @@
                         <div ng-controller="ListController" class="form-group ">
                             <label class="control-label" ng-bind="items[0].sc()"></label> <span ng-if="me.admin">{{filtered.length}}</span>
                             <select ng-disabled="edit" class="form-control" ng-model="item.owner.id">
-                                <option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )" value="{{option.id}}">
+                                <option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )"
+                                        value="{{option.id}}">
                                     {{option.getFullName()}}
                                 </option>
                             </select>
 
                         </div>
-
-
-                        <!--&lt;!&ndash; C A L E N D A R &ndash;&gt;-->
-
-                        <!--<div class="form-group">-->
-                            <!--<label class="sr-only" for="exampleInputPassword33"></label>-->
-                            <!--<input required class="form-control  flatpickr flatpickr-calendar"-->
-                                   <!--ng-flatpickr-->
-                                   <!--fp-opts="dateOpts"-->
-                                   <!--fp-on-setup="datePostSetup(fpItem)"-->
-                                   <!--ng-model="item.name">-->
-                            <!--<span class="input-group-btn">-->
-                              <!--&lt;!&ndash;<button class="btn btn-default" type="button" ng-click="clear()"><span class="glyphicon glyphicon-remove"></span></button>&ndash;&gt;-->
-                            <!--</span>-->
-                        <!--</div>-->
-
-
+                        <div ng-controller="ListController" class="form-group ">
+                            <!--{{items | json}}-->
+                        </div>
                         <div class="form-group">
                             <!--<div class="form-group" style=" position: fixed;margin-left: 50px; margin-bottom: 70px; bottom:0; left:0;">-->
                             <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-md btn-success">
@@ -141,7 +138,7 @@
             </div>
         </div>
 
-        <div class="col-md-6"   ng-if="close">
+        <div class="col-md-6" ng-if="close">
             <div class="row">
                 <div class="col-md-6">
                     <!-- C A L E N D A R -->
@@ -168,13 +165,20 @@
                     <div class="panel-body" ng-if="intersection.length">
                         <div class="table-responsive">
                             <table class="table">
-                                <tr ng-class="{danger:intr.inr}" ng-repeat="intr in  intersection " ng-cloak>
-                                    <th>{{intr.name}}{{intr.inr}}</th>
-                                    <td>{{intr.owner['lastName']}} {{intr.owner['firstName'].substr(0,1)}}. {{intr.owner['patronymicName'].substr(0,1)}}.</td>
+                                <tr ng-class="{danger:intr.inr}" ng-repeat="intr in  intersection | filter:{from:yearFrom}" ng-cloak>
+                                    <th>{{intr.name}}</th>
+                                    <!--<th>{{intr.from}} * {{moment('2017-08-06')}}</th>-->
+                                    <td>{{intr.owner['lastName']}} {{intr.owner['firstName'].substr(0,1)}}.
+                                        {{intr.owner['patronymicName'].substr(0,1)}}.
+                                    </td>
                                 </tr>
                             </table>
-                            <!--{{intersection[0].intersect | json}}-->
-
+                            <!--{{intersection[0].from | json}}-->
+                            <!--Год: {{me.interface}}-->
+                            <!--Год: {{yearFrom}}-->
+                            <span ng-if="me.kadr || me.admin"></span> Интерфейс выбран на: <a
+                                href="/admin/vacations">{{me.interfaces[0].year}}</a>
+                            год
                         </div>
                     </div>
                 </div>

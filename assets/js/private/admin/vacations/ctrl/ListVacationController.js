@@ -50,6 +50,28 @@
                 size: false
             };
 
+
+            io.socket.put('/interfaces/'+ $scope.me.id + '/join', function (data, JWR) {
+                // If something went wrong, handle the error.
+                if (JWR.statusCode !== 200) {
+                    console.error(JWR);
+                    // TODO
+                    return;
+                }
+
+                // If the server gave us its blessing and indicated that we were
+                // able to successfully join the room, then we'll set that on the
+                // scope to allow the user to start sending chats.
+                //
+                // Note that, at this point, we'll also be able to start _receiving_ chats.
+                $scope.hasJoinedRoom = true;
+                // Because io.socket.get() is not an angular thing, we have to call $scope.$apply()
+                // in this callback in order for our changes to the scope to actually take effect.
+                $scope.$apply();
+            });
+
+
+
             //$scope.days = moment.duration(2).days();
             //$scope.hours = moment.duration(2).hours();
             //$scope.month = moment.duration().months();
@@ -238,6 +260,23 @@
             $scope.countChar = '4';
             $scope.filedName = 'lastName';
 
+            //$scope.$on('changeInterface', function (event, args) {
+            //    console.log('СОбытия на странице frontend', args);
+            //});
+
+            //
+            //io.socket.on('chat', function (e) {
+            //    console.log('new chat received!', e);
+            //    //$scope.chats.push({
+            //    //    created: e.created,
+            //    //    username: e.username,
+            //    //    message: e.message,
+            //    //    gravatarURL: e.gravatarURL
+            //    //});
+            //
+            //    $scope.$apply();
+            //});
+
 
             $scope.$watch('where', function (value) {
 
@@ -257,6 +296,9 @@
                             $scope.getDays();
 
                             $scope.where = {from: {'>=': moment(value['year'], ['YYYY'])}};
+                            $rootScope.$broadcast('changeInterface', {
+                                message: sailsResponse.data[0]
+                            });
                         })
                         .catch(function onError(sailsResponse) {
 
@@ -272,8 +314,6 @@
                         });
                 }
             });
-
-
 
 
             $scope.objectName = [];

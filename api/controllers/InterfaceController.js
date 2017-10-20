@@ -25,6 +25,24 @@ module.exports = {
             });
     },
 
+    joinChat: function (req, res) {
+
+        // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+
+        // TODO: ^ Потяните это в политику `isSocketRequest`
+
+        // Присоединитесь к комнате для этого видео (в качестве запрашивающего сокета)
+        Interface.subscribe(req, req.param('id'));
+
+        // Присоединитесь к комнате видео для анимации ввода
+        sails.sockets.join(req, 'interface' + req.param('id'));
+
+        // Video.watch(req);
+        return res.ok();
+    },
 
     /**
      * Создать
@@ -84,7 +102,13 @@ module.exports = {
     update: function (req, res) {
         //console.log('BODY REQ: ', req.body);
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
+        if (req.isSocket) {
+            return res.json({
+                WebSocketId: sails.sockets.getId(req),
+                hello: 'world'
+            });
+        }
+        console.log('YEAR', req.param('year'));
         if (!_.isNumber(req.param('year').year)) {
             return res.ok('Год остался без изменений.');
         }
@@ -97,7 +121,7 @@ module.exports = {
             .exec((err, findUser)=> {
                 "use strict";
                 if (err) return res.serverError(err);
-                if(!findUser) res.notFound();
+                if (!findUser) res.notFound();
                 //console.log('FINOV: ', findUser.interfaces[0]);
 
                 Interface.update(findUser.interfaces[0].id, obj)
@@ -105,6 +129,14 @@ module.exports = {
                         "use strict";
                         if (err) return res.serverError(err);
                         console.log('UPDATE INTERFACE:', updateInterface);
+
+                        sails.sockets.broadcast('interface' + req.session.me, 'chat', {
+                            message: 'URAAA!!!',
+                            lastName: findUser.lastName,
+                            created: 'just now',
+                            interfaces: updateInterface
+                        });
+
                         return res.send(updateInterface);
                     });
             });

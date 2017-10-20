@@ -695,6 +695,7 @@ module.exports = {
      */
     findUsers: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        console.log('REG',req.param('id'));
         if (req.param('id')) {
             User.findOne(req.param('id'))
                 .populate('positions')
@@ -707,6 +708,7 @@ module.exports = {
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
+                    console.log('REG USER',user);
                     res.ok(user);
 
                 });

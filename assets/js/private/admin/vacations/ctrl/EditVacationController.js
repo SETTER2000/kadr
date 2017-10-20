@@ -15,23 +15,13 @@ angular.module('VacationModule')
             //console.log('4',t.isPast());                   //=> true
             //console.log('5',t.contains("2017-10-25T10:00"А)); //=> true
 
+            /**
+             * Выбор отображения года в календаре, при загрузке странице
+             * Пользователям показывается текущий год
+             * Админу и кадрам год установленный в интерфейсе
+             */
+            $scope.yearFrom = ($scope.me['kadr'] || $scope.me['admin'] ) ? $scope.me.interfaces[0].year : moment().year();
 
-            //$scope.changed = function () {
-            //    let quest = '';
-            //    quest = angular.element(document.querySelector(".quest")).text();
-            //    if (!quest) return;
-            //    $http.get('/user/getUsersDepartment/' + quest)
-            //        .then(function (response) {
-            //            console.log('response: ', response);
-            //            $scope.users = response.data;
-            //        });
-            //    console.log('ups22:', quest);
-            //};
-
-            //console.log('USSSSSSSSSS:', Users.get({id: '58a461e66723246b6c2bc61d'}));
-            //var p = Users.get({id: '58a461e66723246b6c2bc61d'}, function (val) {
-            //    console.log('AVATAR:', val.getAvatar());
-            //});
 
             var info = {
                 changed: 'Изменения сохранены!',
@@ -56,7 +46,8 @@ angular.module('VacationModule')
             $scope.close = 1;
             $scope.intersect = false;
             $scope.loginAdmin = false;
-
+            $scope.flatpicker = {};
+            $scope.selectAvatarUrl =  $scope.me.avatarUrl;
             $scope.edit = $state.includes('home.admin.vacations.edit');
 
             function Calendar() {
@@ -326,6 +317,30 @@ angular.module('VacationModule')
                     //return count;
                 }
             };
+            //$scope.$on('changeInterface', function (event, args) {
+            //    console.log(args);
+            //    $scope.yearFrom = args.message.year;
+            //    $scope.apply();
+            //});
+
+
+            io.socket.on('chat', function (e) {
+                console.log('new chat received!', e);
+                console.log('e.interfaces[0].year', e.interfaces[0].year);
+                $scope.yearFrom = e.interfaces[0].year;
+                $scope.me.interfaces[0].year = e.interfaces[0].year;
+
+                //$scope.dateOpts.defaultDate = ['11.10.2010', '11.10.2010'];
+                //$scope.chats.push({
+                //    created: e.created,
+                //    username: e.username,
+                //    message: e.message,
+                //    gravatarURL: e.gravatarURL
+                //});
+                //Working.changeMonth(0, false); // go to January
+                $scope.$apply();
+            });
+
 
             let Working = new Calendar();
             //Working.year = 2016;
@@ -339,7 +354,8 @@ angular.module('VacationModule')
             //console.log('holiday:', holiday);
             //var holiday = ['01.01.2018', '23.02.2018']; // праздник
             let celebration = Working.getCelebration(); // пораньше на час
-
+            //console.log('UUUU', moment($scope.yearFrom, ['YYYY']));
+            //console.log('UUUU2', $scope.yearFrom);
             $scope.dateOpts = {
                 locale: info.ru, // язык
                 mode: "range", // диапазон дат выбрать
@@ -347,6 +363,17 @@ angular.module('VacationModule')
                 minDate: info.minDate, // минимальная дата
                 allowInput: true, // ручной ввод даты
                 inline: true, // календарь открыт
+                // Обработчик события на изменения даты
+                //onChange: function(selectedDates, dateStr, instance) {
+                //    console.log('selectedDates',selectedDates);
+                //},
+                // Обработчик события на изменения года
+                onYearChange: function (selectedDates, dateStr, instance) {
+                    //console.log('CHANGE1', instance);
+                    $scope.yearFrom = instance.currentYear;
+                    //console.log('ESS',  $scope.yearFrom);
+                    $scope.$apply();
+                },
                 onDayCreate: function (dObj, dStr, fp, dayElem) {
                     dayOff.forEach(function (v, k, arr) {
                         if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
@@ -376,12 +403,13 @@ angular.module('VacationModule')
                 //    return new Date(str.selectedDates);
                 //}
                 //maxDate: info.maxDate // максимальная дата
-                //defaultDate: 'today' // по умолчанию какая дата отображается
+                //defaultDate: ['11.10.2010', '11.10.2010'] // по умолчанию какая дата отображается
             };
 
-            $scope.flatpicker = {};
 
-
+//$scope.$watch('yearFrom', function (value) {
+//    $scope.yearFrom = value;
+//});
             /**
              * Это функция срабатывает каждый раз после выбора даты
              * Принимает объект flatpicker c вновь выбранными датами или одной датой
@@ -400,36 +428,55 @@ angular.module('VacationModule')
                  * Кол-во выбраных дней
                  */
                 $scope.daysSelectHoliday = Working.getCountDay(fpItem.selectedDates);
+                fpItem.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
+                //console.log('DDDDDDD6', moment().year($scope.me.interfaces[0].year));
+                //console.log('POPP:', moment().month());
+                //console.log('Текущие пересечения', $scope.intersection);
+                //
+                //console.log('Выбранный период', fpItem.selectedDates);
 
-                console.log('Текущие пересечения', $scope.intersection);
-
-                console.log('Выбранный период', fpItem.selectedDates);
+                //console.log('******************************************************* // ************************************* ');
                 if ($scope.intersection) {
+                    let x = [];
                     $scope.intersection.forEach(function (val, key, arr) {
-                        (moment(fpItem.selectedDates[0]).isBetween(val.from, val.to)) ? arr[key].inr = 1 : arr[key].inr = 0;
+                        if (fpItem.selectedDates[0]) {
+                            (moment(fpItem.selectedDates[0]).isBetween(val.from, val.to)) ? val.inr = 1 : val.inr = 0;
+                            //console.log('#1Проверяемое число c индексом ноль:', fpItem.selectedDates[0]);
+                            //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+                            if (!val.inr) {
+                                (moment(fpItem.selectedDates[0]).isSame(val.from) || moment(fpItem.selectedDates[0]).isSame(val.to)) ? val.inr = 1 : val.inr = 0;
+                                //console.log('#2 Проверяемое число c индексом ноль:', fpItem.selectedDates[0]);
+                                //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+                            }
 
+                        }
+                        if (fpItem.selectedDates[1] && !val.inr) {
+                            (moment(fpItem.selectedDates[1]).isBetween(val.from, val.to)) ? val.inr = 1 : val.inr = 0;
+                            //console.log('#1 Проверяемое число c индексом один:', fpItem.selectedDates[1]);
+                            //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+                            if (!val.inr) {
+                                (moment(fpItem.selectedDates[1]).isSame(val.from) || moment(fpItem.selectedDates[1]).isSame(val.to)) ? val.inr = 1 : val.inr = 0;
+                                //console.log('#2 Проверяемое число c индексом один:', fpItem.selectedDates[1]);
+                                //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+                            }
+                        }
 
-                        //if (!moment(fpItem.selectedDates[0]).isBetween(val.from, val.to))
-                        //if (moment(fpItem.selectedDates[0]).isSame(val.from))arr[key].inr2 = 1;
-                        //if (!moment(fpItem.selectedDates[0]).isSame(val.from))arr[key].inr2 = 0;
-                        //if (moment(fpItem.selectedDates[0]).isSame(val.to)) arr[key].inr3 = 1;
-                        //if (!moment(fpItem.selectedDates[0]).isSame(val.to)) arr[key].inr3 = 0;
-                        //if (moment(fpItem.selectedDates[1]).isBetween(val.from, val.to))arr[key].intersect = 1;
-                        //if (!moment(fpItem.selectedDates[1]).isBetween(val.from, val.to))arr[key].intersect = 0;
-                        //arr[key].intersect = 0;
-
-                        //arr[key]
-                        //val.intersect = $scope.intersect;
+                        if (fpItem.selectedDates[0] && !val.inr && fpItem.selectedDates[1]) {
+                            //console.log('******************************************************* // ************************************* ');
+                            (moment(val.from).isBetween(fpItem.selectedDates[0], fpItem.selectedDates[1])) ? val.inr = 1 : val.inr = 0;
+                            //console.log('Проверяем отпуск на предмет вхождение в промежуток чисел во вновь выбранном отуске.', val.from);
+                            //console.log('Входит ли в этот промежуток?:', 'c ' + fpItem.selectedDates[0] + ' по ' + fpItem.selectedDates[1] + ': ' + val.inr);
+                        }
+                        //console.log('******************************************************* // ************************************* ');
+                        x.push(val);
                     });
+                    return $scope.intersection = x;
                 }
-
-
-                //console.log('flatpickr', fpItem.redraw());
-                //console.log('$scope.item.location', $scope.item.location);
             };
-            $scope.$watch('intersection', function (value) {
-                console.log('NPR: ', value);
-            });
+
+            //$scope.$watch('intersection', function (value) {
+            //    console.log('NPR: ', value);
+            //});
 
             /**
              * Очищает непосредственно объект Flatpicker в отличие
@@ -437,11 +484,22 @@ angular.module('VacationModule')
              */
             $scope.clear = function () {
                 $scope.flatpicker.clear();
+                $scope.intersection.forEach(function (val, key, arr) {
+                    val.inr = 0;
+                })
             };
 
             $scope.$watch('item.owner.id', function (value) {
-                console.log('NEW', value);
                 $scope.getIntersections(value);
+                if(value){
+                    Users.get({id: value}, function (user) {
+                        $scope.selectAvatarUrl = user.avatarUrl;
+                        $scope.apply();
+                    }, function (err) {
+                        console.log('ERRd:', err);
+                    });
+                }
+
             });
 
             /**

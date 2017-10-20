@@ -120,6 +120,13 @@ module.exports.routes = {
     'PUT /interface/update': 'InterfaceController.update',
 
 
+    /**
+     * WEB SOCKET
+     */
+
+    'PUT /interfaces/:id/join': 'InterfaceController.joinChat',
+
+
     // !!!! НЕ УДАЛЯТЬ РОУТ!
     //'POST /user/signup': 'UserController.signup',
 
