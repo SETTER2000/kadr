@@ -47,7 +47,7 @@ angular.module('VacationModule')
             $scope.intersect = false;
             $scope.loginAdmin = false;
             $scope.flatpicker = {};
-            $scope.selectAvatarUrl =  $scope.me.avatarUrl;
+            $scope.selectAvatarUrl = $scope.me.avatarUrl;
             $scope.edit = $state.includes('home.admin.vacations.edit');
 
             function Calendar() {
@@ -324,24 +324,6 @@ angular.module('VacationModule')
             //});
 
 
-            io.socket.on('chat', function (e) {
-                console.log('new chat received!', e);
-                console.log('e.interfaces[0].year', e.interfaces[0].year);
-                $scope.yearFrom = e.interfaces[0].year;
-                $scope.me.interfaces[0].year = e.interfaces[0].year;
-
-                //$scope.dateOpts.defaultDate = ['11.10.2010', '11.10.2010'];
-                //$scope.chats.push({
-                //    created: e.created,
-                //    username: e.username,
-                //    message: e.message,
-                //    gravatarURL: e.gravatarURL
-                //});
-                //Working.changeMonth(0, false); // go to January
-                $scope.$apply();
-            });
-
-
             let Working = new Calendar();
             //Working.year = 2016;
             //Working.showData();
@@ -403,9 +385,36 @@ angular.module('VacationModule')
                 //    return new Date(str.selectedDates);
                 //}
                 //maxDate: info.maxDate // максимальная дата
-                //defaultDate: ['11.10.2010', '11.10.2010'] // по умолчанию какая дата отображается
+                defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
             };
 
+            io.socket.on('chat', function (e) {
+                //console.log('new chat received!', e);
+                //console.log('e.interfaces[0].year', e.interfaces[0].year);
+                $scope.yearFrom = e.interfaces[0].year;
+                /**
+                 * Устанавливаем год интерфейса для пересечений
+                 */
+                $scope.me.interfaces[0].year = e.interfaces[0].year;
+
+                //Working.onValueUpdate(function(selectedDates, dateStr, instance){
+                //    instance.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
+                //});
+                //$scope.dateOpts.defaultDate = ['11.10.2010', '11.10.2010'];
+                //$scope.chats.push({
+                //    created: e.created,
+                //    username: e.username,
+                //    message: e.message,
+                //    gravatarURL: e.gravatarURL
+                //});
+                //Working.changeMonth(0, false); // go to January
+                //console.log('e.idUser',e.idUser);
+                //$scope.getIntersections(e.idUser);
+
+                $scope.refresh();
+                $scope.$apply();
+                //
+            });
 
 //$scope.$watch('yearFrom', function (value) {
 //    $scope.yearFrom = value;
@@ -424,11 +433,13 @@ angular.module('VacationModule')
              */
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
+
+                console.log('DASSS', fpItem);
                 /**
                  * Кол-во выбраных дней
                  */
                 $scope.daysSelectHoliday = Working.getCountDay(fpItem.selectedDates);
-                fpItem.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
+                //fpItem.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
                 //console.log('DDDDDDD6', moment().year($scope.me.interfaces[0].year));
                 //console.log('POPP:', moment().month());
                 //console.log('Текущие пересечения', $scope.intersection);
@@ -443,6 +454,7 @@ angular.module('VacationModule')
                             (moment(fpItem.selectedDates[0]).isBetween(val.from, val.to)) ? val.inr = 1 : val.inr = 0;
                             //console.log('#1Проверяемое число c индексом ноль:', fpItem.selectedDates[0]);
                             //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+
                             if (!val.inr) {
                                 (moment(fpItem.selectedDates[0]).isSame(val.from) || moment(fpItem.selectedDates[0]).isSame(val.to)) ? val.inr = 1 : val.inr = 0;
                                 //console.log('#2 Проверяемое число c индексом ноль:', fpItem.selectedDates[0]);
@@ -468,6 +480,8 @@ angular.module('VacationModule')
                             //console.log('Входит ли в этот промежуток?:', 'c ' + fpItem.selectedDates[0] + ' по ' + fpItem.selectedDates[1] + ': ' + val.inr);
                         }
                         //console.log('******************************************************* // ************************************* ');
+
+
                         x.push(val);
                     });
                     return $scope.intersection = x;
@@ -489,17 +503,22 @@ angular.module('VacationModule')
                 })
             };
 
-            $scope.$watch('item.owner.id', function (value) {
+            $scope.$watch('item.owner.id', function (value, old) {
+
                 $scope.getIntersections(value);
-                if(value){
+                if (value) {
                     Users.get({id: value}, function (user) {
+                        $scope.user = user;
+                        if (!$scope.user.avatarUrl) {
+                            return $scope.selectAvatarUrl = 'http://via.placeholder.com/150x150';
+                        }
                         $scope.selectAvatarUrl = user.avatarUrl;
                         $scope.apply();
                     }, function (err) {
                         console.log('ERRd:', err);
                     });
                 }
-
+//
             });
 
             /**
@@ -508,8 +527,8 @@ angular.module('VacationModule')
             $scope.getIntersections = function (id) {
                 let query = (id) ? '/vacation/get-intersections/' + id : '/vacation/get-intersections';
                 $http.get(query).then(function (response) {
-                    console.log('GET-INTERFACE', response.data);
                     $scope.intersection = response.data;
+                    $scope.datePostSetup($scope.flatpicker);
                 }, function errorCallback(err) {
                     console.log('ERROR:', err);
                 });
@@ -549,13 +568,16 @@ angular.module('VacationModule')
                     toastr.error(err, info.error + ' 122! ');
                 })
             };
-
+            $scope.getArrIntersection = function (item) {
+                return $scope.flatpicker;
+            };
 
             $scope.saveEdit = function (item) {
                 if (!angular.isDefined(item))toastr.error('Нет объекта для сохранения.', 'Ошибка!');
                 if (!angular.isDefined(item.name)) return toastr.error('Дата не может быть пустой.', 'Ошибка!');
                 if (!angular.isDefined(item.furlough)) return toastr.error('Тип отпуска не может быть пустой.', 'Ошибка!');
                 item.daysSelectHoliday = +$scope.daysSelectHoliday;
+                console.log('XXXXXXXP', $scope.getArrIntersection(item));
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
                     item.from = $scope.flatpicker.selectedDates[0];
                     item.to = $scope.flatpicker.selectedDates[1];

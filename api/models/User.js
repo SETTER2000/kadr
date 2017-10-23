@@ -259,7 +259,7 @@ module.exports = {
         },
         vacations: {
             collection: 'vacation'
-        },
+    },
 
         getFullName: function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;

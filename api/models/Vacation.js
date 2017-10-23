@@ -58,6 +58,24 @@ module.exports = {
         owner: {
             model: 'user'
         },
+
+        /**
+         *
+         */
+        //intersec:{
+        //    collection: 'vacation'
+        //},
+        /**
+         *  Пересекается с какими отпусками
+         */
+        intersec:{
+            collection: 'vacation',
+            via: 'intersecOwner'
+        },
+        intersecOwner: {
+            collection: 'vacation',
+            via: 'intersec'
+        },
         whomCreated: {
             model: 'user'
         },

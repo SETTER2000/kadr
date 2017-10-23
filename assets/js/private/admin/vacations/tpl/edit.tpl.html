@@ -52,10 +52,12 @@
                             <!-- P H O T O -->
 
                        <div class=" pull-right">
-                                <img class="img-thumbnail" width="80px" ng-src="{{selectAvatarUrl}}" alt="">
+                           <a href="{{user.getEditUrl(user.id)}}"> <img class="img-thumbnail" width="80px" ng-src="{{selectAvatarUrl}}" alt=""></a>
                             </div>
                             <div class="clearfix"></div>
                         </div>
+
+
                         <!-- T Y P E  F U R L O U G H -->
 
                         <div ng-controller="ListFurloughController" class="form-group ">
@@ -141,11 +143,13 @@
         <div class="col-md-6" ng-if="close">
             <div class="row">
                 <div class="col-md-6">
+
+
                     <!-- C A L E N D A R -->
 
                     <div class="form-group">
                         <label class="sr-only" for="exampleInputPassword33"></label>
-                        <input required class="form-control  flatpickr flatpickr-calendar"
+                        <input  required class="form-control  flatpickr flatpickr-calendar"
                                ng-flatpickr
                                fp-opts="dateOpts"
                                fp-on-setup="datePostSetup(fpItem)"
@@ -173,12 +177,12 @@
                                     </td>
                                 </tr>
                             </table>
-                            <!--{{intersection[0].from | json}}-->
+                            <!--{{intersection[0] | json}}-->
                             <!--Год: {{me.interface}}-->
                             <!--Год: {{yearFrom}}-->
-                            <span ng-if="me.kadr || me.admin"></span> Интерфейс выбран на: <a
-                                href="/admin/vacations">{{me.interfaces[0].year}}</a>
-                            год
+                            <!--<span ng-if="me.kadr || me.admin"></span> Интерфейс выбран на: <a-->
+                                <!--href="/admin/vacations">{{me.interfaces[0].year}}</a>-->
+                            <!--год-->
                         </div>
                     </div>
                 </div>

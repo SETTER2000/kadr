@@ -20,7 +20,7 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-                console.log('findUser.interfaces[0]', findUser.interfaces[0]);
+                //console.log('findUser.interfaces[0]', findUser.interfaces[0]);
                 return res.ok(findUser.interfaces[0]);
             });
     },
@@ -57,7 +57,7 @@ module.exports = {
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
                 let year = (req.param('year')) ? req.param('year') : moment().year();
-                console.log('findUser', findUser);
+                //console.log('findUser', findUser);
                 if (findUser.interfaces.length) return res.badRequest('У вас уже есть готовый интерфейс!');
                 let obj = {
                     year: year
@@ -69,7 +69,7 @@ module.exports = {
                     findUser.interfaces.add(createInterface.id);
                     findUser.save(function (err) {
                         if (err) {
-                            console.log('ОШИБКИ ЮЗЕРА:', err);
+                            //console.log('ОШИБКИ ЮЗЕРА:', err);
                             return res.negotiate(err);
                         }
                         //return res.send(createInterface);
@@ -108,7 +108,7 @@ module.exports = {
                 hello: 'world'
             });
         }
-        console.log('YEAR', req.param('year'));
+        //console.log('YEAR', req.param('year'));
         if (!_.isNumber(req.param('year').year)) {
             return res.ok('Год остался без изменений.');
         }
@@ -128,11 +128,12 @@ module.exports = {
                     .exec((err, updateInterface)=> {
                         "use strict";
                         if (err) return res.serverError(err);
-                        console.log('UPDATE INTERFACE:', updateInterface);
+                        //console.log('UPDATE INTERFACE:', updateInterface);
 
                         sails.sockets.broadcast('interface' + req.session.me, 'chat', {
                             message: 'URAAA!!!',
                             lastName: findUser.lastName,
+                            idUser: findUser.id,
                             created: 'just now',
                             interfaces: updateInterface
                         });

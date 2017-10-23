@@ -109,6 +109,7 @@ module.exports.routes = {
     'GET /vacation/getYears': 'VacationController.getYears',
     'GET /vacation/get-intersections/:id': 'VacationController.getIntersections',
     'GET /vacation/get-intersections': 'VacationController.getIntersections',
+    'POST /vacation/get-intersections-user': 'VacationController.getIntersectionsUser',
 
 
 

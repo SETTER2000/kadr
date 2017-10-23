@@ -62,10 +62,11 @@ module.exports = {
                 .populate('owner')
                 .populate('whomCreated')
                 .populate('whomUpdated')
+                .populate('intersec')
                 .exec(function foundVacation(err, vacations) {
                     if (err) return res.serverError(err);
                     if (!vacations) return res.notFound();
-                    console.log('vacations RESPONS one :', vacations);
+                    //console.log('vacations RESPONS one :', vacations);
 
                     return res.ok(vacations);
                 });
@@ -118,6 +119,7 @@ module.exports = {
                                 .populate('owner')
                                 .populate('whomCreated')
                                 .populate('whomUpdated')
+                                .populate('intersec')
                                 .exec(function foundVacation(err, vacations) {
                                     if (err) return res.serverError(err);
                                     if (!vacations) return res.notFound();
@@ -156,25 +158,46 @@ module.exports = {
             //action: (req.param('action')) ? req.param('action') : true
         };
 
-        User.findOne({id: req.session.me})
+
+        obj.owner = (req.param('owner')) ? req.param('owner').id : req.session.me;
+
+        /**
+         * Выбираем объект пользователя на которого будет записан отпуск
+         */
+        User.findOne({id: obj.owner})
             .populate('vacationWhomCreated')
             .populate('vacations')
+            .populate('intersections')
             .exec((err, findUser)=> {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-                obj.owner = (req.param('owner')) ? req.param('owner').id : findUser.id;
-                obj.whomCreated = findUser.id;
+
+
+                /**
+                 * Устанавливаем пользователя, который создал отпуск
+                 * @type {*|null}
+                 */
+                obj.whomCreated = req.session.me;
+
+                /**
+                 * Устанавливаем тип отпуска
+                 */
                 Furlough.findOne(req.param('furlough'))
                     .populate('vacations')
                     .exec((err, findFurlough)=> {
                         "use strict";
                         if (err) return res.serverError(err);
                         if (!findFurlough) return res.notFound('Не найдено!');
-                        console.log('---------------------------------------------**');
+                        //console.log('---------------------------------------------**');
                         obj.furlough = findFurlough.id;
                         obj.from = new Date(moment(req.param('name').split(' ')[0], ['DD.MM.YYYY']));
                         obj.to = new Date(moment(req.param('name').split(' ')[2], ['DD.MM.YYYY']));
+
+                        /**
+                         * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
+                         * По сути проверяем чтоб не было пересечения со своим же отпуском
+                         */
                         Vacation.native(function (err, collection) {
                             if (err) return res.serverError(err);
 
@@ -205,39 +228,76 @@ module.exports = {
                                     //console.log('RESULT: ', results);
                                     if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
 
+                                    /**
+                                     * Проверяем чтоб не было дубля
+                                     * Ищем отпуск в соответствии с именем отпуска и владельцем отпуска (на кого записан отпуск)
+                                     *
+                                     */
                                     Vacation.findOne({'name': req.param('name'), 'owner': obj.owner.id})
                                         .exec((err, findParam)=> {
                                             "use strict";
                                             if (err)return res.serverError(err);
                                             if (findParam) return res.badRequest(req.param('name') + ' - дубликат.');
 
-                                            //console.log('findParam: ', findParam);
-                                            console.log('=============================================*');
+                                            let a = [];
 
-                                            Vacation.create(obj).exec(function (err, createVacation) {
-                                                if (err) return res.serverError(err);
-                                                console.log('Отпуск создал:', req.session.me);
-                                                //console.log('Отпуск новый:', createVacation);
-                                                findUser.vacations.add(createVacation.id);
-                                                findUser.vacationWhomCreated.add(createVacation.id);
-                                                //findUser.vacationWhomUpdated.add(finn.id);
-                                                findFurlough.vacations.add(createVacation.id);
+                                            _.forEach(findUser.intersections, function (val, key, arr) {
+                                                //a.push(val.id);
 
-                                                //console.log('ОБЪЕКТ USER:', findUser);
+                                                Vacation.native(function (err, collection) {
+                                                    if (err) return res.serverError(err);
+                                                    collection.aggregate(
+                                                        [
+                                                            {
+                                                                $match: {
+                                                                    $or: [
+                                                                        {$and: [{from: {$lte: new Date(moment(obj.from))}}, {to: {$gte: new Date(moment(obj.from))}}, {owner: ObjectId(val.id)}]},
+                                                                        {$and: [{from: {$lte: new Date(moment(obj.to))}}, {to: {$gte: new Date(moment(obj.to))}}, {owner: ObjectId(val.id)}]},
+                                                                        {$and: [{from: {$gt: new Date(moment(obj.from))}}, {to: {$lt: new Date(moment(obj.to))}}, {owner: ObjectId(val.id)}]}
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    ).toArray(function (err, results) {
+                                                        if (err) return res.serverError(err);
+                                                        console.log('RESSS', results[0]);
+                                                        console.log('RESSS2', results[0]._id);
+                                                        obj.intersec= results[0];
+                                                        //return res.ok();
+                                                        Vacation.create(obj).exec(function (err, createVacation) {
+                                                            if (err) return res.serverError(err);
+                                                            console.log('Отпуск создал:', req.session.me);
+                                                            //console.log('Отпуск новый:', createVacation);
+                                                            findUser.vacations.add(createVacation.id);
+                                                            //findUser.intersec.add(createVacation.id);
+                                                            findUser.vacationWhomCreated.add(createVacation.id);
+                                                            //findUser.vacationWhomUpdated.add(finn.id);
+                                                            findFurlough.vacations.add(createVacation.id);
+                                                            //createVacation.intersec.add(results[0]._id);
+                                                            //console.log('ОБЪЕКТ USER:', findUser);
+                                                            //createVacation.save(function (err) {
+                                                            //    if (err)  return res.negotiate(err);
 
-                                                findUser.save(function (err) {
-                                                    if (err) {
-                                                        console.log('ОШИБКИ ЮЗЕРА:', err);
-                                                        return res.negotiate(err);
-                                                    }
-                                                    //console.log('finn-7777777:', createVacation);
-                                                    findFurlough.save(function (err) {
-                                                        if (err) return res.negotiate(err);
-                                                        //console.log('finn:', createVacation);
-                                                        return res.send(createVacation);
+                                                            //    if (err)  return res.negotiate(err);
+
+                                                                findUser.save(function (err) {
+                                                                    if (err)return res.negotiate(err);
+
+                                                                    findFurlough.save(function (err) {
+                                                                        if (err) return res.negotiate(err);
+                                                                        return res.send(createVacation);
+                                                                    });
+                                                                });
+                                                            //});
+                                                        });
                                                     });
                                                 });
+
                                             });
+
+                                            console.log('AAA', a);
+
+
                                         });
                                 });
                         });
@@ -325,7 +385,7 @@ module.exports = {
     daysInYear: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         let year = (req.param('year')) ? req.param('year') : moment().year();
-        console.log('YEAR:', year);
+        //console.log('YEAR:', year);
         User.findOne({id: req.session.me})
             .populate('vacationWhomCreated')
             .populate('vacations')
@@ -390,7 +450,7 @@ module.exports = {
                 ]
             ).toArray(function (err, results) {
                 if (err) return res.serverError(err);
-                console.log(results);
+                //console.log(results);
                 return res.send(results);
             });
         });
@@ -404,7 +464,7 @@ module.exports = {
         //console.log('INTERSECTIO:', req.param('id'));
         let userID = (req.param('id')) ? req.param('id') : req.session.me;
         //(req.param('id')) ? res.ok(req.param('id')) : res.ok(req.session.me);
-        console.log('IDDD:', userID);
+        //console.log('IDDD:', userID);
         User.findOne({id: userID})
             .populate('intersections')
             .populate('vacations')
@@ -413,25 +473,66 @@ module.exports = {
                 if (err) return res.serverError(err);
                 if (!user) return res.badRequest();
                 if (!user.intersections.length) return res.ok();
-                console.log('GETTT', user.getShortName());
+                //console.log('GETTT', user.getShortName());
                 //return res.ok(user.intersections);
                 let ar = [];
                 _.forEach(user.intersections, function (val, key) {
                     ar.push(val.id);
                 });
-                console.log('user.intersections', user.intersections);
-                console.log('ar', ar);
-                Vacation.find({where: {owner: ar}},{sort:'from'})
+                //console.log('user.intersections', user.intersections);
+                //console.log('ar', ar);
+                Vacation.find({where: {owner: ar}}, {sort: 'from'})
                     .populate('furlough')
-                    .populate('owner',{sort:'lastName'})
+                    .populate('owner', {sort: 'lastName'})
                     .exec((err, vacationsFind)=> {
                         if (err) return res.serverError(err);
 
-                        console.log('RESPONSE: ', vacationsFind);
+                        //console.log('RESPONSE: ', vacationsFind);
 
                         res.ok(vacationsFind);
                     });
             });
+
+    },
+
+    /**
+     * Отпуска пересекающиеся c конкретным отпуском у пользователя,
+     * который установлен в списке пересечений
+     */
+    getIntersectionsUser: function (req, res) {
+        Vacation.native(function (err, collection) {
+            if (err) return res.serverError(err);
+
+            //db.vacation.aggregate([
+            //    {$match:{ $or:[
+            //        {$and: [{from:{$lte:ISODate("2017-10-02")}}, {to:{$gte:ISODate("2017-10-02")}}, {owner: ObjectId("58d285c3963240c8096f5416")}]},
+            //        {$and: [{from:{$lte:ISODate("2017-12-22")}}, {to:{$gte:ISODate("2017-12-22")}}, {owner: ObjectId("58d285c3963240c8096f5416")}]},
+            //        { $and: [ {from:{$gt:ISODate("2017-10-02")}}, {to:{$lt:ISODate("2017-12-22")}}, {owner: ObjectId("58d285c3963240c8096f5416")}] }
+            //    ]}
+            //    }
+            //]).pretty();
+            console.log('FROM:', req.param('from'));
+            console.log('TO:', req.param('to'));
+            console.log('OWNER:', req.param('owner')); //
+            collection.aggregate(
+                [
+                    {
+                        $match: {
+                            $or: [
+                                {$and: [{from: {$lte: new Date(moment(req.param('from')))}}, {to: {$gte: new Date(moment(req.param('from')))}}, {owner: ObjectId(req.param('owner'))}]},
+                                {$and: [{from: {$lte: new Date(moment(req.param('to')))}}, {to: {$gte: new Date(moment(req.param('to')))}}, {owner: ObjectId(req.param('owner'))}]},
+                                {$and: [{from: {$gt: new Date(moment(req.param('from')))}}, {to: {$lt: new Date(moment(req.param('to')))}}, {owner: ObjectId(req.param('owner'))}]}
+                            ]
+                        }
+                    }
+                ]
+            ).toArray(function (err, results) {
+                if (err) return res.serverError(err);
+                //console.log(results);
+                return res.send(results);
+            });
+        });
+
 
     }
 };

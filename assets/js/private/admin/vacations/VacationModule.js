@@ -48,7 +48,7 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
         ;
     })
     .constant('CONF_MODULE_VACATION', {baseUrl: '/vacations/:vacationId'})
-    .factory('Vacations', function ($resource, CONF_MODULE_VACATION) {
+    .factory('Vacations', function ($resource, $http, CONF_MODULE_VACATION) {
 
         var Vacations = $resource(
             CONF_MODULE_VACATION.baseUrl,
@@ -136,6 +136,15 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                 }
             }
             return item.removeVacation = this.arr;
+        };
+        Vacations.prototype.getIntersec= function () {
+           //return 'ddddddd';
+            console.log('SSSSSSSSSS', this.intersec);
+            let l ='';
+            this.intersec.forEach(function (v,k,a) {
+                l += 'перечсечение: ' +v.name + ' ';
+            });
+           return l;
         };
         return Vacations;
     })
