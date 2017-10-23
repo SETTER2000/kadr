@@ -260,8 +260,8 @@ module.exports = {
                                                         ]
                                                     ).toArray(function (err, results) {
                                                         if (err) return res.serverError(err);
-                                                        console.log('RESSS', results[0]);
-                                                        console.log('RESSS2', results[0]._id);
+                                                        if(!results) console.log('NOOOOO');
+                                                        console.log('results[0]', results[0]);
                                                         obj.intersec= results[0];
                                                         //return res.ok();
                                                         Vacation.create(obj).exec(function (err, createVacation) {
@@ -295,7 +295,7 @@ module.exports = {
 
                                             });
 
-                                            console.log('AAA', a);
+
 
 
                                         });
