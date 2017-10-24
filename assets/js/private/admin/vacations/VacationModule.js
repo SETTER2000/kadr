@@ -137,14 +137,9 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
             }
             return item.removeVacation = this.arr;
         };
-        Vacations.prototype.getIntersec= function () {
-           //return 'ddddddd';
-            console.log('SSSSSSSSSS', this.intersec);
-            let l ='';
-            this.intersec.forEach(function (v,k,a) {
-                l += 'перечсечение: ' +v.name + ' ';
-            });
-           return l;
+        Vacations.prototype.getIntersec = function () {
+            console.log('this.intersec', this.intersec);
+            return (this.intersec.length>0) ? this.intersec : false;
         };
         return Vacations;
     })
@@ -235,7 +230,7 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
             if (!angular.isArray(value) || !angular.isArray(valueArr)) return value;
             let arr = [];
             value.forEach(function (v, k, a) {
-                if(valueArr.indexOf(v[nameProperty][nameColllectionProperty]) !== -1){
+                if (valueArr.indexOf(v[nameProperty][nameColllectionProperty]) !== -1) {
                     arr.push(v);
                 }
             });

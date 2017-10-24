@@ -20,7 +20,7 @@
         </td>
         <td>
             <!--<pre>{{item.owner.avatarUrl | json}}</pre>-->
-            <a    href="/admin/users/edit/{{item.owner.id}}">
+            <a href="/admin/users/edit/{{item.owner.id}}">
                 <img ng-if="item.owner.avatarUrl" alt="{{ item.owner.getFullName() }}" ng-src="{{ item.owner.avatarUrl }}" class="photo"/>
                 <img ng-if="!item.owner.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет"
                      class="photo"/>
@@ -31,14 +31,14 @@
                 {{item.name}}
             </a>
         </td>
-        <td  nowrap>
+        <td nowrap>
             <span class="position">{{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}</span>
         </td>
         <td class="text-center">
             {{item.daysSelectHoliday}}
         </td>
         <td>
-            <span >{{item.furlough.name}}</span>
+            <span>{{item.furlough.name}}</span>
         </td>
         <td class="text-center">
             <span title="{{item.status | changeName}}" ng-class="item.status | getICO"></span>
@@ -46,8 +46,12 @@
         <td>
             {{item.actions}}
         </td>
-        <td>
-            {{item.getIntersec()}}
+        <td class="text-center">
+            <div ng-if="item.getIntersec()">
+                <a class="position" href="{{item.getEditUrl(item.id)}}">
+                    <span class="glyphicon glyphicon-ok "></span> +{{item.getIntersec().length}}
+                </a>
+            </div>
         </td>
         <td class="text-center">
             {{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}

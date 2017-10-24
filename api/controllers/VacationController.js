@@ -158,7 +158,8 @@ module.exports = {
             //action: (req.param('action')) ? req.param('action') : true
         };
 
-
+        console.log('OWNER: ', req.param('owner'));
+        console.log('OWNER SESS ME: ', req.session.me);
         obj.owner = (req.param('owner')) ? req.param('owner').id : req.session.me;
 
         /**
@@ -210,7 +211,6 @@ module.exports = {
                              * или
                              * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                              */
-
                             collection.aggregate([
                                     {
                                         $match: {
@@ -224,8 +224,6 @@ module.exports = {
                                 ])
                                 .toArray(function (err, results) {
                                     if (err) return res.serverError(err);
-
-                                    //console.log('RESULT: ', results);
                                     if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
 
                                     /**
@@ -241,11 +239,13 @@ module.exports = {
 
                                             let a = [];
 
-                                            _.forEach(findUser.intersections, function (val, key, arr) {
-                                                //a.push(val.id);
 
-                                                Vacation.native(function (err, collection) {
-                                                    if (err) return res.serverError(err);
+                                            Vacation.native(function (err, collection) {
+                                                if (err) return res.serverError(err);
+                                                console.log('findUser.intersections', findUser.intersections);
+                                                _.forEach(findUser.intersections, function (val, key) {
+                                                    a.push(val.id);
+                                                    console.log('МАССИВ A: ', a);
                                                     collection.aggregate(
                                                         [
                                                             {
@@ -256,45 +256,48 @@ module.exports = {
                                                                         {$and: [{from: {$gt: new Date(moment(obj.from))}}, {to: {$lt: new Date(moment(obj.to))}}, {owner: ObjectId(val.id)}]}
                                                                     ]
                                                                 }
-                                                            }
+                                                            },
+                                                            {$project: {id: "$id"}}
                                                         ]
                                                     ).toArray(function (err, results) {
                                                         if (err) return res.serverError(err);
-                                                        if(!results) console.log('NOOOOO');
-                                                        console.log('results[0]', results[0]);
-                                                        obj.intersec= results[0];
-                                                        //return res.ok();
-                                                        Vacation.create(obj).exec(function (err, createVacation) {
-                                                            if (err) return res.serverError(err);
-                                                            console.log('Отпуск создал:', req.session.me);
-                                                            //console.log('Отпуск новый:', createVacation);
-                                                            findUser.vacations.add(createVacation.id);
-                                                            //findUser.intersec.add(createVacation.id);
-                                                            findUser.vacationWhomCreated.add(createVacation.id);
-                                                            //findUser.vacationWhomUpdated.add(finn.id);
-                                                            findFurlough.vacations.add(createVacation.id);
-                                                            //createVacation.intersec.add(results[0]._id);
-                                                            //console.log('ОБЪЕКТ USER:', findUser);
-                                                            //createVacation.save(function (err) {
-                                                            //    if (err)  return res.negotiate(err);
+                                                        console.log('results', results);
+                                                        let ars = [];
 
-                                                            //    if (err)  return res.negotiate(err);
+                                                        if (results[0]) {
+                                                            _.forEach(results, function (v, k) {
+                                                                ars.push(v['_id'].toString());
+                                                            });
 
-                                                                findUser.save(function (err) {
-                                                                    if (err)return res.negotiate(err);
+                                                        }
+                                                        console.log("ARS:",ars);
+                                                        obj.intersec = ars;
 
-                                                                    findFurlough.save(function (err) {
-                                                                        if (err) return res.negotiate(err);
-                                                                        return res.send(createVacation);
-                                                                    });
-                                                                });
-                                                            //});
+                                                    });
+
+                                                });
+                                                //if (results[0]) obj.intersec = results[0]['_id'].toString();
+                                                Vacation.create(obj).exec(function (err, createVacation) {
+                                                    if (err) return res.serverError(err);
+                                                    console.log('Отпуск создал:', req.session.me);
+
+                                                    findUser.vacations.add(createVacation.id);
+                                                    findUser.vacationWhomCreated.add(createVacation.id);
+                                                    findFurlough.vacations.add(createVacation.id);
+                                                    findUser.save(function (err) {
+                                                        if (err)return res.negotiate(err);
+                                                        findFurlough.save(function (err) {
+                                                            if (err) return res.negotiate(err);
+                                                            return res.send(createVacation);
                                                         });
                                                     });
                                                 });
 
-                                            });
 
+
+
+
+                                            });
 
 
 

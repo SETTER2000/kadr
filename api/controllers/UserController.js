@@ -1364,6 +1364,7 @@ module.exports = {
     addAnnounced: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         //console.log('req.param(matching add):', req.param('matching'));
+        console.log('ОПОВЕЩВАЕМЫЙ', req.param('value'));
         User.findOne(req.param('id'))
             .populate('announced')
             .exec(function (err, findOneUser) {

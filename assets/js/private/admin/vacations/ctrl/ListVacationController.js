@@ -22,7 +22,7 @@
             $scope.whomUpdatedArea = 'Кем изменён';
             $scope.whomCreatedArea = 'Кем создан';
             $scope.actionsArea = 'Действие';
-            $scope.infoArea = 'Информация';
+            $scope.infoArea = 'Пересечения';
             $scope.daysSelectHolidayArea = 'Дней';
             $scope.added = 'Добавить отпуск';
             $scope.showBt = 1;
@@ -333,7 +333,7 @@
                 };
                 //console.log(' MY QUERY:', $scope.query);
                 $scope.items = Vacations.query($scope.query, function (vacations) {
-                    //console.log('Vacations ITEMS22:', vacations);
+                    console.log('Vacations ITEMS22:', vacations);
                     $scope.objectName = [];
                     //$scope.me.interface = vacations.interfaces[0].year;
                     for (var u = 0; u < vacations.length; u++) {
