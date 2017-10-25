@@ -157,8 +157,8 @@ module.exports = {
             status: 'pending',
             furlough: req.param('furlough'),
             owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
-            from: new Date(moment(req.param('from'))),
-            to: new Date(moment(req.param('to')))
+            from: req.param('from'),
+            to: req.param('to')
         };
 
         // console.log('req.body: ', req.body);
@@ -180,12 +180,14 @@ module.exports = {
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
 
-                let a = [];
+
+
                 /**
                  * Формируем массив идентификаторов пользователей,
                  * которые указаны в поле отслеживания за пересечениями.
                  * По сути это айдишники тех, с кем отслеживаю пересечения моего отпуска.
                  */
+                let a = [];
                 _.forEach(findUser.intersections, function (val, key) {
                     a.push(val.id);
                 });
@@ -220,8 +222,6 @@ module.exports = {
                         .toArray(function (err, results) {
                             if (err) return res.serverError(err);
                             if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
-
-                            // console.log('findUser.intersections', findUser.intersections);
 
 
                             /**
@@ -265,7 +265,7 @@ module.exports = {
                                                 });
                                             }
                                         });
-                                        console.log('findUser++:', findUser);
+                                        // console.log('findUser++:', findUser);
                                         let strEmail = '';
 
                                         if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
@@ -314,18 +314,29 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        var obj = {
+        let obj = {
             id: req.param('id'),
-            section: req.param('section'),
-            sections: req.param('sections'),
             name: req.param('name'),
             daysSelectHoliday: +req.param('daysSelectHoliday'),
-            whomCreated: req.param('whomCreated'),
             whomUpdated: req.session.me,
             action: req.param('action'),
             from: req.param('from'),
             to: req.param('to')
         };
+        // let obj = {
+        //     section: 'Отпуск',
+        //     sections: 'Отпуска',
+        //     name: req.param('name'),
+        //     daysSelectHoliday: +req.param('daysSelectHoliday'),
+        //     whomCreated: req.session.me,
+        //     whomUpdated: null,
+        //     action: req.param('action'),
+        //     status: 'pending',
+        //     furlough: req.param('furlough'),
+        //     owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
+        //     from: new Date(moment(req.param('from'))),
+        //     to: new Date(moment(req.param('to')))
+        // };
         User.findOne({id: req.session.me})
             .populate('vacationWhomUpdated')
             .populate('vacations')
@@ -339,9 +350,9 @@ module.exports = {
                 obj.whomUpdated = findUser.id;
                 Vacation.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
                     if (err) return res.negotiate(err);
-                    console.log('objEdit: ', objEdit);
-                    console.log('Отпуск обновил:', findUser.lastName + ' ' + findUser.firstName);
-                    console.log('Отпуск обновление:', obj);
+                    // console.log('objEdit: ', objEdit);
+                    // console.log('Отпуск обновил:', findUser.lastName + ' ' + findUser.firstName);
+                    // console.log('Отпуск обновление:', obj);
                     findUser.vacationWhomUpdated.add(objEdit[0].id);
                     findUser.save(function (err) {
                         if (err) return res.negotiate(err);
