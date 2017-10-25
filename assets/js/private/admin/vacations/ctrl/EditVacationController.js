@@ -533,6 +533,7 @@ angular.module('VacationModule')
                     console.log('ERROR:', err);
                 });
             };
+
             $scope.getIntersections();
 
             $scope.refresh = function () {
@@ -568,6 +569,7 @@ angular.module('VacationModule')
                     toastr.error(err, info.error + ' 122! ');
                 })
             };
+
             $scope.getArrIntersection = function (item) {
                 return $scope.flatpicker;
             };
@@ -576,11 +578,11 @@ angular.module('VacationModule')
                 if (!angular.isDefined(item))toastr.error('Нет объекта для сохранения.', 'Ошибка!');
                 if (!angular.isDefined(item.name)) return toastr.error('Дата не может быть пустой.', 'Ошибка!');
                 if (!angular.isDefined(item.furlough)) return toastr.error('Тип отпуска не может быть пустой.', 'Ошибка!');
+                item.from = $scope.flatpicker.selectedDates[0];
+                item.to = $scope.flatpicker.selectedDates[1];
                 item.daysSelectHoliday = +$scope.daysSelectHoliday;
-                console.log('XXXXXXXP', $scope.getArrIntersection(item));
+                // console.log('XXXXXXXP', $scope.getArrIntersection(item));
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
-                    item.from = $scope.flatpicker.selectedDates[0];
-                    item.to = $scope.flatpicker.selectedDates[1];
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $scope.refresh();
@@ -608,7 +610,6 @@ angular.module('VacationModule')
                 }
             };
 
-
             $scope.addPosition = function () {
                 if (angular.isArray($scope.item.positions)) {
                     $scope.item.positions.push({});
@@ -626,7 +627,6 @@ angular.module('VacationModule')
                     //$scope.item.furloughs = [{id:'599d8813b88be82bf00a1771'}];
                 }
             };
-
 
             $scope.removeFurlough = function (furlough) {
                 $scope.item.furloughRemove = [];
