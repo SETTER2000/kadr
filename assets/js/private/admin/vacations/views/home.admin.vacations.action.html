@@ -45,8 +45,13 @@
         <td>
             {{item.actions}}
         </td>
-        <td>
-            {{item.info}}
+        <td class="text-center">
+            <div ng-if="item.getIntersec()">
+                <a class="position" href="{{item.getEditUrl(item.id)}}">
+                    <span class="glyphicon glyphicon-ok "></span> +{{item.getIntersec().length}}
+                </a>
+                <!--{{item.getIntersec() | json}}-->
+            </div>
         </td>
         <td class="text-center">{{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}</td>
         <td ng-if="me.admin" class="text-center">{{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}</td>

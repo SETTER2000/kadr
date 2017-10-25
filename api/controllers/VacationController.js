@@ -172,11 +172,14 @@ module.exports = {
         User.findOne({id: obj.owner})
             .populate('vacationWhomCreated')
             .populate('vacations')
+            .populate('matchings')
+            .populate('announced')
             .populate('intersections')
             .exec((err, findUser) => {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
+
                 let a = [];
                 /**
                  * Формируем массив идентификаторов пользователей,
@@ -204,16 +207,16 @@ module.exports = {
                      * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                      */
                     collection.aggregate([
-                        {
-                            $match: {
-                                $or: [
-                                    {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                    {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                    {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                ]
+                            {
+                                $match: {
+                                    $or: [
+                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
+                                    ]
+                                }
                             }
-                        }
-                    ])
+                        ])
                         .toArray(function (err, results) {
                             if (err) return res.serverError(err);
                             if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
@@ -256,17 +259,43 @@ module.exports = {
 
                                         _.forEach(users, function (v, k) {
                                             // console.log('Отпуска пересекаемые с нашим:', v.vacations);
-                                            if(_.isArray(v.vacations) &&  (v.vacations.length>0)) {
-                                                _.forEach(v.vacations, function (val,key) {
+                                            if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
+                                                _.forEach(v.vacations, function (val, key) {
                                                     createVacation.intersec.add(val.id)
                                                 });
                                             }
                                         });
+                                        console.log('findUser++:', findUser);
+                                        let strEmail = '';
+
+                                        if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
+                                            let a = [];
+                                            _.forEach(findUser.matchings, function (val, key) {
+                                                console.log('EMAIl:', val.email);
+                                                a.push(val.email);
+                                            });
+                                            strEmail = a.join(',');
+                                        }
+
 
                                         findUser.save(function (err) {
                                             if (err) return res.negotiate(err);
                                             createVacation.save(function (err) {
                                                 if (err) return res.negotiate(err);
+
+                                                strEmail = (strEmail) ? strEmail : '';
+                                                console.log('Согласующие:', strEmail);
+                                                let options = {
+                                                    to: strEmail, // Кому: можно несколько получателей указать через запятую
+                                                    subject: ' ✔ ' + obj.section + ' создан! ' + findUser.getFullName(), // Тема письма
+                                                    text: '<h2>Уведомление об отпуске </h2>', // plain text body
+                                                    html: '' +
+                                                    '<h2>Уведомление об отпуске </h2> ' +
+                                                    '<p>' + obj.section + ' для ' + findUser.getFullName() + ' создан</p>' +
+                                                    '<p> C ' + moment(obj.from).format('LLLL') + ' по ' + moment(obj.to).format('LLLL') + '</p>' +
+                                                    '<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
+                                                };
+                                                EmailService.sender(options);
                                                 return res.send(createVacation);
                                             });
                                         });
@@ -396,6 +425,7 @@ module.exports = {
             });
     },
 
+
     /**
      * писок годов доступных для вывода в селектор годо
      */
@@ -465,6 +495,7 @@ module.exports = {
             });
 
     },
+
 
     /**
      * Отпуска пересекающиеся c конкретным отпуском у пользователя,

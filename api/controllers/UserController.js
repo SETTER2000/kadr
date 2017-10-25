@@ -500,7 +500,7 @@ module.exports = {
                             newUser.interfaces.add(createInterface.id);
                             newUser.save(function (err) {
                                 if (err) return res.negotiate(err);
-                                Mailer.sendWelcomeMail(newUser);
+
                                 res.send({id: newUser.id});
                             });
                         });
@@ -1305,7 +1305,7 @@ module.exports = {
                 findOneUser.matchings.add(req.param('value'));
                 findOneUser.save(function (err) {
                     if (err) return res.negotiate(err);
-                    Mailer.sendWelcomeMail(findOneUser);
+
                     return res.ok(findOneUser);
                 });
             });
@@ -1372,7 +1372,7 @@ module.exports = {
                 findOneUser.announced.add(req.param('value'));
                 findOneUser.save(function (err) {
                     if (err) return res.negotiate(err);
-                    Mailer.sendWelcomeMail(findOneUser);
+
                     return res.ok(findOneUser);
                 });
             });
@@ -1434,7 +1434,7 @@ module.exports = {
                 findOneUser.intersections.add(req.param('value'));
                 findOneUser.save(function (err) {
                     if (err) return res.negotiate(err);
-                    Mailer.sendWelcomeMail(findOneUser);
+
                     return res.ok(findOneUser);
                 });
             });
@@ -1494,7 +1494,6 @@ module.exports = {
                 findOneUser.iagree.add(req.param('value'));
                 findOneUser.save(function (err) {
                     if (err) return res.negotiate(err);
-                    Mailer.sendWelcomeMail(findOneUser);
                     return res.ok(findOneUser);
                 });
             });
