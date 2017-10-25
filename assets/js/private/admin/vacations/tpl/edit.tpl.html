@@ -169,7 +169,7 @@
                     <div class="panel-body" ng-if="intersection.length">
                         <div class="table-responsive">
                             <table class="table">
-                                <tr ng-class="{danger:intr.inr}" ng-repeat="intr in  intersection | filter:{from:yearFrom}" ng-cloak>
+                                <tr ng-class="{danger:intr.inr}" ng-repeat="intr in  intersection | filter:{from:yearFrom, fired:false}" ng-cloak>
                                     <th>{{intr.name}}</th>
                                     <!--<th>{{intr.from}} * {{moment('2017-08-06')}}</th>-->
                                     <td>{{intr.owner['lastName']}} {{intr.owner['firstName'].substr(0,1)}}.
@@ -177,7 +177,7 @@
                                     </td>
                                 </tr>
                             </table>
-                            <!--{{intersection[0] | json}}-->
+                            {{intersection[0] | json}}
                             <!--Год: {{me.interface}}-->
                             <!--Год: {{yearFrom}}-->
                             <!--<span ng-if="me.kadr || me.admin"></span> Интерфейс выбран на: <a-->
