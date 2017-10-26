@@ -58,12 +58,11 @@ angular.module('VacationModule')
 
             function Calendar() {
                 this.year = [new Date().getFullYear(), new Date().getFullYear() + 1, new Date().getFullYear() + 2];
+
                 /**
                  * Праздники и выходные дни по годам,
                  *
-                 * @type {*[]}
                  */
-
                 let data = [
                     {
                         "Год/Месяц": "2016",
@@ -160,6 +159,7 @@ angular.module('VacationModule')
                     {'Ноябрь': '11'},
                     {'Декабрь': '12'}
                 ];
+
                 /**
                  * Официальные праздники РФ
                  */

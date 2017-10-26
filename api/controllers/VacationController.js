@@ -5,8 +5,11 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 const ObjectId = require('mongodb').ObjectId;
-const moment = require('moment');
+// const moment = require('moment');
+const zone = "Europe/Moscow";
+var moment = require('moment-timezone');
 moment.locale('ru');
+
 const _ = require('lodash');
 const path = require('path');
 const fs = require('fs');
@@ -209,16 +212,16 @@ module.exports = {
                      * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                      */
                     collection.aggregate([
-                            {
-                                $match: {
-                                    $or: [
-                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                    ]
-                                }
+                        {
+                            $match: {
+                                $or: [
+                                    {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                    {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                    {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
+                                ]
                             }
-                        ])
+                        }
+                    ])
                         .toArray(function (err, results) {
                             if (err) return res.serverError(err);
                             if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
@@ -396,7 +399,7 @@ module.exports = {
         User.findOne({id: '58e35656594105801c9d9203'})
             .populate('interfaces')
             .populate('vacations')
-            .exec((err, findUser)=> {
+            .exec((err, findUser) => {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
@@ -420,25 +423,26 @@ module.exports = {
                             }
                         ]
                     }
-                }).exec((err, findVacations)=> {
+                }).exec((err, findVacations) => {
                     if (err) return res.serverError(err);
                     if (!findVacations) return res.notFound();
 
                     let obj = {};
 
                     let vacationPeriodsFrom = findVacations.map(function (vacation) {
-                        return moment(vacation.from);
+                        return moment.tz(vacation.from, zone);
                     });
                     let vacationPeriodsTo = findVacations.map(function (vacation) {
-                        return moment(vacation.to);
+                        return moment.tz(vacation.to, zone);
                     });
                     let vacationSelectDays = findVacations.map(function (vacation) {
                         return vacation.daysSelectHoliday;
                     });
-                    obj.maxFrom = moment.max(vacationPeriodsFrom);  // максималная дата начала отпуска
-                    obj.maxTo = moment.max(vacationPeriodsTo);  // максималная дата конца отпуска
-                    obj.yearFrom = obj.maxFrom.get('year'); // год начала максимального периода
-                    obj.yearTo = obj.maxTo.get('year'); // год окончания макс. периода
+                    
+                    obj.maxFrom = moment.max(vacationPeriodsFrom).tz(zone).format();  // максималная дата начала отпуска
+                    obj.maxTo = moment.max(vacationPeriodsTo).tz(zone).format();  // максималная дата конца отпуска
+                    obj.yearFrom = moment(obj.maxFrom).get('year'); // год начала максимального периода
+                    obj.yearTo = moment(obj.maxTo).get('year'); // год окончания макс. периода
                     obj.dh = vacationSelectDays;
 
                     /**
@@ -450,18 +454,29 @@ module.exports = {
                     obj.allDays = obj.dh.reduce(function (sum, current) {
                         return sum + current;
                     }, 0);
+                    obj.curentDateFormat = moment.tz(zone).format('LLLL');
+
 
                     /**
                      * Кол-во дней от периода выбраных в следующем году
                      * По сути находим хвостик который залез в следующий год
                      */
-                    obj.diff = (obj.maxFrom.get('year') != obj.maxTo.get('year')) ? moment(obj.maxTo).startOf('year').diff(obj.maxTo, 'days') : 0;
+                    obj.y = moment(moment(obj.maxFrom).endOf('year')).tz(zone).format();
+
+                    /**
+                     * Хвостик от отпуска в следующем году
+                     * @type {number}
+                     */
+                    obj.diff = (obj.yearFrom != obj.yearTo) ? moment.tz(obj.maxTo, zone).endOf('d').diff(moment.tz(obj.y, zone), 'day') : 0;
 
                     /**
                      * Кол-во отпускных дней пренадлежащих только году интерфейса
+                     * @type {number}
                      */
-                    obj.selectDaysYearsPeriod = obj.allDays + obj.diff;
-                    //res.send(findVacations);
+                    obj.selectDaysYearsPeriod = obj.allDays - obj.diff;
+
+
+
                     res.send(obj);
                 });
 
@@ -547,8 +562,7 @@ module.exports = {
                 return res.send(results);
             });
         });
-    }
-    ,
+    },
 
 
     /**
@@ -607,9 +621,9 @@ module.exports = {
             //    ]}
             //    }
             //]).pretty();
-            console.log('FROM:', req.param('from'));
-            console.log('TO:', req.param('to'));
-            console.log('OWNER:', req.param('owner')); //
+            // console.log('FROM:', req.param('from'));
+            // console.log('TO:', req.param('to'));
+            // console.log('OWNER:', req.param('owner')); //
             collection.aggregate(
                 [
                     {
