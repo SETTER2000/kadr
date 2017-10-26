@@ -26,8 +26,8 @@ module.exports.routes = {
      *                 JSON API ENDPOINTS                        *
      *************************************************************/
 
-      // 'PUT /login': 'UserController.loginLDAP',
-    'PUT /login': 'UserController.login',
+    'PUT /login': 'UserController.loginLDAP',
+    //'PUT /login': 'UserController.login',
     'GET /logout': 'PageController.logout',
     'POST /logout': 'UserController.logout',
     // 'GET /mail/send': 'MailController.send',
@@ -105,7 +105,9 @@ module.exports.routes = {
     /**
      * Vacation
      */
-    'GET /vacation/getDays': 'VacationController.daysInYear',
+    'GET /vacation/calendar': 'VacationController.dataCalendar',
+    'GET /vacation/getNextDays': 'VacationController.getDaysPeriodYear',
+    //'GET /vacation/getNextDays/:id': 'VacationController.getDaysPeriodYear',
     'GET /vacation/getYears': 'VacationController.getYears',
     'GET /vacation/get-intersections/:id': 'VacationController.getIntersections',
     'GET /vacation/get-intersections': 'VacationController.getIntersections',

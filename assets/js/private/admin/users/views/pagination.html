@@ -25,7 +25,23 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div ng-if="showString()" class="pagination"><p>Осталось в текущем году:{{getDays()}}</p></div>
+        <div ng-if="showString()" class="pagination" ng-cloak>
+            <p>
+                <span ng-class="{'text-danger':(selectDays<0)}">
+                    <md-tooltip
+                        md-direction="top">
+                    Осталось {{selectDays}} дней на отпуск в {{year}} году
+                </md-tooltip>
+                    {{year}}: {{selectDays}}</span> &nbsp;|&nbsp;
+
+                <span ng-class="{'text-danger':(nextDayYear<0)}">
+                    <md-tooltip
+                            md-direction="top">
+                        Осталось дней на отпуск в {{yearNext}} году
+                    </md-tooltip>
+                    {{yearNext}}: {{nextDayYear}}</span>
+            </p>
+        </div>
     </div>
     <div class="col-md-6">
         <nav class="pull-right">

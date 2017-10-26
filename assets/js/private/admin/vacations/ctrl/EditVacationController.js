@@ -50,11 +50,16 @@ angular.module('VacationModule')
             $scope.selectAvatarUrl = $scope.me.avatarUrl;
             $scope.edit = $state.includes('home.admin.vacations.edit');
 
+            $http.get('/vacation/calendar').then(function (response) {
+                $scope.data = response.data;
+                console.log('MESSS:' , $scope.data);
+            });
+
+
             function Calendar() {
                 this.year = [new Date().getFullYear(), new Date().getFullYear() + 1, new Date().getFullYear() + 2];
                 /**
-                 * Праздники и выходные дни по годам, взято здесь:
-                 * http://data.gov.ru/user/login?destination=api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content/10
+                 * Праздники и выходные дни по годам,
                  *
                  * @type {*[]}
                  */

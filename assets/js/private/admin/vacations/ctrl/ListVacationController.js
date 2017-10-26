@@ -25,6 +25,7 @@
             $scope.infoArea = 'Пересечения';
             $scope.daysSelectHolidayArea = 'Дней';
             $scope.added = 'Добавить отпуск';
+            $scope.children = ['Отпуск по беременности и родам','Отпуск по уходу за ребенком'];
             $scope.showBt = 1;
             $scope.countHolidayRF = 28;
             // показать формочку выбора кол-ва строк на странице
@@ -100,21 +101,6 @@
             $scope.yearLeap = moment(1316116057189).fromNow();
 
 
-            /**
-             * Год
-             * @type {*[]}
-             */
-                //$scope.options2 =
-                //    [
-                //        {id: "2015", year: "2015"},
-                //        {id: "2016", year: "2016"},
-                //        {id: "2017", year: "2017"},
-                //        {id: "2018", year: "2018"},
-                //        {id: "2019", year: "2019"}
-                //    ];
-                //$scope.modeSelectYear = $scope.options2[0];
-
-
             $scope.inter = {year: moment().year()};
 
             /**
@@ -135,8 +121,9 @@
              * Кол-во дн. отпуска выбранных в конкретном году
              */
             $scope.getDays = function () {
-                $http.get('/vacation/getDays/?year=' + $scope.interface).then(function success(response) {
-                        $scope.days = $scope.countHolidayRF - response.data.count;
+                $http.get('/vacation/getNextDays').then(function success(response) {
+                        $scope.days = response.data;
+                        console.log('POPP:', days);
                     },
                     function errorCallback(response) {
 
@@ -256,7 +243,6 @@
                 return milliseconds;
             };
 
-            //$scope.str = 'Петров';
             $scope.countChar = '4';
             $scope.filedName = 'lastName';
 
@@ -279,9 +265,7 @@
 
 
             $scope.$watch('where', function (value) {
-
                 $scope.refresh(value);
-
             });
 
             $scope.$watch('interface', function (value, old) {
@@ -369,9 +353,7 @@
                 })
             };
 
-//$scope.$watch('countCurrentView', function (value) {
-//   return $scope.countCurrentView = value;
-//});
+
 
             $scope.reverse = true;
 

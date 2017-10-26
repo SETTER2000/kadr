@@ -1,7 +1,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=(items  | firedUser | filter:{$:searchText, action:true} ).length"
+        length-object="countCurrentView=(items  | firedUser | filter:{$:searchText, action:true}| searchObjectVal:'furlough':'name':children ).length"
         current-page="currentPage"
         added="added"
         show-bt="showBt"
@@ -13,7 +13,7 @@
 </pagination>
 <table class="table table-hover">
     <tr head-table type="vacation"></tr>
-    <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true } | searchObjectVal:'furlough':'name':['Отпуск по беременности и родам','Отпуск по уходу за ребенком'] |
+    <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true } | searchObjectVal:'furlough':'name':children |
        orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
         <td>
             {{$index+1}}
@@ -74,7 +74,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=(items | firedUser | filter:{$:searchText, action:true} ).length"
+        length-object="countCurrentView=(items | firedUser | filter:{$:searchText, action:true} | searchObjectVal:'furlough':'name':children).length"
         current-page="currentPage"
         added="added"
         show-bt="showBt" show-cont-it="showContIt"

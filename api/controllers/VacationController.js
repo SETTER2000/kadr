@@ -10,6 +10,7 @@ moment.locale('ru');
 const _ = require('lodash');
 const path = require('path');
 const fs = require('fs');
+const http = require('http');
 
 
 module.exports = {
@@ -179,7 +180,6 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-
 
 
                 /**
@@ -389,12 +389,92 @@ module.exports = {
 
     },
 
+    /**
+     * Кол-во дней оставшихся на отпуск в следующем году
+     */
+    getDaysPeriodYear: function (req, res) {
+        User.findOne({id: '58e35656594105801c9d9203'})
+            .populate('interfaces')
+            .populate('vacations')
+            .exec((err, findUser)=> {
+                "use strict";
+                if (err) return res.serverError(err);
+                if (!findUser) return res.notFound();
+                //console.log('findUser:', findUser);
+                let year = (req.param('year')) ? req.param('year') : findUser['interfaces'][0].year;
+                Vacation.find({
+                    where: {
+                        owner: '58e35656594105801c9d9203',
+                        or: [
+                            {
+                                from: {
+                                    '>=': new Date(moment(year, ["YYYY"]).startOf('year')), // set to January 1st, 12:00 am this year
+                                    '<=': new Date(moment(year, ["YYYY"]).endOf("year")) // set the moment to 12-31 23:59:59.999 this year
+                                }
+                            },
+                            {
+                                to: {
+                                    '>=': new Date(moment(year, ["YYYY"]).startOf('year')), // set to January 1st, 12:00 am this year
+                                    '<=': new Date(moment(year, ["YYYY"]).endOf("year")) // set the moment to 12-31 23:59:59.999 this year
+                                }
+                            }
+                        ]
+                    }
+                }).exec((err, findVacations)=> {
+                    if (err) return res.serverError(err);
+                    if (!findVacations) return res.notFound();
+
+                    let obj = {};
+
+                    let vacationPeriodsFrom = findVacations.map(function (vacation) {
+                        return moment(vacation.from);
+                    });
+                    let vacationPeriodsTo = findVacations.map(function (vacation) {
+                        return moment(vacation.to);
+                    });
+                    let vacationSelectDays = findVacations.map(function (vacation) {
+                        return vacation.daysSelectHoliday;
+                    });
+                    obj.maxFrom = moment.max(vacationPeriodsFrom);  // максималная дата начала отпуска
+                    obj.maxTo = moment.max(vacationPeriodsTo);  // максималная дата конца отпуска
+                    obj.yearFrom = obj.maxFrom.get('year'); // год начала максимального периода
+                    obj.yearTo = obj.maxTo.get('year'); // год окончания макс. периода
+                    obj.dh = vacationSelectDays;
+
+                    /**
+                     * Всего дней выбраных во всех периодах начиная
+                     * с года интерфейса пользователя.
+                     * Для каждого элемента массива запустить функцию,
+                     * промежуточный результат передавать первым аргументом далее
+                     */
+                    obj.allDays = obj.dh.reduce(function (sum, current) {
+                        return sum + current;
+                    }, 0);
+
+                    /**
+                     * Кол-во дней от периода выбраных в следующем году
+                     * По сути находим хвостик который залез в следующий год
+                     */
+                    obj.diff = (obj.maxFrom.get('year') != obj.maxTo.get('year')) ? moment(obj.maxTo).startOf('year').diff(obj.maxTo, 'days') : 0;
+
+                    /**
+                     * Кол-во отпускных дней пренадлежащих только году интерфейса
+                     */
+                    obj.selectDaysYearsPeriod = obj.allDays + obj.diff;
+                    //res.send(findVacations);
+                    res.send(obj);
+                });
+
+
+            });
+    },
 
     /**
      * Кол-во дней взятых на отпуск по годам
      */
     daysInYear: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
         let year = (req.param('year')) ? req.param('year') : moment().year();
         //console.log('YEAR:', year);
         User.findOne({id: req.session.me})
@@ -434,11 +514,12 @@ module.exports = {
                     });
                 });
             });
-    },
+    }
+    ,
 
 
     /**
-     * писок годов доступных для вывода в селектор годо
+     * Список годов доступных для вывода в селектор года
      */
     getYears: function (req, res) {
 
@@ -466,7 +547,8 @@ module.exports = {
                 return res.send(results);
             });
         });
-    },
+    }
+    ,
 
 
     /**
@@ -505,7 +587,8 @@ module.exports = {
                     });
             });
 
-    },
+    }
+    ,
 
 
     /**
@@ -547,6 +630,27 @@ module.exports = {
         });
 
 
+    },
+
+
+    /**
+     * Получить праздники, выходные и т.д для календаря
+     */
+    dataCalendar: function (req, res) {
+        res.ok(sails.config.holiday.data);
+
+        //res.writeHead(200, {
+        //    'Content-Type': 'text/event-stream; charset=UTF-8',
+        //    'Cache-Control': 'no-cache',
+        //    'Connection': 'keep-alive',
+        //    'Access-Control-Allow-Credentials': true,
+        //    'Access-Control-Allow-Origin': '*'
+        //});
+
+        //  host: 'http://data.gov.ru/api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content/10/?access_token=2eace3b1564af9461d112b0ec65e98ba',
+
     }
+
+
 };
 

@@ -38,6 +38,7 @@
 <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
 <!--<script src="/vendor/bootstrap/dist/js/bootstrap.min.js"></script>-->
 
+
 <script>
 
     window.SAILS_LOCALS = {
@@ -45,6 +46,10 @@
         me: <%- JSON.stringify(me||null) %>
 
     };
+
+
+
+
 
 </script>
 
@@ -146,27 +151,9 @@
 
 
 <script>
-//    const myInput = document.querySelector(".flatpickr");
-//    const fp = new Flatpickr(myInput, {"locale": "ru" });  // Flatpickr
-
-
     $(function () {
         $('[data-toggle="popover"]').popover();
-
-
-//        function Refresh() {
-//            $.get("http://data.gov.ru/api/json/dataset/?access_token=2eace3b1564af9461d112b0ec65e98ba",
-//                    ParseAnswer);
-//        }
-//        Refresh();
-//        function ParseAnswer(data) {
-//            data = $.parseJSON(data);
-//            $("#question").text(data["2186"]["summaryLast"]);
-//        }
-//        window.setInterval(Refresh, 10000);
-
     });
-
 
 
 

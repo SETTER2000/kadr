@@ -186,24 +186,18 @@ module.exports = {
             dominant: true
         },
 
-        //interface:{
-        //    type: 'string'
-        //},
-        interfaces:{
+
+        interfaces: {
             collection: 'interface',
             via: 'users',
             dominant: true
         },
-        //vacations: {
-        //    collection: 'vacation',
-        //    via: 'users',
-        //    dominant: true
-        //},
+
 
         /**
          * согласующий
          */
-        matchings:{
+        matchings: {
             collection: 'user',
             via: 'owner'
         },
@@ -215,7 +209,7 @@ module.exports = {
         /**
          * Оповещаемые
          */
-        announced:{
+        announced: {
             collection: 'user',
             via: 'announcedOwner'
         },
@@ -227,7 +221,7 @@ module.exports = {
         /**
          * Пересечения
          */
-        intersections:{
+        intersections: {
             collection: 'user',
             via: 'intersectionsOwner'
         },
@@ -239,7 +233,7 @@ module.exports = {
         /**
          * Я согласующий
          */
-        iagree:{
+        iagree: {
             collection: 'user',
             via: 'iagreeOwner'
         },
@@ -249,17 +243,26 @@ module.exports = {
         },
 
 
-
-
+        /**
+         * Кто создал отпуск
+         */
         vacationWhomCreated: {
             collection: 'vacation'
         },
+
+        /**
+         * Кто обновил отпуск
+         */
         vacationWhomUpdated: {
             collection: 'vacation'
         },
+
+        /**
+         * Отпуска пользователя
+         */
         vacations: {
             collection: 'vacation'
-    },
+        },
 
         getFullName: function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;

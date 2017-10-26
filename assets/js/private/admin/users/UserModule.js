@@ -307,6 +307,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 showContIt: '=',// true|false показывать или нет формочку выбора кол-ва строк
                 showStr: '=',// true|false показывать или нет строку об отпусках. =?bind - не обязательная привязка значения
                 days: '=', // кол-во дней взятых на отпуск в текущем году
+                //nextDayYear: '=', // остаток дней на отпуск в следующем году
                 urlBt: '=',// ссылка для кнопки.
                 defaultRows: '=', // по умолчанию сколько строк должно показываться на одной странице
                 limitRows: '=',  // массив содержащий значения кол-ва строк для одной страницы [20,30,50,70,100]
@@ -319,6 +320,10 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             templateUrl: '/js/private/admin/users/views/pagination.html',
             replace: true,
             link: function (scope) {
+                scope.countHolidayRF = 28;
+
+
+                console.log('SCOPE:', scope.days);
                 scope.$watch('added', function (value) {
                     scope.added = value;
                 });
@@ -331,21 +336,19 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 scope.$watch('showStr', function (value) {
                     scope.showStr = value;
                 });
-                scope.$watch('days', function (value) {
-                    scope.days = value;
+                scope.$watch('days', function (value, old) {
+                    if(value){
+                        scope.getDays(value);
+                    }
+                });
+                scope.$watch('nextDayYear', function (value) {
+                    scope.nextDayYear = value;
                 });
                 scope.$watch('urlBt', function (value) {
                     scope.urlBt = value;
                 });
                 scope.$watch('lengthObject', function (value) {
                     scope.numPages = Math.floor(value / scope.defaultRows) + 1;
-                    //scope.pages = [];
-                    //for (var i = 1; i <= value; i++) {
-                    //    scope.pages.push(i);
-                    //}
-                    //if (scope.currentPage > value) {
-                    //    scope.selectPage(value);
-                    //}
                 });
 
                 scope.$watch('numPages', function (value) {
@@ -392,9 +395,16 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 scope.showString = function () {
                     return scope.showStr;
                 };
-                scope.getDays = function () {
-                    return scope.days;
+                scope.getDays = function (days) {
+                    //return 0;
+                    scope.selectDays = (scope.countHolidayRF - days.selectDaysYearsPeriod);
+                    scope.year = days.yearFrom;
+                    scope.nextDayYear = (scope.countHolidayRF + days.diff);
+                    scope.yearNext = (+scope.year + 1);
+                    //return (scope.countHolidayRF - +scope.days.selectDaysYearsPeriod);
                 };
+
+
                 scope.urlBtn = function () {
                     return scope.urlBt;
                 };

@@ -82,11 +82,13 @@ module.exports.policies = {
         //create: ['isLoggedIn']
     },
     VacationController: {
-        '*': ['isLoggedIn'],
+        //'*': ['isLoggedIn'],
         getIntersections: true,
-        getIntersectionsUser:true
+        getIntersectionsUser:true,
+        daysInYear:true,
+        getNextDays:true
         //create: ['isLoggedIn']
-    },
+    }
     //FurloughController: {
     //    '*': 'isLoggedIn',
     //    //'*': false,
