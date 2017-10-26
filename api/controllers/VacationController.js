@@ -438,7 +438,7 @@ module.exports = {
                     let vacationSelectDays = findVacations.map(function (vacation) {
                         return vacation.daysSelectHoliday;
                     });
-                    
+
                     obj.maxFrom = moment.max(vacationPeriodsFrom).tz(zone).format();  // максималная дата начала отпуска
                     obj.maxTo = moment.max(vacationPeriodsTo).tz(zone).format();  // максималная дата конца отпуска
                     obj.yearFrom = moment(obj.maxFrom).get('year'); // год начала максимального периода

@@ -399,7 +399,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     //return 0;
                     scope.selectDays = (scope.countHolidayRF - days.selectDaysYearsPeriod);
                     scope.year = days.yearFrom;
-                    scope.nextDayYear = (scope.countHolidayRF + days.diff);
+                    scope.nextDayYear = (scope.countHolidayRF - days.diff);
                     scope.yearNext = (+scope.year + 1);
                     //return (scope.countHolidayRF - +scope.days.selectDaysYearsPeriod);
                 };
