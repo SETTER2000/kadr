@@ -459,7 +459,7 @@ module.exports = {
                     obj.minTo = moment.tz(moment.min(vacationPeriodsTo), zone);  // минимальная дата конца отпуска
                     obj.yearMinFrom = moment(obj.minFrom).get('year'); // год начала минимального периода
                     obj.yearMinTo = moment(obj.minTo).get('year'); // год окончания минимального. периода
-                   
+
 
                     /**
                      * Всего дней выбраных во всех периодах начиная
@@ -547,6 +547,11 @@ module.exports = {
                     obj.holidays = holidays;
                     obj.workdays = workdays;
                     obj.allDaysVacation = allDaysVacation;
+
+                    /**
+                     * Дни отпуска попавшие в следующий год
+                     * @type {Array}
+                     */
                     obj.tail = tail;
 
 
