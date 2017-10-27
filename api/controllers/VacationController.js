@@ -7,11 +7,14 @@
 const ObjectId = require('mongodb').ObjectId;
 // const moment = require('moment');
 const zone = "Europe/Moscow";
-var moment = require('moment-timezone');
+var Moment = require('moment-timezone');
+const MomentRange = require('moment-range'); // https://github.com/rotaready/moment-range#subtract
+const moment = MomentRange.extendMoment(Moment);
 moment.locale('ru');
 
 const _ = require('lodash');
 const path = require('path');
+const momentBusiness = require('moment-business'); //(https://github.com/jmeas/moment-business)
 const fs = require('fs');
 const http = require('http');
 
@@ -212,16 +215,16 @@ module.exports = {
                      * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                      */
                     collection.aggregate([
-                        {
-                            $match: {
-                                $or: [
-                                    {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                    {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                    {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                ]
+                            {
+                                $match: {
+                                    $or: [
+                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
+                                    ]
+                                }
                             }
-                        }
-                    ])
+                        ])
                         .toArray(function (err, results) {
                             if (err) return res.serverError(err);
                             if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
@@ -405,6 +408,7 @@ module.exports = {
                 if (!findUser) return res.notFound();
                 //console.log('findUser:', findUser);
                 let year = (req.param('year')) ? req.param('year') : findUser['interfaces'][0].year;
+
                 Vacation.find({
                     where: {
                         owner: '58e35656594105801c9d9203',
@@ -426,9 +430,15 @@ module.exports = {
                 }).exec((err, findVacations) => {
                     if (err) return res.serverError(err);
                     if (!findVacations) return res.notFound();
-
+                    _.forEach(findVacations, function (v,k) {
+                        console.log('VALUE: ', v.name);
+                    });
+                    console.log('***************************//******************************** ');
+                    //console.log('findVacations', findVacations);
                     let obj = {};
+                    let holidaysRf = ["01.01.2017", "02.01.2017", "03.01.2017", "04.01.2017", "05.01.2017", "06.01.2017", "07.01.2017", "08.01.2017", "23.02.2017", "08.03.2017", "01.05.2017", "09.05.2017", "12.06.2017", "04.11.2017", "01.01.2018", "02.01.2018", "03.01.2018", "04.01.2018", "05.01.2018", "06.01.2018", "07.01.2018", "08.01.2018", "23.02.2018", "08.03.2018", "01.05.2018", "09.05.2018", "12.06.2018", "04.11.2018", "01.01.2019", "02.01.2019", "03.01.2019", "04.01.2019", "05.01.2019", "06.01.2019", "07.01.2019", "08.01.2019", "23.02.2019", "08.03.2019", "01.05.2019", "09.05.2019", "12.06.2019", "04.11.2019"];
 
+                    //console.log('holidays',holidays);
                     let vacationPeriodsFrom = findVacations.map(function (vacation) {
                         return moment.tz(vacation.from, zone);
                     });
@@ -439,11 +449,17 @@ module.exports = {
                         return vacation.daysSelectHoliday;
                     });
 
-                    obj.maxFrom = moment.max(vacationPeriodsFrom).tz(zone).format();  // максималная дата начала отпуска
-                    obj.maxTo = moment.max(vacationPeriodsTo).tz(zone).format();  // максималная дата конца отпуска
+                    obj.maxFrom = moment.tz(moment.max(vacationPeriodsFrom), zone);  // максималная дата начала отпуска
+                    obj.maxTo = moment.tz(moment.max(vacationPeriodsTo), zone);  // максималная дата конца отпуска
                     obj.yearFrom = moment(obj.maxFrom).get('year'); // год начала максимального периода
                     obj.yearTo = moment(obj.maxTo).get('year'); // год окончания макс. периода
                     obj.dh = vacationSelectDays;
+
+                    obj.minFrom = moment.tz(moment.min(vacationPeriodsFrom), zone);  // минимальная дата начала отпуска
+                    obj.minTo = moment.tz(moment.min(vacationPeriodsTo), zone);  // минимальная дата конца отпуска
+                    obj.yearMinFrom = moment(obj.minFrom).get('year'); // год начала минимального периода
+                    obj.yearMinTo = moment(obj.minTo).get('year'); // год окончания минимального. периода
+                   
 
                     /**
                      * Всего дней выбраных во всех периодах начиная
@@ -454,20 +470,85 @@ module.exports = {
                     obj.allDays = obj.dh.reduce(function (sum, current) {
                         return sum + current;
                     }, 0);
-                    obj.curentDateFormat = moment.tz(zone).format('LLLL');
+                    obj.startVacationDateFormat = moment.tz(obj.maxFrom.clone(),zone).format('LLLL');
+                    obj.endtVacationDateFormat = moment.tz(obj.maxTo.clone(),zone).format('LLLL');
 
 
                     /**
-                     * Кол-во дней от периода выбраных в следующем году
-                     * По сути находим хвостик который залез в следующий год
+                     * Последняя точка времени года
                      */
-                    obj.y = moment(moment(obj.maxFrom).endOf('year')).tz(zone).format();
+                    obj.endOfYear = obj.maxFrom.clone().endOf('year');
+
+                    //const from = moment(moment.max(vacationPeriodsFrom), 'YYYY-MM-DD');
+                    //const to = moment(moment.max(vacationPeriodsTo), 'YYYY-MM-DD');
+                    //const rangeFrom = from.range('year');
+                    //const rangeTo = to.range('day');
+                    //const range3 = range.subtract(rangeTo);
+
+                    //console.log('rangeFrom  START', rangeFrom.start);
+                    //console.log('rangeTo START', rangeTo.start);
+                    ////console.log('range3 START',range3.start);
+                    //console.log('rangeFrom  END', rangeFrom.end);
+                    //console.log('rangeTo END', rangeTo.end);
+                    //console.log('range3 END',range3.end);
+
+
+                    let holidays = []; // праздничные дни попавшие в отпуск
+                    let workdays = []; // рабочии дни попавшие в отпуск, по сути то что и считается отпуском
+                    let allDaysVacation = []; // все выбранные дни отпуска
+                    let tail = []; // (хвост) рабочии дни попавшие в следующий год
+
+
+                    /**
+                     * Создаём из начальной и конечной даты отпуска диапазон
+                     */
+                    const range = moment.range(obj.maxFrom, obj.maxTo);
+
+                    /**
+                     * Обходим диапазон по дням (для этого в скобках константа day, можно по месяцам обойти month)
+                     * Заполняем массив всех дней попавших в период отпуска
+                     */
+                    for (let day of range.by('day')) {
+                        allDaysVacation.push(day.format('YYYY-MM-DD'));
+                    }
+
+
+                    /**
+                     * Заполняем массив праздничных дней попавших в период отпуска
+                     */
+                    _.forEach(holidaysRf, function (val, key) {
+                        const m = moment(val, ['DD.MM.YYYY']);
+                        if (range.contains(m)) holidays.push(m.format('YYYY-MM-DD'));
+                        //(moment(day.format('YYYY-MM-DD')).isSame(moment(val, ['DD.MM.YYYY']).tz(zone))) ? holidays.push(day.format('YYYY-MM-DD')) : workdays[day.format('YYYYMMDD')]=day.format('YYYY-MM-DD');
+                    });
+
+
+                    /**
+                     * Заполняем массив рабочими днями
+                     * @type {Array}
+                     */
+                    workdays = _.difference(allDaysVacation, holidays);
+
+
+                    /**
+                     * Заполняем массив рабочими днями попавшими на другой год (хвост)
+                     * @type {Array}
+                     */
+                    _.forEach(workdays, function (v, k) {
+                        (moment(v).get('year') ==  ((obj.yearTo !==  obj.yearFrom) ?  obj.yearTo : 1000) ) ? tail.push(v) : '';
+                    });
+
 
                     /**
                      * Хвостик от отпуска в следующем году
                      * @type {number}
                      */
-                    obj.diff = (obj.yearFrom != obj.yearTo) ? moment.tz(obj.maxTo, zone).endOf('d').diff(moment.tz(obj.y, zone), 'day') : 0;
+                    obj.diff = tail.length;
+                    obj.holidays = holidays;
+                    obj.workdays = workdays;
+                    obj.allDaysVacation = allDaysVacation;
+                    obj.tail = tail;
+
 
                     /**
                      * Кол-во отпускных дней пренадлежащих только году интерфейса
@@ -475,8 +556,34 @@ module.exports = {
                      */
                     obj.selectDaysYearsPeriod = obj.allDays - obj.diff;
 
+                    //const years = Array.from(range.by('day'));
+                    //console.log('COUNT day:', years.length);
+                    //let t = years.map(m => m.format('YYYY'));
+                    //console.log('M', t);
 
 
+                    //console.log(moment.months());
+                    //console.log(moment.weekdays());
+                    //let start = moment(moment(obj.maxFrom).startOf('d').diff(1, 'sec'));
+                    //let end = moment(moment(obj.maxTo).endOf('d'));
+                    //console.log(
+                    //    momentBusiness.weekDays(start ,end) // количество рабочих дней между startMoment и endMoment
+                    //);
+                    //
+                    //console.log(
+                    //    momentBusiness.weekendDays(start ,end) // количество выходных дней между startMoment и endMoment
+                    //);
+                    //console.log(
+                    //    momentBusiness.addWeekDays(start.clone() ,3) // Добавьте рабочие дни к моменту, изменив первоначальный момент. Возвращает момент.
+                    //);
+                    //console.log(
+                    //    momentBusiness.subtractWeekDays(start.clone() ,3) // Вычесть рабочие дни из момента, изменив первоначальный момент. Возвращает момент.
+                    //);
+                    //console.log(
+                    //    momentBusiness.isWeekDay(start) // Добавьте рабочие дни к моменту, изменив первоначальный момент. Возвращает момент.
+                    //);
+                    //console.log('START:', start);
+                    //console.log('END:',end);
                     res.send(obj);
                 });
 

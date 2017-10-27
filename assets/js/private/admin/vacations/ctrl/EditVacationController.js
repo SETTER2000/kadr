@@ -145,6 +145,8 @@ angular.module('VacationModule')
                         "Количество рабочих часов при 24-часовой рабочей неделе": "1179.6"
                     }
                 ];
+
+
                 let months = [
                     {'Январь': '01'},
                     {'Февраль': '02'},
@@ -189,6 +191,11 @@ angular.module('VacationModule')
                     return holiday;
                 };
             }
+
+
+
+
+
 
             Calendar.prototype.showData = function () {
                 return console.log('Доступные данные:', this.getData());
@@ -275,6 +282,7 @@ angular.module('VacationModule')
                 }
                 return arr;
             };
+
             Calendar.prototype.getCountDay = function (arr) {
                 if (angular.isArray(arr) && arr.length == 2) {
                     let h = this.getHoliday();
@@ -330,6 +338,7 @@ angular.module('VacationModule')
 
 
             let Working = new Calendar();
+            //console.log(Working.getHoliday()); // все праздники, массив
             //Working.year = 2016;
             //Working.showData();
             //console.log('DAYS: ',Working.getDayOff());
