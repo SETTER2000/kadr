@@ -602,7 +602,7 @@ angular.module('VacationModule')
                             $scope.refresh();
                         },
                         function (err) {
-                            toastr.error(err.data.invalidAttributes, info.error + ' 11445!');
+                            toastr.error(err.data, info.error + ' 11445!');
                         }
                     );
                 } else {

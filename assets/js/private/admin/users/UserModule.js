@@ -398,9 +398,14 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 scope.getDays = function (days) {
                     //return 0;
                     scope.selectDays = (scope.countHolidayRF - days.selectDaysYearsPeriod);
-                    scope.year = days.yearFrom;
                     scope.nextDayYear = (scope.countHolidayRF - days.diff);
-                    scope.yearNext = (+scope.year + 1);
+                    scope.yr = days.yearFrom;
+                    scope.tailMin = days.tailMin;
+                    scope.tail = days.tail;
+                    scope.diff = days.diff;
+                    scope.tailMinInterface = days.tailMinInterface;
+                    scope.tailInterface = days.tailInterface;
+                    scope.yearNext = (+scope.yr + 1);
                     //return (scope.countHolidayRF - +scope.days.selectDaysYearsPeriod);
                 };
 

@@ -153,6 +153,9 @@ module.exports = {
     create: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
+
+        console.log('OWNER', req.param('owner'));
+
         let obj = {
             section: 'Отпуск',
             sections: 'Отпуска',
@@ -164,8 +167,8 @@ module.exports = {
             status: 'pending',
             furlough: req.param('furlough'),
             owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
-            from: req.param('from'),
-            to: req.param('to')
+            from: new Date(req.param('from')),
+            to: new Date(req.param('to'))
         };
 
         // console.log('req.body: ', req.body);
@@ -187,11 +190,10 @@ module.exports = {
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
 
-
                 /**
                  * Формируем массив идентификаторов пользователей,
                  * которые указаны в поле отслеживания за пересечениями.
-                 * По сути это айдишники тех, с кем отслеживаю пересечения моего отпуска.
+                 * По сути это id тех, с кем отслеживаю пересечения моего отпуска.
                  */
                 let a = [];
                 _.forEach(findUser.intersections, function (val, key) {
@@ -233,7 +235,7 @@ module.exports = {
                             /**
                              * Заполнить поле vacations объектами отпусков с которыми
                              * пересекается вновь создаваемый отпуск.
-                             * Тем сасмым находим отпуска пересекающиеся с нашим у тех людей,
+                             * Тем самым находим отпуска пересекающиеся с нашим, у тех людей
                              * за которыми отслеживаем пересечения.
                              */
                             User.find({id: a})
@@ -251,15 +253,25 @@ module.exports = {
                                                     '>=': new Date(moment(req.param('from'))),
                                                     '<=': new Date(moment(req.param('to')))
                                                 }
+                                            },
+                                            {
+                                                from: {
+                                                    '<': new Date(moment(req.param('from')))
+                                                },
+                                                to: {
+                                                    '>': new Date(moment(req.param('to')))
+                                                }
                                             }
                                         ]
                                     }
                                 })
                                 .exec((err, users) => {
                                     if (err) return res.serverError(err);
+
                                     Vacation.create(obj).exec(function (err, createVacation) {
                                         if (err) return res.serverError(err);
                                         console.log('Отпуск создал:', req.session.me);
+
                                         findUser.vacations.add(createVacation.id);
                                         findUser.vacationWhomCreated.add(createVacation.id);
 
@@ -326,45 +338,127 @@ module.exports = {
             daysSelectHoliday: +req.param('daysSelectHoliday'),
             whomUpdated: req.session.me,
             action: req.param('action'),
-            from: req.param('from'),
-            to: req.param('to')
+            owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
+            from: new Date(req.param('from')),
+            to: new Date(req.param('to')),
+            intersec: []
         };
-        // let obj = {
-        //     section: 'Отпуск',
-        //     sections: 'Отпуска',
-        //     name: req.param('name'),
-        //     daysSelectHoliday: +req.param('daysSelectHoliday'),
-        //     whomCreated: req.session.me,
-        //     whomUpdated: null,
-        //     action: req.param('action'),
-        //     status: 'pending',
-        //     furlough: req.param('furlough'),
-        //     owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
-        //     from: new Date(moment(req.param('from'))),
-        //     to: new Date(moment(req.param('to')))
-        // };
+
         User.findOne({id: req.session.me})
             .populate('vacationWhomUpdated')
             .populate('vacations')
+            .populate('intersections')
             .exec((err, findUser) => {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-                //console.log('findParam:', findUser);
-                //obj.vacationWhomCreated = findUser.id;
-                //obj.owner = findUser.id;
-                obj.whomUpdated = findUser.id;
-                Vacation.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
-                    if (err) return res.negotiate(err);
-                    // console.log('objEdit: ', objEdit);
-                    // console.log('Отпуск обновил:', findUser.lastName + ' ' + findUser.firstName);
-                    // console.log('Отпуск обновление:', obj);
-                    findUser.vacationWhomUpdated.add(objEdit[0].id);
-                    findUser.save(function (err) {
-                        if (err) return res.negotiate(err);
-                        res.ok();
-                    });
+
+                /**
+                 * Формируем массив идентификаторов пользователей,
+                 * которые указаны в поле отслеживания за пересечениями.
+                 * По сути это id тех, с кем отслеживаю пересечения моего отпуска.
+                 */
+                let a = [];
+                _.forEach(findUser.intersections, function (val, key) {
+                    a.push(val.id);
                 });
+
+                obj.whomUpdated = findUser.id;
+
+
+                /**
+                 * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
+                 * По сути проверяем чтоб не было пересечения со своим же отпуском
+                 */
+                Vacation.native(function (err, collection) {
+                    if (err) return res.serverError(err);
+
+                    /**
+                     * ПЕРЕСЕЧЕНИЕ ОТПУСКОВ
+                     * Найти период где
+                     * начало отпуска меньше или равно входящему началу отпуска и конец отпуска больше или равен входящему началу отпуска
+                     * или
+                     * начало отпуска меньше или равен входящему концу отпуска и конец отпуска больше или равен входящему концу отпуска
+                     * или
+                     * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
+                     */
+                    collection.aggregate([
+                            {
+                                $match: {
+                                    $or: [
+                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id:{$ne:ObjectId(req.param('id'))}}]},
+                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id:{$ne:ObjectId(req.param('id'))}}]},
+                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id:{$ne:ObjectId(req.param('id'))}}]}
+                                    ]
+                                }
+                            }
+                        ])
+                        .toArray(function (err, results) {
+                            if (err) return res.serverError(err);
+                            if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
+                            /**
+                             * Заполнить поле vacations объектами отпусков с которыми
+                             * пересекается вновь создаваемый отпуск.
+                             * Тем самым находим отпуска пересекающиеся с нашим, у тех людей
+                             * за которыми отслеживаем пересечения.
+                             */
+                            User.find({id: a})
+                                .populate('vacations', {
+                                    where: {
+                                        or: [
+                                            {
+                                                from: {
+                                                    '>=': new Date(moment(req.param('from'))),
+                                                    '<=': new Date(moment(req.param('to')))
+                                                }
+                                            },
+                                            {
+                                                to: {
+                                                    '>=': new Date(moment(req.param('from'))),
+                                                    '<=': new Date(moment(req.param('to')))
+                                                }
+                                            },
+                                            {
+                                                from: {
+                                                    '<': new Date(moment(req.param('from')))
+                                                },
+                                                to: {
+                                                    '>': new Date(moment(req.param('to')))
+                                                }
+                                            }
+                                        ]
+                                    }
+                                })
+                                .exec((err, users) => {
+                                    if (err) return res.serverError(err);
+                                    _.forEach(users, function (v, k) {
+                                        // console.log('Отпуска пересекаемые с нашим:', v.vacations);
+                                        if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
+                                            _.forEach(v.vacations, function (val, key) {
+                                                obj.intersec.push(val.id);
+                                            });
+                                        }
+                                    });
+                                    Vacation.update(req.param('id'), obj)
+                                        .exec(function updateObj(err, objEdit) {
+                                            if (err) return res.negotiate(err);
+                                            console.log('Отпуск обновил (' + objEdit[0].id + '):', findUser.lastName + ' ' + findUser.firstName);
+                                            // console.log('Отпуск обновление:', obj);
+                                            findUser.vacationWhomUpdated.add(objEdit[0].id);
+
+
+                                            findUser.save(function (err) {
+                                                if (err) return res.negotiate(err);
+                                                res.ok();
+                                            });
+                                        });
+
+
+                                });
+                        });
+                });
+
+
             });
     },
 
@@ -399,7 +493,7 @@ module.exports = {
      * Кол-во дней оставшихся на отпуск в следующем году
      */
     getDaysPeriodYear: function (req, res) {
-        User.findOne({id: '58e35656594105801c9d9203'})
+        User.findOne({id: req.session.me})
             .populate('interfaces')
             .populate('vacations')
             .exec((err, findUser) => {
@@ -411,7 +505,7 @@ module.exports = {
 
                 Vacation.find({
                     where: {
-                        owner: '58e35656594105801c9d9203',
+                        owner: req.session.me,
                         or: [
                             {
                                 from: {
@@ -430,13 +524,16 @@ module.exports = {
                 }).exec((err, findVacations) => {
                     if (err) return res.serverError(err);
                     if (!findVacations) return res.notFound();
-                    _.forEach(findVacations, function (v,k) {
+                    _.forEach(findVacations, function (v, k) {
                         console.log('VALUE: ', v.name);
                     });
                     console.log('***************************//******************************** ');
                     //console.log('findVacations', findVacations);
                     let obj = {};
-                    let holidaysRf = ["01.01.2017", "02.01.2017", "03.01.2017", "04.01.2017", "05.01.2017", "06.01.2017", "07.01.2017", "08.01.2017", "23.02.2017", "08.03.2017", "01.05.2017", "09.05.2017", "12.06.2017", "04.11.2017", "01.01.2018", "02.01.2018", "03.01.2018", "04.01.2018", "05.01.2018", "06.01.2018", "07.01.2018", "08.01.2018", "23.02.2018", "08.03.2018", "01.05.2018", "09.05.2018", "12.06.2018", "04.11.2018", "01.01.2019", "02.01.2019", "03.01.2019", "04.01.2019", "05.01.2019", "06.01.2019", "07.01.2019", "08.01.2019", "23.02.2019", "08.03.2019", "01.05.2019", "09.05.2019", "12.06.2019", "04.11.2019"];
+
+                    // Праздники в RF
+                    let holidaysRf = sails.config.holidaysRf.data;
+                    //let holidaysRf = ["01.01.2017", "02.01.2017", "03.01.2017", "04.01.2017", "05.01.2017", "06.01.2017", "07.01.2017", "08.01.2017", "23.02.2017", "08.03.2017", "01.05.2017", "09.05.2017", "12.06.2017", "04.11.2017", "01.01.2018", "02.01.2018", "03.01.2018", "04.01.2018", "05.01.2018", "06.01.2018", "07.01.2018", "08.01.2018", "23.02.2018", "08.03.2018", "01.05.2018", "09.05.2018", "12.06.2018", "04.11.2018", "01.01.2019", "02.01.2019", "03.01.2019", "04.01.2019", "05.01.2019", "06.01.2019", "07.01.2019", "08.01.2019", "23.02.2019", "08.03.2019", "01.05.2019", "09.05.2019", "12.06.2019", "04.11.2019"];
 
                     //console.log('holidays',holidays);
                     let vacationPeriodsFrom = findVacations.map(function (vacation) {
@@ -457,8 +554,8 @@ module.exports = {
 
                     obj.minFrom = moment.tz(moment.min(vacationPeriodsFrom), zone);  // минимальная дата начала отпуска
                     obj.minTo = moment.tz(moment.min(vacationPeriodsTo), zone);  // минимальная дата конца отпуска
-                    obj.yearMinFrom = moment(obj.minFrom).get('year'); // год начала минимального периода
-                    obj.yearMinTo = moment(obj.minTo).get('year'); // год окончания минимального. периода
+                    obj.yearMinFrom = (findVacations.length > 1) ? moment(obj.minFrom).get('year') : 1000; // год начала минимального периода
+                    obj.yearMinTo = (findVacations.length > 1) ? moment(obj.minTo).get('year') : 1000; // год окончания минимального. периода
 
 
                     /**
@@ -470,8 +567,11 @@ module.exports = {
                     obj.allDays = obj.dh.reduce(function (sum, current) {
                         return sum + current;
                     }, 0);
-                    obj.startVacationDateFormat = moment.tz(obj.maxFrom.clone(),zone).format('LLLL');
-                    obj.endtVacationDateFormat = moment.tz(obj.maxTo.clone(),zone).format('LLLL');
+
+                    obj.startVacationDateFormat = moment.tz(obj.maxFrom.clone(), zone).format('LLLL');
+                    obj.endVacationDateFormat = moment.tz(obj.maxTo.clone(), zone).format('LLLL');
+                    obj.startVacationDateFormatMinFrom = moment.tz(obj.minFrom.clone(), zone).format('LLLL');
+                    obj.endVacationDateFormatMinTo = moment.tz(obj.minTo.clone(), zone).format('LLLL');
 
 
                     /**
@@ -479,24 +579,22 @@ module.exports = {
                      */
                     obj.endOfYear = obj.maxFrom.clone().endOf('year');
 
-                    //const from = moment(moment.max(vacationPeriodsFrom), 'YYYY-MM-DD');
-                    //const to = moment(moment.max(vacationPeriodsTo), 'YYYY-MM-DD');
-                    //const rangeFrom = from.range('year');
-                    //const rangeTo = to.range('day');
-                    //const range3 = range.subtract(rangeTo);
-
-                    //console.log('rangeFrom  START', rangeFrom.start);
-                    //console.log('rangeTo START', rangeTo.start);
-                    ////console.log('range3 START',range3.start);
-                    //console.log('rangeFrom  END', rangeFrom.end);
-                    //console.log('rangeTo END', rangeTo.end);
-                    //console.log('range3 END',range3.end);
+                    /**
+                     * Последняя точка времени года (минимальный диапазон)
+                     */
+                    obj.endOfYearMinTo = obj.minTo.clone().startOf('year');
 
 
                     let holidays = []; // праздничные дни попавшие в отпуск
+                    let holidaysMin = []; // праздничные дни попавшие в отпуск (минимальный диапазон)
                     let workdays = []; // рабочии дни попавшие в отпуск, по сути то что и считается отпуском
+                    let workdaysMin = []; // рабочии дни попавшие в отпуск, по сути то что и считается отпуском (минимальный диапазон)
                     let allDaysVacation = []; // все выбранные дни отпуска
+                    let allDaysVacationMin = []; // все выбранные дни отпуска (минимальный диапазон)
                     let tail = []; // (хвост) рабочии дни попавшие в следующий год
+                    let tailMin = []; // (хвост) рабочии дни попавшие в предыдущий год
+                    let tailMinInterface = []; // хвост рабочих дней попавших в год выбранного интерфейса из минимального периода
+                    let tailInterface = []; // хвост рабочих дней попавших в год выбранного интерфейса из максимального периода
 
 
                     /**
@@ -505,11 +603,24 @@ module.exports = {
                     const range = moment.range(obj.maxFrom, obj.maxTo);
 
                     /**
+                     * Создаём из начальной и конечной даты отпуска диапазон (минимальный)
+                     */
+                    const rangeMin = moment.range(obj.minFrom, obj.minTo);
+
+                    /**
                      * Обходим диапазон по дням (для этого в скобках константа day, можно по месяцам обойти month)
                      * Заполняем массив всех дней попавших в период отпуска
                      */
                     for (let day of range.by('day')) {
                         allDaysVacation.push(day.format('YYYY-MM-DD'));
+                    }
+
+                    /**
+                     * Обходим диапазон по дням (для этого в скобках константа day, можно по месяцам обойти month)
+                     * Заполняем массив всех дней попавших в период отпуска
+                     */
+                    for (let day of rangeMin.by('day')) {
+                        allDaysVacationMin.push(day.format('YYYY-MM-DD'));
                     }
 
 
@@ -522,6 +633,15 @@ module.exports = {
                         //(moment(day.format('YYYY-MM-DD')).isSame(moment(val, ['DD.MM.YYYY']).tz(zone))) ? holidays.push(day.format('YYYY-MM-DD')) : workdays[day.format('YYYYMMDD')]=day.format('YYYY-MM-DD');
                     });
 
+                    /**
+                     * Заполняем массив праздничных дней попавших в период отпуска
+                     */
+                    _.forEach(holidaysRf, function (val, key) {
+                        const m = moment(val, ['DD.MM.YYYY']);
+                        if (rangeMin.contains(m)) holidaysMin.push(m.format('YYYY-MM-DD'));
+                        //(moment(day.format('YYYY-MM-DD')).isSame(moment(val, ['DD.MM.YYYY']).tz(zone))) ? holidays.push(day.format('YYYY-MM-DD')) : workdays[day.format('YYYYMMDD')]=day.format('YYYY-MM-DD');
+                    });
+
 
                     /**
                      * Заполняем массив рабочими днями
@@ -531,11 +651,29 @@ module.exports = {
 
 
                     /**
+                     * Заполняем массив рабочими днями
+                     * @type {Array}
+                     */
+                    workdaysMin = _.difference(allDaysVacationMin, holidaysMin);
+
+
+                    /**
                      * Заполняем массив рабочими днями попавшими на другой год (хвост)
                      * @type {Array}
                      */
                     _.forEach(workdays, function (v, k) {
-                        (moment(v).get('year') ==  ((obj.yearTo !==  obj.yearFrom) ?  obj.yearTo : 1000) ) ? tail.push(v) : '';
+                        (moment(v).get('year') == ((obj.yearTo !== obj.yearFrom) ? obj.yearTo : 1000) ) ? tail.push(v) : '';
+                        (moment(v).get('year') == ((obj.yearTo !== obj.yearFrom) ? obj.yearFrom : 1000) ) ? tailInterface.push(v) : '';
+                    });
+
+
+                    /**
+                     * Заполняем массив рабочими днями попавшими на предыдущий год (хвост)(минимальный диапазон)
+                     * @type {Array}
+                     */
+                    _.forEach(workdaysMin, function (v, k) {
+                        (moment(v).get('year') == ((obj.yearMinTo !== obj.yearMinFrom) ? obj.yearMinFrom : 1000) ) ? tailMin.push(v) : '';
+                        (moment(v).get('year') == ((obj.yearMinTo !== obj.yearMinFrom) ? obj.yearMinTo : 1000) ) ? tailMinInterface.push(v) : '';
                     });
 
 
@@ -544,9 +682,33 @@ module.exports = {
                      * @type {number}
                      */
                     obj.diff = tail.length;
+
+                    /**
+                     * Хвостик от отпуска в следующем году
+                     * @type {number}
+                     */
+                    obj.diffMin = tailMin.length;
+
+                    /**
+                     * Кол-во отпускных дней пренадлежащих только году интерфейса
+                     * @type {number}
+                     */
+                    obj.selectDaysYearsPeriod = obj.allDays - obj.diff - obj.diffMin;
+
+                    /**
+                     * Кол-во отпускных дней пренадлежащих только году интерфейса
+                     * @type {number}
+                     */
+                        //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
+
+                    obj.holidaysMin = holidaysMin;
                     obj.holidays = holidays;
                     obj.workdays = workdays;
+                    obj.workdaysMin = workdaysMin;
                     obj.allDaysVacation = allDaysVacation;
+                    obj.allDaysVacationMin = allDaysVacationMin;
+                    obj.tailMinInterface = tailMinInterface;
+                    obj.tailInterface = tailInterface;
 
                     /**
                      * Дни отпуска попавшие в следующий год
@@ -554,41 +716,13 @@ module.exports = {
                      */
                     obj.tail = tail;
 
-
                     /**
-                     * Кол-во отпускных дней пренадлежащих только году интерфейса
-                     * @type {number}
+                     * Дни отпуска попавшие в следующий год
+                     * @type {Array}
                      */
-                    obj.selectDaysYearsPeriod = obj.allDays - obj.diff;
-
-                    //const years = Array.from(range.by('day'));
-                    //console.log('COUNT day:', years.length);
-                    //let t = years.map(m => m.format('YYYY'));
-                    //console.log('M', t);
+                    obj.tailMin = tailMin;
 
 
-                    //console.log(moment.months());
-                    //console.log(moment.weekdays());
-                    //let start = moment(moment(obj.maxFrom).startOf('d').diff(1, 'sec'));
-                    //let end = moment(moment(obj.maxTo).endOf('d'));
-                    //console.log(
-                    //    momentBusiness.weekDays(start ,end) // количество рабочих дней между startMoment и endMoment
-                    //);
-                    //
-                    //console.log(
-                    //    momentBusiness.weekendDays(start ,end) // количество выходных дней между startMoment и endMoment
-                    //);
-                    //console.log(
-                    //    momentBusiness.addWeekDays(start.clone() ,3) // Добавьте рабочие дни к моменту, изменив первоначальный момент. Возвращает момент.
-                    //);
-                    //console.log(
-                    //    momentBusiness.subtractWeekDays(start.clone() ,3) // Вычесть рабочие дни из момента, изменив первоначальный момент. Возвращает момент.
-                    //);
-                    //console.log(
-                    //    momentBusiness.isWeekDay(start) // Добавьте рабочие дни к моменту, изменив первоначальный момент. Возвращает момент.
-                    //);
-                    //console.log('START:', start);
-                    //console.log('END:',end);
                     res.send(obj);
                 });
 

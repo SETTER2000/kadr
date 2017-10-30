@@ -27,17 +27,20 @@
     <div class="col-md-3">
         <div ng-if="showString()" class="pagination" ng-cloak>
             <p>
-                <span ng-class="{'text-danger':(selectDays<0)}">
+                <span class="boxM" ng-class="{'text-danger':(selectDays<0)}">
+                   <span ng-if="tailMinInterface.length" class="arrowM">&larr; <small>{{tailMinInterface.length}}</small></span>
+                      <span ng-if="(tailInterface.length && diff)" class="arrowR ">  <small>  {{tailInterface.length}}</small> &larr;</span>
                     <md-tooltip
                         md-direction="top">
-                    Осталось {{selectDays}} дней на отпуск в {{year}} году
+                    Осталось {{selectDays}} дн. на отпуск в {{yr}} году
                 </md-tooltip>
-                    {{year}}: {{selectDays}}</span> &nbsp;|&nbsp;
+                    {{yr}}: {{selectDays}}</span> &nbsp;|&nbsp;
 
-                <span ng-class="{'text-danger':(nextDayYear<0)}">
+                <span  class="boxM" ng-class="{'text-danger':(nextDayYear<0)}">
+                    <span ng-if="diff" class="arrowM ">&rarr; <small>{{diff}}</small> </span>
                     <md-tooltip
                             md-direction="top">
-                        Осталось дней на отпуск в {{yearNext}} году
+                        Осталось {{nextDayYear}} дн. на отпуск в {{yearNext}} году
                     </md-tooltip>
                     {{yearNext}}: {{nextDayYear}}</span>
             </p>

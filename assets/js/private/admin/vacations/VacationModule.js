@@ -139,7 +139,7 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
         };
         Vacations.prototype.getIntersec = function () {
             //console.log('this.intersec', this.intersec);
-            return (this.intersec.length>0) ? this.intersec : false;
+            return (this.intersec.length > 0) ? this.intersec : false;
         };
         return Vacations;
     })
