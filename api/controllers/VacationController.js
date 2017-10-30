@@ -804,7 +804,7 @@ module.exports = {
                 ]
             ).toArray(function (err, results) {
                 if (err) return res.serverError(err);
-                //console.log(results);
+                console.log(results);
                 return res.send(results);
             });
         });

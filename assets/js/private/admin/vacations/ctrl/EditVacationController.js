@@ -50,14 +50,14 @@ angular.module('VacationModule')
             $scope.selectAvatarUrl = $scope.me.avatarUrl;
             $scope.edit = $state.includes('home.admin.vacations.edit');
 
-            $http.get('/vacation/calendar').then(function (response) {
-                $scope.data = response.data;
-                console.log('MESSS:' , $scope.data);
-            });
+            //$http.get('/vacation/calendar').then(function (response) {
+            //    $scope.data = response.data;
+            //    console.log('MESSS:' , $scope.data);
+            //});
 
 
             function Calendar() {
-                this.year = [new Date().getFullYear(), new Date().getFullYear() + 1, new Date().getFullYear() + 2];
+                this.year = [new Date().getFullYear()-1,new Date().getFullYear(), new Date().getFullYear() + 1, new Date().getFullYear() + 2];
 
                 /**
                  * Праздники и выходные дни по годам,
@@ -211,6 +211,7 @@ angular.module('VacationModule')
                         ob.push(v);
                     }
                 });
+                console.log('PUSHHH:', ob);
                 return ob;
             };
             Calendar.prototype.getCreateDate = function () {
