@@ -344,7 +344,7 @@ module.exports = {
             intersec: []
         };
 
-        User.findOne({id: req.session.me})
+        User.findOne({id: obj.owner})
             .populate('vacationWhomUpdated')
             .populate('vacations')
             .populate('intersections')
@@ -365,14 +365,13 @@ module.exports = {
 
                 obj.whomUpdated = findUser.id;
 
-
+                //console.log('INTERSECTIONS A:', a);
                 /**
                  * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
                  * По сути проверяем чтоб не было пересечения со своим же отпуском
                  */
                 Vacation.native(function (err, collection) {
                     if (err) return res.serverError(err);
-
                     /**
                      * ПЕРЕСЕЧЕНИЕ ОТПУСКОВ
                      * Найти период где
@@ -386,9 +385,9 @@ module.exports = {
                             {
                                 $match: {
                                     $or: [
-                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id:{$ne:ObjectId(req.param('id'))}}]},
-                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id:{$ne:ObjectId(req.param('id'))}}]},
-                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id:{$ne:ObjectId(req.param('id'))}}]}
+                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
                                     ]
                                 }
                             }
@@ -403,6 +402,7 @@ module.exports = {
                              * за которыми отслеживаем пересечения.
                              */
                             User.find({id: a})
+                                .populate('owner',{where: {'id':{'!':obj.owner}}})
                                 .populate('vacations', {
                                     where: {
                                         or: [
@@ -425,6 +425,7 @@ module.exports = {
                                                 to: {
                                                     '>': new Date(moment(req.param('to')))
                                                 }
+
                                             }
                                         ]
                                     }
@@ -439,26 +440,37 @@ module.exports = {
                                             });
                                         }
                                     });
+
+                                    //console.log('obj.intersec', obj.intersec);
+                                    
+                                    Vacation.find()
+                                        .populate('intersec', {where: {id: req.param('id')}})
+                                        .exec((err, findVacation)=> {
+                                            if (err) return res.negotiate(err);
+                                            //console.log('FIND VACAT', findVacation);
+                                            _.forEach(findVacation, function (v, k) {
+                                                if (v.intersec.length) {
+                                                    findVacation[k].intersec.remove(req.param('id'));
+                                                    //console.log('XX', findVacation[k].intersec);
+                                                    findVacation[k].save(function (err) {
+                                                        if (err) return res.negotiate(err);
+                                                        //console.log('XX2', findVacation[k].intersec);
+                                                    });
+                                                }
+                                            });
+                                        });
                                     Vacation.update(req.param('id'), obj)
                                         .exec(function updateObj(err, objEdit) {
                                             if (err) return res.negotiate(err);
                                             console.log('Отпуск обновил (' + objEdit[0].id + '):', findUser.lastName + ' ' + findUser.firstName);
-                                            // console.log('Отпуск обновление:', obj);
-                                            findUser.vacationWhomUpdated.add(objEdit[0].id);
-
-
                                             findUser.save(function (err) {
                                                 if (err) return res.negotiate(err);
                                                 res.ok();
                                             });
                                         });
-
-
                                 });
                         });
                 });
-
-
             });
     },
 

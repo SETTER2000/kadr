@@ -211,7 +211,6 @@ angular.module('VacationModule')
                         ob.push(v);
                     }
                 });
-                console.log('PUSHHH:', ob);
                 return ob;
             };
             Calendar.prototype.getCreateDate = function () {
