@@ -82,6 +82,10 @@ module.exports = {
         whomUpdated: {
             model: 'user'
         },
+        chats: {
+            collection: 'chat',
+            via: 'vacation'
+        },
         getHoliday: function (id) {
             User.findOne({id: id})
                 .populate('positions')

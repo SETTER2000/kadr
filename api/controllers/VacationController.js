@@ -402,7 +402,7 @@ module.exports = {
                              * за которыми отслеживаем пересечения.
                              */
                             User.find({id: a})
-                                .populate('owner',{where: {'id':{'!':obj.owner}}})
+                                .populate('owner', {where: {'id': {'!': obj.owner}}})
                                 .populate('vacations', {
                                     where: {
                                         or: [
@@ -442,7 +442,7 @@ module.exports = {
                                     });
 
                                     //console.log('obj.intersec', obj.intersec);
-                                    
+
                                     Vacation.find()
                                         .populate('intersec', {where: {id: req.param('id')}})
                                         .exec((err, findVacation)=> {
@@ -921,8 +921,128 @@ module.exports = {
 
         //  host: 'http://data.gov.ru/api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content/10/?access_token=2eace3b1564af9461d112b0ec65e98ba',
 
-    }
+    },
 
+    /**
+     * Чат отпуска
+     * @param req
+     * @param res
+     * @returns {*}
+     */
+    joinChat: function (req, res) {
 
+        // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // TODO: ^ Потяните это в политику `isSocketRequest`
+
+        // Присоединитесь к комнате для этого отпуска (в качестве запрашивающего сокета)
+        Vacation.subscribe(req, req.param('id'));
+
+        // Присоединитесь к комнате отпуска для анимации ввода
+        sails.sockets.join(req, 'vacation' + req.param('id'));
+        // Vacation.watch(req);
+        console.log('Connect chat');
+        return res.ok();
+    },
+    
+    
+    chat: function (req, res) {
+        let obj = {
+            //id: req.param('id'),
+            //name: req.param('name'),
+            //daysSelectHoliday: +req.param('daysSelectHoliday'),
+            //whomUpdated: req.session.me,
+            //action: req.param('action'),
+            owner: (req.param('owner')) ? req.param('owner') : req.session.me
+            //from: new Date(req.param('from')),
+            //to: new Date(req.param('to')),
+            //intersec: []
+        };
+        console.log(' req.param',  req.param('id'));
+        // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // TODO: ^ pull this into a `isSocketRequest` policy
+
+        Chat.create({
+            message:req.param('message'),
+            //message: req.param('message'),
+            sender: req.session.me,
+            vacation: '59f855fc58f4be1ccc2d7bf4'
+        }).exec(function (err, createdChat) {
+            if (err) return res.negotiate('ERORRR');
+
+            User.findOne({
+                id: obj.owner
+            })
+                .exec(function (err, foundUser) {
+                if (err) return res.negotiate(err);
+                if (!foundUser) return res.notFound();
+
+                // Трансляция события WebSocket всем остальным, находящимся в настоящее время в сети,
+                // поэтому их пользователь
+                // агенты могут обновлять интерфейс для них.
+                // sails.sockets.broadcast ('vacation' + req.param ('id'), 'chat', {
+                // сообщение: req.param ('сообщение'),
+                // имя пользователя: foundUser.username,
+                // Создано: «только сейчас»,
+                // gravatarURL: foundUser.gravatarURL
+                //});
+                //Vacation.update(req.param('id'), {
+                //    //message: req.param('message'),
+                //    message: req.param('message'),
+                //    username: foundUser.lastName,
+                //    created: 'just now',
+                //    //gravatarURL: foundUser.avatarUrl
+                //});
+
+                return res.ok();
+
+            });
+        });
+    },
+
+    typing: function (req, res) {
+
+        // Nothing except socket requests should ever hit this endpoint.
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // TODO: ^ pull this into a `isSocketRequest` policy
+
+        User.findOne({
+            id: req.session.userId
+        }).exec(function (err, foundUser) {
+            if (err) return res.negotiate(err);
+            if (!foundUser) return res.notFound();
+
+            // Broadcast socket event to everyone else currently online so their user agents
+            // can update the UI for them.
+            sails.sockets.broadcast('vacation' + req.param('id'), 'typing', {
+                username: foundUser.username
+            }, (req.isSocket ? req : undefined));
+
+            return res.ok();
+        });
+    },
+
+    stoppedTyping: function (req, res) {
+
+        // Nothing except socket requests should ever hit this endpoint.
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // TODO: ^ pull this into a `isSocketRequest` policy
+
+        // Broadcast socket event to everyone else currently online so their user agents
+        // can update the UI for them.
+        sails.sockets.broadcast('vacation' + req.param('id'),
+            'stoppedTyping', {}, (req.isSocket ? req : undefined));
+
+        return res.ok();
+    },
 };
 

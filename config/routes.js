@@ -113,7 +113,10 @@ module.exports.routes = {
     'GET /vacation/get-intersections': 'VacationController.getIntersections',
     'POST /vacation/get-intersections-user': 'VacationController.getIntersectionsUser',
 
-
+    'POST /vacation/:id/chat': 'VacationController.chat',
+    'PUT  /vacation/:id/join': 'VacationController.joinChat',
+    'PUT  /vacation/:id/typing': 'VacationController.typing',
+    'PUT  /vacation/:id/stoppedTyping': 'VacationController.stoppedTyping',
 
     /**
      * Interface
