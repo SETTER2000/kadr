@@ -514,7 +514,7 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-                console.log('findUser:', findUser);
+                //console.log('findUser:', findUser);
                 let intfaceYear = (findUser['interfaces'].length) ? findUser['interfaces'][0].year : moment().get('year');
                 let year = (req.param('year')) ? req.param('year') : intfaceYear;
 
