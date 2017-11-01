@@ -989,13 +989,37 @@ module.exports = {
                 }).exec(function (err, createdChat) {
                     if (err) return res.negotiate(err);
 
-                    console.log('foundUser.avatarUrl', foundUser.avatarUrl);
+
                     sails.sockets.broadcast('vacation' + req.param('id'), 'vacation', {
                         message: req.param('message'),
                         username: foundUser.getShortName(),
                         created: 'только сейчас',
                         avatarUrl: foundUser.avatarUrl
                     });
+
+
+                    let strEmail = '';
+
+                    if (_.isArray(foundUser.matchings) && (foundUser.matchings.length > 0)) {
+                        let a = [];
+                        _.forEach(foundUser.matchings, function (val, key) {
+                            console.log('EMAIl:', val.email);
+                            a.push(val.email);
+                        });
+                        strEmail = a.join(',');
+                    }
+
+                    let options = {
+                        to: strEmail, // Кому: можно несколько получателей указать через запятую
+                        subject: ' ! Сообщение чата отпуска ! ' + foundUser.getFullName(), // Тема письма
+                        text: '<h2>Сообщение чата </h2>', // plain text body
+                        html: '' +
+                        '<h2>У Вас есть новое сообщение. </h2> ' +
+                        '<p>'+req.param('message')+'</p>'
+
+                    };
+                    EmailService.sender(options);
+
                     return res.ok();
 
                 });
