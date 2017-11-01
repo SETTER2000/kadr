@@ -6,9 +6,11 @@
  */
 
 module.exports = {
-
+  connection: 'userMongodbServer',
   attributes: {
-
+    avatarUrl:{
+      type:'string'
+    },
     message: {
       type: 'string'
     },

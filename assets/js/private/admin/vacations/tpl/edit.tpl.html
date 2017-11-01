@@ -51,8 +51,9 @@
 
                             <!-- P H O T O -->
 
-                       <div class=" pull-right">
-                           <a href="{{user.getEditUrl(user.id)}}"> <img class="img-thumbnail" width="80px" ng-src="{{selectAvatarUrl}}" alt=""></a>
+                            <div class=" pull-right">
+                                <a href="{{user.getEditUrl(user.id)}}"> <img class="img-thumbnail" width="80px" ng-src="{{selectAvatarUrl}}"
+                                                                             alt=""></a>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -128,10 +129,42 @@
                     <button ng-show="me.admin" ng-if="!item.action" ng-click="delete2(item)" class="btn btn-sm btn-default pull-right">
                         <span class="glyphicon glyphicon-trash"></span>
                     </button>
-
-                    DDDD:{{chats}}
-
-                    <button class="btn btn-sm btn-default" ng-click="sendMessage()">go</button>
+                    <form ng-show="edit" role="form" ng-submit="sendMessage()">
+                        <div class="panel panel-default">
+                            <div class="panel-heading lead">
+                                <i class="fa fa-comment"></i> Чат
+                            </div>
+                            <div class="panel-body">
+                                <ul class="chat-window">
+                                    <li class="chat clearfix" ng-repeat="chat in chats">
+                                        <div class="chat-body">
+                                            <img class="chat-avatar" ng-src="{{chat.avatarUrl}}">
+                                            <div class="header">
+                                                <span class="username">{{chat.username}} </span>
+                                                <small class="pull-right">{{chat.created }}{{chat.time}}</small>
+                                            </div>
+                                            <p class="message">
+                                                {{chat.message}}
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="panel-footer">
+                                <div class="input-group">
+                                    <input id="btn-input" type="text" class="form-control input-sm" ng-model="message"
+                                           placeholder="Написать сообщение..." ng-keypress="whenTyping($event)" ng-focus="whenTyping($event)" ng-blur="whenNotTyping($event)" ng-disabled="!me">
+                <span class="input-group-btn">
+                  <button type="submit" ng-disabled="!hasJoinedRoom || !me" class="btn btn-info btn-sm" id="btn-chat">
+                      Отправить</button>
+                </span>
+                                </div>
+                                <div ng-show="typing">
+                                    {{usernameTyping}} печатает...<i class="overlord-loading-spinner fa fa-spinner" ></i>
+                                </div>
+                            </div>
+                        </div><!-- class="panel panel-primary" -->
+                    </form>
                 </div>
             </div>
 
@@ -153,7 +186,7 @@
 
                     <div class="form-group">
                         <label class="sr-only" for="exampleInputPassword33"></label>
-                        <input  required class="form-control  flatpickr flatpickr-calendar"
+                        <input required class="form-control  flatpickr flatpickr-calendar"
                                ng-flatpickr
                                fp-opts="dateOpts"
                                fp-on-setup="datePostSetup(fpItem)"

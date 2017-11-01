@@ -70,6 +70,7 @@ module.exports = {
                 .populate('whomCreated')
                 .populate('whomUpdated')
                 .populate('intersec')
+                .populate('chats')
                 .exec(function foundVacation(err, vacations) {
                     if (err) return res.serverError(err);
                     if (!vacations) return res.notFound();
@@ -505,6 +506,7 @@ module.exports = {
      * Кол-во дней оставшихся на отпуск в следующем году
      */
     getDaysPeriodYear: function (req, res) {
+        Interface.create(req, res);
         User.findOne({id: req.session.me})
             .populate('interfaces')
             .populate('vacations')
@@ -512,8 +514,9 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-                //console.log('findUser:', findUser);
-                let year = (req.param('year')) ? req.param('year') : findUser['interfaces'][0].year;
+                console.log('findUser:', findUser);
+                let intfaceYear = (findUser['interfaces'].length) ? findUser['interfaces'][0].year : moment().get('year');
+                let year = (req.param('year')) ? req.param('year') : intfaceYear;
 
                 Vacation.find({
                     where: {
@@ -943,86 +946,80 @@ module.exports = {
         // Присоединитесь к комнате отпуска для анимации ввода
         sails.sockets.join(req, 'vacation' + req.param('id'));
         // Vacation.watch(req);
-        console.log('Connect chat');
+        console.log('Connect chat ' + 'vacation' + req.param('id'));
         return res.ok();
     },
-    
-    
+
+
     chat: function (req, res) {
-        let obj = {
-            //id: req.param('id'),
-            //name: req.param('name'),
-            //daysSelectHoliday: +req.param('daysSelectHoliday'),
-            //whomUpdated: req.session.me,
-            //action: req.param('action'),
-            owner: (req.param('owner')) ? req.param('owner') : req.session.me
-            //from: new Date(req.param('from')),
-            //to: new Date(req.param('to')),
-            //intersec: []
-        };
-        console.log(' req.param',  req.param('id'));
+        console.log(' vacation', req.param('id'));
+        console.log(' message', req.param('message'));
+        console.log('sender me', req.session.me);
+        console.log('REQ me', req.session);
         // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
         if (!req.isSocket) {
             return res.badRequest();
         }
         // TODO: ^ pull this into a `isSocketRequest` policy
 
-        Chat.create({
-            message:req.param('message'),
-            //message: req.param('message'),
-            sender: req.session.me,
-            vacation: '59f855fc58f4be1ccc2d7bf4'
-        }).exec(function (err, createdChat) {
-            if (err) return res.negotiate('ERORRR');
 
-            User.findOne({
-                id: obj.owner
+        User.findOne({
+                id: req.session.me
             })
-                .exec(function (err, foundUser) {
+            .exec(function (err, foundUser) {
                 if (err) return res.negotiate(err);
                 if (!foundUser) return res.notFound();
 
                 // Трансляция события WebSocket всем остальным, находящимся в настоящее время в сети,
                 // поэтому их пользователь
                 // агенты могут обновлять интерфейс для них.
-                // sails.sockets.broadcast ('vacation' + req.param ('id'), 'chat', {
-                // сообщение: req.param ('сообщение'),
-                // имя пользователя: foundUser.username,
-                // Создано: «только сейчас»,
-                // gravatarURL: foundUser.gravatarURL
-                //});
-                //Vacation.update(req.param('id'), {
-                //    //message: req.param('message'),
+                //console.log('foundUser', foundUser);
+                //Vacation.publishUpdate(req.param('id'), {
                 //    message: req.param('message'),
-                //    username: foundUser.lastName,
-                //    created: 'just now',
-                //    //gravatarURL: foundUser.avatarUrl
+                //    username: foundUser.getFullName(),
+                //    created: 'только сейчас',
+                //    avatarURL: foundUser.avatarURL
                 //});
+                Chat.create({
+                    message: req.param('message'),
+                    sender: req.session.me,
+                    vacation: req.param('id'),
+                    avatarUrl:foundUser.avatarUrl,
+                    username:foundUser.getShortName()
+                }).exec(function (err, createdChat) {
+                    if (err) return res.negotiate(err);
 
-                return res.ok();
+                    console.log('foundUser.avatarUrl', foundUser.avatarUrl);
+                    sails.sockets.broadcast('vacation' + req.param('id'), 'vacation', {
+                        message: req.param('message'),
+                        username: foundUser.getShortName(),
+                        created: 'только сейчас',
+                        avatarUrl: foundUser.avatarUrl
+                    });
+                    return res.ok();
 
+                });
             });
-        });
     },
 
     typing: function (req, res) {
 
-        // Nothing except socket requests should ever hit this endpoint.
+        // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
         if (!req.isSocket) {
             return res.badRequest();
         }
         // TODO: ^ pull this into a `isSocketRequest` policy
 
         User.findOne({
-            id: req.session.userId
+            id: req.session.me
         }).exec(function (err, foundUser) {
             if (err) return res.negotiate(err);
             if (!foundUser) return res.notFound();
 
-            // Broadcast socket event to everyone else currently online so their user agents
-            // can update the UI for them.
+            // Событие сокетов Broadcast для всех остальных в настоящее время в сети, чтобы их пользовательские агенты
+            // может обновить интерфейс для них.
             sails.sockets.broadcast('vacation' + req.param('id'), 'typing', {
-                username: foundUser.username
+                username: foundUser.getFullName()
             }, (req.isSocket ? req : undefined));
 
             return res.ok();
@@ -1031,18 +1028,18 @@ module.exports = {
 
     stoppedTyping: function (req, res) {
 
-        // Nothing except socket requests should ever hit this endpoint.
+        // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
         if (!req.isSocket) {
             return res.badRequest();
         }
         // TODO: ^ pull this into a `isSocketRequest` policy
 
-        // Broadcast socket event to everyone else currently online so their user agents
-        // can update the UI for them.
+        // Событие сокетов Broadcast для всех остальных в настоящее время в сети, чтобы их пользовательские агенты
+        // может обновить интерфейс для них.
         sails.sockets.broadcast('vacation' + req.param('id'),
             'stoppedTyping', {}, (req.isSocket ? req : undefined));
 
         return res.ok();
-    },
+    }
 };
 

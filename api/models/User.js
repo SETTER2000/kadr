@@ -264,6 +264,26 @@ module.exports = {
             collection: 'vacation'
         },
 
+        /**
+         * Чат
+         * @returns {string}
+         */
+        followers: {
+            collection: 'user',
+            via: 'following'
+        },
+
+        // Who am I following?
+        following: {
+            collection: 'user',
+            via: 'followers'
+        },
+        chats: {
+            collections: 'chat',
+            via: 'sender'
+        },
+
+
         getFullName: function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;
         },

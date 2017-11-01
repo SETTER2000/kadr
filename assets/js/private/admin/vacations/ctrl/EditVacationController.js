@@ -55,12 +55,18 @@ angular.module('VacationModule')
             //    console.log('MESSS:' , $scope.data);
             //});
 
+
+            // set-up loading state
+            $scope.showVacation = {
+                loading: false
+            };
+
             $scope.hasJoinedRoom = false;
             // Get the video id form the current URL path:  /tutorials/1/videos/3/show
             // /admin/vacations/edit/59f87fa07fe80611fc8ebdf5
             $scope.fromUrlVideoId = window.location.pathname.split('/')[4];
             // Send a socket request to join the chat room.
-            io.socket.put('/vacation/'+ $scope.fromUrlVideoId + '/join', function (data, JWR) {
+            io.socket.put('/vacation/' + $scope.fromUrlVideoId + '/join', function (data, JWR) {
                 // If something went wrong, handle the error.
                 if (JWR.statusCode !== 200) {
                     console.error(JWR);
@@ -78,17 +84,13 @@ angular.module('VacationModule')
                 // in this callback in order for our changes to the scope to actually take effect.
                 $scope.$apply();
             });
-
+            //$scope.chats = (window.SAILS_LOCALS.chats) ? window.SAILS_LOCALS.chats : [];
             // Handle socket events that are fired when a new chat event is sent (.broadcast)
             io.socket.on('vacation', function (e) {
 
+
                 // Append the chat we just received
-                $scope.chats.push({
-                    created: e.data.created,
-                    username: e.data.username,
-                    message: e.data.message,
-                    gravatarURL: e.data.gravatarURL
-                });
+                $scope.chats.push(e);
 
                 // Because io.socket.on() is not an angular thing, we have to call $scope.$apply() in
                 // this event handler in order for our changes to the scope to actually take effect.
@@ -96,12 +98,12 @@ angular.module('VacationModule')
             });
 
 
-            $scope.sendMessage = function() {
+            $scope.sendMessage = function () {
 
-                io.socket.post('/vacation/'+$scope.fromUrlVideoId+'/chat', {
-                    message: 'HOLLY',
-                    owner:'59f855fc58f4be1ccc2d7bf4'
-                }, function (data, JWR){
+                io.socket.post('/vacation/' + $scope.fromUrlVideoId + '/chat', {
+                    message: $scope.message,
+                    //owner:'59f855fc58f4be1ccc2d7bf4'
+                }, function (data, JWR) {
 
                     // If something went wrong, handle the error.
                     if (JWR.statusCode !== 200) {
@@ -117,11 +119,35 @@ angular.module('VacationModule')
                     $scope.$apply();
                 });
             };//</sendMessage>
+            $scope.whenTyping = function (event) {
+                io.socket.request({
+                    url: '/vacation/' + $scope.fromUrlVideoId + '/typing',
+                    method: 'put'
+                }, function (data, JWR) {
+                    // If something went wrong, handle the error.
+                    if (JWR.statusCode !== 200) {
+                        console.error(JWR);
+                        return;
+                    }
+                });
+            };//</whenTyping>
 
+            $scope.whenNotTyping = function (event) {
+                io.socket.request({
+                    url: '/vacation/' + $scope.fromUrlVideoId + '/stoppedTyping',
+                    method: 'put'
+                }, function (data, JWR) {
+                    // If something went wrong, handle the error.
+                    if (JWR.statusCode !== 200) {
+                        console.error(JWR);
+                        return;
+                    }
+                });
+            };//</whenNotTyping>
 
 
             function Calendar() {
-                this.year = [new Date().getFullYear()-1,new Date().getFullYear(), new Date().getFullYear() + 1, new Date().getFullYear() + 2];
+                this.year = [new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1, new Date().getFullYear() + 2];
 
                 /**
                  * Праздники и выходные дни по годам,
@@ -255,10 +281,6 @@ angular.module('VacationModule')
                     return holiday;
                 };
             }
-
-
-
-
 
 
             Calendar.prototype.showData = function () {
@@ -466,7 +488,7 @@ angular.module('VacationModule')
                 defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
             };
 
-            io.socket.on('chat', function (e) {
+            io.socket.on('interface', function (e) {
                 //console.log('new chat received!', e);
                 //console.log('e.interfaces[0].year', e.interfaces[0].year);
                 $scope.yearFrom = e.interfaces[0].year;
@@ -581,6 +603,18 @@ angular.module('VacationModule')
                 })
             };
 
+            /**
+             * Прошедшее время сообщений в чате
+             */
+            $scope.chatTime = function () {
+                let y = [];
+                $scope.tm.forEach(function (val, key, arr) {
+                    val.time = moment(val.createdAt).fromNow();
+                    y.push(val);
+                });
+                return y;
+            };
+
             $scope.$watch('item.owner.id', function (value, old) {
 
                 $scope.getIntersections(value);
@@ -616,8 +650,12 @@ angular.module('VacationModule')
 
             $scope.refresh = function () {
                 let item = $scope.item = Vacations.get({id: $stateParams.vacationId}, function (vacations) {
-                        //console.log('VACATION ITEM:', vacations);
+                        console.log('VACATION ITEM:', vacations);
                         $scope.vacations = vacations;
+
+                        $scope.tm = vacations.chats;
+                        $scope.chats = $scope.chatTime();
+
                         $scope.flatpicker.setDate(vacations.name);
 
                         item.getBirthday();

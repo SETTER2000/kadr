@@ -82,6 +82,12 @@ module.exports = {
         whomUpdated: {
             model: 'user'
         },
+        /**
+         * Чат
+         */
+        //tutorialAssoc: {
+        //    model: 'tutorial'
+        //},
         chats: {
             collection: 'chat',
             via: 'vacation'

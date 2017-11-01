@@ -130,7 +130,7 @@ module.exports = {
                         if (err) return res.serverError(err);
                         //console.log('UPDATE INTERFACE:', updateInterface);
 
-                        sails.sockets.broadcast('interface' + req.session.me, 'chat', {
+                        sails.sockets.broadcast('interface' + req.session.me, 'interface', {
                             message: 'URAAA!!!',
                             lastName: findUser.lastName,
                             idUser: findUser.id,
