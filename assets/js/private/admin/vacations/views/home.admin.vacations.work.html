@@ -11,7 +11,7 @@
         url-bt="urlBt"
         on-select-page="selectCount=selectCount+1">
 </pagination>
-<table class="table table-hover">
+<table class="table table-hover tus">
     <tr head-table type="vacation"></tr>
     <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true}  |
        orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
