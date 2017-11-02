@@ -56,12 +56,15 @@
                         </span>
                     </a>
                 </li>
+                <li><a ng-if="currentPage>1 " ng-click="selectPage(1)" href="">1</a></li>
                 <li ng-repeat="page in pages"
                     ng-class="{active: isActive(page)}">
-                    <a href="#" ng-click="selectPage(page)">
+                    <a href="#" ng-hide="$index!=(currentPage-1)" ng-click="selectPage(page)">
                         {{page}}
                     </a>
+
                 </li>
+                <li><a ng-if="allPages>1 && (currentPage!=allPages)" ng-click="selectPage(allPages)" href="">{{allPages}}</a></li>
                 <li ng-class="{disabled: noNext()}">
                     <a href="#" ng-click="selectNext()">
                         <span aria-hidden="true">

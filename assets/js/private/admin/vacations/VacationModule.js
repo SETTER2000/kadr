@@ -1,4 +1,4 @@
-angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimate', 'angularMoment'])
+angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimate', 'angularMoment','ngMaterial'])
     .config(function ($stateProvider) {
         $stateProvider
             .state('home.admin.vacations', {
@@ -60,6 +60,10 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                 }
             }
         );
+
+
+
+
 
         Vacations.prototype.formatDate = function (date) {
 

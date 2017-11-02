@@ -30,6 +30,39 @@
             <a class="position" href="{{item.getEditUrl(item.id)}}">
                 {{item.name}}
             </a>
+            <!--<div>-->
+                <!--<a class="pull-left" href=""><span class="glyphicon glyphicon-arrow-left"></span></a>-->
+                <!--<a class="pull-right" href=""><span class="glyphicon glyphicon-arrow-right"></span></a>-->
+            <!--</div>-->
+            <!--<div class="fo">-->
+                <!--<div  class="sample tabsdemoDynamicTabs" layout="column" ng-cloak="" >-->
+                    <!--<md-content class="md-padding">-->
+                        <!--<md-tabs md-selected="selectedIndex" md-border-bottom="" md-autoselect="" md-swipe-content="">-->
+                            <!--<md-tab ng-repeat="tab in tabs" ng-disabled="tab.disabled" label="{{tab.title}}">-->
+
+                            <!--</md-tab>-->
+                        <!--</md-tabs>-->
+                    <!--</md-content>-->
+
+                    <!--&lt;!&ndash;<form ng-submit="addTab(tTitle,tContent)" layout="column" class="md-padding" style="padding-top: 0;">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div layout="row" layout-sm="column">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div flex="" style="position: relative;">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<h2 class="md-subhead" style="position: absolute; bottom: 0; left: 0; margin: 0; font-weight: 500; text-transform: uppercase; line-height: 35px; white-space: nowrap;">Add a new Tab:</h2>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<label for="label">Label</label>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<input id="label" ng-model="tTitle" type="text">&ndash;&gt;-->
+                            <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<label for="content">Content</label>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<input id="content" ng-model="tContent" type="text">&ndash;&gt;-->
+                            <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<md-button class="add-tab md-primary md-raised" ng-disabled="!tTitle || !tContent" type="submit" style="margin-right: 0;">Add Tab</md-button>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</form>&ndash;&gt;-->
+
+                <!--</div>-->
+            <!--</div>-->
         </td>
         <td nowrap>
             <span class="position">{{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}</span>
@@ -70,7 +103,7 @@
         </td>
     </tr>
 </table>
-
+{{countCurrentView}}
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"

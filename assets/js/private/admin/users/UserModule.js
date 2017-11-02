@@ -348,7 +348,10 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     scope.urlBt = value;
                 });
                 scope.$watch('lengthObject', function (value) {
+                    console.log('NEW lengthObject', value);
+                    console.log('scope.defaultRows', scope.defaultRows);
                     scope.numPages = Math.floor(value / scope.defaultRows) + 1;
+                    //scope.numPages = (scope.lengthObject % scope.defaultRows) ? Math.floor(scope.lengthObject / scope.defaultRows)+1 : Math.floor(scope.lengthObject / scope.defaultRows) ;
                 });
 
                 scope.$watch('numPages', function (value) {
@@ -359,6 +362,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     if (scope.currentPage > value) {
                         scope.selectPage(value);
                     }
+                    scope.allPages = scope.pages.length;
                 });
                 scope.$watch('limitRows', function (value) {
                     scope.rows = [];
@@ -366,9 +370,12 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                         scope.rows.push(value[i]);
                     }
                 });
+                //scope.numPages = (scope.lengthObject % scope.defaultRows) ? Math.floor(scope.lengthObject / scope.defaultRows)+1 : Math.floor(scope.lengthObject / scope.defaultRows) ;
                 scope.$watch('defaultRows', function (value, oldValue) {
                     if (value > 0) {
+                        console.log('defaultRows',scope.defaultRows);
                         scope.defaultRows = value;
+                        //scope.numPages = (scope.lengthObject % scope.defaultRows) ? Math.floor(scope.lengthObject / scope.defaultRows)+1 : Math.floor(scope.lengthObject / scope.defaultRows) ;
                         scope.numPages = Math.floor(scope.lengthObject / scope.defaultRows) + 1;
                     }
                 });
