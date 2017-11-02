@@ -152,10 +152,10 @@
                             </div>
                             <div class="panel-footer">
                                 <div class="input-group">
-                                    <input id="btn-input" type="text" class="form-control input-sm" ng-model="message"
+                                    <input id="btn-input" required type="text" class="form-control input-sm" ng-model="message"
                                            placeholder="Написать сообщение..." ng-keypress="whenTyping($event)" ng-focus="whenTyping($event)" ng-blur="whenNotTyping($event)" ng-disabled="!me">
                 <span class="input-group-btn">
-                  <button type="submit" ng-disabled="!hasJoinedRoom || !me" class="btn btn-info btn-sm" id="btn-chat">
+                  <button type="submit" ng-disabled="!hasJoinedRoom || !me"  class="btn btn-info btn-sm" id="btn-chat">
                       Отправить</button>
                 </span>
                                 </div>
