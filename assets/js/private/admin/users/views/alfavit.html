@@ -4,7 +4,7 @@
             <button ng-repeat="ch in parts"
                     ng-click="getCharText(ch)" ng-bind="ch" type="button" class="btn btn-default" ng-cloak>
             </button>
-            <button ng-click="getCharText(0)" class="btn btn-default" type="button">
+            <button ng-if="charText" ng-click="getCharText(0)" class="btn btn-default" type="button">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </div>
