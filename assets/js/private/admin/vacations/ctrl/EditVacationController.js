@@ -534,7 +534,7 @@ angular.module('VacationModule')
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
 
-                console.log('DASSS', fpItem);
+                //console.log('DASSS', fpItem);
                 /**
                  * Кол-во выбраных дней
                  */
@@ -650,7 +650,7 @@ angular.module('VacationModule')
 
             $scope.refresh = function () {
                 let item = $scope.item = Vacations.get({id: $stateParams.vacationId}, function (vacations) {
-                        console.log('VACATION ITEM:', vacations);
+                        //console.log('VACATION ITEM:', vacations);
                         $scope.vacations = vacations;
 
                         $scope.tm = vacations.chats;
