@@ -3,7 +3,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView"
+        length-object="countCurrentView=((items | firedUser | filter:{$:searchText, action:true} ).length)?(items | firedUser | filter:{$:searchText, action:true} ).length:1"
         current-page="currentPage"
         added="added"
         show-bt="showBt"

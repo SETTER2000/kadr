@@ -20,7 +20,7 @@ angular.module('VacationModule')
              * Пользователям показывается текущий год
              * Админу и кадрам год установленный в интерфейсе
              */
-            $scope.yearFrom = ($scope.me['kadr'] || $scope.me['admin'] ) ? $scope.me.interfaces[0].year : moment().year();
+            $scope.yearFrom = ($scope.me['kadr'] || $scope.me['admin'] ) ? (($scope.me.interfaces) ? $scope.me.interfaces[0].year : moment().year()) : moment().year();
 
 
             var info = {
@@ -87,7 +87,7 @@ angular.module('VacationModule')
             //$scope.chats = (window.SAILS_LOCALS.chats) ? window.SAILS_LOCALS.chats : [];
             // Handle socket events that are fired when a new chat event is sent (.broadcast)
             io.socket.on('vacation', function (e) {
-
+                $scope.chats = (angular.isArray($scope.chats)) ? $scope.chats : [];
 
                 // Append the chat we just received
                 $scope.chats.push(e);
