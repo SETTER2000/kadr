@@ -1,7 +1,8 @@
+<!--length-object="countCurrentView=(items  | firedUser | filter:{$:searchText, action:true}| searchObjectVal:'furlough':'name':children ).length"-->
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=(items  | firedUser | filter:{$:searchText, action:true}| searchObjectVal:'furlough':'name':children ).length"
+        length-object="countCurrentView=((items | firedUser | filter:{$:searchText, action:true } | searchObjectVal:'furlough':'name':children ).length)?(items | firedUser | filter:{$:searchText, action:true } | searchObjectVal:'furlough':'name':children ).length:1"
         current-page="currentPage"
         added="added"
         show-bt="showBt"
@@ -70,14 +71,14 @@
         </td>
     </tr>
 </table>
-
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=(items | firedUser | filter:{$:searchText, action:true} | searchObjectVal:'furlough':'name':children).length"
+        length-object="countCurrentView"
         current-page="currentPage"
         added="added"
-        show-bt="showBt" show-cont-it="showContIt"
+        show-bt="showBt"
+        show-cont-it="showContIt"
         show-str="showStr"
         days="days"
         url-bt="urlBt"

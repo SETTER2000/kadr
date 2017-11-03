@@ -323,7 +323,8 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 scope.countHolidayRF = 28;
 
 
-                console.log('SCOPE:', scope.days);
+                //console.log('scope.lengthObject:', scope.lengthObject);
+
                 scope.$watch('added', function (value) {
                     scope.added = value;
                 });
@@ -348,10 +349,8 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     scope.urlBt = value;
                 });
                 scope.$watch('lengthObject', function (value) {
-                    console.log('NEW lengthObject', value);
-                    console.log('scope.defaultRows', scope.defaultRows);
-                    scope.numPages = Math.floor(value / scope.defaultRows) + 1;
-                    //scope.numPages = (scope.lengthObject % scope.defaultRows) ? Math.floor(scope.lengthObject / scope.defaultRows)+1 : Math.floor(scope.lengthObject / scope.defaultRows) ;
+                    scope.lengthObject = value;
+                    scope.numPage();
                 });
 
                 scope.$watch('numPages', function (value) {
@@ -373,13 +372,18 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 //scope.numPages = (scope.lengthObject % scope.defaultRows) ? Math.floor(scope.lengthObject / scope.defaultRows)+1 : Math.floor(scope.lengthObject / scope.defaultRows) ;
                 scope.$watch('defaultRows', function (value, oldValue) {
                     if (value > 0) {
-                        console.log('defaultRows',scope.defaultRows);
                         scope.defaultRows = value;
-                        //scope.numPages = (scope.lengthObject % scope.defaultRows) ? Math.floor(scope.lengthObject / scope.defaultRows)+1 : Math.floor(scope.lengthObject / scope.defaultRows) ;
-                        scope.numPages = Math.floor(scope.lengthObject / scope.defaultRows) + 1;
+                        scope.numPage();
                     }
                 });
 
+                scope.numPage= function () {
+                    if(scope.lengthObject || scope.defaultRows){
+                        scope.numPages = (scope.lengthObject % scope.defaultRows) ? Math.floor(scope.lengthObject / scope.defaultRows)+1 : Math.floor(scope.lengthObject / scope.defaultRows) ;
+                    }else{
+                        scope.numPages = 1;
+                    }
+                };
                 scope.noPrevious = function () {
                     return scope.currentPage === 1;
                 };

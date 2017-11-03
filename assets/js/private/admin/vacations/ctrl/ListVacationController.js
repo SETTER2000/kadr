@@ -376,6 +376,7 @@
                 $scope.items = Vacations.query($scope.query, function (vacations) {
                     console.log('Vacations ITEMS22:', vacations);
                     $scope.objectName = [];
+                    $scope.countCurrentView = vacations.length;
                     //$scope.me.interface = vacations.interfaces[0].year;
                     for (var u = 0; u < vacations.length; u++) {
                         $scope.objectName.push(vacations[u].getOwner());

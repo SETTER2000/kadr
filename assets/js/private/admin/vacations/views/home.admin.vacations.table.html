@@ -1,7 +1,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=(items  | firedUser | filter:{$:searchText} ).length"
+        length-object="countCurrentView=((items  | firedUser | filter:{$:searchText} ).length)?(items  | firedUser | filter:{$:searchText} ).length:1"
         current-page="currentPage"
         added="added"
         show-bt="showBt"
@@ -63,3 +63,17 @@
         </td>
     </tr>
 </table>
+
+<pagination
+        limit-rows="limitRows"
+        default-rows="defaultRows"
+        length-object="countCurrentView"
+        current-page="currentPage"
+        added="added"
+        show-bt="showBt"
+        show-cont-it="showContIt"
+        show-str="showStr"
+        days="days"
+        url-bt="urlBt"
+        on-select-page="selectCount=selectCount+1">
+</pagination>

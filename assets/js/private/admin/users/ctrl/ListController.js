@@ -47,7 +47,7 @@
             /**
              * PAGINATION
              */
-            $scope.defaultRows = 20;
+            $scope.defaultRows = 15;
             $scope.limitRows = [30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
 
@@ -249,6 +249,7 @@
                 $scope.items = Users.query($scope.query, function (users) {
                     //console.log('USER ITEMS:', users);
                     $scope.items = users;
+                    $scope.countCurrentView = users.length;
                     $scope.objectName = users;
                     //$scope.numPages = Math.floor(users.length / $scope.defaultRows) + 1;
                 }, function (err) {

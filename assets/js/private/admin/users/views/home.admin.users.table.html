@@ -1,7 +1,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="(items | filter:{$:searchText, fired:mode} ).length"
+        length-object="countCurrentView=((items | filter:{$:searchText, fired:mode} ).length)?(items | filter:{$:searchText, fired:mode} ).length:1"
         current-page="currentPage"
         added="added"
         show-bt="showBt" show-cont-it="showContIt"

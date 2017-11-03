@@ -2,18 +2,19 @@
     <div class="col-md-3">
         <div class="pull-left">
             <div class="pagination">
-                <div class="btn-toolbar " role="toolbar">
+                <div class="btn-toolbar relavs" role="toolbar">
                     <button ng-if="showBtn()" class="btn btn-default btn-group" role="group" ui-sref="{{urlBtn()}}" title="{{added}}"
                             type="button">
                         {{added}}
                     </button>
-                    <button ng-if="showContItem()" type="button" class="btn btn-default btn-group dropdown-toggle" role="group" data-toggle="dropdown"
+                    <button ng-if="showContItem()" type="button" class="btn btn-default btn-group dropdown-toggle" role="group"
+                            data-toggle="dropdown"
                             aria-haspopup="true"
                             aria-expanded="false">
                         Количество: {{defaultRows}}
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu pull-right">
                         <li><input ng-model="defaultRows" class="form-control"></li>
                         <li ng-repeat="row in rows" ng-class="{active: isActiveRow(row)}">
                             <a href="#" ng-click="getLimitRows(row)">{{row}}</a>
@@ -28,16 +29,18 @@
         <div ng-if="showString()" class="pagination" ng-cloak>
             <p>
                 <span class="boxM" ng-class="{'text-danger':(selectDays<0)}">
-                   <span ng-if="tailMinInterface.length" class="arrowM">&larr; <small>{{tailMinInterface.length}}</small></span>
-                      <span ng-if="(tailInterface.length && diff)" class="arrowR ">  <small>  {{tailInterface.length}}</small> &larr;</span>
+                   <span ng-if="tailMinInterface.length" class="arrowM">&larr;
+                       <small>{{tailMinInterface.length}}</small></span>
+                      <span ng-if="(tailInterface.length && diff)" class="arrowR ">  <small> {{tailInterface.length}}</small> &larr;</span>
                     <md-tooltip
-                        md-direction="top">
-                    Осталось {{selectDays}} дн. на отпуск в {{yr}} году
-                </md-tooltip>
+                            md-direction="top">
+                        Осталось {{selectDays}} дн. на отпуск в {{yr}} году
+                    </md-tooltip>
                     {{yr}}: {{selectDays}}</span> &nbsp;|&nbsp;
 
-                <span  class="boxM" ng-class="{'text-danger':(nextDayYear<0)}">
-                    <span ng-if="diff" class="arrowM ">&rarr; <small>{{diff}}</small> </span>
+                <span class="boxM" ng-class="{'text-danger':(nextDayYear<0)}">
+                    <span ng-if="diff" class="arrowM ">&rarr;
+                        <small>{{diff}}</small> </span>
                     <md-tooltip
                             md-direction="top">
                         Осталось {{nextDayYear}} дн. на отпуск в {{yearNext}} году
@@ -46,6 +49,10 @@
             </p>
         </div>
     </div>
+
+
+    <!-- P A G I N A T I O N -->
+
     <div class="col-md-6">
         <nav class="pull-right">
             <ul class="pagination">
@@ -62,7 +69,6 @@
                     <a href="#" ng-hide="$index!=(currentPage-1)" ng-click="selectPage(page)">
                         {{page}}
                     </a>
-
                 </li>
                 <li><a ng-if="allPages>1 && (currentPage!=allPages)" ng-click="selectPage(allPages)" href="">{{allPages}}</a></li>
                 <li ng-class="{disabled: noNext()}">

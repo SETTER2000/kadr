@@ -2,7 +2,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="(items | filter:{$:searchText, fired:false} ).length"
+        length-object="countCurrentView=((items | filter:{$:searchText, fired:false} ).length)?(items | filter:{$:searchText, fired:false} ).length:1"
         current-page="currentPage"
         added="added"
         show-bt="showBt" show-cont-it="showContIt"
@@ -87,7 +87,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="(items | filter:{$:searchText, fired:false} ).length"
+        length-object="countCurrentView"
         current-page="currentPage"
         added="added"
         show-bt="showBt" show-cont-it="showContIt"
