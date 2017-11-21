@@ -46,6 +46,7 @@ module.exports = {
             sections: 'Типы отпусков',
             name: req.param('name'),
             tip: req.param('tip'),
+            fixIntersec: (req.param('fixIntersec')) ? req.param('fixIntersec') : false,
             location: req.param('location'),
             action: (req.param('action')) ? req.param('action') : false
         };
@@ -82,7 +83,8 @@ module.exports = {
             name: req.param('name'),
             tip: req.param('tip'),
             location: req.param('location'),
-            action: req.param('action')
+            action: req.param('action'),
+            fixIntersec: req.param('fixIntersec')
         };
         Furlough.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
             if (err)return res.negotiate(err);

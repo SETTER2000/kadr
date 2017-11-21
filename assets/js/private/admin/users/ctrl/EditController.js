@@ -3,6 +3,7 @@ angular.module('UserModule')
     .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', 'Vacations', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
         function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, Vacations, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
+            $scope.edit = $state.includes('home.admin.users.edit');
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -241,7 +242,7 @@ angular.module('UserModule')
 
             $scope.loginAdmin = false;
 
-            $scope.edit = $state.includes('home.admin.users.edit');
+
 
             $scope.dateOpts = {
                 locale: info.ru,

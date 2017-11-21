@@ -86,13 +86,13 @@
 
 
                     </th>
-                    <!--<th>-->
-                    <!--<button class="btn btn-default" ng-click="sortBy('birthday')">Тип-->
-                    <!--<span class="sortOrder" ng-show="propertyName === 'type'"-->
-                    <!--ng-class="{reverse: reverse}"></span>-->
-                    <!--</button>-->
+                    <th class="text-center">
+                    <button class="btn btn-default not-border" ng-click="sortBy('fixIntersec')">{{intersecOneArea}}
+                    <span class="sortOrder" ng-show="propertyName === 'fixIntersec'"
+                    ng-class="{reverse: reverse}"></span>
+                    </button>
 
-                    <!--</th>-->
+                    </th>
 
                     <!--<th>-->
                     <!--<button class="btn btn-default" ng-click="sortBy('email')">Местоположение-->
@@ -112,7 +112,15 @@
                             {{item.name}}
                         </a>
                     </td>
-                    <!--<td>{{item.name}}</td>-->
+                    <td class="text-center">
+                        <span class="glyphicon glyphicon-ok" ng-if="item.fixIntersec">
+                              <md-tooltip  md-direction="top">
+                                  {{intersecNoArea}}
+                              </md-tooltip>
+                            <span>
+
+                    </span>
+                    </span></td>
                     <!--<td>{{item.type }}</td>-->
                     <!--<td>{{item.location}}</td>-->
                     <!--<td class="btn-group-xs">-->

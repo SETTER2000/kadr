@@ -697,7 +697,7 @@ angular.module('VacationModule')
                 item.from = $scope.flatpicker.selectedDates[0];
                 item.to = $scope.flatpicker.selectedDates[1];
                 item.daysSelectHoliday = +$scope.daysSelectHoliday;
-                // console.log('XXXXXXXP', $scope.getArrIntersection(item));
+                 console.log('XXXXXXXP', $scope.item);
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);

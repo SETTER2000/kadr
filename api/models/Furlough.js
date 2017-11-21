@@ -23,6 +23,10 @@ module.exports = {
             defaultsTo: true,
             required: true
         },
+        fixIntersec: {
+            type: 'boolean',
+            defaultsTo: false
+        },
         name: {
             type: 'string',
             unique: true,

@@ -1,9 +1,44 @@
 angular.module('FurloughModule')
-    .controller('EditFurloughController', ['$scope', '$state','toastr', 'Furloughs', '$stateParams', '$rootScope',
-        function ($scope, $state,toastr, Furloughs, $stateParams, $rootScope) {
+    .controller('EditFurloughController', ['$scope', '$state', 'toastr', 'Furloughs', '$stateParams', '$rootScope',
+        function ($scope, $state, toastr, Furloughs, $stateParams, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
-            $scope.editObj = $state.includes('home.admin.furloughs.edit');
+            $scope.edit = $state.includes('home.admin.furloughs.edit');
             //if(!$scope.me.admin) $location.path('/') ;
+            $scope.data = {
+                cb1: false
+            };
+            $scope.intersecArea= 'учитывает пересечения';
+            $scope.intersecNoArea= 'не учитывает пересечения';
+            $scope.help = {
+                intersec:' Данная опция позволяет установить логику обработки данного типа ' +
+                'отпуска в системе. Если не требуется учитывать пересечение отпуска этого типа с ' +
+                'собственными уже установленными отпусками, то нужно включить опцию в ' +
+                'позицию \"не учитывает пересечения\". В противном случаи сделать наоборот.' +
+                ' По умолчанию учитывает пересечения.',
+                header:'Информация',
+                showHelp: function (text, header) {
+                    toastr.info(text, header,{
+                        "allowHtml": true,
+                        // iconClass:'toast-pink',
+                        // autoDismiss: false,
+                        // containerId: 'toast-container',
+                        // maxOpened: 1,
+                        // newestOnTop: true,
+                        // positionClass: 'toast-top-right',
+                        // // positionClass: 'toast-top-left',
+                        // positionClass: "toast-top-full-width",
+                         preventDuplicates: true,
+                         //preventOpenDuplicates: true,
+                        // target: 'body',
+                        // // closeButton:true,
+                        // extendedTimeOut:1000,
+                        // "showDuration": "100",
+                        // "hideDuration": "300",
+                        // "timeOut": "5000",
+                        "progressBar": true
+                    });
+                }
+            };
 
             $scope.refresh = function () {
                 var item = $scope.item = Furloughs.get({id: $stateParams.furloughId}, function (furloughs) {
@@ -24,10 +59,10 @@ angular.module('FurloughModule')
             $scope.delete = function (item) {
                 console.log(item);
                 item.$delete(item, function (success) {
-                    toastr.success('Объект удалён.','OK! ');
+                    toastr.success('Объект удалён.', 'OK! ');
                     $state.go('home.admin.furloughs');
                 }, function (err) {
-                    toastr.error(err,'Ошибка 3 EditFurloughController!');
+                    toastr.error(err, 'Ошибка 3 EditFurloughController!');
                 })
             };
 
@@ -38,19 +73,19 @@ angular.module('FurloughModule')
                             $scope.refresh();
                         },
                         function (err) {
-                            toastr.error(err.message,'Ошибка!');
+                            toastr.error(err.message, 'Ошибка!');
                         }
                     );
                 } else {
                     $scope.refresh();
-                    item.$save(item,function (success) {
+                    item.$save(item, function (success) {
                             toastr.success('Новая должность создана.');
                             $state.go('home.admin.furlough', {furloughId: success.id});
-                    },
-                    function (err) {
-                        toastr.error(err.data,'Ошибка 101!');
-                        //toastr.error(err.data.originalError.errmsg,'Ошибка! EditFurloughController!');
-                    });
+                        },
+                        function (err) {
+                            toastr.error(err.data, 'Ошибка 101!');
+                            //toastr.error(err.data.originalError.errmsg,'Ошибка! EditFurloughController!');
+                        });
                 }
             };
 

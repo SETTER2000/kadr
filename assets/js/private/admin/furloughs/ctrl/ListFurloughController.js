@@ -10,7 +10,9 @@
              */
             $scope.sort = 'name';
 
-
+            $scope.intersecArea= 'учитывает пересечения';
+            $scope.intersecNoArea= 'не учитывает пересечения';
+            $scope.intersecOneArea= 'Пересечения';
             $scope.debug = false;
 
             /**
