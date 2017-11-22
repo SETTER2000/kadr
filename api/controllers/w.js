@@ -188,19 +188,17 @@ db.vacation.aggregate([
                 fixIntersec: "$furlough_docs.fixIntersec"
             },
             number: {$sum: 1},
-            a: {$push: "$furlough_docs._id"},
-            fu: {
-                $map: {
-                    input: "$a",
-                    as: "grade",
-                    in: {
-                        oldItemId: '$$grade._id', // Returns ObjectId
-                        _id: {$literal: ObjectId()}
-                    }
-                }
+            a: {$push: "$furlough_docs._id"} }
+    },{$project:{ fu: {
+        $map: {
+            input: "$a",
+            as: "grade",
+            in: {
+                oldItemId: '$$grade._id', // Returns ObjectId
+                _id: {$literal: ObjectId().valueOf()}
             }
         }
-    }
+    }}}
 ]).pretty();
 
 fu:{
