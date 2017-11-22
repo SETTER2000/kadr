@@ -102,6 +102,7 @@ angular.module('VacationModule')
 
                 io.socket.post('/vacation/' + $scope.fromUrlVideoId + '/chat', {
                     message: $scope.message,
+                    name: $scope.item.name
                     //owner:'59f855fc58f4be1ccc2d7bf4'
                 }, function (data, JWR) {
 

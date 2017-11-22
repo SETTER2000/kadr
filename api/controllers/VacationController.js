@@ -188,154 +188,161 @@ module.exports = {
             .populate('announced')
             .populate('intersections')
             .exec((err, findUser) => {
-                "use strict";
-                if (err) return res.serverError(err);
-                if (!findUser) return res.notFound();
-
-                /**
-                 * Формируем массив идентификаторов пользователей,
-                 * которые указаны в поле отслеживания за пересечениями.
-                 * По сути это id тех, с кем отслеживаю пересечения моего отпуска.
-                 */
-                let a = [];
-                _.forEach(findUser.intersections, function (val, key) {
-                    a.push(val.id);
-                });
-
-                /**
-                 * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
-                 * По сути проверяем чтоб не было пересечения со своим же отпуском
-                 */
-                Vacation.native(function (err, collection) {
+                    "use strict";
                     if (err) return res.serverError(err);
+                    if (!findUser) return res.notFound();
 
                     /**
-                     * ПЕРЕСЕЧЕНИЕ ОТПУСКОВ
-                     * Найти период где
-                     * начало отпуска меньше или равно входящему началу отпуска и конец отпуска больше или равен входящему началу отпуска
-                     * или
-                     * начало отпуска меньше или равен входящему концу отпуска и конец отпуска больше или равен входящему концу отпуска
-                     * или
-                     * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
+                     * Формируем массив идентификаторов пользователей,
+                     * которые указаны в поле отслеживания за пересечениями.
+                     * По сути это id тех, с кем отслеживаю пересечения моего отпуска.
                      */
-                    collection.aggregate([
-                            {
-                                $match: {
-                                    $or: [
-                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                    ]
-                                }
-                            }
-                        ])
-                        .toArray(function (err, results) {
+                    let a = [];
+                    _.forEach(findUser.intersections, function (val, key) {
+                        a.push(val.id);
+                    });
+                    /**
+                     * Проверяем тип отпуска создаваемый пользователем на предмет
+                     * разрешённости пересечения с собственными уже созданными отпусками
+                     * Проще сказать, если отпуску разрешено пересекаться с уже созданными отпусками, то
+                     * сообщение о пересечении не выводится пользователю и отпуск добавляется в БД, ну и наоборот.
+                     */
+                        // Выбираем все типы отпусков которым не разрешено совпадение
+                    Furlough.find({fixIntersec: false}).exec((err, findFurlough)=> {
+                        if (err) return res.serverError(err);
+                        console.log('obj.furlough.id', obj.furlough.id);
+                        console.log('findFurlough', findFurlough);
+                        //if (findFurlough.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
+                        let b = [];
+                        _.forEach(findFurlough, function (val, key) {
+                            b.push(val.id);
+                        });
+
+                        console.log('ID типов отпусков, не разр. пересечение:', b);
+                        /**
+                         * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
+                         * По сути проверяем чтоб не было пересечения со своим же отпуском
+                         */
+                        Vacation.native(function (err, collection) {
                             if (err) return res.serverError(err);
-                            console.log('results', results);
+
                             /**
-                             * Проверяем тип отпуска создаваемый пользователем на предмет
-                             * разрешённости пересечения с собственными уже созданными отпусками
-                             * Проще сказать, если отпуску разрешено пересекаться с уже созданными отпусками, то
-                             * сообщение о пересечении не выводится пользователю и отпуск добавляется в БД, ну и наоборот.
+                             * ПЕРЕСЕЧЕНИЕ ОТПУСКОВ
+                             * Найти период где
+                             * начало отпуска меньше или равно входящему началу отпуска и конец отпуска больше или равен входящему началу отпуска
+                             * или
+                             * начало отпуска меньше или равен входящему концу отпуска и конец отпуска больше или равен входящему концу отпуска
+                             * или
+                             * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                              */
-                            Furlough.find({id: obj.furlough.id, fixIntersec: false}).exec((err, findFurlough)=> {
-                                if (err) return res.serverError(err);
-                                console.log('obj.furlough.id',obj.furlough.id);
-                                console.log('findFurlough',findFurlough);
-                                if (results.length && findFurlough.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
-
-
-                                /**
-                                 * Заполнить поле vacations объектами отпусков с которыми
-                                 * пересекается вновь создаваемый отпуск.
-                                 * Тем самым находим отпуска пересекающиеся с нашим, у тех людей
-                                 * за которыми отслеживаем пересечения.
-                                 */
-                                User.find({id: a})
-                                    .populate('vacations', {
-                                        where: {
-                                            or: [
-                                                {
-                                                    from: {
-                                                        '>=': new Date(moment(req.param('from'))),
-                                                        '<=': new Date(moment(req.param('to')))
-                                                    }
-                                                },
-                                                {
-                                                    to: {
-                                                        '>=': new Date(moment(req.param('from'))),
-                                                        '<=': new Date(moment(req.param('to')))
-                                                    }
-                                                },
-                                                {
-                                                    from: {
-                                                        '<': new Date(moment(req.param('from')))
-                                                    },
-                                                    to: {
-                                                        '>': new Date(moment(req.param('to')))
-                                                    }
-                                                }
+                            collection.aggregate([
+                                    {
+                                        $match: {
+                                            $or: [
+                                                {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                                {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                                {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
                                             ]
                                         }
-                                    })
-                                    .exec((err, users) => {
-                                        if (err) return res.serverError(err);
-
-                                        Vacation.create(obj).exec(function (err, createVacation) {
-                                            if (err) return res.serverError(err);
-                                            console.log('Отпуск создал:', req.session.me);
-
-                                            findUser.vacations.add(createVacation.id);
-                                            findUser.vacationWhomCreated.add(createVacation.id);
-
-                                            _.forEach(users, function (v, k) {
-                                                // console.log('Отпуска пересекаемые с нашим:', v.vacations);
-                                                if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
-                                                    _.forEach(v.vacations, function (val, key) {
-                                                        createVacation.intersec.add(val.id)
-                                                    });
-                                                }
-                                            });
-                                            // console.log('findUser++:', findUser);
-                                            let strEmail = '';
-
-                                            if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
-                                                let a = [];
-                                                _.forEach(findUser.matchings, function (val, key) {
-                                                    console.log('EMAIl:', val.email);
-                                                    a.push(val.email);
-                                                });
-                                                strEmail = a.join(',');
+                                    }
+                                ])
+                                .toArray(function (err, results) {
+                                    if (err) return res.serverError(err);
+                                    console.log('results', results);
+                                    //if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
+                                    /**
+                                     * Заполнить поле vacations объектами отпусков с которыми
+                                     * пересекается вновь создаваемый отпуск.
+                                     * Тем самым находим отпуска пересекающиеся с нашим, у тех людей
+                                     * за которыми отслеживаем пересечения.
+                                     */
+                                    User.find({id: a})
+                                        .populate('vacations', {
+                                            where: {
+                                                or: [
+                                                    {
+                                                        from: {
+                                                            '>=': new Date(moment(req.param('from'))),
+                                                            '<=': new Date(moment(req.param('to')))
+                                                        }
+                                                    },
+                                                    {
+                                                        to: {
+                                                            '>=': new Date(moment(req.param('from'))),
+                                                            '<=': new Date(moment(req.param('to')))
+                                                        }
+                                                    },
+                                                    {
+                                                        from: {
+                                                            '<': new Date(moment(req.param('from')))
+                                                        },
+                                                        to: {
+                                                            '>': new Date(moment(req.param('to')))
+                                                        }
+                                                    }
+                                                ]
                                             }
+                                        })
+                                        .exec((err, users) => {
+                                            if (err) return res.serverError(err);
+
+                                            Vacation.create(obj).exec(function (err, createVacation) {
+                                                if (err) return res.serverError(err);
+                                                console.log('Отпуск создал:', req.session.me);
+
+                                                findUser.vacations.add(createVacation.id);
+                                                findUser.vacationWhomCreated.add(createVacation.id);
+
+                                                _.forEach(users, function (v, k) {
+                                                    // console.log('Отпуска пересекаемые с нашим:', v.vacations);
+                                                    if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
+                                                        _.forEach(v.vacations, function (val, key) {
+                                                            createVacation.intersec.add(val.id)
+                                                        });
+                                                    }
+                                                });
+                                                // console.log('findUser++:', findUser);
+                                                let strEmail = '';
+
+                                                if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
+                                                    let a = [];
+                                                    _.forEach(findUser.matchings, function (val, key) {
+                                                        console.log('EMAIl:', val.email);
+                                                        a.push(val.email);
+                                                    });
+                                                    strEmail = a.join(',');
+                                                }
 
 
-                                            findUser.save(function (err) {
-                                                if (err) return res.negotiate(err);
-                                                createVacation.save(function (err) {
+                                                findUser.save(function (err) {
                                                     if (err) return res.negotiate(err);
+                                                    createVacation.save(function (err) {
+                                                        if (err) return res.negotiate(err);
 
-                                                    strEmail = (strEmail) ? strEmail : '';
-                                                    console.log('Согласующие:', strEmail);
-                                                    let options = {
-                                                        to: strEmail, // Кому: можно несколько получателей указать через запятую
-                                                        subject: ' ✔ ' + obj.section + ' создан! ' + findUser.getFullName(), // Тема письма
-                                                        text: '<h2>Уведомление об отпуске </h2>', // plain text body
-                                                        html: '' +
-                                                        '<h2>Уведомление об отпуске </h2> ' +
-                                                        '<p>' + obj.section + ' для ' + findUser.getFullName() + ' создан</p>' +
-                                                        '<p> C ' + moment(obj.from).format('LLLL') + ' по ' + moment(obj.to).format('LLLL') + '</p>' +
-                                                        '<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
-                                                    };
-                                                    EmailService.sender(options);
-                                                    return res.send(createVacation);
+                                                        strEmail = (strEmail) ? strEmail : '';
+                                                        console.log('Согласующие:', strEmail);
+                                                        let options = {
+                                                            to: strEmail, // Кому: можно несколько получателей указать через запятую
+                                                            subject: ' ✔ ' + obj.section + ' создан! ' + findUser.getFullName(), // Тема письма
+                                                            text: '<h2>Уведомление об отпуске </h2>', // plain text body
+                                                            html: '' +
+                                                            '<h2>Уведомление об отпуске </h2> ' +
+                                                            '<p>' + obj.section + ' для ' + findUser.getFullName() + ' создан</p>' +
+                                                            '<p> C ' + moment(obj.from).format('LLLL') + ' по ' + moment(obj.to).format('LLLL') + '</p>' +
+                                                            '<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
+                                                        };
+                                                        EmailService.sender(options);
+                                                        return res.send(createVacation);
+                                                    });
                                                 });
                                             });
                                         });
-                                    });
-                            });
+                                });
                         });
-                });
-            });
+                    });
+                }
+            )
+        ;
     },
 
 
@@ -486,7 +493,8 @@ module.exports = {
                         });
                 });
             });
-    },
+    }
+    ,
 
 
     /**
@@ -513,7 +521,8 @@ module.exports = {
         // res.redirect('/admin/users');
 
 
-    },
+    }
+    ,
 
     /**
      * Кол-во дней оставшихся на отпуск в следующем году
@@ -756,7 +765,8 @@ module.exports = {
 
 
             });
-    },
+    }
+    ,
 
     /**
      * Кол-во дней взятых на отпуск по годам
@@ -836,7 +846,8 @@ module.exports = {
                 return res.send(results);
             });
         });
-    },
+    }
+    ,
 
 
     /**
@@ -918,7 +929,8 @@ module.exports = {
         });
 
 
-    },
+    }
+    ,
 
 
     /**
@@ -937,7 +949,8 @@ module.exports = {
 
         //  host: 'http://data.gov.ru/api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content/10/?access_token=2eace3b1564af9461d112b0ec65e98ba',
 
-    },
+    }
+    ,
 
     /**
      * Чат отпуска
@@ -961,7 +974,8 @@ module.exports = {
         // Vacation.watch(req);
         console.log('Connect chat ' + 'vacation' + req.param('id'));
         return res.ok();
-    },
+    }
+    ,
 
 
     chat: function (req, res) {
@@ -973,6 +987,7 @@ module.exports = {
         console.log('REQ host', values);
         console.log('REQ host', req.host);
         console.log('REQ .subdomains', req.subdomains);
+        console.log('REQ .body', req.body);
         // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
         if (!req.isSocket) {
             return res.badRequest();
@@ -1028,7 +1043,7 @@ module.exports = {
 
                     let options = {
                         to: strEmail, // Кому: можно несколько получателей указать через запятую
-                        subject: ' ! Чат отпуска! Сообщение от ' + foundUser.getFullName(), // Тема письма
+                        subject: ' ! Чат отпуска '+req.param('name')+'! Сообщение от ' + foundUser.getFullName(), // Тема письма
                         text: '<h2>Сообщение чата </h2>', // plain text body
                         html: '' +
                         '<h2>У Вас есть новое сообщение. </h2> ' +
@@ -1042,7 +1057,8 @@ module.exports = {
 
                 });
             });
-    },
+    }
+    ,
 
     typing: function (req, res) {
 
@@ -1066,7 +1082,8 @@ module.exports = {
 
             return res.ok();
         });
-    },
+    }
+    ,
 
     stoppedTyping: function (req, res) {
 
@@ -1083,5 +1100,6 @@ module.exports = {
 
         return res.ok();
     }
-};
+}
+;
 
