@@ -166,6 +166,7 @@ module.exports = {
             whomCreated: req.session.me,
             whomUpdated: null,
             action: req.param('action'),
+            maxTwoWeek: req.param('maxTwoWeek'),
             status: 'pending',
             furlough: req.param('furlough'),
             owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
@@ -285,14 +286,11 @@ module.exports = {
                                         })
                                         .exec((err, users) => {
                                             if (err) return res.serverError(err);
-
                                             Vacation.create(obj).exec(function (err, createVacation) {
                                                 if (err) return res.serverError(err);
                                                 console.log('Отпуск создал:', req.session.me);
-
                                                 findUser.vacations.add(createVacation.id);
                                                 findUser.vacationWhomCreated.add(createVacation.id);
-
                                                 _.forEach(users, function (v, k) {
                                                     // console.log('Отпуска пересекаемые с нашим:', v.vacations);
                                                     if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
@@ -303,7 +301,6 @@ module.exports = {
                                                 });
                                                 // console.log('findUser++:', findUser);
                                                 let strEmail = '';
-
                                                 if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
                                                     let a = [];
                                                     _.forEach(findUser.matchings, function (val, key) {
@@ -353,12 +350,19 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
+
+        console.log('UPDATE req.owner', req.param('owner'));
+        console.log('UPDATE req.session', req.session);
+
+
         let obj = {
             id: req.param('id'),
             name: req.param('name'),
             daysSelectHoliday: +req.param('daysSelectHoliday'),
             whomUpdated: req.session.me,
             action: req.param('action'),
+            maxTwoWeek: req.param('maxTwoWeek'),
             owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
             from: new Date(req.param('from')),
             to: new Date(req.param('to')),
@@ -384,7 +388,6 @@ module.exports = {
                     a.push(val.id);
                 });
 
-                obj.whomUpdated = findUser.id;
 
                 //console.log('INTERSECTIONS A:', a);
                 /**
@@ -483,7 +486,8 @@ module.exports = {
                                     Vacation.update(req.param('id'), obj)
                                         .exec(function updateObj(err, objEdit) {
                                             if (err) return res.negotiate(err);
-                                            console.log('Отпуск обновил (' + objEdit[0].id + '):', findUser.lastName + ' ' + findUser.firstName);
+                                            sails.log('Обновлён отпуск у (' + objEdit[0].id + '):', findUser.lastName + ' ' + findUser.firstName);
+                                            sails.log('Обновил отпуск (' + objEdit[0].id + '):', obj.whomUpdated);
                                             findUser.save(function (err) {
                                                 if (err) return res.negotiate(err);
                                                 res.ok();
@@ -1043,7 +1047,7 @@ module.exports = {
 
                     let options = {
                         to: strEmail, // Кому: можно несколько получателей указать через запятую
-                        subject: ' ! Чат отпуска '+req.param('name')+'! Сообщение от ' + foundUser.getFullName(), // Тема письма
+                        subject: ' ! Чат отпуска ' + req.param('name') + '! Сообщение от ' + foundUser.getFullName(), // Тема письма
                         text: '<h2>Сообщение чата </h2>', // plain text body
                         html: '' +
                         '<h2>У Вас есть новое сообщение. </h2> ' +

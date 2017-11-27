@@ -201,18 +201,18 @@ db.vacation.aggregate([
     }}}
 ]).pretty();
 
-fu:{
-    $map: {
-        input: "$furlough_docs._id",
-            as
-    :
-        "grade",
-    in:
-        {
-            $in: ["$$grade", ['599d87bbb88be82bf00a176d', '599d87cbb88be82bf00a176f', '599d883db88be82bf00a1772']]
-        }
-    }
-}
+//fu:{
+//    $map: {
+//        input: "$furlough_docs._id",
+//            as
+//    :
+//        "grade",
+//    in:
+//        {
+//            $in: ["$$grade", ['599d87bbb88be82bf00a176d', '599d87cbb88be82bf00a176f', '599d883db88be82bf00a1772']]
+//        }
+//    }
+//}
 
 db.vacation.aggregate([
     {

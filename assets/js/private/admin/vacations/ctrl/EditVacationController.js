@@ -540,6 +540,33 @@ angular.module('VacationModule')
                  * Кол-во выбраных дней
                  */
                 $scope.daysSelectHoliday = Working.getCountDay(fpItem.selectedDates);
+
+                if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
+                    toastr.warning('14 дней максимальный период планирования для одного отпуска. Вы можете запланировать несколько отпусков последовательно. ВНИМАНИЕ! Если необходим отпуск более 14 дней рекомендуем согласовать период с руководителем и кадровой службой ');
+                    fpItem.clear();
+                }
+
+                //$scope.$watch('maxTwoWeek', function (value) {
+                //    $scope.item.$update($scope.item, function (success) {
+                //            toastr.success(info.changed);
+                //            //$scope.refresh();
+                //        },
+                //        function (err) {
+                //            toastr.error(err.data, info.error + ' 11445!');
+                //        }
+                //    );
+                //});
+                $scope.maxWeek = function () {
+                    $scope.item.$update($scope.item, function (success) {
+                            toastr.success(info.changed);
+                            //$scope.refresh();
+                        },
+                        function (err) {
+                            toastr.error(err.data, info.error + ' 11445!');
+                        }
+                    );
+                };
+
                 //fpItem.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
                 //console.log('DDDDDDD6', moment().year($scope.me.interfaces[0].year));
                 //console.log('POPP:', moment().month());
@@ -698,7 +725,7 @@ angular.module('VacationModule')
                 item.from = $scope.flatpicker.selectedDates[0];
                 item.to = $scope.flatpicker.selectedDates[1];
                 item.daysSelectHoliday = +$scope.daysSelectHoliday;
-                 console.log('XXXXXXXP', $scope.item);
+                console.log('XXXXXXXP', $scope.item);
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);

@@ -24,6 +24,11 @@ module.exports = {
             defaultsTo: true,
             required: true
         },
+        maxTwoWeek: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+
         from: {
             type: 'date',
             defaultsTo: null
