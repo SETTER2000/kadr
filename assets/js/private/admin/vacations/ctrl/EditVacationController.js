@@ -36,8 +36,9 @@ angular.module('VacationModule')
                 redirectSelf: 'home.admin.vacations',
                 ru: 'ru',
                 dateFormat: "d.m.Y",
-                minDate: "01-01-1950"
-                //maxDate:"31-12-2002"
+                minDate: "01-01-1950",
+                //maxDate:"31-12-2002",
+                maxTwoWeek: '14 дней максимальный период планирования для одного отпуска. Вы можете запланировать несколько отпусков последовательно. ВНИМАНИЕ! Если необходим отпуск более 14 дней рекомендуем согласовать период с руководителем и кадровой службой. ',
             };
 
 
@@ -517,6 +518,13 @@ angular.module('VacationModule')
                 //
             });
 
+
+            $scope.fixTwoWeek = function () {
+                if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
+                    toastr.warning(info.maxTwoWeek);
+                    return fpItem.clear();
+                }
+            };
 //$scope.$watch('yearFrom', function (value) {
 //    $scope.yearFrom = value;
 //});
@@ -541,9 +549,9 @@ angular.module('VacationModule')
                  */
                 $scope.daysSelectHoliday = Working.getCountDay(fpItem.selectedDates);
 
+
                 if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
-                    toastr.warning('14 дней максимальный период планирования для одного отпуска. Вы можете запланировать несколько отпусков последовательно. ВНИМАНИЕ! Если необходим отпуск более 14 дней рекомендуем согласовать период с руководителем и кадровой службой ');
-                    fpItem.clear();
+                    toastr.warning(info.maxTwoWeek);
                 }
 
                 //$scope.$watch('maxTwoWeek', function (value) {
@@ -556,16 +564,18 @@ angular.module('VacationModule')
                 //        }
                 //    );
                 //});
-                $scope.maxWeek = function () {
-                    $scope.item.$update($scope.item, function (success) {
-                            toastr.success(info.changed);
-                            //$scope.refresh();
-                        },
-                        function (err) {
-                            toastr.error(err.data, info.error + ' 11445!');
-                        }
-                    );
-                };
+                //$scope.maxWeek = function () {
+                //    $scope.item.$update($scope.item, function (success) {
+                //            toastr.success(info.changed);
+                //            console.log('success', success);
+                //            //$scope.refresh();
+                //            $scope.item = success;
+                //        },
+                //        function (err) {
+                //            toastr.error(err.data, info.error + ' 11445!');
+                //        }
+                //    );
+                //};
 
                 //fpItem.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
                 //console.log('DDDDDDD6', moment().year($scope.me.interfaces[0].year));
@@ -719,6 +729,7 @@ angular.module('VacationModule')
             };
 
             $scope.saveEdit = function (item) {
+                $scope.fixTwoWeek();
                 if (!angular.isDefined(item))toastr.error('Нет объекта для сохранения.', 'Ошибка!');
                 if (!angular.isDefined(item.name)) return toastr.error('Дата не может быть пустой.', 'Ошибка!');
                 if (!angular.isDefined(item.furlough)) return toastr.error('Тип отпуска не может быть пустой.', 'Ошибка!');

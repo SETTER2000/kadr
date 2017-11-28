@@ -49,8 +49,19 @@
                             <li><a ng-if="(me.kadr || me.admin)" href="/admin/calendar/58b92215d19963601fad8fec/месяц">Посещаемость</a></li>
                             <li><a ng-if="me.admin" ui-sref="home.admin.users.administration">Группы</a></li>
                         </ul>
-                    </li>
-                    <li>
+                    </li><li>
+                    <li class="dropdown">
+                        <a ng-if="(me.kadr || me.admin || me.leader)" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                            Кадровая служба
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <!--<li class="dropdown-header">Редактирование</li>-->
+                            <!--<li><a ng-if="(me.kadr || me.admin || me.leader)" ui-sref="home.admin.users.exit">Выход сотрудника</a></li>-->
+                            <li><a ng-if="(me.admin)" ui-sref="home.admin.users">График отпусков</a></li>
+                            <li><a ng-if="(me.admin)" ui-sref="home.admin.users">Документы и отчётность</a></li>
+
+                        </ul>
+                    </li><li>
                     </li>
 
                 </ul>

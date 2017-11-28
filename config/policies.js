@@ -36,6 +36,7 @@ module.exports.policies = {
         loginLDAP: ['isLoggedOut'],
         //logout: ['isLoggedIn'],
         signup: ['isLoggedOut'],
+        updateDefaultRows:['isLoggedIn'],
         //removeProfile: ['isLoggedIn'],
         //updateProfile: ['isLoggedIn'],
         //restoreGravatarURL: ['isLoggedIn'],

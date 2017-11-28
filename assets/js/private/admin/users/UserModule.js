@@ -11,7 +11,8 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     '@': {
                         templateUrl: '/js/private/admin/users/tpl/list.tpl.html',
                         controller: 'ListController'
-                    }
+                    },
+                    "actionView@home.admin.users": {templateUrl: '/js/private/admin/users/views/home.users.action.html'}
                 }
             })
             .state('home.admin.users.settings', {
@@ -319,12 +320,8 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             },
             templateUrl: '/js/private/admin/users/views/pagination.html',
             replace: true,
-            link: function (scope) {
+            link: function (scope,$rootScope) {
                 scope.countHolidayRF = 28;
-
-
-                //console.log('scope.lengthObject:', scope.lengthObject);
-
                 scope.$watch('added', function (value) {
                     scope.added = value;
                 });
@@ -363,6 +360,8 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     }
                     scope.allPages = scope.pages.length;
                 });
+
+
                 scope.$watch('limitRows', function (value) {
                     scope.rows = [];
                     for (var i = 0; i <= value.length; i++) {
@@ -370,9 +369,14 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     }
                 });
                 //scope.numPages = (scope.lengthObject % scope.defaultRows) ? Math.floor(scope.lengthObject / scope.defaultRows)+1 : Math.floor(scope.lengthObject / scope.defaultRows) ;
-                scope.$watch('defaultRows', function (value, oldValue) {
+                scope.$watch('defaultRows', function (value, old) {
                     if (value > 0) {
                         scope.defaultRows = value;
+                        console.log('value NEW в дериктиве pagination', value);
+                        console.log('value OLD в дериктиве pagination', old);
+                        scope.$emit('defaultRowsTable',{
+                            defaultRows:scope.defaultRows
+                        });
                         scope.numPage();
                     }
                 });
@@ -725,11 +729,72 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
      * Не используя в директиве изолированного скоупа
      * директиву можно многократно использовать в разных контролерах.
      */
+
     .directive('headTable', function () {
         return {
             templateUrl: function (elem, attr) {
                 return '/js/private/admin/users/views/' + attr.type + '-head-table.html';
             }
+        };
+    })
+    .directive('tdTable', function () {
+        return {
+            restrict: "E",
+            scope: {
+                'searchText': '=',
+                'dtItems': '=',
+                'filterObject': '=',
+                //'filterKennel': '=',
+                'currentPage': '=',
+                'defaultRows': '=',
+                'nameHeader': '=',
+                'fieldName': '=', // Какой тип контакта показывать по умолчанию
+                'me': '='
+            },
+
+            templateUrl: function (elem, attr) {
+                return '/js/private/admin/users/views/' + attr.type + '-table.html';
+            },
+            replace: true,
+
+            link: function (scope) {
+                // scope.$watch('searchText', function (value) {
+                //     console.log('searchText:', value);
+                //     scope.searchText = value;
+                //
+                // });
+                // scope.$watch('nameHeader', function (value) {
+                //     console.log('nameHeader:', value);
+                //     scope.nameHeader = value;
+                //
+                // });
+                // scope.$watch('currentPage', function (value) {
+                //     console.log('currentPage:', value);
+                //     scope.currentPage = value;
+                //
+                // });
+                // scope.$watch('defaultRows', function (value) {
+                //     console.log('defaultRows:', value);
+                //     scope.defaultRows = value;
+                //
+                // });
+                scope.$watch('dtItems', function (value) {
+                    console.log('dtItems:', value);
+                    scope.items = value;
+                });
+                // scope.$watch('filterObject', function (value) {
+                //     console.log('filterObject:', value);
+                //     scope.filterObject = value;
+                // });
+                scope.sortBy = function (propertyName) {
+                    scope.reverse = (scope.propertyName === propertyName) ? !scope.reverse : true;
+                    scope.propertyName = propertyName;
+                };
+
+                // scope.items = scope[attributes["dtItems"]];
+                // scope.filterObject = scope[attributes["filterObject"]];
+                // scope.filterObject.searchText = scope[attributes["searchText"]];
+            },
         };
     })
 

@@ -77,6 +77,10 @@ module.exports = {
             type: 'date',
             defaultsTo: null
         },
+        defaultRows: {
+            type: 'integer',
+            defaultsTo: 10
+        },
 
         subdivision: {
             type: 'array',

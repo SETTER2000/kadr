@@ -1,0 +1,165 @@
+<table class="table table-hover" ng-cloak>
+    <tr>
+        <th>#</th>
+        <th class="text-center"><span class="badge">{{filtered.length}}</span></th>
+        <th>
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('kennels[0].name')">
+                {{nameHeader.fioArea}}
+                <span class="sortOrder" ng-show="propertyName === 'kennels[0].name'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th ng-if="me.kadr || me.admin">
+            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('messages[0].message')">
+                {{nameHeader.messagesArea}}
+                <span class="sortOrder" ng-show="propertyName === 'messages[0].message'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('gender')">
+                {{nameHeader.genderArea}}
+                <span class="sortOrder" ng-show="propertyName === 'gender'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('weight')">
+                {{nameHeader.weightArea}} (гр)
+                <span class="sortOrder" ng-show="propertyName === 'weight'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('growth')">
+                {{nameHeader.growthArea}} (см)
+                <span class="sortOrder" ng-show="propertyName === 'growth'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('variety')">
+                {{nameHeader.varietyArea}}
+                <span class="sortOrder" ng-show="propertyName === 'variety'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('color')">
+                {{nameHeader.colorArea}}
+                <span class="sortOrder" ng-show="propertyName === 'color'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('breeder')">
+                {{nameHeader.breederArea}}
+                <span class="sortOrder" ng-show="propertyName === 'breeder'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('owner')">
+                {{nameHeader.ownerArea}}
+                <span class="sortOrder" ng-show="propertyName === 'owner'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th>
+            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('sales')">
+                {{nameHeader.salesArea}}
+                <span class="sortOrder" ng-show="propertyName === 'sales'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+        <th></th>
+    </tr>
+
+
+    <tr ng-repeat="item in filtered=(items |filter:{$:searchText} | kennel:filterKennel | filter:filterObject  |
+orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">
+
+        <td>{{$index+1}}</td>
+        <td>
+            <a ng-href="{{item.getShowUrl(item.id, me)}}">
+                <img class="object-fit_cover" ng-class="{photoSize:vid}" ng-mouseover="vid=true"
+                     ng-mouseleave="vid=false"
+                     ng-src="{{item.avatarUrl}}"
+                     alt="">
+            </a>
+        </td>
+        <td ng-if="me.admin || me.kadr">
+            <a href="{{item.getEditUrl(item.id)}}">
+                {{item.getFullName()}}
+                <span ng-if="!item.name" class="text-danger"><md-tooltip
+                        md-direction="top">
+              временное имя, псевдоним
+            </md-tooltip>{{item.symbol}} {{item.alias}}</span>
+            </a>
+        </td>
+        <td ng-if="!me.admin && !me.kadr">
+            {{item.getFullName()}}
+            <span ng-if="!item.name" class="text-danger"><md-tooltip
+                    md-direction="top">
+              временное имя, псевдоним
+            </md-tooltip>{{item.symbol}} {{item.alias}}</span>
+
+        </td>
+        <td class="text-center" ng-if="me.admin || me.kadr" ng-controller="ListMessageController">
+            <div ng-repeat="itm in items | filter:{id:item.id}"></div>
+            <a ng-if="item.messages.length" href="{{item.getEditUrl(itm.id)}}">
+                <md-tooltip md-direction="top">Есть сообщения в адрес {{itm.getFullName()}}</md-tooltip>
+             **   {{itm.messages.length}}
+            </a>
+        </td>
+        <td>{{item.gender}}</td>
+        <td class="text-center">{{item.weight | number:0}}</td>
+        <td class="text-center">{{item.growth}}</td>
+        <td>{{item.variety}}</td>
+        <td> {{item.color}}</td>
+        <td>{{item.breederName(0)}}</td>
+        <td>{{item.ownerName(0)}}</td>
+        <td class="text-center"><span ng-if="item.sales" class="glyphicon glyphicon-ok text-success "></span></td>
+        <!--<td>-->
+        <!--<ul style="list-style-type: none; margin: 0; padding: 0" class="position" ng-controller="ListDepartmentController"-->
+        <!--ng-repeat="subdivision in item.subdivision | filter:{$:searchText}">-->
+        <!--<li style="list-style-type: none; margin: 0; padding: 0" ng-repeat="option in items | filter:{$:searchText,id:subdivision.id}">-->
+        <!--{{option.name}}-->
+        <!--</li>-->
+        <!--</ul>-->
+        <!--</td>-->
+        <!--<td>-->
+        <!--<ul style="list-style-type: none; margin: 0; padding: 0" class="position" ng-controller="ListPositionController"-->
+        <!--ng-repeat="position in item.positions">-->
+        <!--<li style="list-style-type: none" ng-repeat="option in items | filter:position.id">-->
+        <!--{{option.name}}-->
+        <!--</li>-->
+        <!--</ul>-->
+        <!--</td>-->
+        <!--<td><a href="mailto:{{item.email}}">{{item.email}}</a></td>-->
+        <!--<td width="250px" class="text-right">{{item.getContact(fieldName)}}</td>-->
+
+        <td class="btn-group-xs">
+            <a ng-href="{{item.getShowUrl(item.id)}}" class="btn"
+               ng-class="{'btn-primary': item.action, ' btn-danger':!item.action}">
+                <span class="glyphicon"
+                      ng-class="{'glyphicon-eye-open': item.action, 'glyphicon-eye-close':!item.action}"
+                      aria-hidden="true"></span>
+            </a>
+        </td>
+        <!--<td class="btn-group-xs">-->
+        <!--<a href="#">-->
+        <!--<span ng-if="mode" ng-click="delete(item)" class="glyphicon glyphicon-trash"></span>-->
+        <!--</a>-->
+        <!--</td>-->
+    </tr>
+</table>
+
+<!--<tr ng-repeat="item in filtered=(items | filter:{$:searchText, gender:'сука',action:true} |-->
+<!--orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">-->
+
+<!--<tr ng-repeat="item in filtered=(items | filter:{$:searchText} |-->
+<!--orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">-->
+
+<!--<tr ng-repeat="item in filtered=(items | filter:{$:searchText, gender:'кобель',action:true} |-->
+<!--orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">-->

@@ -61,6 +61,7 @@ module.exports.routes = {
     'POST /user/delete-iagree': 'UserController.deleteIAgree',
 
     'PUT /user/update-kadr/:id': 'UserController.updateKadr',
+    'PUT /user/update-rows': 'UserController.updateDefaultRows',
 
     //'PUT /user/update-leader/:id': 'UserController.updateLeader',
     'PUT /user/update-action/:id': 'UserController.updateAction',

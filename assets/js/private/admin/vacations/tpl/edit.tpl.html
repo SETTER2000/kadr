@@ -16,19 +16,19 @@
             <a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |
                 date:'dd.MM.yyyy'}}</a>
             <div class="btn-group-xs pull-right" ng-cloak>
-                <button ng-show="me.admin" ng-if="!item.action" ng-click="delete2(item)" class="btn  btn-danger " ng-cloak>
+                <button ng-show="me.admin" ng-if="!item.action && edit" ng-click="delete2(item)" class="btn  btn-danger " ng-cloak>
                     <span class="glyphicon glyphicon-trash"></span> Удалить
                 </button>
 
                 <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
                     <span class="glyphicon glyphicon-check"></span> Сохранить
                 </button>
-                <a ng-href="{{item.getListUrl()}}" type="button" class="btn btn-warning">
+                <a ng-show="edit" ng-href="{{item.getListUrl()}}" type="button" class="btn btn-warning">
                     <span class="glyphicon glyphicon-list"></span> Список
                 </a>
 
                 <small><md-tooltip md-direction="top">>14 дн. </md-tooltip>
-                   <md-checkbox ng-model="item.maxTwoWeek" class="small" ng-click="maxWeek()" aria-label="Checkbox 1"></md-checkbox></small>
+                   <md-checkbox ng-model="item.maxTwoWeek" class="small"  aria-label="Checkbox 1"></md-checkbox></small>
             </div>
         </h2>
     </div>

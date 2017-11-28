@@ -1,20 +1,18 @@
 /**
  * VacationController
  *
- * @description :: TODO Отпуска
+ * @description :: TODO: график отпусков
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 const ObjectId = require('mongodb').ObjectId;
-// const moment = require('moment');
 const zone = "Europe/Moscow";
 var Moment = require('moment-timezone');
-const MomentRange = require('moment-range'); // https://github.com/rotaready/moment-range#subtract
+const MomentRange = require('moment-range');
 const moment = MomentRange.extendMoment(Moment);
 moment.locale('ru');
 
 const _ = require('lodash');
 const path = require('path');
-const momentBusiness = require('moment-business'); //(https://github.com/jmeas/moment-business)
 const fs = require('fs');
 const http = require('http');
 
@@ -45,7 +43,7 @@ module.exports = {
         //console.log('Q: ', q);
         //console.log('REQ_ALL:',req.allParams());
 
-        //Vacation.find(q)
+        //Schedule.find(q)
         //    .populate('furlough')
         //    .populate('owner')
         //    .populate('whomCreated')
@@ -64,7 +62,7 @@ module.exports = {
 
         if (req.param('id')) {
             //console.log('VACTION ID:', req.param('id'));
-            Vacation.findOne(req.param('id'))
+            Schedule.findOne(req.param('id'))
                 .populate('furlough')
                 .populate('owner')
                 .populate('whomCreated')
@@ -122,7 +120,7 @@ module.exports = {
                             //console.log('ОТОБРАННЫЕ:', us);
                             //console.log('USER ODIN:', users[0]);
                             //console.log('DDDDDDDDDDDDDDASreq.session :', req.session.me);
-                            Vacation.find(us)
+                            Schedule.find(us)
                                 .populate('furlough')
                                 .populate('owner')
                                 .populate('whomCreated')
@@ -224,7 +222,7 @@ module.exports = {
                          * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
                          * По сути проверяем чтоб не было пересечения со своим же отпуском
                          */
-                        Vacation.native(function (err, collection) {
+                        Schedule.native(function (err, collection) {
                             if (err) return res.serverError(err);
 
                             /**
@@ -286,7 +284,7 @@ module.exports = {
                                         })
                                         .exec((err, users) => {
                                             if (err) return res.serverError(err);
-                                            Vacation.create(obj).exec(function (err, createVacation) {
+                                            Schedule.create(obj).exec(function (err, createVacation) {
                                                 if (err) return res.serverError(err);
                                                 console.log('Отпуск создал:', req.session.me);
                                                 findUser.vacations.add(createVacation.id);
@@ -394,7 +392,7 @@ module.exports = {
                  * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
                  * По сути проверяем чтоб не было пересечения со своим же отпуском
                  */
-                Vacation.native(function (err, collection) {
+                Schedule.native(function (err, collection) {
                     if (err) return res.serverError(err);
                     /**
                      * ПЕРЕСЕЧЕНИЕ ОТПУСКОВ
@@ -467,7 +465,7 @@ module.exports = {
 
                                     //console.log('obj.intersec', obj.intersec);
 
-                                    Vacation.find()
+                                    Schedule.find()
                                         .populate('intersec', {where: {id: req.param('id')}})
                                         .exec((err, findVacation)=> {
                                             if (err) return res.negotiate(err);
@@ -483,7 +481,7 @@ module.exports = {
                                                 }
                                             });
                                         });
-                                    Vacation.update(req.param('id'), obj)
+                                    Schedule.update(req.param('id'), obj)
                                         .exec(function updateObj(err, objEdit) {
                                             if (err) return res.negotiate(err);
                                             sails.log('Обновлён отпуск у (' + objEdit[0].id + '):', findUser.lastName + ' ' + findUser.firstName);
@@ -509,12 +507,12 @@ module.exports = {
      */
     destroy: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        Vacation.findOne(req.param('id')).exec((err, finds) => {
+        Schedule.findOne(req.param('id')).exec((err, finds) => {
             "use strict";
             if (err) return res.serverError(err);
             if (!finds) return res.notFound();
 
-            Vacation.destroy(req.param('id'), (err) => {
+            Schedule.destroy(req.param('id'), (err) => {
                 if (err) return next(err);
                 console.log('Отпуск удалил:', req.session.me);
                 console.log('Отпуск удалён:', finds);
@@ -544,7 +542,7 @@ module.exports = {
                 let intfaceYear = (findUser['interfaces'].length) ? findUser['interfaces'][0].year : moment().get('year');
                 let year = (req.param('year')) ? req.param('year') : intfaceYear;
 
-                Vacation.find({
+                Schedule.find({
                     where: {
                         owner: req.session.me,
                         or: [
@@ -795,8 +793,8 @@ module.exports = {
                         '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
                 }
                 year = findUser.interfaces[0].year;
-                //console.log('YEAR Vacation :', year);
-                Vacation.native(function (err, collection) {
+                //console.log('YEAR Schedule :', year);
+                Schedule.native(function (err, collection) {
                     if (err) return res.serverError(err);
                     collection.aggregate([
                         {$match: {owner: ObjectId(findUser.id), action: true}},
@@ -826,7 +824,7 @@ module.exports = {
      */
     getYears: function (req, res) {
 
-        Vacation.native(function (err, collection) {
+        Schedule.native(function (err, collection) {
             if (err) return res.serverError(err);
             collection.aggregate(
                 [
@@ -878,7 +876,7 @@ module.exports = {
                 });
                 //console.log('user.intersections', user.intersections);
                 //console.log('ar', ar);
-                Vacation.find({where: {owner: ar}}, {sort: 'from'})
+                Schedule.find({where: {owner: ar}}, {sort: 'from'})
                     .populate('furlough')
                     .populate('owner', {sort: 'lastName'})
                     .exec((err, vacationsFind) => {
@@ -899,7 +897,7 @@ module.exports = {
      * который установлен в списке пересечений
      */
     getIntersectionsUser: function (req, res) {
-        Vacation.native(function (err, collection) {
+        Schedule.native(function (err, collection) {
             if (err) return res.serverError(err);
 
             //db.vacation.aggregate([
@@ -971,11 +969,11 @@ module.exports = {
         // TODO: ^ Потяните это в политику `isSocketRequest`
 
         // Присоединитесь к комнате для этого отпуска (в качестве запрашивающего сокета)
-        Vacation.subscribe(req, req.param('id'));
+        Schedule.subscribe(req, req.param('id'));
 
         // Присоединитесь к комнате отпуска для анимации ввода
         sails.sockets.join(req, 'vacation' + req.param('id'));
-        // Vacation.watch(req);
+        // Schedule.watch(req);
         console.log('Connect chat ' + 'vacation' + req.param('id'));
         return res.ok();
     }
@@ -1010,7 +1008,7 @@ module.exports = {
                 // поэтому их пользователь
                 // агенты могут обновлять интерфейс для них.
                 //console.log('foundUser', foundUser);
-                //Vacation.publishUpdate(req.param('id'), {
+                //Schedule.publishUpdate(req.param('id'), {
                 //    message: req.param('message'),
                 //    username: foundUser.getFullName(),
                 //    created: 'только сейчас',

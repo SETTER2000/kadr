@@ -1479,6 +1479,24 @@ module.exports = {
             });
     },
 
+ /**
+     * Обновить 'кол-во строк в таблице' пользователю
+     * @param req
+     * @param res
+     */
+    updateDefaultRows: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+     console.log('req in', req.param('defaultRows'));
+        User.update(req.session.me, {
+                defaultRows: req.param('defaultRows')
+            })
+            .exec(function (err, update) {
+                if (err) return res.negotiate(err);
+                console.log('req out', update);
+                return res.ok(update);
+            });
+    },
+
 
     /**
      * Добавить 'я согласующий' пользователю

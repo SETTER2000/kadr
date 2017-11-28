@@ -42,29 +42,108 @@
                     });
                 };
                 f(root);
-                console.log('WATCHERS.LENGTH',watchers.length);
+                console.log('WATCHERS.LENGTH', watchers.length);
             })();
             /**
              * PAGINATION
              */
-            $scope.defaultRows = 15;
-            $scope.limitRows = [30, 50, 70, 100];
+            //$scope.handshake = function () {
+            //    $rootScope.$broadcast('defaultRowsTable',{
+            //        item:'sssss'
+            //    });
+            //    //return $scope.wind = (!$scope.wind);
+            //};
+            $scope.$on('defaultRowsTable', function (event,data) {
+                console.log('defaultRowsTable',data); // Данные, которые нам прислали
+                return  $scope.defaultRows =  data.defaultRows;
+            });
+
+
+
+
+            $scope.defaultRows = ($scope.me.defaultRows)?$scope.me.defaultRows :15;
+            //$scope.defaultRows =6;
+            $scope.limitRows = [2, 3, 5, 10, 15, 30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
+            console.log('defaultRows:::', $scope.defaultRows);
+            $scope.$watch('defaultRows', function (value,old) {
+                $http.put('/user/update-rows',{
+                        defaultRows: $scope.defaultRows
+                    })
+                    .then(function onSuccess(sailsResponse) {
+                        console.log('sailsResponse in ListController: ',sailsResponse.data[0].defaultRows);
+                         $scope.defaultRows = sailsResponse.data[0].defaultRows;
+                   
+                        // $scope.userProfile.properties.gravatarURL = sailsResponse.data.gravatarURL;
+                        // window.location = '#/profile/' + $scope.editProfile.properties.id;
+                        //window.location = '/profile';
+                        //toastr.success(info.passChange);
+                        //$scope.editProfile.loading = false;
+                    })
+                    .catch(function onError(sailsResponse) {
+                        // console.log('sailsresponse: ', sailsResponse)
+                        // Otherwise, display generic error if the error is unrecognized.
+                        //$scope.editProfile.changePassword.errorMsg = $scope.unexpected + (sailsResponse.data || sailsResponse.status);
+                        toastr.error('ERRDDD!',$scope.editProfile.changePassword.errorMsg);
+                    })
+                    .finally(function eitherWay() {
+                        $scope.editProfile.loading = false;
+                    });
+                //console.log('value NEW', value);
+                //console.log('value OLD', old);
+                //$scope.countDefaultRows();
+            });
+
+            //$scope.countDefaultRows = function () {
+            //
+            //  $http.put('/user/update-rows',{
+            //            defaultRows: $scope.defaultRows
+            //        })
+            //        .then(function onSuccess(sailsResponse) {
+            //            console.log('sailsResponse in ListController: ',sailsResponse.data[0].defaultRows);
+            //           return $scope.defaultRows = sailsResponse.data[0].defaultRows;
+            //            // $scope.userProfile.properties.gravatarURL = sailsResponse.data.gravatarURL;
+            //            // window.location = '#/profile/' + $scope.editProfile.properties.id;
+            //            //window.location = '/profile';
+            //            //toastr.success(info.passChange);
+            //            //$scope.editProfile.loading = false;
+            //        })
+            //        .catch(function onError(sailsResponse) {
+            //            // console.log('sailsresponse: ', sailsResponse)
+            //            // Otherwise, display generic error if the error is unrecognized.
+            //            //$scope.editProfile.changePassword.errorMsg = $scope.unexpected + (sailsResponse.data || sailsResponse.status);
+            //            toastr.error('ERRDDD!',$scope.editProfile.changePassword.errorMsg);
+            //        })
+            //        .finally(function eitherWay() {
+            //            $scope.editProfile.loading = false;
+            //        });
+            //};
+
+            //$scope.fioArea = 'ФИО';
+            //$scope.drArea = 'ДР11';
+            //$scope.loginArea = 'Логин';
+            //$scope.emailArea = 'Email';
+            //$scope.updatedAtArea = 'Update';
+            //$scope.roomArea = 'Комната';
+            //$scope.departmentArea = 'Отдел';
+            //$scope.positionArea = 'Должность';
+
+            $scope.nameHeader = {
+                fioArea: 'ФИО',
+                drArea: 'ДР11',
+                loginArea: 'Логин',
+                emailArea: 'Email',
+                updatedAtArea: 'Update',
+                roomArea: 'Комната',
+                departmentArea: 'Отдел',
+                positionArea: 'Должность'
+            };
 
 
-
-            $scope.fioArea = 'ФИО';
-            $scope.drArea = 'ДР11';
-            $scope.loginArea = 'Логин';
-            $scope.emailArea = 'Email';
-            $scope.updatedAtArea = 'Update';
-            $scope.roomArea = 'Комната';
-            $scope.departmentArea = 'Отдел';
-            $scope.positionArea = 'Должность';
             $scope.added = 'Добавить сотрудника';
             $scope.showBt = 1;
             // показать формочку выбора кол-ва строк на странице
-            $scope.showContIt = ($scope.me.admin)?1:0;
+            $scope.showContIt = ($scope.me.admin) ? 1 : 0;
             $scope.showStr = 0;
             $scope.urlBt = 'home.admin.users.create';
 
@@ -127,18 +206,49 @@
             //    }
             //});
 
+
+            /**
+             * Фильтры для каждой выбираемой страницы
+             *
+             */
+            $scope.filterTemplate = {
+                all: {}, // все
+                action: {action: false}, // Не активированы / заблокированные
+                list: {fired: true}, // уволеные
+                work: {fired: false} // работают
+            };
+
+            $scope.$watch('modeSelect.value', function (value, old) {
+                console.log('modeSelect OLD', old);
+                console.log('modeSelect NEW', value);
+                $scope.ftObj = $scope.filterTemplate[value];
+            });
+            $scope.$watch('searchText', function (value, old) {
+                console.log('OLD', old);
+                console.log('NEW', value);
+                $scope.searchText = value;
+                // $scope.refresh();
+            });
             $scope.options =
                 [
                     {display: "Работают", value: "work"},
                     {display: "Уволены", value: "list"},
                     {display: "Не активированы / Заблокированы", value: "action"},
-                    {display: "Все", value: "table"}
+                    {display: "Все", value: "all"}
                 ];
             $scope.modeSelect = $scope.options[0];
-            $scope.tableView = "/js/private/admin/users/views/home.admin.users.table.html";
-            $scope.listView = "/js/private/admin/users/views/home.admin.users.list.html";
-            $scope.actionView = "/js/private/admin/users/views/home.admin.users.action.html";
-            $scope.workView = "/js/private/admin/users/views/home.admin.users.work.html";
+            //$scope.tableView = "/js/private/admin/users/views/home.admin.users.table.html";
+            //$scope.listView = "/js/private/admin/users/views/home.admin.users.list.html";
+            //$scope.actionView = "/js/private/admin/users/views/home.admin.users.action.html";
+            //$scope.workView = "/js/private/admin/users/views/home.admin.users.work.html";
+            $scope.getLastName = function (item) {
+                $http.post('/att', item)
+                    .then(function (attendance) {
+                        $scope.differ(attendance);
+                        $scope.numPages = Math.floor($scope.items.length / $scope.defaultRows) + 1;
+                    });
+            };
+
 
             $scope.loadOptions = function () {
                 return $timeout(function () {
