@@ -63,7 +63,7 @@
 
             $scope.defaultRows = ($scope.me.defaultRows)?$scope.me.defaultRows :15;
             //$scope.defaultRows =6;
-            $scope.limitRows = [2, 3, 5, 10, 15, 30, 50, 70, 100];
+            $scope.limitRows = [2, 3, 5, 7,10, 15, 30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
             console.log('defaultRows:::', $scope.defaultRows);
             $scope.$watch('defaultRows', function (value,old) {
@@ -72,7 +72,7 @@
                     })
                     .then(function onSuccess(sailsResponse) {
                         console.log('sailsResponse in ListController: ',sailsResponse.data[0].defaultRows);
-                         $scope.defaultRows = sailsResponse.data[0].defaultRows;
+                         $scope.defaultRows = $scope.me.defaultRows=sailsResponse.data[0].defaultRows;
                    
                         // $scope.userProfile.properties.gravatarURL = sailsResponse.data.gravatarURL;
                         // window.location = '#/profile/' + $scope.editProfile.properties.id;

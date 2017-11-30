@@ -13,6 +13,7 @@ angular.module('Holiday', [
         'UserModule',
         'CalendarModule',
         'AttendanceModule',
+        'ScheduleModule',
         'AdminModule'
     ])
     // .constant("baseUrl", "http://localhost\\:1337")

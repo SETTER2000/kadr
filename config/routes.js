@@ -134,6 +134,12 @@ module.exports.routes = {
     'PUT /interfaces/:id/join': 'InterfaceController.joinChat',
 
 
+    /**
+     * Schedule
+     */
+    'PUT /schedule/update-rows': 'ScheduleController.updateDefaultRows',
+
+
     // !!!! НЕ УДАЛЯТЬ РОУТ!
     //'POST /user/signup': 'UserController.signup',
 
@@ -221,7 +227,18 @@ module.exports.routes = {
     'DELETE /vacations/:id': 'VacationController.destroy', // удалить
     'PUT /vacations/:id': 'VacationController.update', // обновить
 
+    /**
+     * Schedule
+     */
+    //'POST   /schedules':                'ScheduleController.createUser',
+    //'GET    /schedules':                'ScheduleController.findUsers',
+    //'PUT    /schedules/changePassword': 'ScheduleController.changePassword',
 
+    'GET    /schedules':            'ScheduleController.get',
+    'GET    /schedules/:id':        'ScheduleController.get',
+    'POST   /schedules':            'ScheduleController.create', // создать запись
+    'DELETE /schedules/:id':        'ScheduleController.destroy', // удалить
+    'PUT    /schedules/:id':        'ScheduleController.update', // обновить
     /*************************************************************
      * Server-rendered HTML Pages                                *
      *************************************************************/
@@ -244,6 +261,11 @@ module.exports.routes = {
     'GET /admin/users/administration': 'PageController.showAdminPage',
     'GET /admin/users/create': 'PageController.showHomePage',
     'GET /admin/users/exit': 'PageController.getExitUserPage',
+    'GET /admin/user/:id': 'PageController.showHomePage',
+    'GET /admin/users/show/:id': 'UserController.findOne',
+    'PUT /admin/users/edit/changePassword': 'UserController.changePasswordProfile',
+    'GET /admin/users/edit/:id': 'PageController.getEditUserPage',
+
 
     'GET /admin/departments': 'PageController.showHomePage',
 
@@ -256,12 +278,7 @@ module.exports.routes = {
 
     //'GET /admin/users/attendance': 'PageController.showHomePage',
     'GET /admin/positions/create': 'PageController.showHomePage',
-    //'GET /admin/users/list': 'PageController.showHomePage',
-    'GET /admin/user/:id': 'PageController.showHomePage',
-    'GET /admin/users/show/:id': 'UserController.findOne',
-    //'GET /admin/users/edit': 'PageController.getEditUserPage',
-    'PUT /admin/users/edit/changePassword': 'UserController.changePasswordProfile',
-    'GET /admin/users/edit/:id': 'PageController.getEditUserPage',
+
 
     'GET /admin/departments/create': 'PageController.showHomePage',
     'GET /admin/departments/:id': 'DepartmentController.findOne',
@@ -294,6 +311,15 @@ module.exports.routes = {
 
     'GET /admin/vacations/edit/:id': 'PageController.showHomePage',
     'GET /admin/vacations/create/': 'PageController.showHomePage',
+
+
+
+    'GET /admin/schedules':          'PageController.showHomePage',
+    'GET /admin/schedules/create':   'PageController.showHomePage',
+    'GET /admin/schedules/show/:id': 'PageController.showHomePage',
+    'GET /admin/schedules/edit/:id': 'PageController.showHomePage',
+    'GET /admin/schedule/:id':       'PageController.showHomePage',
+
 
 
     //'GET /admin/attendances/calendar': 'PageController.showHomePage',

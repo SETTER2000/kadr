@@ -1,0 +1,98 @@
+
+    <th>#</th>
+    <th class="text-center">{{countCurrentView}}</th>
+    <th>
+        <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('lastName')">
+            {{fioArea}}
+<span class="sortOrder" ng-show="propertyName === 'lastName'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th class="text-center">
+        <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('room')">
+            {{roomArea}}
+<span class="sortOrder" ng-show="propertyName === 'room'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <!--<th>-->
+    <!--<button class="btn  btn-sm btn-default not-border" ng-click="sortBy('birthday')">{{drArea}}-->
+    <!--<span class="sortOrder" ng-show="propertyName === 'birthday'"-->
+    <!--ng-class="{reverse: reverse}"></span>-->
+    <!--</button>-->
+
+    <!--</th>-->
+    <!--<th>-->
+    <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('login')">{{loginArea}}-->
+    <!--<span class="sortOrder" ng-show="propertyName === 'login'"-->
+    <!--ng-class="{reverse: reverse}"></span>-->
+    <!--</button>-->
+
+    <!--</th>-->
+    <th>
+        <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('departments[0].name')">
+            {{departmentArea}}
+<span class="sortOrder" ng-show="propertyName === 'departments[0].name'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+
+    </th>
+    <th>
+        <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('positions[0].name')">
+            {{positionArea}}
+<span class="sortOrder" ng-show="propertyName === 'positions[0].name'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+
+
+    <th>
+        <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">
+            {{emailArea}}
+<span class="sortOrder" ng-show="propertyName === 'email'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th  ng-if="me.admin" class="text-center">
+        <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('updatedAt')">
+            {{updatedAtArea}}
+<span class="sortOrder" ng-show="propertyName === 'updatedAt'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th class="wdt">
+        <!--<button class="btn  btn-sm btn-default" ng-click="sortBy('contacts')">Контакты: {{fieldName}}-->
+        <!--<span class="sortOrder" ng-show="propertyName === 'contacts'"-->
+        <!--ng-class="{reverse: reverse}"></span>-->
+        <!--</button>-->
+        <!-- Single button -->
+        <!-- Split button -->
+        <div class="btn-group pull-right">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">
+                <span class="sortOrder" ng-show="propertyName === 'contacts'" ng-class="{reverse: reverse}"></span>
+                Контакты: {{fieldName}}
+            </button>
+            <button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Контакты: {{fieldName}}</span>
+            </button>
+            <ul class="dropdown-menu">
+                <!--<li><a href="#" ng-click="fieldName='Email'">Email</a></li>-->
+                <li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>
+                <li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>
+                <li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>
+                <!--<li role="separator" class="divider"></li>-->
+                <!--<li><a href="#">Separated link</a></li>-->
+            </ul>
+        </div>
+    </th>
+    <!--<th>-->
+    <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">Отработанное время-->
+    <!--<span class="sortOrder" ng-show="propertyName === 'email'"-->
+    <!--ng-class="{reverse: reverse}"></span>-->
+    <!--</button>-->
+
+    <!--</th>-->
+    <!--<th></th>-->
+    <!--<th></th>-->

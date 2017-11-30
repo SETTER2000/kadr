@@ -248,6 +248,13 @@ module.exports = {
 
 
         /**
+         * Кто создал график отпусков
+         */
+        scheduleWhomCreated: {
+            collection: 'schedule'
+        },
+
+        /**
          * Кто создал отпуск
          */
         vacationWhomCreated: {

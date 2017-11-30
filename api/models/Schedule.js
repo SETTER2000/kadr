@@ -31,7 +31,13 @@ module.exports = {
             type: 'date',
             defaultsTo: null
         },
-
+        defaultRows: {
+            type: 'integer',
+            defaultsTo: 10
+        },
+        period: {
+            type: 'string'
+        },
         //Одобрено 	    (APPROVE)   approved
         //Отказано 	    (REJECT)    denied
         //Подтверждено 	(CONFIRM)   confirmed
@@ -39,24 +45,26 @@ module.exports = {
         //Ожидание 	    (wait_one)  pending
         status: {
             type: 'string',
-            defaultsTo: 'pending',
-            enum: ['approved', 'denied', 'confirmed', 'moved', 'pending']
+            defaultsTo: 'Проект',
+            enum: ['approved', 'denied', 'confirmed', 'В работе', 'Проект']
         },
         name: {
             type: 'string'
         },
-        //whomCreated:{
-        //  type:'string'
-        //},
-        //daysSelectHoliday: {
-        //    type: 'integer'
-        //},
-        //furlough: {
-        //    model: 'furlough'
-        //},
-        //owner: {
-        //    model: 'user'
-        //},
+        year: {
+            type: 'integer',
+            maxLength: 4,
+            minLength: 4,
+            required: true
+        },
+        start: { //запустить проект расслыки
+            type: 'date',
+            defaultsTo: null
+        },
+        daysSelectHoliday: {
+            type: 'integer'
+        },
+
         //
         ///**
         // *
@@ -75,12 +83,13 @@ module.exports = {
         //    collection: 'vacation',
         //    via: 'intersec'
         //},
-        //whomCreated: {
-        //    model: 'user'
-        //},
-        //whomUpdated: {
-        //    model: 'user'
-        //},
+        whomCreated: {
+            model: 'user'
+        },
+        whomUpdated: {
+            model: 'user'
+        },
+
         ///**
         // * Чат
         // */

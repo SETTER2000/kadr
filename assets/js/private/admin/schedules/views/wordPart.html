@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-md-12">
+        <nav class="text-center">
+            <ul class="word">
+                <li ng-if="charText" ng-repeat="part in parts  track by $index" ng-class="{active: isActive(part)}" ng-cloak>
+                    <a  class="btn btn-default btn-sm" href="#" role="button" ng-click="selectPart(part)">
+                        {{part}}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

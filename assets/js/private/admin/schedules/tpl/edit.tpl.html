@@ -1,0 +1,212 @@
+<!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
+
+<div class="col-sm-11  col-md-12  main" ng-cloak>
+    <div class="page-header">
+        <h2>
+            <p ng-if="item.name" ng-class="{'fired':item.fired}">{{item.getFullName()}}<span ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
+
+            </p>
+            <p ng-if="!item.name">Новый график</p>
+            <a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button"> Работает c {{item.dateInWork |
+                date:'dd.MM.yyyy' }} ({{item.periodWork()}})</a>
+
+
+            <!--<a href="#" class="btn btn-info btn-xs " ng-if="item.decree"  title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>-->
+            <a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |
+                date:'dd.MM.yyyy'}}</a>
+            <div class="btn-group-xs pull-right">
+                <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
+                    <span class="glyphicon glyphicon-check"></span> Сохранить
+                </button>
+                <a ng-href="{{item.getListUrl()}}" type="button" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-list"></span> Список
+                </a>
+            </div>
+
+        </h2>
+    </div>
+
+    <div class="row">
+        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}" ng-cloak>
+
+
+            <!-- E D I T / C R E A T E  F O R M -->
+
+            <div class="panel" ng-class="{'panel-warning':!item.fired, 'panel-default':item.fired}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Редактировать
+                        <a href="#" class="pull-right">
+                            <span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>
+                        </a>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <form name="userForm" novalidate ng-submit="saveEdit(item)" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div ng-if="(me.admin)" class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="item.action">Активность
+                                </label>
+                            </div>
+
+
+                            <!-- Y E A R -->
+
+                            <label class="control-label" for="inputSuccess1">Год</label>
+                            <!--<input  type="text" class="form-control" ng-model="item.lastName">-->
+                            <input ng-if="!edit" autofocus required type="number" min="2013" max="2030" ng-change="fixYear()" class="form-control"
+                                   ng-model="item.year" >
+                            <input ng-if="edit" autofocus required  min="2013" max="2030" ng-init="getYear()" ng-change="fixYear()" type="number" class="form-control" ng-model="item.year">
+                            <!--<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
+                        </div>
+
+
+                        <div class="form-group">
+                           <label class="control-label" for="inputSuccess3">Наименование</label>
+                           <input type="text" class="form-control" required ng-model="item.name">
+                        </div>
+
+
+
+
+
+                        <div ng-if="(me.admin && item.id)" class="row">
+                            <div class="col-md-5">
+                                <div class="form-group ">
+                                    <div class="form-group ">
+                                        <label class="control-label" for="inputSuccess18">
+                                            Зарегистрирован в системе
+                                        </label>
+                                        <div><a href="#" class="btn btn-default  disabled" role="button">
+                                     <span class="glyphicon " ng-class="{ 'glyphicon-saved':item.createdAt}"
+                                           aria-hidden="true"></span>
+                                            {{item.getCreatedAt() | date:'dd.MM.yyyy HH:mm'}}
+                                        </a></div>
+                                        <!--<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group ">
+                                    <div class="form-group " ng-if="item.updatedAt">
+                                        <label class="control-label" for="inputSuccess18">Последнее обновление</label>
+                                        <div><a href="#" class="btn btn-default  disabled" role="button">
+                                     <span class="glyphicon " ng-class="{ 'glyphicon-ok':item.updatedAt}"
+                                           aria-hidden="true"></span>
+                                            {{item.updatedAt | date:'dd.MM.yyyy HH:mm'}}
+                                        </a></div>
+                                        <!--<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="form-group">
+                            <!--<div class="form-group" style=" position: fixed;margin-left: 50px; margin-bottom: 70px; bottom:0; left:0;">-->
+                            <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-md btn-success">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Сохранить
+                            </button>
+
+                            <button ng-show="edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-md btn-success">
+                                <span class="glyphicon glyphicon-check"></span>
+                                Сохранить
+                            </button>
+                            <a ng-if="me.admin" ng-href="{{item.getListUrl()}}" class="btn btn-md btn-warning">
+                                <span class="glyphicon glyphicon-list"> </span>
+                                Список
+                            </a>
+                            <!--<button ng-if="!item.id" ng-click="revert()" ng-disabled="!canRevert()" class="btn btn-md btn-primary">-->
+                            <!--<span class="glyphicon glyphicon-erase"> </span>-->
+                            <!--Очистить-->
+                            <!--</button>-->
+
+
+                            <!--<button ng-if="item.id" ui-sref="home.admin.users.edit(data.id)"-->
+                            <!--class="btn btn-default btn-md pull-right" role="button">-->
+                            <!--<span class="glyphicon glyphicon-trash"></span>-->
+                            <!--</button>-->
+
+                        </div>
+                    </form>
+                    <button ng-show="me.admin" ng-if="!item.action && edit" ng-click="delete2(item)" class="btn btn-sm btn-default pull-right">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+
+
+
+
+
+
+
+            <!-- U P L O A D E R -->
+
+            <!--<div ng-if="item.id" ng-switch on="modeSelect.value" ng-cloak>-->
+                <!--<div ng-switch-when="uploader">-->
+                    <!--<ng-include src="uploaderView"></ng-include>-->
+                <!--</div>-->
+            <!--</div>-->
+
+
+            <!-- C A L E N D A R -->
+
+            <div class="form-group">
+                <label class="sr-only" for="exampleInputPassd33"></label>
+                <input required class="form-control  flatpickr flatpickr-calendar"
+                       ng-flatpickr
+                       fp-opts="dateOpts"
+                       fp-on-setup="datePostSetup(fpItem)"
+                       ng-model="item.period">
+                            <span class="input-group-btn">
+                              <!--<button class="btn btn-default" type="button" ng-click="clear()"><span class="glyphicon glyphicon-remove"></span></button>-->
+                            </span>
+            </div>
+            <!--<div class="input-group">-->
+                <!--<input type="text" class="form-control flatpickr " ng-flatpickr-->
+                       <!--fp-opts="dateOpts3"-->
+                       <!--fp-on-setup="toggleBlur(item)"-->
+                       <!--ng-model="item.firedDate">-->
+                            <!--<span class="input-group-btn">-->
+                              <!--<button class="btn btn-default" type="button" ng-click="removeFired(item)"><span-->
+                                      <!--class="glyphicon glyphicon-remove"></span></button>-->
+                            <!--</span>-->
+            <!--</div>-->
+
+            <!-- I N F O  P A N E L -->
+
+            <div ng-if="me.admin" class="panel"
+                 ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Информация</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr ng-repeat="(key, value) in item" ng-cloak>
+                                <th>{{key}}</th>
+                                <td>{{value | date:'dd.MM.yyyy' }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!--<div ui-view></div>-->
+<!--<div ui-view="users"></div>-->
+

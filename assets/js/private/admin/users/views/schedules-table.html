@@ -1,0 +1,415 @@
+<table class="table table-hover">
+   <!-- H E A D E R  T A B L E  -->
+    <tr>
+
+        <!-- I N D E X -->
+        <th>#</th>
+
+        <!-- А В А Т А Р -->
+        <!--<th class="text-center">-->
+            <!--<span class="badge">{{filtered.length}}</span>-->
+        <!--</th>-->
+
+        <!-- Н А И М Е Н О В А Н И Е -->
+        <th>
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('name')">
+                {{nameHeader.oneArea}}
+                <span class="sortOrder" ng-show="propertyName === 'name'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!-- Y E A R -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('year')">
+                {{nameHeader.twoArea}}
+                <span class="sortOrder" ng-show="propertyName === 'year'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+
+        <!-- S T A T U S -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('status')">
+               {{nameHeader.threeArea}}
+                    <span class="sortOrder" ng-show="propertyName === 'status'" ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+
+        <!-- F R O M  -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('from')">
+                {{nameHeader.fourArea}}
+                <span class="sortOrder" ng-show="propertyName === 'from'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!-- T O -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('to')">
+                {{nameHeader.fiveArea}}
+                <span class="sortOrder" ng-show="propertyName === 'to'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!-- К О Л-В О  Д Н Е Й -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('daysSelectHoliday')">
+                {{nameHeader.sixArea}}
+                <span class="sortOrder" ng-show="propertyName === 'daysSelectHoliday'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!-- С О З Д А Л -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('whomCreated[0].lastName')">
+                {{nameHeader.sevenArea}}
+                <span class="sortOrder" ng-show="propertyName === 'whomCreated[0].lastName'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!-- О Б Н О В И Л -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('whomCreated[0].lastName')">
+                {{nameHeader.eightArea}}
+                <span class="sortOrder" ng-show="propertyName === 'whomCreated[0].lastName'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+
+        <!-- C R E A T E -->
+        <th ng-if="me.admin" class="text-center">
+            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('createdAt')">
+                {{nameHeader.createdAtArea}}  <span class="sortOrder" ng-show="propertyName === 'createdAt'"
+                    ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+
+        <!-- U P D A T E -->
+        <th ng-if="me.admin" class="text-center">
+            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('updatedAt')">
+                {{nameHeader.updatedAtArea}}  <span class="sortOrder" ng-show="propertyName === 'updatedAt'"
+                    ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!--&lt;!&ndash; К О Н Т А К Т Ы &ndash;&gt;-->
+        <!--<th class="wdt">-->
+            <!--<div class="btn-group pull-right">-->
+                <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">-->
+                    <!--<span class="sortOrder" ng-show="propertyName === 'contacts'" ng-class="{reverse: reverse}"></span>-->
+                    <!--Контакты: {{fieldName}}-->
+                <!--</button>-->
+                <!--<button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"-->
+                        <!--aria-haspopup="true" aria-expanded="false">-->
+                    <!--<span class="caret"></span>-->
+                    <!--<span class="sr-only">Контакты: {{fieldName}}</span>-->
+                <!--</button>-->
+                <!--<ul class="dropdown-menu">-->
+                    <!--&lt;!&ndash;<li><a href="#" ng-click="fieldName='Email'">Email</a></li>&ndash;&gt;-->
+                    <!--<li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>-->
+                    <!--<li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>-->
+                    <!--<li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>-->
+                    <!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<li><a href="#">Separated link</a></li>&ndash;&gt;-->
+                <!--</ul>-->
+            <!--</div>-->
+        <!--</th>-->
+    </tr>
+
+    <!-- B O D Y  T A B L E -->
+    <tr ng-repeat="item in filtered=(items | filter:{$:searchText} | filter:filterObject |
+orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)" ng-cloak>
+
+        <!-- I N D E X -->
+        <td>
+            {{$index+1}}
+        </td>
+
+        <!-- А В А Т А Р -->
+        <!--<td>-->
+            <!--&lt;!&ndash;<img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}" alt=""></td>&ndash;&gt;-->
+            <!--<img ng-if="item.avatarUrl" alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="photo"/>-->
+            <!--<img ng-if="!item.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>-->
+        <!--</td>-->
+
+        <!-- Н А И М Е Н О В А Н И Е -->
+        <td>
+            <a class="position" href="{{item.getEditUrl(item.id)}}">
+                {{item.getFullName()}}
+            </a>
+        </td>
+
+        <!-- Y E A R -->
+        <td class="text-center">
+            {{item.year}}
+        </td>
+
+        <!-- Y E A R -->
+        <td class="text-center">
+            {{item.status}}
+        </td>
+
+
+        <!-- F R O M -->
+        <td class="text-center">
+            {{item.from | date : "dd.MM.yyyy "}}
+        </td>
+
+        <!-- T O -->
+        <td class="text-center">
+            {{item.to | date : "dd.MM.yyyy "}}
+        </td>
+
+
+        <!-- К О Л-В О  Д Н Е Й -->
+        <td class="text-center">
+            {{item.daysSelectHoliday }}
+        </td>
+
+        <!-- С О З Д А Л -->
+        <td class="text-center">
+            {{item.whomCreated.lastName}} {{item.whomCreated.firstName}} {{item.whomCreated.patronymicName}}
+        </td>
+
+
+
+        <!-- О Б Н О В И Л -->
+        <td class="text-center">
+            {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName}} {{item.whomUpdated.patronymicName}}
+        </td>
+
+            <!-- C R E A T E -->
+        <td ng-if="me.admin" class="text-center">
+            {{item.createdAt | date:"dd.MM.yyyy hh:mm:ss"}}
+        </td>
+
+            <!-- U P D A T E -->
+        <td ng-if="me.admin" class="text-center">
+            {{item.updatedAt | date:"dd.MM.yyyy hh:mm:ss"}}
+        </td>
+
+
+        <!--&lt;!&ndash; К О Н Т А К Т Ы &ndash;&gt;-->
+        <!--<td width="250px" class="text-right">-->
+            <!--{{item.getContact(fieldName)}}-->
+        <!--</td>-->
+        <!--<td>{{item.diff}}</td>-->
+        <!--<td class="btn-group-xs">-->
+        <!--&lt;!&ndash;<a ng-href="{{item.getShowUrl(item.id)}}" class="btn"&ndash;&gt;-->
+        <!--&lt;!&ndash;ng-class="{'btn-primary': !item.fired, ' btn-danger':item.fired}">&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="glyphicon"&ndash;&gt;-->
+        <!--&lt;!&ndash;ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"&ndash;&gt;-->
+        <!--&lt;!&ndash;aria-hidden="true"></span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a ui-sref="admin.users.edit({userId:'588b46b6d20dd30c17b27f03'})">Users Edit</a>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a ui-sref="admin.users.edit({userId:item.id})" class="btn btn-sm btn-warning">&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+        <!--&lt;!&ndash;<a ng-href="{{item.getEditUrl(item.id)}}" class="btn btn-warning">&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+        <!--</td>-->
+        <!--<td class="btn-group-xs">-->
+        <!--<a href="#">-->
+        <!--<span ng-if="mode" ng-click="delete(item)" class="glyphicon glyphicon-trash"></span>-->
+        <!--</a>-->
+        <!--</td>-->
+    </tr>
+</table>
+
+
+<!--<table class="table table-hover">-->
+<!--&lt;!&ndash;<tr><th colspan="100">Найдено: {{filtered.length}}</th></tr>&ndash;&gt;-->
+<!--<tr>-->
+<!--<th>#</th>-->
+<!--<th></th>-->
+<!--<th>-->
+<!--<button class="btn btn-sm btn-default  not-border" ng-click="sortBy('lastName')">-->
+<!--{{nameHeader.fioArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'lastName'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+<!--</th>-->
+
+<!--<th class="text-center">-->
+<!--<button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('room')">-->
+<!--{{nameHeader.roomArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'room'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+
+<!--</th>-->
+<!--&lt;!&ndash;<th>&ndash;&gt;-->
+<!--&lt;!&ndash;<button class="btn  btn-sm btn-default not-border" ng-click="sortBy('birthday')">{{drArea}}&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="sortOrder" ng-show="propertyName === 'birthday'"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{reverse: reverse}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</th>&ndash;&gt;-->
+<!--&lt;!&ndash;<th>&ndash;&gt;-->
+<!--&lt;!&ndash;<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('login')">{{loginArea}}&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="sortOrder" ng-show="propertyName === 'login'"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{reverse: reverse}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</th>&ndash;&gt;-->
+<!--<th>-->
+<!--<button class="btn  btn-sm btn-default not-border" ng-click="sortBy('departments[0].name')">-->
+<!--{{nameHeader.departmentArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'departments[0].name'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+
+<!--</th>-->
+<!--<th>-->
+<!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('positions[0].name')">-->
+<!--{{nameHeader.positionArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'positions[0].name'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+
+<!--</th>-->
+<!--<th>-->
+<!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">-->
+<!--{{nameHeader.emailArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'email'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+
+<!--</th>-->
+
+<!--<th class="wdt">-->
+<!--&lt;!&ndash;<button class="btn  btn-sm btn-default" ng-click="sortBy('contacts')">Контакты: {{fieldName}}&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="sortOrder" ng-show="propertyName === 'contacts'"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{reverse: reverse}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+<!--&lt;!&ndash; Single button &ndash;&gt;-->
+<!--&lt;!&ndash; Split button &ndash;&gt;-->
+<!--<div class="btn-group pull-right">-->
+<!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">-->
+<!--<span class="sortOrder" ng-show="propertyName === 'contacts'" ng-class="{reverse: reverse}"></span>-->
+<!--Контакты/{{fieldName}}-->
+<!--</button>-->
+<!--<button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"-->
+<!--aria-haspopup="true" aria-expanded="false">-->
+<!--<span class="caret"></span>-->
+<!--<span class="sr-only">Контакты: {{fieldName}}</span>-->
+<!--</button>-->
+<!--<ul class="dropdown-menu">-->
+<!--&lt;!&ndash;<li><a href="#" ng-click="fieldName='Email'">Email</a></li>&ndash;&gt;-->
+<!--<li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>-->
+<!--<li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>-->
+<!--<li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>-->
+<!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
+<!--&lt;!&ndash;<li><a href="#">Separated link</a></li>&ndash;&gt;-->
+<!--</ul>-->
+<!--</div>-->
+<!--</th>-->
+<!--&lt;!&ndash;<th>&ndash;&gt;-->
+<!--&lt;!&ndash;<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">Отработанное время&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="sortOrder" ng-show="propertyName === 'email'"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{reverse: reverse}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</th>&ndash;&gt;-->
+<!--&lt;!&ndash;<th></th>&ndash;&gt;-->
+<!--<th colspan="10"></th>-->
+<!--</tr>-->
+<!--&lt;!&ndash;| firstChar:param:charText&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="$even ? 'default' : 'success'"&ndash;&gt;-->
+<!--&lt;!&ndash;<tr><td ng-repeat="(key,property) in item">{{key}}</td></tr>&ndash;&gt;-->
+<!--<tr ng-repeat="item in filtered=(items |filter:{$:searchText} | filter:filterObject |-->
+<!--orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">-->
+
+<!--<td>{{$index+1}}</td>-->
+<!--<td ng-if="item.avatarUrl">-->
+<!--<a ng-href="{{item.getShowUrl(item.id)}}">-->
+<!--<img class="object-fit_cover" ng-class="{photoSize:vid}" ng-mouseover="vid=true"-->
+<!--ng-mouseleave="vid=false"-->
+<!--ng-src="{{item.avatarUrl}}"-->
+<!--alt="">-->
+<!--</a>-->
+<!--</td>-->
+<!--<td ng-if="!item.avatarUrl">-->
+<!--<a ng-href="{{item.getShowUrl(item.id)}}" title="нет фото">-->
+<!--<img class="object-fit_cover" src="http://via.placeholder.com/80x80/f5f5f5/ffffff/" alt="">-->
+<!--</a>-->
+<!--</td>-->
+
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<a ng-href="{{item.getShowUrl(item.id)}}">&ndash;&gt;-->
+<!--&lt;!&ndash;<img class="object-fit_cover" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-src="{{item.avatarUrl}}"&ndash;&gt;-->
+<!--&lt;!&ndash;alt="">&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+
+
+<!--<td ng-if="me.admin || me.kadr">-->
+<!--<a  href="{{item.getEditUrl(item.id)}}">-->
+<!--{{item.getFullName()}}-->
+<!--<span ng-if="!item.name" class="text-danger"><md-tooltip-->
+<!--md-direction="top">-->
+<!--временное имя, псевдоним-->
+<!--</md-tooltip>{{item.symbol}} {{item.alias}}</span>-->
+<!--</a>-->
+<!--</td>-->
+<!--<td ng-if="!me.admin && !me.kadr">-->
+
+<!--{{item.getFullName()}}-->
+<!--<span ng-if="!item.name" class="text-danger"><md-tooltip-->
+<!--md-direction="top">-->
+<!--временное имя, псевдоним-->
+<!--</md-tooltip>{{item.symbol}} {{item.alias}}</span>-->
+
+<!--</td>-->
+<!--<td class="text-center">{{item.room}}</td>-->
+<!--<td>-->
+<!--<ul ng-if="item.departments" style="list-style-type: none; margin: 0; padding: 0" class="position"-->
+<!--ng-controller="ListDepartmentController"-->
+<!--ng-repeat="department in item.departments | filter:{$:searchText, fired:mode}">-->
+<!--<li style="list-style-type: none; margin: 0; padding: 0"-->
+<!--ng-repeat="option in items | filter:{$:searchText,id:department.id}">-->
+<!--{{option.name}}-->
+<!--</li>-->
+<!--</ul>-->
+<!--</td>-->
+<!--<td>-->
+<!--<ul style="list-style-type: none; margin: 0; padding: 0" class="position"-->
+<!--ng-controller="ListPositionController"-->
+<!--ng-repeat="position in item.positions">-->
+<!--<li style="list-style-type: none" ng-repeat="option in items | filter:position.id">-->
+<!--{{option.name}}-->
+<!--</li>-->
+<!--</ul>-->
+<!--</td>-->
+<!--<td><a href="mailto:{{item.email}}">{{item.email}}</a></td>-->
+<!--<td width="250px" class="text-right">{{item.getContact(fieldName)}}</td>-->
+<!--<td>{{item.diff}}</td>-->
+<!--<td class="btn-group-xs">-->
+<!--<a ng-href="{{item.getShowUrl(item.id,me )}}" class="btn"-->
+<!--ng-class="{'btn-primary': !item.fired, ' btn-danger':item.fired}">-->
+<!--<span class="glyphicon"-->
+<!--ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"-->
+<!--aria-hidden="true"></span>-->
+<!--</a>-->
+
+
+<!--</td>-->
+<!--&lt;!&ndash;<td class="btn-group-xs">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;<span ng-if="mode" ng-click="delete(item)" class="glyphicon glyphicon-trash"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--</tr>-->
+<!--</table>-->
+
