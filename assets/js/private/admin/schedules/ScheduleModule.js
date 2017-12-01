@@ -109,7 +109,7 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
         $rootScope.$stateParams = $stateParams;
         amMoment.changeLocale('ru');
     })
-    .factory('Schedules', function ($resource, $state, CONF_MODULE_SCHEDULE) {
+    .factory('Schedules', function ($resource, $state,$rootScope, Users, CONF_MODULE_SCHEDULE) {
         var Schedules = $resource(
             CONF_MODULE_SCHEDULE.baseUrl,
             {scheduleId: '@id'},
@@ -132,7 +132,8 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
 
 
         Schedules.prototype.getFullName = function () {
-            return (!this.name) ? this.name = 'График отпусков на ' + this.year : this.name;
+            return (!this.name) ? this.name = 'График отпусков на ' : this.name;
+            //return (!this.name) ? this.name = 'График отпусков на ' + this.year : this.name;
         };
 
         Schedules.prototype.getYear = function () {
@@ -151,6 +152,18 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
         Schedules.prototype.scs = function () {
             return this.sections;
         };
+
+
+        /**
+         * Запрос кол-ва пользователей в системе
+         */
+        Schedules.prototype.getAllUsers = function () {
+            $rootScope.$broadcast('getAllUsers', {
+                message: 'dgdfgdfgdfg'
+            });
+
+        };
+
         Schedules.prototype.ok = function () {
             return alert('Сотрудник: ' + this.getFullName() + ' изменён!');
         };

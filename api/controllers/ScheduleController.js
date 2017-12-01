@@ -162,7 +162,9 @@ module.exports = {
             period: req.param('period'),
             //maxTwoWeek: req.param('maxTwoWeek'),
             status: 'Проект',
+            start: new Date(req.param('start')),
             year: +req.param('year'),
+            countData: +req.param('countData'),
             //furlough: req.param('furlough'),
             //owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
             from: new Date(req.param('from')),
@@ -390,12 +392,8 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
-
         console.log('UPDATE req.owner', req.param('owner'));
-        console.log('UPDATE req.session', req.session);
-
-
+        console.log('moment start', moment(req.param('start'), ["DD.MM.YYYY HH:mm"]));
         let obj = {
             section: 'График отпусков',
             sections: 'Графики отпусков',
@@ -405,15 +403,15 @@ module.exports = {
             action: req.param('action'),
             period: req.param('period'),
             status: req.param('status'),
+            start: new Date(req.param('start')),
             year: +req.param('year'),
-            //furlough: req.param('furlough'),
-            //owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
             from: new Date(req.param('from')),
             to: new Date(req.param('to'))
         };
 
-        User.findOne({id: obj.whomUpdated})
+        ((obj.status === 'Проект') || (obj.status === 'В работе')) ? obj.countData = +req.param('countData') : '';
 
+        User.findOne({id: obj.whomUpdated})
             .exec((err, findUser) => {
                 "use strict";
                 if (err) return res.serverError(err);
@@ -721,7 +719,7 @@ module.exports = {
             })
             .exec(function (err, update) {
                 if (err) return res.negotiate(err);
-                console.log('req out', update);
+                //console.log('req out', update);
                 return res.ok(update);
             });
     },

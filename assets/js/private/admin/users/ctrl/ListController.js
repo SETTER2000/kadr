@@ -22,7 +22,12 @@
             //    "hideMethod": "fadeOut"
             //};
 
-
+            //$rootScope.$on('getAllUsers', function (event, data) {
+            //    console.log('MESSAGqqqddsSSS: ',data); // ‘Some data’
+            //});
+           $scope.getAllUsers=function(){
+              return 222;
+           };
             /**
              * Просто проверочнпая функция, которая
              * проверяет кол-во наблюдателей (watchers) в модуле.

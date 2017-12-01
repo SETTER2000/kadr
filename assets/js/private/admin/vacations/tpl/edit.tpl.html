@@ -27,8 +27,10 @@
                     <span class="glyphicon glyphicon-list"></span> Список
                 </a>
 
-                <small><md-tooltip md-direction="top">>14 дн. </md-tooltip>
-                   <md-checkbox ng-model="item.maxTwoWeek" class="small"  aria-label="Checkbox 1"></md-checkbox></small>
+                <small>
+                    <md-tooltip md-direction="top">>14 дн.</md-tooltip>
+                    <md-checkbox ng-model="item.maxTwoWeek" class="small" aria-label="Checkbox 1"></md-checkbox>
+                </small>
             </div>
         </h2>
     </div>
@@ -59,8 +61,9 @@
                             <!-- P H O T O -->
 
                             <div class=" pull-right">
-                                <a href="{{user.getEditUrl(user.id)}}"> <img class="img-thumbnail" width="80px" ng-src="{{selectAvatarUrl}}"
-                                                                             alt=""></a>
+                                <a href="{{user.getEditUrl(user.id)}}">
+                                    <img class="img-thumbnail" width="80px" ng-src="{{selectAvatarUrl}}" alt="">
+                                </a>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -89,7 +92,8 @@
                         <!--  O W N E R  -->
 
                         <div ng-controller="ListController" class="form-group ">
-                            <label class="control-label" ng-bind="items[0].sc()"></label> <span ng-if="me.admin">{{filtered.length}}</span>
+                            <label class="control-label" ng-bind="items[0].sc()"></label>
+                            <span ng-if="me.admin">{{filtered.length}}</span>
                             <select ng-disabled="edit" class="form-control" ng-model="item.owner.id">
                                 <option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )"
                                         value="{{option.id}}">
@@ -120,6 +124,12 @@
                                 <span class="glyphicon glyphicon-erase"> </span>
                                 Очистить
                             </button>
+
+                            <button title="Комментировать" ng-disabled="(edit && chats.length) || (!edit) || (comment)"
+                                    class="btn btn-md btn-link pull-right" type="button" ng-click="toogle()">
+                                <i class="fa fa-comment-o" aria-hidden="true"></i>
+                                Комментарий
+                            </button>
                             <!--<button ng-if="!item.id" ng-click="revert()" ng-disabled="!canRevert()" class="btn btn-md btn-primary">-->
                             <!--<span class="glyphicon glyphicon-erase"> </span>-->
                             <!--Очистить-->
@@ -134,18 +144,21 @@
                         </div>
                     </form>
 
-                    <form ng-show="edit" role="form" ng-submit="sendMessage()">
+
+                    <!-- C H A T -->
+
+                    <form ng-show="(edit && chats.length) || (comment)" role="form" ng-submit="sendMessage()">
                         <div class="panel panel-default">
-                            <div class="panel-heading lead">
-                                <i class="fa fa-comment"></i> Чат
-                            </div>
+                            <!--<div class="panel-heading lead">-->
+                            <!--&lt;!&ndash;<i class="fa fa-comment"></i> Чат&ndash;&gt;-->
+                            <!--</div>-->
                             <div class="panel-body">
                                 <ul class="chat-window">
                                     <li class="chat clearfix" ng-repeat="chat in chats">
                                         <div class="chat-body">
                                             <img class="chat-avatar" ng-src="{{chat.avatarUrl}}">
                                             <div class="header">
-                                                <span class="username">{{chat.username}} </span>
+                                                <span class="username"> <a href="/admin/user/{{chat.sender}}">{{chat.username}} </a></span>
                                                 <small class="pull-right">{{chat.created }}{{chat.time}}</small>
                                             </div>
                                             <p class="message">
@@ -157,12 +170,17 @@
                             </div>
                             <div class="panel-footer">
                                 <div class="input-group">
+                                    <span class="input-group-addon not-border"> <img class="chat-avatar-comment" ng-src="{{me.avatarUrl}}"></span>
+
                                     <input id="btn-input" required type="text" class="form-control input-sm" ng-model="message"
-                                           placeholder="Написать сообщение..." ng-keypress="whenTyping($event)"
+                                           placeholder="Написать комментарий..." ng-keypress="whenTyping($event)"
                                            ng-focus="whenTyping($event)" ng-blur="whenNotTyping($event)" ng-disabled="!me">
+
+
                 <span class="input-group-btn">
-                  <button type="submit" ng-disabled="!hasJoinedRoom || !me" class="btn btn-info btn-sm" id="btn-chat">
-                      Отправить
+                  <button type="submit" ng-disabled="!hasJoinedRoom || !me" class="btn btn-link btn-sm" id="btn-chat">
+                      <i class="fa " ng-class="{'fa-paper-plane-o':!message.length,'fa-paper-plane': message.length}"
+                         aria-hidden="true"></i>
                   </button>
                 </span>
                                 </div>

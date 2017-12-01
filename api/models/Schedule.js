@@ -46,7 +46,7 @@ module.exports = {
         status: {
             type: 'string',
             defaultsTo: 'Проект',
-            enum: ['approved', 'denied', 'confirmed', 'В работе', 'Проект']
+            enum: ['Проект','В работе','Утвержден']
         },
         name: {
             type: 'string'
@@ -58,10 +58,13 @@ module.exports = {
             required: true
         },
         start: { //запустить проект расслыки
-            type: 'date',
+            type: 'datetime',
             defaultsTo: null
         },
         daysSelectHoliday: {
+            type: 'integer'
+        },
+        countData: {
             type: 'integer'
         },
 

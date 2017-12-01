@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     angular.module('ScheduleModule')
-        .controller('ListScheduleController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Schedules', 'Attendances', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Schedules, Attendances) {
+        .controller('ListScheduleController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Schedules', 'Users', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Schedules, Users) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
 
@@ -46,6 +46,8 @@
                 sixArea: 'Кол-во дней',
                 sevenArea: 'Создал',
                 eightArea: 'Обновил',
+                nineArea: 'Кол-во собраных данных',
+                tenArea: 'Обновил',
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено'
             };
@@ -239,13 +241,15 @@
 
                 $scope.items = Schedules.query($scope.query, function (schedules) {
                     console.log('SCHEDULE ITEMS:', schedules);
-                    $scope.items = schedules;
+                    $scope.items =  schedules;
+
                     $scope.countCurrentView = schedules.length;
                     $scope.objectName = schedules;
                     //$scope.numPages = Math.floor(schedules.length / $scope.defaultRows) + 1;
                 }, function (err) {
                     toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
                 });
+
             };
 
             $scope.getMode = function (t) {

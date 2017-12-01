@@ -295,6 +295,9 @@ module.exports = {
         },
 
 
+        getLastFirstName: function () {
+            return this.lastName + ' ' + this.firstName ;
+        },
         getFullName: function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;
         },

@@ -55,7 +55,10 @@ angular.module('VacationModule')
             //    $scope.data = response.data;
             //    console.log('MESSS:' , $scope.data);
             //});
-
+            $scope.comment = false;
+            $scope.toogle = function () {
+                $scope.comment = ($scope.comment) ? false : true;
+            };
 
             // set-up loading state
             $scope.showVacation = {

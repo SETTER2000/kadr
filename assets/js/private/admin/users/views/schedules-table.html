@@ -19,6 +19,15 @@
             </button>
         </th>
 
+        <!-- C O U N T  D A T A S E A R C H  itemsUsers-->
+        <th>
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('countData')">
+                {{nameHeader.nineArea}}
+                <span class="sortOrder" ng-show="propertyName === 'countData'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
         <!-- Y E A R -->
         <th class="text-center">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('year')">
@@ -148,6 +157,11 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             </a>
         </td>
 
+        <!-- C O U N T  D A T A S E A R C H -->
+        <td class="text-center">
+          {{ item.countData }}
+        </td>
+
         <!-- Y E A R -->
         <td class="text-center">
             {{item.year}}
@@ -189,12 +203,12 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
             <!-- C R E A T E -->
         <td ng-if="me.admin" class="text-center">
-            {{item.createdAt | date:"dd.MM.yyyy hh:mm:ss"}}
+            {{item.createdAt | date:"dd.MM.yyyy HH:mm:ss"}}
         </td>
 
             <!-- U P D A T E -->
         <td ng-if="me.admin" class="text-center">
-            {{item.updatedAt | date:"dd.MM.yyyy hh:mm:ss"}}
+            {{item.updatedAt | date:"dd.MM.yyyy HH:mm:ss"}}
         </td>
 
 

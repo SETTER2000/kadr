@@ -1,7 +1,7 @@
 'use strict';
 angular.module('ScheduleModule')
-    .controller('EditScheduleController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Schedules', 'moment', 'Positions', 'Departments', 'Vacations', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
-        function ($scope, $http, toastr, $interval, $templateCache, $state, Schedules, moment, Positions, Departments, Vacations, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
+    .controller('EditScheduleController', ['$scope', '$http', '$parse', 'toastr', '$interval', '$templateCache', '$state', 'Schedules', 'moment', 'Positions', 'Departments', 'Vacations', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
+        function ($scope, $http, $parse, toastr, $interval, $templateCache, $state, Schedules, moment, Positions, Departments, Vacations, Users, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             $scope.edit = $state.includes('home.admin.schedules.edit');
             var info = {
@@ -17,8 +17,18 @@ angular.module('ScheduleModule')
                 redirectSelf: 'home.admin.schedules',
                 ru: 'ru',
                 dateFormat: "d.m.Y",
+                dateTimeFormat: "d.m.Y H:i",
                 minDate: "01-01-1950",
                 maxDate: "31-12-2002"
+            };
+
+
+
+            $scope.expr = "start | date:'dd.MM.yyyy HH:mm'";
+
+            $scope.parseExpression = function () {
+                var fn = $parse($scope.expr);
+                $scope.item.start = fn($scope.item)
             };
 
 
@@ -161,7 +171,9 @@ angular.module('ScheduleModule')
                 alert("Sorry! You'll need to create a Constitution for " + state + " first!");
             };
             $scope.fixYear = function () {
-                if(!angular.isNumber($scope.item.year)){ toastr.error('Год введён не корректно!', info.error);}
+                if (!angular.isNumber($scope.item.year)) {
+                    toastr.error('Год введён не корректно!', info.error);
+                }
                 return;
             };
             // ******************************
@@ -262,6 +274,31 @@ angular.module('ScheduleModule')
                 }
                 $scope.selectedItem = obj;
             };
+
+            /**
+             * Запрос кол-ва пользователей в системе
+             */
+            $scope.getAllUsers = function () {
+                let itemsUsers = $scope.itemsUsers = Users.query({},
+                    function (users) {
+                        console.log('EDIT USERS SCHEDULE', users);
+
+
+                        $scope.itemsUsers = users;
+                        //$scope.getBoss();
+                    }, function (err) {
+                        console.log(err, 'ОШибка в USERS objects');
+                        // активируем по умолчанию создаваемую запись
+                        //item.action = true;
+                        //item.status = 'Проект';
+                        //item.sc = function () {
+                        //    return 'Отпуск';
+                        //};
+
+                    }
+                );
+            };
+
             /**
              * Build `states` list of key/value pairs
              */
@@ -414,33 +451,35 @@ angular.module('ScheduleModule')
                 defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
             };
 
-            //$scope.getYear= function (item) {
-            //  return $scope.item = {year : moment().add(1,'years').get('year')};
-            //};
+            $scope.minYear = function () {
+                return moment().add(1, 'years').get('year');
+            };
 
 
             $scope.dateOpts2 = {
                 locale: info.ru,
                 //mode: "range",
-                dateFormat: info.dateFormat,
+                time_24hr: true,
+                enableTime: true,
+                dateFormat: info.dateTimeFormat,
                 minDate: info.minDate
                 //defaultDate: 'today'
             };
 
-            $scope.dateOpts3 = {
-                locale: info.ru,
-                //mode: "range",
-                dateFormat: info.dateFormat,
-                minDate: info.minDate
-                //defaultDate: 'today'
-            };
-            $scope.dateOpts4 = {
-                locale: info.ru,
-                //mode: "range",
-                dateFormat: info.dateFormat,
-                minDate: info.minDate
-                //defaultDate: 'today'
-            };
+            //$scope.dateOpts3 = {
+            //    locale: info.ru,
+            //    //mode: "range",
+            //    dateFormat: info.dateFormat,
+            //    minDate: info.minDate
+            //    //defaultDate: 'today'
+            //};
+            //$scope.dateOpts4 = {
+            //    locale: info.ru,
+            //    //mode: "range",
+            //    dateFormat: info.dateFormat,
+            //    minDate: info.minDate
+            //    //defaultDate: 'today'
+            //};
 
             $scope.toggleBlur = function (mx) {
                 //if(!mx) mx.selectedDates = new Date();
@@ -655,19 +694,43 @@ angular.module('ScheduleModule')
             //        });
             //};
             $scope.refresh = function () {
-                let item = $scope.item = Schedules.get({id: $stateParams.scheduleId}, function (schedule) {
-                    console.log('EDIT SCHEDULE', schedule);
-                       
-                        $scope.schedule = schedule;
+                let item = $scope.item = Schedules.get({id: $stateParams.scheduleId},
+                    function (schedules) {
+                        console.log('EDIT SCHEDULE', schedules);
+                        $scope.flatpicker.setDate(schedules.period);
+                        $scope.schedules = schedules;
+                        item.getStart();
+                        console.log('FFFFFFFFFFFF', item.getStart());
                         //$scope.getBoss();
+                    }, function (err) {
+                        // активируем по умолчанию создаваемую запись
+                        item.action = true;
+                        item.status = 'Проект';
+                        item.countData = 0;
+                        //item.sc = function () {
+                        //    return 'Отпуск';
+                        //};
+
                     }
                 );
                 $scope.item.year = item.getYear();
-
+                $scope.getAllUsers();
                 $scope.item.name = item.getFullName();
                 //console.log('refresh',$scope.item);
                 //console.log('refresh1',$scope.schedule);
             };
+
+            $scope.checkStatus = function () {
+                return ($scope.item.status === 'Утвержден') ? false : true;
+            };
+
+            $scope.$watch('item.year', function (val) {
+                if (val) {
+                    $scope.item.name = '';
+                    $scope.item.name = $scope.item.getFullName() + val;
+                }
+            });
+
 
             $scope.delete2 = function (item) {
                 item.$delete(item, function (success) {
@@ -710,10 +773,16 @@ angular.module('ScheduleModule')
             };
 
             var reversValue = function (item) {
+                var u = item.start;
+
+                console.log('UUUUUU:', u);
                 //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+                item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm']).format('YYYY-MM-DD HH:mm')) : null;
                 //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+                var q = item.start;
+                console.log('QQQQQQQQQQQ:', q);
                 return item;
             };
 
@@ -724,6 +793,9 @@ angular.module('ScheduleModule')
                 //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
 
                 item = reversValue(item);
+                console.log('СИЛЬНЫЙ ITEM:', item.start);
+
+
                 if (angular.isDefined(item.id)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
@@ -942,5 +1014,6 @@ angular.module('ScheduleModule')
             };
 
             $scope.refresh();
+
         }
     ]);

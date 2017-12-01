@@ -1021,19 +1021,16 @@ module.exports = {
                     sender: req.session.me,
                     vacation: req.param('id'),
                     avatarUrl: foundUser.avatarUrl,
-                    username: foundUser.getShortName()
+                    username: foundUser.getLastFirstName()
                 }).exec(function (err, createdChat) {
                     if (err) return res.negotiate(err);
-
-
                     sails.sockets.broadcast('vacation' + req.param('id'), 'vacation', {
                         message: req.param('message'),
-                        username: foundUser.getShortName(),
+                        username: foundUser.getLastFirstName(),
                         created: 'только сейчас',
-                        avatarUrl: foundUser.avatarUrl
+                        avatarUrl: foundUser.avatarUrl,
+                        sender: req.session.me
                     });
-
-
                     let strEmail = '';
 
                     if (_.isArray(foundUser.matchings) && (foundUser.matchings.length > 0)) {
