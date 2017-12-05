@@ -1,5 +1,5 @@
 angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
-        'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment'])
+        'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment','ngSanitize'])
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
     }])
@@ -152,6 +152,11 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
         Schedules.prototype.scs = function () {
             return this.sections;
         };
+
+     Schedules.prototype.nameLinkFn = function () {
+            return (this.hasOwnProperty('htmlData') && this.htmlData.length) ? 'Редактировать' : 'Вставить шаблон';
+        };
+
 
 
         /**

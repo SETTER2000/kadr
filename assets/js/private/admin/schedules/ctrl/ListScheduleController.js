@@ -98,28 +98,28 @@
              */
             $scope.filterTemplate = {
                 all: {}, // все
-                action: {action: false}, // Не активированы / заблокированные
-                list: {fired: true}, // уволеные
-                work: {fired: false} // работают
+                project:  {status: 'Проект'}, // проект
+                inWork:   {status: 'В работе'}, // в работе
+                approved: {status: 'Утвержден'} // утверждён
             };
 
             $scope.$watch('modeSelect.value', function (value, old) {
-                console.log('modeSelect OLD', old);
-                console.log('modeSelect NEW', value);
+                //console.log('modeSelect OLD', old);
+                //console.log('modeSelect NEW', value);
                 $scope.ftObj = $scope.filterTemplate[value];
             });
             $scope.$watch('searchText', function (value, old) {
-                console.log('OLD', old);
-                console.log('NEW', value);
+                //console.log('OLD', old);
+                //console.log('NEW', value);
                 $scope.searchText = value;
                 // $scope.refresh();
             });
             $scope.options =
                 [
                     {display: "Все", value: "all"},
-                    {display: "Проект", value: "work"},
-                    {display: "Уволены", value: "list"},
-                    {display: "Не активированы / Заблокированы", value: "action"}
+                    {display: "Проект", value:    "project"},
+                    {display: "В работе", value:  "inWork"},
+                    {display: "Утвержден", value: "approved"}
 
                 ];
             $scope.modeSelect = $scope.options[0];

@@ -46,7 +46,12 @@ module.exports = {
         status: {
             type: 'string',
             defaultsTo: 'Проект',
-            enum: ['Проект','В работе','Утвержден']
+            enum: ['Проект', 'В работе', 'Утвержден']
+        },
+        htmlData: {
+            type: 'array',
+            defaultsTo:[],
+            required: true
         },
         name: {
             type: 'string'

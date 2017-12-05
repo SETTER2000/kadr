@@ -191,14 +191,14 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- С О З Д А Л -->
         <td class="text-center">
-            {{item.whomCreated.lastName}} {{item.whomCreated.firstName}} {{item.whomCreated.patronymicName}}
+            {{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}} {{item.whomCreated.patronymicName[0]}}
         </td>
 
 
 
         <!-- О Б Н О В И Л -->
         <td class="text-center">
-            {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName}} {{item.whomUpdated.patronymicName}}
+            {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName[0]}} {{item.whomUpdated.patronymicName[0]}}
         </td>
 
             <!-- C R E A T E -->

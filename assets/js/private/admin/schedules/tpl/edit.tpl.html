@@ -3,21 +3,27 @@
 <div class="col-sm-11  col-md-12  main" ng-cloak>
     <div class="page-header">
         <h2>
-            <p ng-if="item.name" ng-class="{'fired':item.fired}">{{item.getFullName()}} ({{item.daysSelectHoliday}})<span
+            <p ng-if="item.name" ng-class="{'fired':item.fired}">{{item.getFullName()}} (собрать за {{item.daysSelectHoliday}} дн.)<span
                     ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
 
             </p>
             <p ng-if="!item.name">Новый график</p>
-            <a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button"> Работает c {{item.dateInWork |
-                date:'dd.MM.yyyy' }} ({{item.periodWork()}})</a>
+            <a href="#" class="btn btn-primary btn-xs disabled" ng-hide="item.fired" role="button">
+                Собрано данных: 0 из {{item.countData }}</a>
 
 
             <!--<a href="#" class="btn btn-info btn-xs " ng-if="item.decree"  title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>-->
             <a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |
                 date:'dd.MM.yyyy'}}</a>
+
+
             <div class="btn-group-xs pull-right">
+                <button class="btn btn-default btn-md " type="button" ng-click="toogle()">
+                    <span class="glyphicon glyphicon-list-alt"></span> {{item.nameLinkFn()}}
+                </button>
                 <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
                     <span class="glyphicon glyphicon-check"></span> Сохранить
+
                 </button>
                 <a ng-href="{{item.getListUrl()}}" type="button" class="btn btn-warning">
                     <span class="glyphicon glyphicon-list"></span> Список
@@ -26,6 +32,7 @@
 
         </h2>
     </div>
+
 
     <div class="row">
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}" ng-cloak>
@@ -70,17 +77,23 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label" for="inputSuccess3">Период сбора данных</label>
+                            <label class="control-label" for="inputSuccess3">
+                                Период сбора данных
+                            </label>
                             <input type="text" ng-disabled="true" class="form-control" required ng-model="item.period">
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label" for="inputSuccess3">Статус</label>
+                            <label class="control-label" for="inputSuccess3">
+                                Статус
+                            </label>
                             <input type="text" ng-disabled="true" class="form-control" required ng-model="item.status">
                         </div>
 
                         <div class="form-group" ng-if="checkStatus()" ng-controller="ListController">
-                            <label class="control-label" for="inputSuccess3">Кол-во собранных данных</label>
+                            <label class="control-label" for="inputSuccess3">
+                                Собрано данных
+                            </label>
                             <!--<br> 0 из {{(items | filter :{fired:false}).length}}-->
                             <div class="form-inline">
                                 <div class="form-group">
@@ -94,14 +107,12 @@
                         </div>
 
 
-
-
                         <div class="form-group">
                             <label class="control-label">
                                 Время запуска проекта
                             </label>
                             <div class="input-group">
-                                <input type="text" ng-bind="parseExpression()" class="form-control flatpickr" ng-flatpickr
+                                <input type="text" required ng-bind="parseExpression()" class="form-control flatpickr" ng-flatpickr
                                        fp-opts="dateOpts2"
                                        fp-on-setup="toggleBlur(item)"
                                        ng-model="item.start">
@@ -111,8 +122,6 @@
                             </span>
                             </div>
                         </div>
-
-
 
 
                         <div ng-if="(me.admin && item.id)" class="row">
@@ -185,14 +194,46 @@
         </div>
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
 
+            <form class="form-horizontal" ng-show="comment">
+                <div class="form-group animate-if">
 
-            <!-- U P L O A D E R -->
+                    <label for="inputPassword" class="col-sm-2 control-label">Шаблон: </label>
+                    <div class="col-sm-4">
+                        <!--ng-options="name for example in examples"-->
+                        <select class="form-control size-xs" ng-model="selection"
+                                ng-options="option.name for option in examples track by option.tmpl"
+                        ></select>
+                        <tt>selection = {{selection}}</tt><br/>
+                    </div>
 
-            <!--<div ng-if="item.id" ng-switch on="modeSelect.value" ng-cloak>-->
-            <!--<div ng-switch-when="uploader">-->
-            <!--<ng-include src="uploaderView"></ng-include>-->
+
+                </div>
+            </form>
+
+
+            <!--П И С Ь М О  С О Т Р У Д Н И К А М-->
+
+
+            <!--<div ng-if="comment" class="animate-if">-->
+            <!--&lt;!&ndash;<textarea rows="6" class="form-control" ng-model="item.htmlData"/>&ndash;&gt;-->
+            <!--<textarea rows="6" class="form-control" ng-model="item.htmlData"/>-->
             <!--</div>-->
-            <!--</div>-->
+            <!--<p class="text-left" ng-bind-html="item.htmlData"></p>-->
+
+
+            <code>item.htmlDta={{selection.tmpl}}</code>
+
+
+            <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch on="selection.name">
+                <!--<textarea style="width: 100%; height: 120px; border: none" class="animate-switch" ng-switch-when="settings|options"-->
+                <!--ng-switch-when-separator="|">{{htmlData}}</textarea>-->
+                <textarea ng-trim="true" ng-model="selection.tmpl" style="width: 100%; height: 120px; border: none" class="animate-switch" ng-switch-when="home">    {{selection.tmpl}}</textarea>
+                <textarea ng-trim="true" ng-model="selection.tmpl" style="width: 100%; height: 120px; border: none" class="animate-switch" ng-switch-when="settings">{{selection.tmpl}}</textarea>
+                <textarea ng-trim="true" ng-model="selection.tmpl" style="width: 100%; height: 120px; border: none" class="animate-switch" ng-switch-when="options"> {{selection.tmpl}}</textarea>
+                <textarea ng-trim="true" ng-model="selection.tmpl" style="width: 100%; height: 120px; border: none" class="animate-switch" ng-switch-when="other">   {{selection.tmpl}}</textarea>
+                <!--<div class="animate-switch" ng-switch-default>default</div>-->
+
+            </div>
 
 
             <!-- C A L E N D A R -->
@@ -208,16 +249,7 @@
                               <!--<button class="btn btn-default" type="button" ng-click="clear()"><span class="glyphicon glyphicon-remove"></span></button>-->
                             </span>
             </div>
-            <!--<div class="input-group">-->
-            <!--<input type="text" class="form-control flatpickr " ng-flatpickr-->
-            <!--fp-opts="dateOpts3"-->
-            <!--fp-on-setup="toggleBlur(item)"-->
-            <!--ng-model="item.firedDate">-->
-            <!--<span class="input-group-btn">-->
-            <!--<button class="btn btn-default" type="button" ng-click="removeFired(item)"><span-->
-            <!--class="glyphicon glyphicon-remove"></span></button>-->
-            <!--</span>-->
-            <!--</div>-->
+
 
             <!-- I N F O  P A N E L -->
 
@@ -241,7 +273,11 @@
         </div>
 
     </div>
-
+    <div class="row">
+        <div class="col-md-12">
+            <pre  ng-if="debug"><h4>{{item| json}}</h4></pre>
+        </div>
+    </div>
 </div>
 
 

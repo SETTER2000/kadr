@@ -21,11 +21,50 @@ angular.module('ScheduleModule')
                 minDate: "01-01-1950",
                 maxDate: "31-12-2002"
             };
+            $scope.debug = true;
+            $scope.comment = false;
 
 
+
+            //$scope.examples = ['settings', 'home', 'options', 'other'];
+            $scope.examples = [
+                {name: 'settings', tmpl: 'template settings'},
+                {name: 'home', tmpl: 'template home'},
+                {name: 'options', tmpl: 'template options'},
+                {name: 'other', tmpl: 'template other'}
+            ];
+
+
+            $scope.$watch('selection', function (value) {
+                let ar = [];
+                console.log('value DDDDDDDDDDD', value);
+                if (value ){
+                    ar.push(value);
+                    $scope.item.htmlData = ar;
+                }
+            });
+
+
+                console.log('SSSSSSSSDDDDDDDD changeTmpl', $scope.changeTmpl);
+                console.log('SSSSSSSSDDDDDDDD textSX', $scope.textSX);
+
+            //console.log('selection', $scope.selection);
+            //console.log('item.htmlData', $scope.item.htmlData);
+            $scope.toogle = function () {
+                $scope.comment = ($scope.comment) ? false : true;
+            };
+            $scope.year = moment().get('year');
+            $scope.htmlData = '<h1>Уважаемые коллеги!</h1> ' +
+                '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в 2018 году ' +
+                'Генеральным директором подписан приказ о подготовке графика отпусков на ' + $scope.year + ' год.</p> ' +
+                '<p>Коллеги, прошу  в срок до  <b>01.12.' + $scope.year + '</b> ' +
+                'запланировать свои отпуска на ' + $scope.year + ' год и внести информацию в единую информационную систему по ' +
+                'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>';
+
+
+            //if('item.htmlData')
 
             $scope.expr = "start | date:'dd.MM.yyyy HH:mm'";
-
             $scope.parseExpression = function () {
                 var fn = $parse($scope.expr);
                 $scope.item.start = fn($scope.item)
@@ -96,35 +135,6 @@ angular.module('ScheduleModule')
                     toastr.warning(info.maxTwoWeek);
                 }
 
-                //$scope.$watch('maxTwoWeek', function (value) {
-                //    $scope.item.$update($scope.item, function (success) {
-                //            toastr.success(info.changed);
-                //            //$scope.refresh();
-                //        },
-                //        function (err) {
-                //            toastr.error(err.data, info.error + ' 11445!');
-                //        }
-                //    );
-                //});
-                //$scope.maxWeek = function () {
-                //    $scope.item.$update($scope.item, function (success) {
-                //            toastr.success(info.changed);
-                //            console.log('success', success);
-                //            //$scope.refresh();
-                //            $scope.item = success;
-                //        },
-                //        function (err) {
-                //            toastr.error(err.data, info.error + ' 11445!');
-                //        }
-                //    );
-                //};
-
-                //fpItem.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
-                //console.log('DDDDDDD6', moment().year($scope.me.interfaces[0].year));
-                //console.log('POPP:', moment().month());
-                //console.log('Текущие пересечения', $scope.intersection);
-                //
-                //console.log('Выбранный период', fpItem.selectedDates);
 
                 //console.log('******************************************************* // ************************************* ');
                 if ($scope.intersection) {
@@ -299,72 +309,6 @@ angular.module('ScheduleModule')
                 );
             };
 
-            /**
-             * Build `states` list of key/value pairs
-             */
-            //function loadAll() {
-            //    return $http.get('/schedule/get-all').then(function (response) {
-            //        var a = [];
-            //        response.data.map(function (state) {
-            //            //console.log('allStates', state);
-            //            a.push({
-            //                value: state._id,
-            //                display: state.lastName + ' ' + state.firstName.substr(0, 1) + '.' + state.patronymicName.substr(0, 1) + '.'
-            //            });
-            //        });
-            //        return a;
-            //    });
-            //    //return allStates.split(/, +/g).map(function (state) {
-            //    //    //console.log('allStates', state);
-            //    //    return {
-            //    //        value: state.toLowerCase(),
-            //    //        display: state
-            //    //    };
-            //    //});
-            //}
-
-
-            //function loadAll() {
-            //    $http.get('/schedule').then(function onSuccess(sailsResponse) {
-            //
-            //        return sailsResponse.data.map(function (state) {
-            //            //console.log('allStates', state);
-            //            return {
-            //                value: state.id,
-            //                display: state.lastName
-            //            };
-            //        });
-            //    });
-            //}
-
-            //
-            //$scope.allStates = function () {
-            //    $http.get('/schedule').then(function onSuccess(sailsResponse) {
-            //        let ar = [];
-            //        sailsResponse.data.map(function (state) {
-            //            //console.log('allStates',state);
-            //            ar.push({
-            //                value: state.lastName,
-            //                display: state.lastName
-            //            });
-            //        });
-            //        return ar;
-            //    });
-            //};
-
-            //function loadAll() {
-//let r = $scope.allStates();
-            //r.data.map(function (st) {
-            //    //console.log('GETTERR', st);
-            //
-            //    return {
-            //        value: st.lastName,
-            //        display: st.lastName
-            //    };
-            //});
-
-
-            //}
 
             //loadAll_o();
             /**
@@ -378,19 +322,6 @@ angular.module('ScheduleModule')
                 };
 
             }
-
-
-            //$http.get('/schedule/getBoss',{name:'Александр', lname:'Петров', pname:'Вячеславович'})
-            //    .then(function onSuccess(sailsResponse){
-            //        console.log('sailsResponse: ', sailsResponse);
-            //        $scope.scheduleList.contents = sailsResponse.data;
-            //    })
-            //    .catch(function onError(sailsResponse){
-            //        console.log('sailsResponse ERROR:', sailsResponse);
-            //    })
-            //    .finally(function eitherWay(){
-            //        $scope.scheduleList.loading = false;
-            //    });
 
 
             if (!$scope.me.admin && !$scope.me.kadr) $state.go(info.redirectSelf);
@@ -466,20 +397,6 @@ angular.module('ScheduleModule')
                 //defaultDate: 'today'
             };
 
-            //$scope.dateOpts3 = {
-            //    locale: info.ru,
-            //    //mode: "range",
-            //    dateFormat: info.dateFormat,
-            //    minDate: info.minDate
-            //    //defaultDate: 'today'
-            //};
-            //$scope.dateOpts4 = {
-            //    locale: info.ru,
-            //    //mode: "range",
-            //    dateFormat: info.dateFormat,
-            //    minDate: info.minDate
-            //    //defaultDate: 'today'
-            //};
 
             $scope.toggleBlur = function (mx) {
                 //if(!mx) mx.selectedDates = new Date();
@@ -499,180 +416,12 @@ angular.module('ScheduleModule')
 
             });
 
-            uploader.filters.push({
-                name: 'syncFilter',
-                fn: function (item /*{File|FileLikeObject}*/, options) {
-                    return this.queue.length < 10;
-                }
-            });
-
-
-            uploader.filters.push({
-                name: 'asyncFilter',
-                fn: function (item /*{File|FileLikeObject}*/, options, deferred) {
-                    setTimeout(deferred.resolve, 1e3);
-                }
-            });
-
-
-            /**
-             * Фильтр проверяет рассширение
-             * Доступны для загрузки только xlsx файлы
-             */
-            uploader.filters.push({
-                name: 'expFilter',
-                fn: function (item) {
-                    if (item.name.slice(-3) !== 'jpg') {
-                        toastr.error(info.requiredJpg, info.error);
-                        return false;
-                    }
-                    $scope.uploaderButtonPrice = true;
-                    return true;
-                }
-            });
-
-            // CALLBACKS
-
-            uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
-                console.info('onWhenAddingFileFailed', item, filter, options);
-            };
-            uploader.onAfterAddingFile = function (fileItem) {
-                console.info('onAfterAddingFile', fileItem);
-            };
-            uploader.onAfterAddingAll = function (addedFileItems) {
-                console.info('onAfterAddingAll', addedFileItems);
-
-            };
-            uploader.onBeforeUploadItem = function (item) {
-                console.info('onBeforeUploadItem', item);
-                item.formData.push({id: $stateParams.scheduleId});
-
-            };
-
-
-            uploader.onProgressItem = function (fileItem, progress) {
-                console.info('onProgressItem', fileItem, progress);
-
-            };
-            uploader.onProgressAll = function (progress) {
-                console.info('onProgressAll', progress);
-
-            };
-            uploader.onSuccessItem = function (fileItem, response, status, headers) {
-                console.info('onSuccessItem', fileItem);
-                console.info('onSuccessItem2', response);
-                console.info('onSuccessItem3', status);
-                console.info('onSuccessItem4', headers);
-
-
-            };
-            uploader.onErrorItem = function (fileItem, response, status, headers) {
-                $scope.pathToReport = response.avatarFd;
-                $scope.goReport = response.goReport;
-                $scope.statusErr = 'Отклонено';
-                toastr.error(response.message, info.error + ' Статус ' + status);
-            };
-            uploader.onCancelItem = function (fileItem, response, status, headers) {
-                //console.log('uploader.onCancelItem');
-                //console.log(status);
-                //console.info('onCancelItem', fileItem, response, status, headers);
-            };
-            //$scope.$watch('item.avatarUrl', function (value) {
-            //    $scope.item.avatarUrl = value;
-            //
-            //});
-            //
-
-            //$scope.getLdap = function () {
-            //    //console.log($scope.item.lastName);
-            //    $http.post('/schedule/ldap', {
-            //            name: $scope.item.lastName
-            //        })
-            //        .then(function onSuccess(sailsResponse) {
-            //            //console.log('sailsResponse: ',sailsResponse);
-            //            let objectContacts = {};
-            //            $scope.item.contacts = [];
-            //            objectContacts.type = "Внутренний телефон";
-            //            objectContacts.value = sailsResponse.data[0].telephoneNumber;
-            //
-            //            let patronymic = sailsResponse.data[0].displayName.split(' ')[2];
-            //            //$scope.item.lastName = sailsResponse.data[0].sn;
-            //            $scope.item.firstName = sailsResponse.data[0].givenName;
-            //            $scope.item.login = sailsResponse.data[0].sAMAccountName;
-            //            $scope.item.room = sailsResponse.data[0].physicalDeliveryOfficeName;
-            //            $scope.item.email = sailsResponse.data[0].mail;
-            //            $scope.item.contacts.push(objectContacts);
-            //            $scope.item.patronymicName = patronymic;
-            //
-            //            //[{"type":"Мобильный","value":"8-985-729-37-74"},{"type":"Телефон","value":"+7 (495) 444-18-61"},{"type":"Внутренний телефон","value":"(050) 4322"}]
-            //            //$scope.item.patronymicName = patronymic;
-            //            // $scope.scheduleProfile.properties.gravatarURL = sailsResponse.data.gravatarURL;
-            //            // window.location = '#/profile/' + $scope.editProfile.properties.id;
-            //            //window.location = '/profile';
-            //            for (let op in sailsResponse.data) {
-            //                toastr.success(info.isSimilar + sailsResponse.data[op].displayName);
-            //            }
-            //
-            //            $scope.editProfile.loading = false;
-            //        }, function (err) {
-            //            //console.log(info.error, err);
-            //        })
-            //        .catch(function onError(sailsResponse) {
-            //            // console.log('sailsresponse: ', sailsResponse)
-            //            // Otherwise, display generic error if the error is unrecognized.
-            //            $scope.editProfile.changePassword.errorMsg = $scope.unexpected + (sailsResponse.data || sailsResponse.status);
-            //            toastr.error($scope.editProfile.changePassword.errorMsg);
-            //        })
-            //        .finally(function eitherWay() {
-            //            $scope.editProfile.loading = false;
-            //        });
-            //};
-
-            uploader.onCompleteItem = function (fileItem, response, status, headers) {
-                //console.info('onCompleteItem', fileItem, response, status, headers);
-
-
-                if (status == 200) {
-                    fileItem.pathToReport = '/images/foto/' + response.avatarFd;
-                    fileItem.goReport = response.goReport;
-                    fileItem.dateUpload = response.dateUpload;
-                    toastr.success(response.message, 'Ok! ');
-                    fileItem.progress = response.progress;
-                    fileItem.errorPercent = '0';
-                    fileItem.statusOk = response.message;
-                    $interval(function () {
-                        $scope.refresh();
-                        //location.reload()
-                    }, 2000, 1);
-
-                    // fileItem.allEr = response.allEr;
-                }
-                switch (response.status) {
-                    case 202:
-                        //toastr.success(response.message, ' Статус ' + response.status);
-                        fileItem.progress = response.progress;
-                        fileItem.errorPercent = '(' + response.errorPercent + '%)';
-                        //fileItem.pathToReport = '/images/foto/report/' + response.avatarFd;
-                        fileItem.goReport = response.goReport;
-                        fileItem.statusOk = response.message;
-                        fileItem.allEr = response.allEr;
-
-                        break;
-                }
-            };
-            uploader.onCompleteAll = function (fileItem, response, status, headers) {
-                //$scope.getDatePrice();
-                $scope.uploaderButtonPrice = false;
-            };
-
 
             $scope.options =
                 [
                     {display: "Загрузить файл", value: "uploader"}
                 ];
             $scope.modeSelect = $scope.options[0];
-            $scope.uploaderView = "/js/private/admin/schedules/views/uploader.html";
-
 
             $scope.closed = function () {
                 if ($scope.close) {
@@ -682,31 +431,22 @@ angular.module('ScheduleModule')
                     $scope.close = true;
                 }
             };
-            //$scope.getBoss = function () {
-            //    //console.log('$scope.item', $scope.item);
-            //    $http.post('/schedule/getBoss', $scope.item)
-            //        .then(function (response) {
-            //            //console.log('RESPONSORY: ', response);
-            //            $scope.boss = response.data;
-            //        }, function (response) {
-            //            $scope.data = response.data || 'Request failed';
-            //            $scope.status = response.status;
-            //        });
-            //};
+
             $scope.refresh = function () {
                 let item = $scope.item = Schedules.get({id: $stateParams.scheduleId},
                     function (schedules) {
                         console.log('EDIT SCHEDULE', schedules);
                         $scope.flatpicker.setDate(schedules.period);
                         $scope.schedules = schedules;
-                        item.getStart();
-                        console.log('FFFFFFFFFFFF', item.getStart());
+                        $scope.nameLinkFn();
+                        $scope.selection = {name:schedules.htmlData[0].name};
                         //$scope.getBoss();
                     }, function (err) {
                         // активируем по умолчанию создаваемую запись
                         item.action = true;
                         item.status = 'Проект';
                         item.countData = 0;
+
                         //item.sc = function () {
                         //    return 'Отпуск';
                         //};
@@ -726,6 +466,7 @@ angular.module('ScheduleModule')
 
             $scope.$watch('item.year', function (val) {
                 if (val) {
+                    $scope.year = val;
                     $scope.item.name = '';
                     $scope.item.name = $scope.item.getFullName() + val;
                 }
