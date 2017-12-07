@@ -165,7 +165,7 @@ module.exports = {
             start: new Date(req.param('start')),
             year: +req.param('year'),
             countData: +req.param('countData'),
-            htmlData: +req.param('htmlData'),
+            htmlData: req.param('htmlData'),
             //furlough: req.param('furlough'),
             //owner: (req.param('owner')) ? req.param('owner').id : req.session.me,
             from: new Date(req.param('from')),

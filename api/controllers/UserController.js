@@ -271,7 +271,7 @@ module.exports = {
      * Поиск руководителя в LDAP
      */
     bossLDAP: function (req, res) {
-        console.log('Поиск руководителя в LDAP: ', req.param('name'));
+        console.log('Поиск руководителя в LDAP: ', req.param('lastName'));
         const clientSearchLDAP = ldap.createClient({
             url: sails.config.ldap.uri
         });
@@ -320,7 +320,7 @@ module.exports = {
                     return res.negotiate(err);
                 }
                 ldapUser.on('searchEntry', function (entry) {
-                    //console.log('entry: ' + JSON.stringify(entry.object));
+                    console.log('entry: ' + JSON.stringify(entry.object.manager));
                     empl = entry.object;
                 });
 

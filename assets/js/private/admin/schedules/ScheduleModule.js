@@ -154,7 +154,7 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
         };
 
      Schedules.prototype.nameLinkFn = function () {
-            return (this.hasOwnProperty('htmlData') && this.htmlData.length) ? 'Редактировать' : 'Вставить шаблон';
+            return (this.hasOwnProperty('htmlData') && this.htmlData.length) ? 'Редактировать шаблон' : 'Вставить шаблон';
         };
 
 

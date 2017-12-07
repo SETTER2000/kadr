@@ -478,12 +478,13 @@ angular.module('UserModule')
                 }
             };
             $scope.getBoss = function () {
-                //console.log('$scope.item', $scope.item);
+                console.log('$scope.item', $scope.item);
                 $http.post('/user/getBoss', $scope.item)
                     .then(function (response) {
-                        //console.log('RESPONSORY: ', response);
+                        console.log('RESPONSE BOSS: ', response);
                         $scope.boss = response.data;
                     }, function (response) {
+                        console.log('ERROR POST BOSS', response);
                         $scope.data = response.data || 'Request failed';
                         $scope.status = response.status;
                     });
