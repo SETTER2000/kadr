@@ -146,6 +146,10 @@ module.exports = {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         //if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
 
+
+        //sails.hooks.cron.jobs.myJob.schedule= '0 18 17 8 12 *';
+        //sails.hooks.cron.jobs.myJob.go=77;
+        //sails.hooks.cron.jobs.myJob.start();
         console.log('REQ BODY', req.body);
         //console.log('req.session.me', req.session.me);
         //console.log('furlough', req.param('furlough'));
@@ -176,51 +180,51 @@ module.exports = {
             .exec((err, findUser) => {
                 Schedule.create(obj)
                     .exec(function (err, createSchedule) {
-                    if (err) return res.serverError(err);
-                    console.log(obj.section+' создан пользователем:',findUser.getFullName());
-                    //findUser.vacations.add(createSchedule.id);
-                    findUser.scheduleWhomCreated.add(createSchedule.id);
-                    //_.forEach(users, function (v, k) {
-                    //    // console.log('Отпуска пересекаемые с нашим:', v.vacations);
-                    //    if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
-                    //        _.forEach(v.vacations, function (val, key) {
-                    //            createVacation.intersec.add(val.id)
-                    //        });
-                    //    }
-                    //});
-                    // console.log('findUser++:', findUser);
-                    let strEmail = '';
-                    if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
-                        let a = [];
-                        _.forEach(findUser.matchings, function (val, key) {
-                            console.log('EMAIl:', val.email);
-                            a.push(val.email);
+                        if (err) return res.serverError(err);
+                        console.log(obj.section + ' создан пользователем:', findUser.getFullName());
+                        //findUser.vacations.add(createSchedule.id);
+                        findUser.scheduleWhomCreated.add(createSchedule.id);
+                        //_.forEach(users, function (v, k) {
+                        //    // console.log('Отпуска пересекаемые с нашим:', v.vacations);
+                        //    if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
+                        //        _.forEach(v.vacations, function (val, key) {
+                        //            createVacation.intersec.add(val.id)
+                        //        });
+                        //    }
+                        //});
+                        // console.log('findUser++:', findUser);
+                        let strEmail = '';
+                        if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
+                            let a = [];
+                            _.forEach(findUser.matchings, function (val, key) {
+                                console.log('EMAIl:', val.email);
+                                a.push(val.email);
+                            });
+                            strEmail = a.join(',');
+                        }
+
+
+                        findUser.save(function (err) {
+                            if (err) return res.negotiate(err);
+                            //createVacation.save(function (err) {
+                            //    if (err) return res.negotiate(err);
+                            //
+                            //    strEmail = (strEmail) ? strEmail : '';
+                            //    console.log('Согласующие:', strEmail);
+                            //    let options = {
+                            //        to: strEmail, // Кому: можно несколько получателей указать через запятую
+                            //        subject: ' ✔ ' + obj.section + ' создан! ' + findUser.getFullName(), // Тема письма
+                            //        text: '<h2>Уведомление об отпуске </h2>', // plain text body
+                            //        html: '' +
+                            //        '<h2>Уведомление об отпуске </h2> ' +
+                            //        '<p>' + obj.section + ' для ' + findUser.getFullName() + ' создан</p>' +
+                            //        '<p> C ' + moment(obj.from).format('LLLL') + ' по ' + moment(obj.to).format('LLLL') + '</p>' +
+                            //        '<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
+                            //    };
+                            //    EmailService.sender(options);
+                            return res.send(createSchedule);
                         });
-                        strEmail = a.join(',');
-                    }
-
-
-                    findUser.save(function (err) {
-                        if (err) return res.negotiate(err);
-                        //createVacation.save(function (err) {
-                        //    if (err) return res.negotiate(err);
-                        //
-                        //    strEmail = (strEmail) ? strEmail : '';
-                        //    console.log('Согласующие:', strEmail);
-                        //    let options = {
-                        //        to: strEmail, // Кому: можно несколько получателей указать через запятую
-                        //        subject: ' ✔ ' + obj.section + ' создан! ' + findUser.getFullName(), // Тема письма
-                        //        text: '<h2>Уведомление об отпуске </h2>', // plain text body
-                        //        html: '' +
-                        //        '<h2>Уведомление об отпуске </h2> ' +
-                        //        '<p>' + obj.section + ' для ' + findUser.getFullName() + ' создан</p>' +
-                        //        '<p> C ' + moment(obj.from).format('LLLL') + ' по ' + moment(obj.to).format('LLLL') + '</p>' +
-                        //        '<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
-                        //    };
-                        //    EmailService.sender(options);
-                        return res.send(createSchedule);
                     });
-                });
             });
 
         /**
@@ -393,8 +397,17 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('UPDATE req.owner', req.param('owner'));
-        console.log('moment start', moment(req.param('start'), ["DD.MM.YYYY HH:mm"]));
+
+        console.log('DATE START: ', moment(req.param('start')).format('LLLL'));
+        let task = '* ' + moment(req.param('start')).get('minute') + ' ' + moment(req.param('start')).get('hour') + ' ' + moment(req.param('start')).date() + ' ' + (moment(req.param('start')).format('M')) + ' *';
+        console.log('TASK: ', task);
+
+        sails.hooks.cron.jobs.myJob.first = task;
+        sails.hooks.cron.jobs.myJob.go = req.param('name') + ' ' + req.param('period') + '. Запущена рассылка в ' + moment(req.param('start')).format('llll');
+        sails.hooks.cron.jobs.myJob.start();
+
+
+        //console.log('UPDATE req.owner', req.param('owner'));
         let obj = {
             section: 'График отпусков',
             sections: 'Графики отпусков',
@@ -424,8 +437,8 @@ module.exports = {
                     .populate('whomUpdated')
                     .exec(function updateObj(err, objEdit) {
                         if (err) return res.negotiate(err);
-                        sails.log(obj.section+ 'обновлён: ', objEdit);
-                        console.log(obj.section+' обновлён пользователем:',findUser.getFullName());
+                        sails.log(obj.section + 'обновлён: ', objEdit);
+                        console.log(obj.section + ' обновлён пользователем:', findUser.getFullName());
                         findUser.save(function (err) {
                             if (err) return res.negotiate(err);
                             res.ok();
@@ -725,7 +738,6 @@ module.exports = {
                 return res.ok(update);
             });
     },
-
 
 
     /**
@@ -1060,9 +1072,6 @@ module.exports = {
     //
     //    return res.ok();
     //},
-
-
-
 
 
 }

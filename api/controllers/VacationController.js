@@ -1050,8 +1050,8 @@ module.exports = {
                         '<h2>У Вас есть новое сообщение. </h2> ' +
                         '<p>' + req.param('message') + '</p>' +
                         '<p><a href="' + sails.config.appUrl.http + '/admin/vacations/edit/' + req.param('id') + '">перейти в чат</a></p>'
-
                     };
+
                     EmailService.sender(options);
 
                     return res.ok();

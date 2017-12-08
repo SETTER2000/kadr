@@ -1,5 +1,5 @@
 <table class="table table-hover">
-   <!-- H E A D E R  T A B L E  -->
+    <!-- H E A D E R  T A B L E  -->
     <tr>
 
         <!-- I N D E X -->
@@ -7,7 +7,7 @@
 
         <!-- А В А Т А Р -->
         <!--<th class="text-center">-->
-            <!--<span class="badge">{{filtered.length}}</span>-->
+        <!--<span class="badge">{{filtered.length}}</span>-->
         <!--</th>-->
 
         <!-- Н А И М Е Н О В А Н И Е -->
@@ -15,7 +15,7 @@
             <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('name')">
                 {{nameHeader.oneArea}}
                 <span class="sortOrder" ng-show="propertyName === 'name'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -24,7 +24,7 @@
             <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('countData')">
                 {{nameHeader.nineArea}}
                 <span class="sortOrder" ng-show="propertyName === 'countData'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -33,7 +33,7 @@
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('year')">
                 {{nameHeader.twoArea}}
                 <span class="sortOrder" ng-show="propertyName === 'year'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -41,8 +41,8 @@
         <!-- S T A T U S -->
         <th class="text-center">
             <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('status')">
-               {{nameHeader.threeArea}}
-                    <span class="sortOrder" ng-show="propertyName === 'status'" ng-class="{reverse: reverse}"></span>
+                {{nameHeader.threeArea}}
+                <span class="sortOrder" ng-show="propertyName === 'status'" ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -52,7 +52,7 @@
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('from')">
                 {{nameHeader.fourArea}}
                 <span class="sortOrder" ng-show="propertyName === 'from'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -61,7 +61,7 @@
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('to')">
                 {{nameHeader.fiveArea}}
                 <span class="sortOrder" ng-show="propertyName === 'to'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -70,7 +70,16 @@
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('daysSelectHoliday')">
                 {{nameHeader.sixArea}}
                 <span class="sortOrder" ng-show="propertyName === 'daysSelectHoliday'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!-- А К Т И В А Ц И Я -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('action')">
+                {{nameHeader.actionArea}}
+                <span class="sortOrder" ng-show="propertyName === 'action'"
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -79,7 +88,7 @@
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('whomCreated[0].lastName')">
                 {{nameHeader.sevenArea}}
                 <span class="sortOrder" ng-show="propertyName === 'whomCreated[0].lastName'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -88,7 +97,7 @@
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('whomCreated[0].lastName')">
                 {{nameHeader.eightArea}}
                 <span class="sortOrder" ng-show="propertyName === 'whomCreated[0].lastName'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -97,7 +106,7 @@
         <th ng-if="me.admin" class="text-center">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('createdAt')">
                 {{nameHeader.createdAtArea}}  <span class="sortOrder" ng-show="propertyName === 'createdAt'"
-                    ng-class="{reverse: reverse}"></span>
+                                                    ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -106,31 +115,31 @@
         <th ng-if="me.admin" class="text-center">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('updatedAt')">
                 {{nameHeader.updatedAtArea}}  <span class="sortOrder" ng-show="propertyName === 'updatedAt'"
-                    ng-class="{reverse: reverse}"></span>
+                                                    ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
         <!--&lt;!&ndash; К О Н Т А К Т Ы &ndash;&gt;-->
         <!--<th class="wdt">-->
-            <!--<div class="btn-group pull-right">-->
-                <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">-->
-                    <!--<span class="sortOrder" ng-show="propertyName === 'contacts'" ng-class="{reverse: reverse}"></span>-->
-                    <!--Контакты: {{fieldName}}-->
-                <!--</button>-->
-                <!--<button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"-->
-                        <!--aria-haspopup="true" aria-expanded="false">-->
-                    <!--<span class="caret"></span>-->
-                    <!--<span class="sr-only">Контакты: {{fieldName}}</span>-->
-                <!--</button>-->
-                <!--<ul class="dropdown-menu">-->
-                    <!--&lt;!&ndash;<li><a href="#" ng-click="fieldName='Email'">Email</a></li>&ndash;&gt;-->
-                    <!--<li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>-->
-                    <!--<li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>-->
-                    <!--<li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>-->
-                    <!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<li><a href="#">Separated link</a></li>&ndash;&gt;-->
-                <!--</ul>-->
-            <!--</div>-->
+        <!--<div class="btn-group pull-right">-->
+        <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">-->
+        <!--<span class="sortOrder" ng-show="propertyName === 'contacts'" ng-class="{reverse: reverse}"></span>-->
+        <!--Контакты: {{fieldName}}-->
+        <!--</button>-->
+        <!--<button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"-->
+        <!--aria-haspopup="true" aria-expanded="false">-->
+        <!--<span class="caret"></span>-->
+        <!--<span class="sr-only">Контакты: {{fieldName}}</span>-->
+        <!--</button>-->
+        <!--<ul class="dropdown-menu">-->
+        <!--&lt;!&ndash;<li><a href="#" ng-click="fieldName='Email'">Email</a></li>&ndash;&gt;-->
+        <!--<li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>-->
+        <!--<li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>-->
+        <!--<li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>-->
+        <!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
+        <!--&lt;!&ndash;<li><a href="#">Separated link</a></li>&ndash;&gt;-->
+        <!--</ul>-->
+        <!--</div>-->
         <!--</th>-->
     </tr>
 
@@ -145,9 +154,9 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- А В А Т А Р -->
         <!--<td>-->
-            <!--&lt;!&ndash;<img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}" alt=""></td>&ndash;&gt;-->
-            <!--<img ng-if="item.avatarUrl" alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="photo"/>-->
-            <!--<img ng-if="!item.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>-->
+        <!--&lt;!&ndash;<img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}" alt=""></td>&ndash;&gt;-->
+        <!--<img ng-if="item.avatarUrl" alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="photo"/>-->
+        <!--<img ng-if="!item.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>-->
         <!--</td>-->
 
         <!-- Н А И М Е Н О В А Н И Е -->
@@ -159,7 +168,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- C O U N T  D A T A S E A R C H -->
         <td class="text-center">
-          {{ item.countData }}
+            {{ item.countData }}
         </td>
 
         <!-- Y E A R -->
@@ -167,9 +176,9 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             {{item.year}}
         </td>
 
-        <!-- Y E A R -->
-        <td class="text-center">
-            {{item.status}}
+        <!-- S T A T U S -->
+        <td class="text-center " ng-class="{'text-primary':(item.status==='Проект'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Утвержден'), }">
+           <strong>{{item.status}}</strong>
         </td>
 
 
@@ -189,11 +198,15 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             {{item.daysSelectHoliday }}
         </td>
 
+        <!-- А К Т И В А Ц И Я -->
+        <td class="text-center">
+            <span ng-if="item.action" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+        </td>
+
         <!-- С О З Д А Л -->
         <td class="text-center">
             {{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}} {{item.whomCreated.patronymicName[0]}}
         </td>
-
 
 
         <!-- О Б Н О В И Л -->
@@ -201,12 +214,12 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName[0]}} {{item.whomUpdated.patronymicName[0]}}
         </td>
 
-            <!-- C R E A T E -->
+        <!-- C R E A T E -->
         <td ng-if="me.admin" class="text-center">
             {{item.createdAt | date:"dd.MM.yyyy HH:mm:ss"}}
         </td>
 
-            <!-- U P D A T E -->
+        <!-- U P D A T E -->
         <td ng-if="me.admin" class="text-center">
             {{item.updatedAt | date:"dd.MM.yyyy HH:mm:ss"}}
         </td>
@@ -214,7 +227,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!--&lt;!&ndash; К О Н Т А К Т Ы &ndash;&gt;-->
         <!--<td width="250px" class="text-right">-->
-            <!--{{item.getContact(fieldName)}}-->
+        <!--{{item.getContact(fieldName)}}-->
         <!--</td>-->
         <!--<td>{{item.diff}}</td>-->
         <!--<td class="btn-group-xs">-->

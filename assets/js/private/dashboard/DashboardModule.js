@@ -122,4 +122,38 @@ angular.module('DashboardModule', ['ui.router', 'toastr', 'ngResource', 'ngAnima
         //    })
         ;
     })
+    .config(function (toastrConfig) {
+        angular.extend(toastrConfig, {
+            autoDismiss: false,
+            containerId: 'toast-container',
+            maxOpened: 0,
+            newestOnTop: true,
+            // templates: {
+            //     toast: 'directives/toast/toast.html',
+            //     progressbar: 'directives/progressbar/progressbar.html'
+            // },
+            positionClass: 'toast-top-right',
+            allowHtml:true,
+            // positionClass: 'toast-top-left',
+            // positionClass: 'toast-top-full-width',
+            preventDuplicates: false,
+            preventOpenDuplicates: true,
+            target: 'body',
+            // iconClasses: {
+            //     error: 'toast-error',
+            //     info: 'toast-info',
+            //     success: 'toast-success',
+            //     warning: 'toast-warning'
+            // },
+            messageClass: 'toast-message',
+            titleClass: 'toast-title',
+            toastClass: 'toast',
+            // closeButton:true,
+            extendedTimeOut: 1000,
+            "showDuration": "100",
+            "hideDuration": "300",
+            "timeOut": "5000",
+            "progressBar": false,
+        });
+    })
 ;

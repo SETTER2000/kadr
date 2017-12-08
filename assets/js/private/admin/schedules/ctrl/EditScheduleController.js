@@ -1,13 +1,14 @@
 'use strict';
 angular.module('ScheduleModule')
-    .controller('EditScheduleController', ['$scope', '$http', '$parse', 'toastr', '$interval', '$templateCache', '$state', 'Schedules', 'moment', 'Positions', 'Departments', 'Vacations', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
-        function ($scope, $http, $parse, toastr, $interval, $templateCache, $state, Schedules, moment, Positions, Departments, Vacations, Users, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
+    .controller('EditScheduleController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'Schedules', 'moment', 'Positions', 'Departments', 'Vacations', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
+        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Schedules, moment, Positions, Departments, Vacations, Users, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             $scope.edit = $state.includes('home.admin.schedules.edit');
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
                 error: 'Ошибка!',
+                warning: 'ВНИМАНИЕ!',
                 requiredJpg: 'Расширение файла должно быть jpg.',
                 isSimilar: 'Есть похожий: ',
                 ok: 'OK!',
@@ -25,44 +26,62 @@ angular.module('ScheduleModule')
             $scope.debug = true;
             $scope.comment = false;
 
+            angular.extend(toastrConfig, {
+                //"closeButton": true,
+                //"debug": false,
+                //"newestOnTop": false,
+                //"progressBar": true,
+                //"positionClass": "toast-top-right",
+                //"preventDuplicates": false,
+                //"showDuration": "300",
+                //"hideDuration": "1000",
+                //"timeOut": "5000",
+                //"extendedTimeOut": "1000",
+                //"showEasing": "swing",
+                //"hideEasing": "linear",
+                //"showMethod": "fadeIn",
+                //"hideMethod": "fadeOut"
+            });
 
             //$scope.examples = ['settings', 'home', 'options', 'other'];
             $scope.year = moment().get('year');
             console.log('YEARRRR', $scope.year);
             $scope.examples = [
                 {
-                    name: 'Шаблон №1',
+                    name: '№1',
                     tmpl: '<h1>Уважаемые коллеги!</h1> ' +
                     '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в ' + ($scope.year + 1) + ' году ' +
                     'Генеральным директором подписан приказ о подготовке графика отпусков на ' + ($scope.year + 1) + ' год.</p> ' +
-                    '<p>Коллеги, прошу  в срок до  <b>01.12.' + $scope.year + '</b> ' +
+                    '<p>Коллеги, прошу  в срок до  <b>01.12.' + $scope.year + ' </b> ' +
                     'запланировать свои отпуска на ' + ($scope.year + 1) + ' год и внести информацию в единую информационную систему по ' +
                     'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>' +
                     '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
                 },
                 {
-                    name: 'Шаблон №2',
+                    name: '№2',
                     tmpl: 'Шаблон №2 - нет вариантов'
                 },
                 {
-                    name: 'Шаблон №3',
+                    name: '№3',
                     tmpl: 'Шаблон №3 - нет вариантов'
                 },
                 {
-                    name: 'Шаблон №4',
+                    name: '№4',
                     tmpl: 'Шаблон №4 - нет вариантов'
                 }
             ];
 
 
-            $scope.$watch('selection', function (value) {
-                let ar = [];
-                console.log('value DDDDDDDDDDD', value);
-                if (value) {
-                    ar.push(value);
-                    $scope.item.htmlData = ar;
-                }
-            });
+
+
+//$scope.$watch('selection', function (value) {
+            //    let ar = [];
+            //    console.log('value DDDDDDDDDDD', value);
+            //    if (value) {
+            //        ar.push(value);
+            //        $scope.item.htmlData = ar;
+            //    }
+            //});
 
             //
             //console.log('SSSSSSSSDDDDDDDD changeTmpl', $scope.changeTmpl);
@@ -87,7 +106,7 @@ angular.module('ScheduleModule')
             $scope.expr = "start | date:'dd.MM.yyyy HH:mm'";
             $scope.parseExpression = function () {
                 var fn = $parse($scope.expr);
-                $scope.item.start = fn($scope.item)
+                $scope.item.start = $scope.timeDate = fn($scope.item);
             };
 
 
@@ -139,9 +158,13 @@ angular.module('ScheduleModule')
              * @param fpItem
              * @returns {*}
              */
+
+
+
+
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
-
+                //$scope.to = fpItem.selectedDates[1];
                 console.log('DASSS 1', fpItem.selectedDates[0]);
                 console.log('DASSS 2', fpItem.selectedDates[1]);
                 $scope.item.from = fpItem.selectedDates[0];
@@ -408,7 +431,7 @@ angular.module('ScheduleModule')
                 return o;
             };
 
-            console.log('YEAAARRRRRRRRR', moment().add(1, 'year').get('year'));
+            //console.log('YEAAARRRRRRRRR', moment().add(1, 'year').get('year'));
             $scope.dateOpts2 = {
                 locale: info.ru,
                 //mode: "range",
@@ -484,13 +507,37 @@ angular.module('ScheduleModule')
                 //console.log('refresh1',$scope.schedule);
             };
 
+            $scope.$watch('item.action', function (value, old) {
+                if (value !== undefined && !value) {
 
-            $scope.$watch('item.start', function (value) {
-                if($scope.item.status !== 'Проект' || !moment(value).isValid()) return;
-                console.log('DABBBB', value);
-               if(value) toastr.warning('Запуск проекта: ' + moment(value).fromNow());
+                    toastr.warning('Проект не будет запущен.<br> Активируйте проект, для этого установите активность.', info.warning);
+                }
             });
+            $scope.$watch('item.start', function (value) {
+                if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY HH:mm"]).isValid() || !$scope.item.action) return;
 
+                if (value) {
+                    let nm;
+                    nm = (moment(value).isSameOrBefore(moment())) ? 'Проект запущен' : 'Запуск проекта';
+                    toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(value).format('llll'), info.warning,
+                        {
+                            //"closeButton": true,
+                            //"debug": false,
+                            //"newestOnTop": false,
+                            "progressBar": true,
+                            //"positionClass": "toast-top-right",
+                            //"preventDuplicates": false,
+                            //"showDuration": "300",
+                            //"hideDuration": "1000",
+                            //"timeOut": "5000",
+                            //"extendedTimeOut": "1000",
+                            //"showEasing": "swing",
+                            //"hideEasing": "linear",
+                            //"showMethod": "fadeIn",
+                            //"hideMethod": "fadeOut"
+                        });
+                }
+            });
 
 
             $scope.checkStatus = function () {

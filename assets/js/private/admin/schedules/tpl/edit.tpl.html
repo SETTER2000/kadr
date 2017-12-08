@@ -55,9 +55,14 @@
                 <div class="panel-body">
                     <form name="userForm" novalidate ng-submit="saveEdit(item)" enctype="multipart/form-data">
                         <div class="form-group">
+
+
+                            <!-- A C T I O N -->
+
                             <div ng-if="(me.admin)" class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="item.action">Активность
+                                    <input type="checkbox" ng-model="item.action">
+                                    Активность
                                 </label>
                             </div>
 
@@ -244,13 +249,13 @@
                 <!--<textarea style="width: 100%; height: 120px; border: none" class="animate-switch" ng-switch-when="settings|options"-->
                 <!--ng-switch-when-separator="|">{{htmlData}}</textarea>-->
                 <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="Шаблон №1">    {{item.htmlData[0].tmpl}}</textarea>
+                          class="animate-switch" ng-switch-when="№1">    {{item.htmlData[0].tmpl}}</textarea>
                 <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="Шаблон №2">{{item.htmlData[0].tmpl}}</textarea>
+                          class="animate-switch" ng-switch-when="№2">{{item.htmlData[0].tmpl}}</textarea>
                 <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="Шаблон №3"> {{item.htmlData[0].tmpl}}</textarea>
+                          class="animate-switch" ng-switch-when="№3"> {{item.htmlData[0].tmpl}}</textarea>
                 <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="Шаблон №4">   {{item.htmlData[0].tmpl}}</textarea>
+                          class="animate-switch" ng-switch-when="№4">   {{item.htmlData[0].tmpl}}</textarea>
                 <!--<div class="animate-switch" ng-switch-default>default</div>-->
 
             </div>

@@ -48,6 +48,7 @@
                 eightArea: 'Обновил',
                 nineArea: 'Кол-во собраных данных',
                 tenArea: 'Обновил',
+                actionArea: 'Активность',
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено'
             };
