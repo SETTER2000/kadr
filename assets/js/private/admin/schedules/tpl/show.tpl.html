@@ -94,15 +94,15 @@
 
                 <tr ng-if="item.createdAt">
                     <th>Создан</th>
-                    <td>{{item.createdAt | date: "dd.MM.yyyy"}}</td>
+                    <td>{{item.createdAt | date: "dd.MM.yyyy HH:mm"}}</td>
                 </tr>
                 <tr ng-if="item.updatedAt">
                     <th>Обновлён</th>
-                    <td>{{item.updatedAt | date: "dd.MM.yyyy"}}</td>
+                    <td>{{item.updatedAt | date: "dd.MM.yyyy HH:mm"}}</td>
                 </tr>
                 <tr ng-if="item.start">
                     <th>Запустить рассылку</th>
-                    <td>{{item.start | date: "dd.MM.yyyy"}}</td>
+                    <td>{{item.start | date: "dd.MM.yyyy HH:mm"}}</td>
                 </tr>
 
                 <tr>
