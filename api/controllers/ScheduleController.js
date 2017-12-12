@@ -11,7 +11,7 @@ const MomentRange = require('moment-range');
 var CronJob = require('cron').CronJob;
 const moment = MomentRange.extendMoment(Moment);
 moment.locale('ru');
-
+var arrJobs=[];
 const _ = require('lodash');
 const path = require('path');
 const fs = require('fs');
@@ -168,79 +168,164 @@ module.exports = {
             to: new Date(req.param('to'))
         };
 
-        User.findOne({id: obj.whomCreated})
-            .exec((err, findUser) => {
-                Schedule.create(obj)
-                    .exec(function (err, createSchedule) {
-                        if (err) return res.serverError(err);
-                        console.log(obj.section + ' создан пользователем:', findUser.getFullName());
-                        //findUser.vacations.add(createSchedule.id);
-                        findUser.scheduleWhomCreated.add(createSchedule.id);
-                        //_.forEach(users, function (v, k) {
-                        //    // console.log('Отпуска пересекаемые с нашим:', v.vacations);
-                        //    if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
-                        //        _.forEach(v.vacations, function (val, key) {
-                        //            createVacation.intersec.add(val.id)
-                        //        });
-                        //    }
-                        //});
-                        // console.log('findUser++:', findUser);
-                        let strEmail = findUser.email;
-                        //if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
-                        //    let a = [];
-                        //    _.forEach(findUser.matchings, function (val, key) {
-                        //        console.log('EMAIl:', val.email);
-                        //        a.push(val.email);
-                        //    });
-                        //    strEmail = a.join(',');
-                        //}
+        Schedule.find({year: obj.year}).exec((err, findSchedule)=> {
+            if (err) return res.serverError(err);
+            if (findSchedule.length > 0) return res.badRequest('На ' + obj.year + ' год уже есть график отпусков.');
+            User.findOne({id: obj.whomCreated})
+                .exec((err, findUser) => {
+                    Schedule.create(obj)
+                        .exec(function (err, createSchedule) {
+                            if (err) return res.serverError(err);
+                            console.log(obj.section + ' создан пользователем:', findUser.getFullName());
+                            //findUser.vacations.add(createSchedule.id);
+                            findUser.scheduleWhomCreated.add(createSchedule.id);
+                            //_.forEach(users, function (v, k) {
+                            //    // console.log('Отпуска пересекаемые с нашим:', v.vacations);
+                            //    if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
+                            //        _.forEach(v.vacations, function (val, key) {
+                            //            createVacation.intersec.add(val.id)
+                            //        });
+                            //    }
+                            //});
+                            // console.log('findUser++:', findUser);
+                            let strEmail = findUser.email;
+                            //if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
+                            //    let a = [];
+                            //    _.forEach(findUser.matchings, function (val, key) {
+                            //        console.log('EMAIl:', val.email);
+                            //        a.push(val.email);
+                            //    });
+                            //    strEmail = a.join(',');
+                            //}
 
 
-                        findUser.save(function (err) {
-                            if (err) return res.negotiate(err);
-                            strEmail = (strEmail) ? strEmail : '';
-                            console.log('Создатель графика отпусков:', strEmail);
+                            findUser.save(function (err) {
+                                if (err) return res.negotiate(err);
+                                strEmail = (strEmail) ? strEmail : '';
+                                console.log('Создатель графика отпусков:', strEmail);
+                                /**
+                                 * Опции установки задачи cron
+                                 * @type {{start, name}}
+                                 * start : Object.Data
+                                 * name: string
+                                 */
+                                //let taskOpt = {
+                                //    start: req.param('start'),
+                                //    name: req.param('name')
+                                //};
 
-                            /**
-                             * Опции для отправки сообщения
-                             * @type {{to: *, subject: string, text: string, html: string}}
-                             */
-                            let options = {
-                                to: strEmail, // Кому: можно несколько получателей указать через запятую
-                                subject: ' ✔ ' + obj.section + ' создал: ' + findUser.getFullName(), // Тема письма
-                                text: '<h2>Уведомление. График отпусков создан. </h2>', // plain text body
-                                html: '' +
-                                '<h2>График отпусков создан </h2> ' +
-                                '<p>Вы создали ' + obj.section + ' с названием: ' + obj.name + '</p>' +
-                                '<p>Период сбора информации установлен с ' + moment(obj.from).format('LLLL') + ' по ' + moment(obj.to).format('LLLL') + '</p>'
-                                //'<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
-                            };
 
-                            /**
-                             * Опции установки задачи cron
-                             * @type {{start, name}}
-                             * start : Object.Data
-                             * name: string
-                             */
-                            let taskOpt = {
-                                start: req.param('start'),
-                                name: req.param('name')
-                            };
 
-                            CronService.task(taskOpt, (err, foo)=> {
-                                "use strict";
-                                if (err) {
-                                    sails.log('Ошибка в задачи CRON:' + err);
+                                let foo={};
+                                let tsk = moment(obj.start);
+                                let task = '* ' + tsk.get('minute') + ' ' + tsk.get('hour') + ' ' + tsk.date() + ' ' + (tsk.format('M')) + ' *';
+                                try {
+                                    let job  = new CronJob({
+                                        cronTime: task,
+                                        onTick: function () {
+                                            console.log('Задача: ' + obj.name);
+                                            console.log('Задача запущена в: ' + tsk.format("llll"));
+                                            console.log('Время для Cron: ' + task);
+                                            this.stop();
+                                        },
+                                        onComplete: function () {
+                                            console.log('Задача выполнена в: ' + new Date());
+                                            foo =  new Date();
+                                            /**
+                                             * Обновление статуса
+                                             */
+                                            Schedule.update({id: createSchedule.id}, {status: 'В работе'})
+                                                .exec((err, updated)=> {
+                                                    if (err) return res.serverError(err);
+                                                    if (!updated.length) return res.ok('Задача: '+obj.name +' - удалена!');
+
+                                                    console.log('Updated ::' + updated);
+
+                                                    /**
+                                                     * Опции для отправки сообщения
+                                                     * @type {{to: *, subject: string, text: string, html: string}}
+                                                     */
+                                                    let options = {
+                                                        to: strEmail, // Кому: можно несколько получателей указать через запятую
+                                                        subject: ' ✔ ' + obj.section + ' создал: ' + findUser.getFullName(), // Тема письма
+                                                        text: '<h2>Уведомление. ' + obj.section + ' запущен. </h2>', // plain text body
+                                                        html: '' +
+                                                        '<h2>' + obj.section + '.  </h2> ' +
+                                                        '<p>Вы создали ' + obj.section + ' с названием: ' + obj.name + '</p>' +
+                                                        '<p>Период сбора информации установлен:<br>c ' + moment(obj.from).format('llll') + '<br> по ' + moment(obj.to).format('llll') + '</p>' +
+                                                        '<p> В данный момент проект запущен.<br> Статус "' + obj.status + '" изменён на "' + updated[0].status + '".</p>' +
+                                                        '<p>Начало рассылки: ' + moment(obj.start).format('DD.MM.YYYY HH:mm:ss') + '' +
+                                                        '<br>Окончание рассылки: ' + moment(foo).format('DD.MM.YYYY HH:mm:ss') + '</p>' +
+                                                        '<p>Рассылка сообщений сотрудникам закончена.</p>'
+                                                    };
+                                                    EmailService.sender(options);
+                                                    res.send(createSchedule);
+                                                });
+                                        },
+                                        start: true,
+                                        startProject: tsk,
+                                        period:obj.period,
+                                        timeZone: zone
+                                    });
+                                    //job.start();
+                                    arrJobs.push(job);
+                                    sails.log('job status', job.running);
+                                } catch (err) {
+                                    console.log('Ошибка в CRON: '+ err);
                                     return res.negotiate(err);
                                 }
-                                sails.log('Response CRON task', foo);
 
-                                EmailService.sender(options);
-                                return res.send(createSchedule);
+
+                                console.log('arrJobs:' , arrJobs);
+
+                                //CronService.task(taskOpt, (err, foo)=> {
+                                //    "use strict";
+                                //    if (err) {
+                                //        sails.log('Ошибка в задачи CRON:' + err);
+                                //        return res.negotiate(err);
+                                //    }
+                                //
+                                //    sails.log('FOO: ', foo);
+                                //    if (!foo.running) {
+                                //        foo.stop();
+                                //        return res.badRequest('Задача снята! +++');
+                                //    }
+
+                                    ///**
+                                    // * Обновление статуса
+                                    // */
+                                    //Schedule.update({id: createSchedule.id}, {status: 'В работе'})
+                                    //    .exec((err, updated)=> {
+                                    //        if (err) return res.serverError(err);
+                                    //        if (!updated) return res.badRequest('Задача снята!');
+                                    //
+                                    //        console.log('Updated ::' + updated);
+                                    //
+                                    //        /**
+                                    //         * Опции для отправки сообщения
+                                    //         * @type {{to: *, subject: string, text: string, html: string}}
+                                    //         */
+                                    //        let options = {
+                                    //            to: strEmail, // Кому: можно несколько получателей указать через запятую
+                                    //            subject: ' ✔ ' + obj.section + ' создал: ' + findUser.getFullName(), // Тема письма
+                                    //            text: '<h2>Уведомление. ' + obj.section + ' запущен. </h2>', // plain text body
+                                    //            html: '' +
+                                    //            '<h2>' + obj.section + '.  </h2> ' +
+                                    //            '<p>Вы создали ' + obj.section + ' с названием: ' + obj.name + '</p>' +
+                                    //            '<p>Период сбора информации установлен:<br>c ' + moment(obj.from).format('llll') + '<br> по ' + moment(obj.to).format('llll') + '</p>' +
+                                    //            '<p> В данный момент проект запущен.<br> Статус "' + obj.status + '" изменён на "' + updated[0].status + '".</p>' +
+                                    //            '<p>Начало рассылки: ' + moment(obj.start).format('DD.MM.YYYY HH:mm:ss') + '' +
+                                    //            '<br>Окончание рассылки: ' + moment(foo).format('DD.MM.YYYY HH:mm:ss') + '</p>' +
+                                    //            '<p>Рассылка сообщений сотрудникам закончена.</p>'
+                                    //        };
+                                    //        EmailService.sender(options);
+                                    //        res.send(createSchedule);
+                                    //    });
+                                //});
                             });
                         });
-                    });
-            });
+                });
+        });
     },
 
 
@@ -344,12 +429,8 @@ module.exports = {
                 res.ok();
             });
         });
+    },
 
-        // res.redirect('/admin/users');
-
-
-    }
-    ,
 
     /**
      * Кол-во дней оставшихся на отпуск в следующем году
@@ -592,8 +673,7 @@ module.exports = {
 
 
             });
-    }
-    ,
+    },
 
 
     /**
@@ -612,192 +692,8 @@ module.exports = {
                 //console.log('req out', update);
                 return res.ok(update);
             });
-    },
+    }
 
-
-    /**
-     * Кол-во дней взятых на отпуск по годам
-     */
-    //daysInYear: function (req, res) {
-    //    //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-    //
-    //    let year = (req.param('year')) ? req.param('year') : moment().year();
-    //    //console.log('YEAR:', year);
-    //    User.findOne({id: req.session.me})
-    //        .populate('vacationWhomCreated')
-    //        .populate('vacations')
-    //        .populate('interfaces')
-    //        .exec((err, findUser) => {
-    //            "use strict";
-    //            if (err) return res.serverError(err);
-    //            if (!findUser) return res.notFound();
-    //
-    //            if (!findUser.interfaces.length) {
-    //                return console.log('ОШИБКА! Нет свойства "год" в коллекции Interface, у пользователя ' +
-    //                    findUser.lastName + ' ' + findUser.firstName +
-    //                    '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
-    //            }
-    //            year = findUser.interfaces[0].year;
-    //            //console.log('YEAR Schedule :', year);
-    //            Schedule.native(function (err, collection) {
-    //                if (err) return res.serverError(err);
-    //                collection.aggregate([
-    //                    {$match: {owner: ObjectId(findUser.id), action: true}},
-    //                    {$group: {_id: {year: {$year: "$from"}, owner: "$owner"}, count: {$sum: "$daysSelectHoliday"}}},
-    //                    {$project: {'_id.year': 1, count: 1}},
-    //                    {$sort: {'_id.year': 1}}
-    //                ]).toArray(function (err, results) {
-    //                    if (err) return res.serverError(err);
-    //                    //console.log('Выбраные года:', results);
-    //                    if (!results.length) return res.ok({count: 0});
-    //                    let obYear = {count: 0};
-    //                    _.forEach(results, function (value, key) {
-    //                        //console.log('VALUE', value);
-    //                        if (value['_id'].year == year) obYear = value;
-    //                    });
-    //                    //console.log('RESPONSE YEARS ARR: ', obYear);
-    //                    return res.ok(obYear);
-    //                });
-    //            });
-    //        });
-    //}
-    //,
-
-
-    /**
-     * Список годов доступных для вывода в селектор года
-     */
-    //getYears: function (req, res) {
-    //
-    //    Schedule.native(function (err, collection) {
-    //        if (err) return res.serverError(err);
-    //        collection.aggregate(
-    //            [
-    //                {
-    //                    $group: {
-    //                        _id: {year: {$year: "$from"}}
-    //                    }
-    //                },
-    //                {$sort: {'_id.year': -1}},
-    //                {
-    //                    $project: {
-    //                        id: "$_id.year",
-    //                        year: "$_id.year",
-    //                        "_id": 0
-    //                    }
-    //                }
-    //            ]
-    //        ).toArray(function (err, results) {
-    //            if (err) return res.serverError(err);
-    //            console.log(results);
-    //            return res.send(results);
-    //        });
-    //    });
-    //}
-    //,
-
-
-    /**
-     * Отпуска из списка пересечений
-     */
-    //getIntersections: function (req, res) {
-    //    //console.log('INTERSECTIO:', req.param('id'));
-    //    let userID = (req.param('id')) ? req.param('id') : req.session.me;
-    //    //(req.param('id')) ? res.ok(req.param('id')) : res.ok(req.session.me);
-    //    //console.log('IDDD:', userID);
-    //    User.findOne({id: userID})
-    //        .populate('intersections')
-    //        .populate('vacations')
-    //        .exec((err, user) => {
-    //            "use strict";
-    //            if (err) return res.serverError(err);
-    //            if (!user) return res.badRequest();
-    //            if (!user.intersections.length) return res.ok();
-    //            //console.log('GETTT', user.getShortName());
-    //            //return res.ok(user.intersections);
-    //            let ar = [];
-    //            _.forEach(user.intersections, function (val, key) {
-    //                ar.push(val.id);
-    //            });
-    //            //console.log('user.intersections', user.intersections);
-    //            //console.log('ar', ar);
-    //            Schedule.find({where: {owner: ar}}, {sort: 'from'})
-    //                .populate('furlough')
-    //                .populate('owner', {sort: 'lastName'})
-    //                .exec((err, vacationsFind) => {
-    //                    if (err) return res.serverError(err);
-    //
-    //                    //console.log('RESPONSE: ', vacationsFind);
-    //
-    //                    res.ok(vacationsFind);
-    //                });
-    //        });
-    //
-    //}
-    //,
-
-
-    /**
-     * Отпуска пересекающиеся c конкретным отпуском у пользователя,
-     * который установлен в списке пересечений
-     */
-    //getIntersectionsUser: function (req, res) {
-    //    Schedule.native(function (err, collection) {
-    //        if (err) return res.serverError(err);
-    //
-    //        //db.vacation.aggregate([
-    //        //    {$match:{ $or:[
-    //        //        {$and: [{from:{$lte:ISODate("2017-10-02")}}, {to:{$gte:ISODate("2017-10-02")}}, {owner: ObjectId("58d285c3963240c8096f5416")}]},
-    //        //        {$and: [{from:{$lte:ISODate("2017-12-22")}}, {to:{$gte:ISODate("2017-12-22")}}, {owner: ObjectId("58d285c3963240c8096f5416")}]},
-    //        //        { $and: [ {from:{$gt:ISODate("2017-10-02")}}, {to:{$lt:ISODate("2017-12-22")}}, {owner: ObjectId("58d285c3963240c8096f5416")}] }
-    //        //    ]}
-    //        //    }
-    //        //]).pretty();
-    //        // console.log('FROM:', req.param('from'));
-    //        // console.log('TO:', req.param('to'));
-    //        // console.log('OWNER:', req.param('owner')); //
-    //        collection.aggregate(
-    //            [
-    //                {
-    //                    $match: {
-    //                        $or: [
-    //                            {$and: [{from: {$lte: new Date(moment(req.param('from')))}}, {to: {$gte: new Date(moment(req.param('from')))}}, {owner: ObjectId(req.param('owner'))}]},
-    //                            {$and: [{from: {$lte: new Date(moment(req.param('to')))}}, {to: {$gte: new Date(moment(req.param('to')))}}, {owner: ObjectId(req.param('owner'))}]},
-    //                            {$and: [{from: {$gt: new Date(moment(req.param('from')))}}, {to: {$lt: new Date(moment(req.param('to')))}}, {owner: ObjectId(req.param('owner'))}]}
-    //                        ]
-    //                    }
-    //                }
-    //            ]
-    //        ).toArray(function (err, results) {
-    //            if (err) return res.serverError(err);
-    //            //console.log(results);
-    //            return res.send(results);
-    //        });
-    //    });
-    //
-    //
-    //}
-    //,
-
-
-    /**
-     * Получить праздники, выходные и т.д для календаря
-     */
-    //dataCalendar: function (req, res) {
-    //    res.ok(sails.config.holiday.data);
-    //
-    //    //res.writeHead(200, {
-    //    //    'Content-Type': 'text/event-stream; charset=UTF-8',
-    //    //    'Cache-Control': 'no-cache',
-    //    //    'Connection': 'keep-alive',
-    //    //    'Access-Control-Allow-Credentials': true,
-    //    //    'Access-Control-Allow-Origin': '*'
-    //    //});
-    //
-    //    //  host: 'http://data.gov.ru/api/json/dataset/7708660670-proizvcalendar/version/20151123T183036/content/10/?access_token=2eace3b1564af9461d112b0ec65e98ba',
-    //
-    //}
-    //,
 
     /**
      * Чат отпуска

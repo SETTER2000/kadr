@@ -50,7 +50,8 @@
                 tenArea: 'Обновил',
                 actionArea: 'Активность',
                 createdAtArea: 'Создано',
-                updatedAtArea: 'Обновлено'
+                updatedAtArea: 'Обновлено',
+                title: 'Рассылка сообщений закончена.'
             };
 
 

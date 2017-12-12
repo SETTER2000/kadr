@@ -60,7 +60,8 @@ module.exports = {
             type: 'integer',
             maxLength: 4,
             minLength: 4,
-            required: true
+            required: true,
+            unique:true
         },
         start: { //запустить проект расслыки
             type: 'datetime',

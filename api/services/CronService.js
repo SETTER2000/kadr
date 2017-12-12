@@ -21,19 +21,19 @@ module.exports = {
                 cronTime: task,
                 onTick: function () {
                     console.log('Задача: ' + options.name);
-                    console.log('Задача должна быть запущена в: ' + tsk.format("LLLL"));
+                    console.log('Задача запущена в: ' + tsk.format("LLLL"));
                     console.log('Время для Cron: ' + task);
                     this.stop();
                 },
                 onComplete: function () {
                     console.log('Задача выполнена в: ' + new Date());
-                    return done(tsk);
+                    return done(null,job);
                 },
                 start: false,
                 timeZone: zone
             });
             job.start();
-
+            sails.log('job status', job.running);
         } catch (err) {
             return done(err);
         }

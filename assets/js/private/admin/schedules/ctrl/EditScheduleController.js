@@ -484,7 +484,7 @@ angular.module('ScheduleModule')
                         console.log('EDIT SCHEDULE', schedules);
                         $scope.flatpicker.setDate(schedules.period);
                         $scope.schedules = schedules;
-                        $scope.nameLinkFn();
+                        //$scope.nameLinkFn();
 
                         //$scope.selection = {name: schedules.htmlData[0].name};
                         //$scope.getBoss();
@@ -612,6 +612,7 @@ angular.module('ScheduleModule')
                 if (!item.htmlData) return toastr.error(info.messageErr, info.error);
 
 
+
                 if (angular.isDefined(item.id)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
@@ -637,6 +638,8 @@ angular.module('ScheduleModule')
                         let ar = [];
                         ar.push(item.htmlData[0]);
                         item.htmlData = ar;
+                        //toastr.success(info.newOk, info.ok);
+                        //$state.go('home.admin.schedules');
                         item.$save(item, function (success) {
                                 //console.log(success);
                                 //location.reload();
@@ -644,9 +647,10 @@ angular.module('ScheduleModule')
                                 // /admin/schedule/
                                 //$location.path('/profile') ;
                                 $state.go('home.admin.schedule', {scheduleId: success.id});
+                                //$state.go('home.admin.schedules');
                             },
                             function (err) {
-                                toastr.error(err.data.invalidAttributes, info.error + ' 89336!');
+                                toastr.error(err.data, info.error + ' 89336!');
                             });
                     }
                 }

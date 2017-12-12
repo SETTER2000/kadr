@@ -21,7 +21,7 @@ module.exports = {
             if (error) {
                 console.log(error);
             } else {
-                console.log('Сервер готов принять ваши сообщения.');
+                console.log('Подключение к почтовому серверу: Ok!');
             }
         });
 
@@ -47,7 +47,7 @@ module.exports = {
             }
             console.log('Message sent: %s', info.messageId);
             // Preview only available when sending through an Ethereal account
-            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+            //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
             // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
             // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...

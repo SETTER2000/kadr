@@ -161,9 +161,10 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- Н А И М Е Н О В А Н И Е -->
         <td>
-            <a class="position" href="{{item.getEditUrl(item.id)}}">
+            <a ng-if="(item.status==='Проект' || me.admin)" class="position" href="{{item.getEditUrl(item.id)}}">
                 {{item.getFullName()}}
             </a>
+           <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.getFullName()}}</span>
         </td>
 
         <!-- C O U N T  D A T A S E A R C H -->
@@ -178,7 +179,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- S T A T U S -->
         <td class="text-center " ng-class="{'text-primary':(item.status==='Проект'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Утвержден'), }">
-           <strong>{{item.status}}</strong>
+            <md-tooltip ng-if="(item.status==='В работе')" md-direction="right">{{nameHeader.title}}</md-tooltip> <strong>{{item.status}}</strong>
         </td>
 
 
