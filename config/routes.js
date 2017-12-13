@@ -137,8 +137,12 @@ module.exports.routes = {
     /**
      * Schedule
      */
-    'PUT /schedule/update-rows': 'ScheduleController.updateDefaultRows',
+    'PUT /schedule/update-rows':        'ScheduleController.updateDefaultRows',
 
+    //'POST /schedule/:id/chat':          'ScheduleController.chat',
+    //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',
+    //'PUT  /schedule/:id/typing':        'ScheduleController.typing',
+    //'PUT  /schedule/:id/stoppedTyping': 'ScheduleController.stoppedTyping',
 
     // !!!! НЕ УДАЛЯТЬ РОУТ!
     //'POST /user/signup': 'UserController.signup',

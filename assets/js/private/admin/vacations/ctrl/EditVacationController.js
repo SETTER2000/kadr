@@ -65,11 +65,16 @@ angular.module('VacationModule')
                 loading: false
             };
 
+            /**
+             * Пока нет соединения с коменотой чата,
+             * кнопка управления отправки сообщений не активна
+             * @type {boolean}
+             */
             $scope.hasJoinedRoom = false;
-            // Get the video id form the current URL path:  /tutorials/1/videos/3/show
+            // Получить идентификатор видео из текущего URL-адреса: / tutorials / 1 / videos / 3 / show
             // /admin/vacations/edit/59f87fa07fe80611fc8ebdf5
             $scope.fromUrlVideoId = window.location.pathname.split('/')[4];
-            // Send a socket request to join the chat room.
+            // Отправьте запрос сокета, чтобы присоединиться к комнате чата.
             io.socket.put('/vacation/' + $scope.fromUrlVideoId + '/join', function (data, JWR) {
                 // If something went wrong, handle the error.
                 if (JWR.statusCode !== 200) {
@@ -78,26 +83,27 @@ angular.module('VacationModule')
                     return;
                 }
 
-                // If the server gave us its blessing and indicated that we were
-                // able to successfully join the room, then we'll set that on the
-                // scope to allow the user to start sending chats.
+                // Если сервер дал нам свое благословение и указал, что мы
+                // можем успешно присоединиться к комнате, тогда мы установим это в
+                // scope, чтобы пользователь мог начать отправлять чаты.
                 //
-                // Note that, at this point, we'll also be able to start _receiving_ chats.
+                // Обратите внимание, что на этом этапе мы также сможем запустить _receiving_ чаты.
                 $scope.hasJoinedRoom = true;
-                // Because io.socket.get() is not an angular thing, we have to call $scope.$apply()
-                // in this callback in order for our changes to the scope to actually take effect.
+                // Поскольку io.socket.get () не является объектом angular, нам нужно вызвать
+                // $scope.$apply()
+                // в этом обратном вызове, чтобы наши изменения в scope действительно вступили в силу.
                 $scope.$apply();
             });
             //$scope.chats = (window.SAILS_LOCALS.chats) ? window.SAILS_LOCALS.chats : [];
-            // Handle socket events that are fired when a new chat event is sent (.broadcast)
+            //Слушатель события сокетов, который запускается при отправке нового события чата (.broadcast)
             io.socket.on('vacation', function (e) {
                 $scope.chats = (angular.isArray($scope.chats)) ? $scope.chats : [];
 
-                // Append the chat we just received
+                // Добавим чат, который мы только что получили
                 $scope.chats.push(e);
 
-                // Because io.socket.on() is not an angular thing, we have to call $scope.$apply() in
-                // this event handler in order for our changes to the scope to actually take effect.
+                // Поскольку io.socket.on () не является angular объектом, нам нужно вызвать $scope. $Apply() в
+                // этот обработчик событий, чтобы наши изменения в scope действия действительно вступили в силу.
                 $scope.$apply();
             });
 
@@ -110,14 +116,14 @@ angular.module('VacationModule')
                     //owner:'59f855fc58f4be1ccc2d7bf4'
                 }, function (data, JWR) {
 
-                    // If something went wrong, handle the error.
+                    // Если что-то пошло не так, обработайте ошибку.
                     if (JWR.statusCode !== 200) {
                         console.error(JWR);
                         return;
                     }
 
-                    // Clear out the chat message field.
-                    // (but rescue its contents first so we can append them)
+                    // Очистите поле сообщения чата.
+                    // (но сначала сохраним его содержимое, чтобы мы могли добавить его)
                     var messageWeJustChatted = $scope.message;
                     $scope.message = '';
 
@@ -129,7 +135,7 @@ angular.module('VacationModule')
                     url: '/vacation/' + $scope.fromUrlVideoId + '/typing',
                     method: 'put'
                 }, function (data, JWR) {
-                    // If something went wrong, handle the error.
+                    // Если что-то пошло не так, обработайте ошибку.
                     if (JWR.statusCode !== 200) {
                         console.error(JWR);
                         return;
@@ -142,7 +148,7 @@ angular.module('VacationModule')
                     url: '/vacation/' + $scope.fromUrlVideoId + '/stoppedTyping',
                     method: 'put'
                 }, function (data, JWR) {
-                    // If something went wrong, handle the error.
+                   // Если что-то пошло не так, обработайте ошибку.
                     if (JWR.statusCode !== 200) {
                         console.error(JWR);
                         return;

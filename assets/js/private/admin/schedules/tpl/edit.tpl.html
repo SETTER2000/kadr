@@ -59,9 +59,10 @@
 
                             <!-- A C T I O N -->
 
-                            <div ng-if="(me.admin)" class="checkbox">
+                            <div ng-if="(me.admin || me.kadr)" class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="item.action">
+                                    <input type="checkbox" ng-if="((item.status ==='Проект') || me.admin)" ng-model="item.action">
+                                    <input type="checkbox" ng-if="(item.status !=='Проект' && !me.admin)" disabled ng-model="item.action">
                                     Активность
                                 </label>
                             </div>

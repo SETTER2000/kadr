@@ -1486,13 +1486,13 @@ module.exports = {
      */
     updateDefaultRows: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-     console.log('req in', req.param('defaultRows'));
+     //console.log('req in', req.param('defaultRows'));
         User.update(req.session.me, {
                 defaultRows: req.param('defaultRows')
             })
             .exec(function (err, update) {
                 if (err) return res.negotiate(err);
-                console.log('req out', update);
+                //console.log('req out', update);
                 return res.ok(update);
             });
     },

@@ -73,6 +73,11 @@ module.exports = {
         countData: {
             type: 'integer'
         },
+        worked: { // отработала или нет
+            type: 'boolean',
+            defaultsTo: true,
+            required: true
+        },
 
         //
         ///**

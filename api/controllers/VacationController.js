@@ -978,8 +978,7 @@ module.exports = {
         // Vacation.watch(req);
         console.log('Connect chat ' + 'vacation' + req.param('id'));
         return res.ok();
-    }
-    ,
+    },
 
 
     chat: function (req, res) {
