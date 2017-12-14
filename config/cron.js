@@ -23,7 +23,7 @@ module.exports.cron = {
     },
 
     secondJob: {
-        schedule: '*/59 * * * * *',
+        schedule: '*/5 * * * * *',
         onTick: function() {
             //console.log('Я срабатываю каждые 5 секунд (триггер): ' + new Date());
 

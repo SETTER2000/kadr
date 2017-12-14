@@ -217,13 +217,13 @@ module.exports = {
         let tm = moment(req.param('start'));
         let task = '* ' + tm.get('minute') + ' ' + tm.get('hour') + ' ' + tm.date() + ' ' + (tm.format('M')) + ' *';
 
-        sails.on('updateCron', () => {
-            console.log('СОБЫТИЕ updateCron! !!!', 'an event occurred!');
-            Schedule.find().exec((err, findsSchedule)=>{
-                if(err) return res.serverError(err);
-                sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
-            });
-        });
+        // sails.on('updateCron', () => {
+        //     console.log('СОБЫТИЕ updateCron! !!!', 'an event occurred!');
+        //     Schedule.find().exec((err, findsSchedule)=>{
+        //         if(err) return res.serverError(err);
+        //         sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
+        //     });
+        // });
 
 
         //let job = new CronJob({
