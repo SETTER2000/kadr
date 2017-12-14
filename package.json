@@ -74,6 +74,7 @@
     "sails-mongo": "^0.12.3",
     "sails-mssqlserver": "^0.14.3",
     "sails-mysql": "^0.11.5",
+    "send": "^0.11.1",
     "smtp-server": "^3.4.1",
     "twix": "^1.2.1",
     "xlsx": "^0.11.13",
