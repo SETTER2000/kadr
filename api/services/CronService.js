@@ -28,7 +28,9 @@ module.exports = {
                         console.log('Задача выполнена в: ' + new Date());
                         Schedule.update({id: finds[0].id}, {worked: true,status:'В работе'}).exec((err, upd)=> {
                             if (err) return res.serverError();
+                            sails.emit('updateCron');
                             console.log('UPDATE OK! worked:', upd.worked );
+
                         });
                     },
                     start: true,

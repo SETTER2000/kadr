@@ -4,38 +4,39 @@
         .controller('ListScheduleController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Schedules', 'Users', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Schedules, Users) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
-
-
-            $scope.$on('defaultRowsTable', function (event,data) {
-                console.log('defaultRowsTable',data); // Данные, которые нам прислали
-                return  $scope.defaultRows =  data.defaultRows;
+            $scope.$on('defaultRowsTable', function (event, data) {
+                console.log('defaultRowsTable', data); // Данные, которые нам прислали
+                return $scope.defaultRows = data.defaultRows;
             });
 
 
+            /**
+             * TODO WEBSOCKET: Подключаемся к сокету для прослушивания сервера
+             * и обработки события hello
+             */
+            $scope.howdy = 'Привет!';
+            io.socket.on('hello', function (data) {
+                console.log('Socket room list: ' + data.howdy + ' подключился только что к комнате list!');
+                $scope.items = data.howdy;
+                $scope.$apply();
+            });
+            //$scope.hello = function () {
+                io.socket.get('/say/hello', function gotResponse(data, jwRes) {
+                    console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
+                });
+            //};
 
 
-            $scope.defaultRows = ($scope.me.defaultRows)?$scope.me.defaultRows :15;
+            /**
+             * TODO WEBSOCKET: End
+             */
+
+
+
+            $scope.defaultRows = ($scope.me.defaultRows) ? $scope.me.defaultRows : 15;
             //$scope.defaultRows =6;
-            $scope.limitRows = [2, 3, 5, 7,10, 15, 30, 50, 70, 100];
+            $scope.limitRows = [2, 3, 5, 7, 10, 15, 30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
-            //console.log('defaultRows:::', $scope.defaultRows);
-            //$scope.$watch('defaultRows', function (value,old) {
-            //    $http.put('/schedule/update-rows',{
-            //            defaultRows: $scope.defaultRows
-            //        })
-            //        .then(function onSuccess(sailsResponse) {
-            //            console.log('sailsResponse in ListController: ',sailsResponse.data[0].defaultRows);
-            //             $scope.defaultRows = $scope.me.defaultRows=sailsResponse.data[0].defaultRows;
-            //        })
-            //        .catch(function onError(sailsResponse) {
-            //             toastr.error('ERRDDD!');
-            //        })
-            //        .finally(function eitherWay() {
-            //            $scope.editProfile.loading = false;
-            //        });
-            //});
-
-
 
             $scope.nameHeader = {
                 oneArea: 'Наименование',
@@ -51,7 +52,8 @@
                 actionArea: 'Активность',
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено',
-                title: 'Рассылка сообщений закончена.'
+                title: 'Рассылка сообщений закончена.',
+                startProject:'Старт проекта'
             };
 
 
@@ -93,15 +95,14 @@
             };
 
 
-
             /**
              * Фильтры для каждой выбираемой страницы
              *
              */
             $scope.filterTemplate = {
                 all: {}, // все
-                project:  {status: 'Проект'}, // проект
-                inWork:   {status: 'В работе'}, // в работе
+                project: {status: 'Проект'}, // проект
+                inWork: {status: 'В работе'}, // в работе
                 approved: {status: 'Утвержден'} // утверждён
             };
 
@@ -119,8 +120,8 @@
             $scope.options =
                 [
                     {display: "Все", value: "all"},
-                    {display: "Проект", value:    "project"},
-                    {display: "В работе", value:  "inWork"},
+                    {display: "Проект", value: "project"},
+                    {display: "В работе", value: "inWork"},
                     {display: "Утвержден", value: "approved"}
 
                 ];
@@ -243,7 +244,7 @@
 
                 $scope.items = Schedules.query($scope.query, function (schedules) {
                     console.log('SCHEDULE ITEMS:', schedules);
-                    $scope.items =  schedules;
+                    $scope.items = schedules;
 
                     $scope.countCurrentView = schedules.length;
                     $scope.objectName = schedules;
@@ -320,6 +321,6 @@
             breadcrumb.set('Schedules', '/admin/' + $state.current.url);
             $scope.breadcrumbs = breadcrumb;
 
-            $scope.refresh();
+            //$scope.refresh();
         }]);
 })(window.angular);

@@ -1,7 +1,7 @@
 <!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
 <div class="col-sm-11  col-md-12  main">
     <div class="page-header">
-        <h2>{{items[0].scs()}} {{exampleDate | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}<!--({{filtered.length}})-->
+        <h2>{{items[0].sections}} {{exampleDate | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}<!--({{filtered.length}})-->
             <a ng-cloak href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">
                 всего:
                 <span ng-if="mode">SD{{(items | filter:{fired:true}).length}}</span>

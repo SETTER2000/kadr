@@ -244,9 +244,9 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
         Schedules.prototype.getListUrl = function () {
             return '/admin/schedules';
         };
-        Schedules.prototype.getEditUrl = function (id) {
-            return '/admin/schedules/edit/' + id;
-        };
+        //Schedules.prototype.getEditUrl = function (id) {
+        //    return 'schedules/edit/' + id;
+        //};
         Schedules.prototype.getShowUrl = function (id) {
             return '/admin/schedule/' + id;
         };

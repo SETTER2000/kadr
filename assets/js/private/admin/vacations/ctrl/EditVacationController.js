@@ -22,7 +22,6 @@ angular.module('VacationModule')
              */
             $scope.yearFrom = ($scope.me['kadr'] || $scope.me['admin'] ) ? (($scope.me.interfaces) ? $scope.me.interfaces[0].year : moment().year()) : moment().year();
 
-
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -41,95 +40,92 @@ angular.module('VacationModule')
                 maxTwoWeek: '14 дней максимальный период планирования для одного отпуска. Вы можете запланировать несколько отпусков последовательно. ВНИМАНИЕ! Если необходим отпуск более 14 дней рекомендуем согласовать период с руководителем и кадровой службой. ',
             };
 
-
             if (!$scope.me.admin && !$scope.me.kadr) $state.go(info.redirectSelf);
-
             $scope.close = 1;
             $scope.intersect = false;
             $scope.loginAdmin = false;
             $scope.flatpicker = {};
             $scope.selectAvatarUrl = $scope.me.avatarUrl;
             $scope.edit = $state.includes('home.admin.vacations.edit');
-
-            //$http.get('/vacation/calendar').then(function (response) {
-            //    $scope.data = response.data;
-            //    console.log('MESSS:' , $scope.data);
-            //});
             $scope.comment = false;
             $scope.toogle = function () {
                 $scope.comment = ($scope.comment) ? false : true;
             };
-
-            // set-up loading state
             $scope.showVacation = {
                 loading: false
             };
 
             /**
-             * Пока нет соединения с коменотой чата,
+             * TODO Chat
+             * Пока нет соединения с комнотой чата,
              * кнопка управления отправки сообщений не активна
              * @type {boolean}
              */
             $scope.hasJoinedRoom = false;
-            // Получить идентификатор видео из текущего URL-адреса: / tutorials / 1 / videos / 3 / show
-            // /admin/vacations/edit/59f87fa07fe80611fc8ebdf5
+            /**
+             * Получить идентификатор отпуска из текущего URL-адреса:
+             * /admin/vacations/edit/5a2a6006a6daf7103082dbfb
+             */
             $scope.fromUrlVideoId = window.location.pathname.split('/')[4];
-            // Отправьте запрос сокета, чтобы присоединиться к комнате чата.
+            /**
+             * Отправьте запрос сокета, чтобы присоединиться к комнате чата.
+             */
             io.socket.put('/vacation/' + $scope.fromUrlVideoId + '/join', function (data, JWR) {
-                // If something went wrong, handle the error.
+                // Если что-то пошло не так, обработайте ошибку.
                 if (JWR.statusCode !== 200) {
                     console.error(JWR);
                     // TODO
                     return;
                 }
-
-                // Если сервер дал нам свое благословение и указал, что мы
-                // можем успешно присоединиться к комнате, тогда мы установим это в
-                // scope, чтобы пользователь мог начать отправлять чаты.
-                //
-                // Обратите внимание, что на этом этапе мы также сможем запустить _receiving_ чаты.
+                /**
+                 *  Если сервер дал нам свое благословение и указал, что мы
+                 *  можем успешно присоединиться к комнате, тогда мы установим это в
+                 *  scope, чтобы пользователь мог начать отправлять чаты.
+                 *  Обратите внимание, что на этом этапе мы также сможем запустить _receiving_ чаты.
+                 *
+                 */
                 $scope.hasJoinedRoom = true;
-                // Поскольку io.socket.get () не является объектом angular, нам нужно вызвать
-                // $scope.$apply()
-                // в этом обратном вызове, чтобы наши изменения в scope действительно вступили в силу.
+                /**
+                 * Поскольку io.socket.get () не является объектом angular, нам нужно вызвать
+                 * $scope.$apply()
+                 * в этом обратном вызове, чтобы наши изменения в scope действительно вступили в силу.
+                 */
                 $scope.$apply();
             });
-            //$scope.chats = (window.SAILS_LOCALS.chats) ? window.SAILS_LOCALS.chats : [];
-            //Слушатель события сокетов, который запускается при отправке нового события чата (.broadcast)
+            /**
+             *  $scope.chats = (window.SAILS_LOCALS.chats) ? window.SAILS_LOCALS.chats : [];
+             *  Слушатель события сокетов, который запускается при отправке нового события чата (.broadcast)
+             */
             io.socket.on('vacation', function (e) {
                 $scope.chats = (angular.isArray($scope.chats)) ? $scope.chats : [];
-
                 // Добавим чат, который мы только что получили
                 $scope.chats.push(e);
-
-                // Поскольку io.socket.on () не является angular объектом, нам нужно вызвать $scope. $Apply() в
-                // этот обработчик событий, чтобы наши изменения в scope действия действительно вступили в силу.
+                /**
+                 * Поскольку io.socket.on () не является angular объектом, нам нужно вызвать $scope. $Apply() в
+                 * этот обработчик событий, чтобы наши изменения в scope действия действительно вступили в силу.
+                 */
                 $scope.$apply();
             });
 
-
             $scope.sendMessage = function () {
-
                 io.socket.post('/vacation/' + $scope.fromUrlVideoId + '/chat', {
                     message: $scope.message,
                     name: $scope.item.name
                     //owner:'59f855fc58f4be1ccc2d7bf4'
                 }, function (data, JWR) {
-
                     // Если что-то пошло не так, обработайте ошибку.
                     if (JWR.statusCode !== 200) {
                         console.error(JWR);
                         return;
                     }
-
-                    // Очистите поле сообщения чата.
-                    // (но сначала сохраним его содержимое, чтобы мы могли добавить его)
+                    // Очистите поле сообщения чата. (но сначала сохраним его содержимое, чтобы мы могли добавить его)
                     var messageWeJustChatted = $scope.message;
                     $scope.message = '';
 
                     $scope.$apply();
                 });
-            };//</sendMessage>
+            };
+
             $scope.whenTyping = function (event) {
                 io.socket.request({
                     url: '/vacation/' + $scope.fromUrlVideoId + '/typing',
@@ -148,7 +144,7 @@ angular.module('VacationModule')
                     url: '/vacation/' + $scope.fromUrlVideoId + '/stoppedTyping',
                     method: 'put'
                 }, function (data, JWR) {
-                   // Если что-то пошло не так, обработайте ошибку.
+                    // Если что-то пошло не так, обработайте ошибку.
                     if (JWR.statusCode !== 200) {
                         console.error(JWR);
                         return;
@@ -162,7 +158,6 @@ angular.module('VacationModule')
 
                 /**
                  * Праздники и выходные дни по годам,
-                 *
                  */
                 let data = [
                     {
@@ -292,8 +287,6 @@ angular.module('VacationModule')
                     return holiday;
                 };
             }
-
-
             Calendar.prototype.showData = function () {
                 return console.log('Доступные данные:', this.getData());
             };

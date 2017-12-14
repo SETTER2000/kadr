@@ -18,6 +18,14 @@
                       ng-class="{reverse: reverse}"></span>
             </button>
         </th>
+        <!-- С Т А Р Т  П Р О Е К Т А -->
+        <th>
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('start')">
+                {{nameHeader.startProject}}
+                <span class="sortOrder" ng-show="propertyName === 'start'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
 
         <!-- C O U N T  D A T A S E A R C H  itemsUsers-->
         <th>
@@ -161,10 +169,17 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- Н А И М Е Н О В А Н И Е -->
         <td>
-            <a ng-if="(item.status==='Проект' || me.admin)" class="position" href="{{item.getEditUrl(item.id)}}">
-                {{item.getFullName()}}
+            <a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.admin.schedules.edit({scheduleId:item.id})">
+            <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.admin.schedules.edit({id:155})">-->
+                {{item.name}}
             </a>
-           <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.getFullName()}}</span>
+           <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.name}}</span>
+        </td>
+
+
+        <!-- С Т А Р Т  П Р О Е К Т А -->
+        <td>
+            {{item.start | date:"dd.MM.yyyy HH:mm"}}
         </td>
 
         <!-- C O U N T  D A T A S E A R C H -->

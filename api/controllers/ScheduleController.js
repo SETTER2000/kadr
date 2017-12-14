@@ -28,7 +28,6 @@ module.exports = {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
-
         var q = {
             limit: req.param('limit'),
             sort: req.param('sort')
@@ -184,20 +183,26 @@ module.exports = {
                                 if (err) {
                                     return res.serverError(err);
                                 }
-                                res.send(createSchedule);
-                            });
-
-                                    //job.start();
-
-                                    sails.on('event', () => {
-                                        console.log('СОБЫТИЕ!!!!', 'an event occurred!');
-                                    });
-
-                                    sails.emit('event');
+                                //sails.sockets.broadcast('list', 'hello', {howdy: createSchedule}, req);
+                                Schedule.find().exec((err, findSchedule)=>{
+                                    if (err)  return res.serverError(err);
+                                    sails.sockets.broadcast('list', 'hello', {howdy: findSchedule}, req);
+                                    res.send(createSchedule);
+                                });
 
                             });
+
+                            //job.start();
+
+                            sails.on('event', () => {
+                                console.log('СОБЫТИЕ!!!!', 'an event occurred!');
+                            });
+
+                            sails.emit('event');
+
                         });
                 });
+        });
 
     },
 
@@ -212,37 +217,34 @@ module.exports = {
         let tm = moment(req.param('start'));
         let task = '* ' + tm.get('minute') + ' ' + tm.get('hour') + ' ' + tm.date() + ' ' + (tm.format('M')) + ' *';
 
-        let job = new CronJob({
-            cronTime: task,
-            onTick: function () {
-                console.log('Задача: ' + req.param('name'));
-                console.log('Задача должна быть запущена в: ' + moment(req.param('start')).format("LLLL"));
-                console.log('Время для Cron: ' + task);
-                this.stop();
-            },
-            onComplete: function () {
-                console.log('Задача выполнена в: ' + new Date());
-
-            },
-            start: false,
-            timeZone: 'Europe/Moscow'
+        sails.on('updateCron', () => {
+            console.log('СОБЫТИЕ updateCron! !!!', 'an event occurred!');
+            Schedule.find().exec((err, findsSchedule)=>{
+                if(err) return res.serverError(err);
+                sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
+            });
         });
-        job.start();
 
 
-        //new CronJob(task, function() {
-        //    console.log('Задача должна быть запущена в: ' + moment(req.param('start')));
-        //    console.log('Время для Cron: ' + task);
-        //}, function () {
-        //    console.log('Задача выполнена в: ' + new Date());
-        //    this.stop();
-        //}, true, 'Europe/Moscow');
-        //let secondJob = sails.hooks.cron.jobs.secondJob;
-        //console.log('firstJob.cronTime.source', firstJob);
-        //console.log('DATE START: ', moment(req.param('start')).format('LLLL'));
-        //console.log('TASK: ', task);
+        //let job = new CronJob({
+        //    cronTime: task,
+        //    onTick: function () {
+        //        console.log('Задача: ' + req.param('name'));
+        //        console.log('Задача должна быть запущена в: ' + moment(req.param('start')).format("LLLL"));
+        //        console.log('Время для Cron: ' + task);
+        //        this.stop();
+        //    },
+        //    onComplete: function () {
+        //        console.log('Задача выполнена в: ' + new Date());
+        //
+        //    },
+        //    start: false,
+        //    timeZone: 'Europe/Moscow'
+        //});
+        //job.start();
+
         console.log('moment(this.start,[])', moment(new Date(req.param('start')), ['X']));
-        console.log('AAAAAA', (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X'])) ? 1 : 0));
+        //console.log('AAAAAA', (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X'])) ? 1 : 0));
         let obj = {
             section: 'График отпусков',
             sections: 'Графики отпусков',
@@ -277,7 +279,12 @@ module.exports = {
                         //sails.log(obj.section + ' обновлён пользователем:', findUser.getFullName());
                         findUser.save(function (err) {
                             if (err) return res.negotiate(err);
-                            res.ok();
+                            Schedule.find().exec((err, findsSchedule)=>{
+                                if(err) return res.serverError(err);
+                                sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
+                                res.ok();
+                            });
+
                         });
                     });
             });
@@ -292,66 +299,66 @@ module.exports = {
      * @param req
      * @param res
      */
-    ticket: function (req,res) {
+    ticket: function (req, res) {
         User.find({action: true, fired: false}).exec((err, usersFind)=> {
-                "use strict";
-                if (err) return res.serverError(err);
-                if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
-                let strEmail = '';
-                if (_.isArray(usersFind) && (usersFind.length > 0)) {
-                    let a = [];
-                    _.forEach(usersFind, function (val, key) {
-                        a.push(val.email);
-                    });
-                    // assuming openFiles is an array of file names
-                    //async.each(usersFind, function(file, callback) {
-                    //
-                    //    // Perform operation on file here.
-                    //    console.log('Processing file ' + file);
-                    //    a.push(file.email);
-                    //    if( file.length > 32 ) {
-                    //        console.log('This file name is too long');
-                    //        callback('File name too long');
-                    //    } else {
-                    //        // Do work to process file here
-                    //        console.log('File processed');
-                    //        callback();
-                    //    }
-                    //}, function(err) {
-                    //    // if any of the file processing produced an error, err would equal that error
-                    //    if( err ) {
-                    //        // One of the iterations produced an error.
-                    //        // All processing will now stop.
-                    //        console.log('A file failed to process');
-                    //    } else {
-                    //        console.log('All files have been processed successfully');
-                    //    }
-                    //});
-                    strEmail = a.join(',');
-                }
-                sails.log('Email для рассылки: ', strEmail);
+            "use strict";
+            if (err) return res.serverError(err);
+            if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
+            let strEmail = '';
+            if (_.isArray(usersFind) && (usersFind.length > 0)) {
+                let a = [];
+                _.forEach(usersFind, function (val, key) {
+                    a.push(val.email);
+                });
+                // assuming openFiles is an array of file names
+                //async.each(usersFind, function(file, callback) {
+                //
+                //    // Perform operation on file here.
+                //    console.log('Processing file ' + file);
+                //    a.push(file.email);
+                //    if( file.length > 32 ) {
+                //        console.log('This file name is too long');
+                //        callback('File name too long');
+                //    } else {
+                //        // Do work to process file here
+                //        console.log('File processed');
+                //        callback();
+                //    }
+                //}, function(err) {
+                //    // if any of the file processing produced an error, err would equal that error
+                //    if( err ) {
+                //        // One of the iterations produced an error.
+                //        // All processing will now stop.
+                //        console.log('A file failed to process');
+                //    } else {
+                //        console.log('All files have been processed successfully');
+                //    }
+                //});
+                strEmail = a.join(',');
+            }
+            sails.log('Email для рассылки: ', strEmail);
 
-                strEmail = (strEmail) ? strEmail : '';
-                console.log('Создатель графика отпусков:', strEmail);
+            strEmail = (strEmail) ? strEmail : '';
+            console.log('Создатель графика отпусков:', strEmail);
 
-                let options = {
-                    to: strEmail, // Кому: можно несколько получателей указать через запятую
-                    subject: ' ✔ ' + obj.section + ' создал: ' + findUser.getFullName(), // Тема письма
-                    text: '<h2>Уведомление. ' + obj.section + ' запущен. </h2>', // plain text body
-                    html: '' +
-                    '<h2>' + obj.section + '.  </h2> ' +
-                    '<p>Вы создали ' + obj.section + ' с названием: ' + obj.name + '</p>' +
-                    '<p>Период сбора информации установлен:<br>c ' + moment(obj.from).format('llll') + '<br> по ' + moment(obj.to).format('llll') + '</p>' +
-                    '<p> В данный момент проект запущен.<br> Статус "' + obj.status + '" изменён на "' + updated[0].status + '".</p>' +
-                    '<p>Начало рассылки: ' + moment(obj.start).format('DD.MM.YYYY HH:mm:ss') + '' +
-                    '<br>Окончание рассылки: ' + moment(foo).format('DD.MM.YYYY HH:mm:ss') + '</p>' +
-                    '<p>Рассылка сообщений сотрудникам закончена.</p>'
-                };
-                EmailService.sender(options);
-                res.send(createSchedule);
+            let options = {
+                to: strEmail, // Кому: можно несколько получателей указать через запятую
+                subject: ' ✔ ' + obj.section + ' создал: ' + findUser.getFullName(), // Тема письма
+                text: '<h2>Уведомление. ' + obj.section + ' запущен. </h2>', // plain text body
+                html: '' +
+                '<h2>' + obj.section + '.  </h2> ' +
+                '<p>Вы создали ' + obj.section + ' с названием: ' + obj.name + '</p>' +
+                '<p>Период сбора информации установлен:<br>c ' + moment(obj.from).format('llll') + '<br> по ' + moment(obj.to).format('llll') + '</p>' +
+                '<p> В данный момент проект запущен.<br> Статус "' + obj.status + '" изменён на "' + updated[0].status + '".</p>' +
+                '<p>Начало рассылки: ' + moment(obj.start).format('DD.MM.YYYY HH:mm:ss') + '' +
+                '<br>Окончание рассылки: ' + moment(foo).format('DD.MM.YYYY HH:mm:ss') + '</p>' +
+                '<p>Рассылка сообщений сотрудникам закончена.</p>'
+            };
+            EmailService.sender(options);
+            res.send(createSchedule);
 
 
-            });
+        });
 
     },
     /**
@@ -373,7 +380,12 @@ module.exports = {
                 if (err) return next(err);
                 console.log('Отпуск удалил:', req.session.me);
                 console.log('Отпуск удалён:', finds);
-                res.ok();
+                Schedule.find().exec((err, findSchedule)=>{
+                    if (err)  return res.serverError(err);
+                    sails.sockets.broadcast('list', 'hello', {howdy: findSchedule}, req);
+                    res.ok();
+                });
+
             });
         });
     },
@@ -639,7 +651,7 @@ module.exports = {
                 //console.log('req out', update);
                 return res.ok(update);
             });
-    }
+    },
 
 
     /**
@@ -667,131 +679,54 @@ module.exports = {
     //}
     //,
 
+    hello: function (req, res) {
 
-    //chat: function (req, res) {
-    //    console.log(' vacation', req.param('id'));
-    //    console.log(' message', req.param('message'));
-    //    console.log('sender me', req.session.me);
-    //    console.log('REQ me', req.session);
-    //    var values = req.allParams();
-    //    console.log('REQ host', values);
-    //    console.log('REQ host', req.host);
-    //    console.log('REQ .subdomains', req.subdomains);
-    //    console.log('REQ .body', req.body);
-    //    // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
-    //    if (!req.isSocket) {
-    //        return res.badRequest();
-    //    }
-    //    // TODO: ^ pull this into a `isSocketRequest` policy
-    //
-    //
-    //    User.findOne({
-    //            id: req.session.me
-    //        })
-    //        .exec(function (err, foundUser) {
-    //            if (err) return res.negotiate(err);
-    //            if (!foundUser) return res.notFound();
-    //
-    //            // Трансляция события WebSocket всем остальным, находящимся в настоящее время в сети,
-    //            // поэтому их пользователь
-    //            // агенты могут обновлять интерфейс для них.
-    //            //console.log('foundUser', foundUser);
-    //            //Schedule.publishUpdate(req.param('id'), {
-    //            //    message: req.param('message'),
-    //            //    username: foundUser.getFullName(),
-    //            //    created: 'только сейчас',
-    //            //    avatarURL: foundUser.avatarURL
-    //            //});
-    //            Chat.create({
-    //                message: req.param('message'),
-    //                sender: req.session.me,
-    //                vacation: req.param('id'),
-    //                avatarUrl: foundUser.avatarUrl,
-    //                username: foundUser.getShortName()
-    //            }).exec(function (err, createdChat) {
-    //                if (err) return res.negotiate(err);
-    //
-    //
-    //                sails.sockets.broadcast('vacation' + req.param('id'), 'vacation', {
-    //                    message: req.param('message'),
-    //                    username: foundUser.getShortName(),
-    //                    created: 'только сейчас',
-    //                    avatarUrl: foundUser.avatarUrl
-    //                });
-    //
-    //
-    //                let strEmail = '';
-    //
-    //                if (_.isArray(foundUser.matchings) && (foundUser.matchings.length > 0)) {
-    //                    let a = [];
-    //                    _.forEach(foundUser.matchings, function (val, key) {
-    //                        console.log('EMAIl:', val.email);
-    //                        a.push(val.email);
-    //                    });
-    //                    strEmail = a.join(',');
-    //                }
-    //
-    //                let options = {
-    //                    to: strEmail, // Кому: можно несколько получателей указать через запятую
-    //                    subject: ' ! Чат отпуска ' + req.param('name') + '! Сообщение от ' + foundUser.getFullName(), // Тема письма
-    //                    text: '<h2>Сообщение чата </h2>', // plain text body
-    //                    html: '' +
-    //                    '<h2>У Вас есть новое сообщение. </h2> ' +
-    //                    '<p>' + req.param('message') + '</p>' +
-    //                    '<p><a href="' + sails.config.appUrl.http + '/admin/vacations/edit/' + req.param('id') + '">перейти в чат</a></p>'
-    //
-    //                };
-    //                EmailService.sender(options);
-    //
-    //                return res.ok();
-    //
-    //            });
-    //        });
-    //}
-    //,
-    //
-    //typing: function (req, res) {
-    //
-    //    // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
-    //    if (!req.isSocket) {
-    //        return res.badRequest();
-    //    }
-    //    // TODO: ^ pull this into a `isSocketRequest` policy
-    //
-    //    User.findOne({
-    //        id: req.session.me
-    //    }).exec(function (err, foundUser) {
-    //        if (err) return res.negotiate(err);
-    //        if (!foundUser) return res.notFound();
-    //
-    //        // Событие сокетов Broadcast для всех остальных в настоящее время в сети, чтобы их пользовательские агенты
-    //        // может обновить интерфейс для них.
-    //        sails.sockets.broadcast('vacation' + req.param('id'), 'typing', {
-    //            username: foundUser.getFullName()
-    //        }, (req.isSocket ? req : undefined));
-    //
-    //        return res.ok();
-    //    });
-    //}
-    //,
-
-    //stoppedTyping: function (req, res) {
-    //
-    //    // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
-    //    if (!req.isSocket) {
-    //        return res.badRequest();
-    //    }
-    //    // TODO: ^ pull this into a `isSocketRequest` policy
-    //
-    //    // Событие сокетов Broadcast для всех остальных в настоящее время в сети, чтобы их пользовательские агенты
-    //    // может обновить интерфейс для них.
-    //    sails.sockets.broadcast('vacation' + req.param('id'),
-    //        'stoppedTyping', {}, (req.isSocket ? req : undefined));
-    //
-    //    return res.ok();
-    //},
+        /**
+         * TODO SOCKET
+         * Убедитьсь, что это запрос сокета, а не традиционный HTTP
+         */
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
+        sails.sockets.join(req, 'list');
 
 
+        // Передавать уведомление всем сокетам, которые присоединились
+        // к комнате «list», за исключением нашего нового добавленного сокета:
+        //sails.sockets.broadcast('list', 'hello', {howdy: 'hi there!'}, req);
+
+
+        /**
+         * На данный момент мы отправили сообщение сокета всем сокетам, у которых есть
+         * подключение к комнате «list». Но это не обязательно означает, что они
+         * are _listening_. Другими словами, чтобы фактически обрабатывать сообщение сокета,
+         * подключенные сокеты должны прослушивать это конкретное событие (в этом
+         * case, мы передали наше сообщение с именем события «hello»).
+         * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
+         *
+         *  io.socket.on('hello', function (broadcastedData){
+         *  console.log(data.howdy);
+         *  // => 'hi there!'
+         *  }
+         */
+
+        /**
+         * Теперь, когда мы транслируем наше сообщение сокету, нам все равно нужно продолжить
+         * с любой другой логикой, о которой мы должны заботиться в наших действиях, а затем отправить
+         * ответ. В этом случае мы как раз завернуты, поэтому мы продолжим
+         * Ответьте на запрос с помощью 200 OK.
+         * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
+         * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
+         */
+        return    res.json({
+            anyData: 'we want to send back'
+        });
+
+        /**
+         * TODO END SOCKET
+         */
+    }
 }
 ;
 

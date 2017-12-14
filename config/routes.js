@@ -102,7 +102,6 @@ module.exports.routes = {
     'GET /getStructure/:id': 'StructureController.get',
 
 
-
     /**
      * Vacation
      */
@@ -137,7 +136,7 @@ module.exports.routes = {
     /**
      * Schedule
      */
-    'PUT /schedule/update-rows':        'ScheduleController.updateDefaultRows',
+    'PUT /schedule/update-rows': 'ScheduleController.updateDefaultRows',
 
     //'POST /schedule/:id/chat':          'ScheduleController.chat',
     //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',
@@ -238,11 +237,11 @@ module.exports.routes = {
     //'GET    /schedules':                'ScheduleController.findUsers',
     //'PUT    /schedules/changePassword': 'ScheduleController.changePassword',
 
-    'GET    /schedules':            'ScheduleController.get',
-    'GET    /schedules/:id':        'ScheduleController.get',
-    'POST   /schedules':            'ScheduleController.create', // создать запись
-    'DELETE /schedules/:id':        'ScheduleController.destroy', // удалить
-    'PUT    /schedules/:id':        'ScheduleController.update', // обновить
+    'GET    /schedules': 'ScheduleController.get',
+    'GET    /schedules/:id': 'ScheduleController.get',
+    'POST   /schedules': 'ScheduleController.create', // создать запись
+    'DELETE /schedules/:id': 'ScheduleController.destroy', // удалить
+    'PUT    /schedules/:id': 'ScheduleController.update', // обновить
     /*************************************************************
      * Server-rendered HTML Pages                                *
      *************************************************************/
@@ -317,13 +316,11 @@ module.exports.routes = {
     'GET /admin/vacations/create/': 'PageController.showHomePage',
 
 
-
-    'GET /admin/schedules':          'PageController.showHomePage',
-    'GET /admin/schedules/create':   'PageController.showHomePage',
+    'GET /admin/schedules': 'PageController.showHomePage',
+    'GET /admin/schedules/create': 'PageController.showHomePage',
     'GET /admin/schedules/show/:id': 'PageController.showHomePage',
     'GET /admin/schedules/edit/:id': 'PageController.showHomePage',
-    'GET /admin/schedule/:id':       'PageController.showHomePage',
-
+    'GET /admin/schedule/:id': 'PageController.showHomePage',
 
 
     //'GET /admin/attendances/calendar': 'PageController.showHomePage',
@@ -337,6 +334,18 @@ module.exports.routes = {
     //'POST /att': 'Attendance.getQuery',
     //'GET /period': 'Attendance.findPeriod',
     //'GET /pd': 'Attendance.fPeriod',
+
+
+
+    /****************************
+     *     SOCKETS CONNECT      *
+     ***************************/
+
+    // Schedule Controller
+    'GET /say/hello': 'ScheduleController.hello',
+
+
+
 
 
     'GET /:login': {
