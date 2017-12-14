@@ -79,6 +79,7 @@
     "xlsx-populate": "1.8.2"
   },
   "scripts": {
+    "myUpdate": "rm -rf node_modules && rm -rf package-lock.json && npm install",
     "debug": "node debug app.js",
     "start": "node app.js"
   },
