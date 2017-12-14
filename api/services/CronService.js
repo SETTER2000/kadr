@@ -8,44 +8,48 @@ const zone = "Europe/Moscow";
 var Moment = require('moment-timezone');
 const MomentRange = require('moment-range');
 const moment = MomentRange.extendMoment(Moment);
+const _ = require('lodash');
+require('moment-precise-range-plugin');
 moment.locale('ru');
 module.exports = {
     task0: function (options, done) {
-        Schedule.find({action: true, worked: false}).exec((err, finds)=> {
-            if (err) return res.serverError(err);
-            if (!finds.length) return ;
-            console.log('Cron tasks: ', finds.length);
-
-            try {
-                let job = new CronJob({
-                    cronTime: finds[0].start,
-                    onTick: function () {
-                        console.log('Задача: ' + finds[0].name);
-                        console.log('Задача запущена в: ' + moment(finds[0].start).format("LLLL"));
-                        this.stop();
-                    },
-                    onComplete: function () {
-                        console.log('Задача выполнена в: ' + new Date());
-                        Schedule.update({id: finds[0].id}, {worked: true,status:'В работе'}).exec((err, upd)=> {
-                            if (err) return res.serverError();
-                            sails.emit('updateCron');
-                            console.log('UPDATE OK! worked:', upd.worked );
-
+        Schedule.find({action: true, worked: false})
+            .exec((err, finds) => {
+                if (err) return res.serverError(err);
+                if (!finds.length) return;
+                console.log('Cron tasks: ', finds.length);
+                _.forEach(finds, function (task) {
+                    console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
+                    try {
+                        new CronJob({
+                            cronTime: task.start,
+                            onTick: function () {
+                                console.log('Задача: ' + task.name);
+                                console.log('Задача запущена в: ' + moment(task.start).format("LLLL"));
+                                this.stop();
+                            },
+                            onComplete: function () {
+                                console.log('Задача выполнена в: ' + new Date());
+                                Schedule.update({id: finds[0].id}, {
+                                    worked: true,
+                                    status: 'В работе'
+                                }).exec((err, upd) => {
+                                    if (err) return res.serverError();
+                                    sails.emit('updateCron');
+                                    console.log('UPDATE OK! worked:', upd.worked);
+                                });
+                            },
+                            start: true,
+                            timeZone: zone
                         });
-                    },
-                    start: true,
-                    timeZone: zone
+                        //job.start();
+                        //console.log(job);
+                        //sails.log('job status', job.running);
+                    } catch (err) {
+                        return done(err);
+                    }
                 });
-                //job.start();
-                //console.log(job);
-
-                //sails.log('job status', job.running);
-            } catch (err) {
-                return done(err);
-            }
-
-
-        });
+            });
     },
     task1: function (options, done) {
         let tsk = moment(options.start);
