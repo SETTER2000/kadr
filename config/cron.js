@@ -4,7 +4,7 @@ module.exports.cron = {
      * ['seconds', 'minutes', 'hours', 'dayOfMonth', 'month', 'dayOfWeek']
      */
 
-
+    //
     firstJob: {
         schedule: '* * * * * *',
         //schedule: '0 03 17 8 12 *',
