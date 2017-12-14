@@ -41,7 +41,6 @@ module.exports = {
                                         sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule});
                                         console.log('UPDATE OK! worked:', upd.worked);
                                     });
-
                                 });
                             },
                             start: true,
