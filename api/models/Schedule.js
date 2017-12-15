@@ -78,6 +78,14 @@ module.exports = {
             defaultsTo: true,
             required: true
         },
+        jobRunning: { //задача установлена, по умолчанию нет
+            type: 'boolean',
+            defaultsTo: false,
+            required: true
+        },
+        job:{
+          type:'string'
+        },
 
         //
         ///**

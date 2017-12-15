@@ -187,6 +187,7 @@ module.exports = {
                                 Schedule.find().exec((err, findSchedule)=>{
                                     if (err)  return res.serverError(err);
                                     sails.sockets.broadcast('list', 'hello', {howdy: findSchedule}, req);
+                                    sails.sockets.broadcast('list', 'badges', {badges: findSchedule, action:'создан'}, req);
                                     res.send(createSchedule);
                                 });
 
@@ -194,11 +195,11 @@ module.exports = {
 
                             //job.start();
 
-                            sails.on('event', () => {
-                                console.log('СОБЫТИЕ!!!!', 'an event occurred!');
-                            });
-
-                            sails.emit('event');
+                            //sails.on('event', () => {
+                            //    console.log('СОБЫТИЕ!!!!', 'an event occurred!');
+                            //});
+                            //
+                            //sails.emit('event');
 
                         });
                 });
@@ -282,6 +283,7 @@ module.exports = {
                             Schedule.find().exec((err, findsSchedule)=>{
                                 if(err) return res.serverError(err);
                                 sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
+                                sails.sockets.broadcast('list', 'badges', {badges: findsSchedule, action:'обновлён'}, req);
                                 res.ok();
                             });
 
@@ -376,264 +378,21 @@ module.exports = {
             //console.log('DELETE OBJ: ', arrJobs.length);
             //(arrJobs.length > 0) ? console.log('_idleStart STR: ', arrJobs[0]._timeout._idleStart) : '';
             //console.log('START: ', finds.start);
-            Schedule.destroy(req.param('id'), (err) => {
+
+            Schedule.destroy({id:finds.id}, (err) => {
                 if (err) return next(err);
                 console.log('Отпуск удалил:', req.session.me);
                 console.log('Отпуск удалён:', finds);
                 Schedule.find().exec((err, findSchedule)=>{
                     if (err)  return res.serverError(err);
                     sails.sockets.broadcast('list', 'hello', {howdy: findSchedule}, req);
+                    sails.sockets.broadcast('list', 'badges', {badges: findSchedule, action:'удалён'}, req);
                     res.ok();
                 });
 
             });
         });
     },
-
-
-    /**
-     * Кол-во дней оставшихся на отпуск в следующем году
-     */
-    //getDaysPeriodYear: function (req, res) {
-    //    Interface.create(req, res);
-    //    User.findOne({id: req.session.me})
-    //        .populate('interfaces')
-    //        .populate('vacations')
-    //        .exec((err, findUser) => {
-    //            "use strict";
-    //            if (err) return res.serverError(err);
-    //            if (!findUser) return res.notFound();
-    //            //console.log('findUser:', findUser);
-    //            let intfaceYear = (findUser['interfaces'].length) ? findUser['interfaces'][0].year : moment().get('year');
-    //            let year = (req.param('year')) ? req.param('year') : intfaceYear;
-    //
-    //            Schedule.find({
-    //                where: {
-    //                    owner: req.session.me,
-    //                    or: [
-    //                        {
-    //                            from: {
-    //                                '>=': new Date(moment(year, ["YYYY"]).startOf('year')), // set to January 1st, 12:00 am this year
-    //                                '<=': new Date(moment(year, ["YYYY"]).endOf("year")) // set the moment to 12-31 23:59:59.999 this year
-    //                            }
-    //                        },
-    //                        {
-    //                            to: {
-    //                                '>=': new Date(moment(year, ["YYYY"]).startOf('year')), // set to January 1st, 12:00 am this year
-    //                                '<=': new Date(moment(year, ["YYYY"]).endOf("year")) // set the moment to 12-31 23:59:59.999 this year
-    //                            }
-    //                        }
-    //                    ]
-    //                }
-    //            }).exec((err, findVacations) => {
-    //                if (err) return res.serverError(err);
-    //                if (!findVacations) return res.notFound();
-    //                _.forEach(findVacations, function (v, k) {
-    //                    console.log('VALUE: ', v.name);
-    //                });
-    //                console.log('***************************//******************************** ');
-    //                //console.log('findVacations', findVacations);
-    //                let obj = {};
-    //
-    //                // Праздники в RF
-    //                let holidaysRf = sails.config.holidaysRf.data;
-    //                //let holidaysRf = ["01.01.2017", "02.01.2017", "03.01.2017", "04.01.2017", "05.01.2017", "06.01.2017", "07.01.2017", "08.01.2017", "23.02.2017", "08.03.2017", "01.05.2017", "09.05.2017", "12.06.2017", "04.11.2017", "01.01.2018", "02.01.2018", "03.01.2018", "04.01.2018", "05.01.2018", "06.01.2018", "07.01.2018", "08.01.2018", "23.02.2018", "08.03.2018", "01.05.2018", "09.05.2018", "12.06.2018", "04.11.2018", "01.01.2019", "02.01.2019", "03.01.2019", "04.01.2019", "05.01.2019", "06.01.2019", "07.01.2019", "08.01.2019", "23.02.2019", "08.03.2019", "01.05.2019", "09.05.2019", "12.06.2019", "04.11.2019"];
-    //
-    //                //console.log('holidays',holidays);
-    //                let vacationPeriodsFrom = findVacations.map(function (vacation) {
-    //                    return moment.tz(vacation.from, zone);
-    //                });
-    //                let vacationPeriodsTo = findVacations.map(function (vacation) {
-    //                    return moment.tz(vacation.to, zone);
-    //                });
-    //                let vacationSelectDays = findVacations.map(function (vacation) {
-    //                    return vacation.daysSelectHoliday;
-    //                });
-    //
-    //                obj.maxFrom = moment.tz(moment.max(vacationPeriodsFrom), zone);  // максималная дата начала отпуска
-    //                obj.maxTo = moment.tz(moment.max(vacationPeriodsTo), zone);  // максималная дата конца отпуска
-    //                obj.yearFrom = moment(obj.maxFrom).get('year'); // год начала максимального периода
-    //                obj.yearTo = moment(obj.maxTo).get('year'); // год окончания макс. периода
-    //                obj.dh = vacationSelectDays;
-    //
-    //                obj.minFrom = moment.tz(moment.min(vacationPeriodsFrom), zone);  // минимальная дата начала отпуска
-    //                obj.minTo = moment.tz(moment.min(vacationPeriodsTo), zone);  // минимальная дата конца отпуска
-    //                obj.yearMinFrom = (findVacations.length > 1) ? moment(obj.minFrom).get('year') : 1000; // год начала минимального периода
-    //                obj.yearMinTo = (findVacations.length > 1) ? moment(obj.minTo).get('year') : 1000; // год окончания минимального. периода
-    //
-    //
-    //                /**
-    //                 * Всего дней выбраных во всех периодах начиная
-    //                 * с года интерфейса пользователя.
-    //                 * Для каждого элемента массива запустить функцию,
-    //                 * промежуточный результат передавать первым аргументом далее
-    //                 */
-    //                obj.allDays = obj.dh.reduce(function (sum, current) {
-    //                    return sum + current;
-    //                }, 0);
-    //
-    //                obj.startVacationDateFormat = moment.tz(obj.maxFrom.clone(), zone).format('LLLL');
-    //                obj.endVacationDateFormat = moment.tz(obj.maxTo.clone(), zone).format('LLLL');
-    //                obj.startVacationDateFormatMinFrom = moment.tz(obj.minFrom.clone(), zone).format('LLLL');
-    //                obj.endVacationDateFormatMinTo = moment.tz(obj.minTo.clone(), zone).format('LLLL');
-    //
-    //
-    //                /**
-    //                 * Последняя точка времени года
-    //                 */
-    //                obj.endOfYear = obj.maxFrom.clone().endOf('year');
-    //
-    //                /**
-    //                 * Последняя точка времени года (минимальный диапазон)
-    //                 */
-    //                obj.endOfYearMinTo = obj.minTo.clone().startOf('year');
-    //
-    //
-    //                let holidays = []; // праздничные дни попавшие в отпуск
-    //                let holidaysMin = []; // праздничные дни попавшие в отпуск (минимальный диапазон)
-    //                let workdays = []; // рабочии дни попавшие в отпуск, по сути то что и считается отпуском
-    //                let workdaysMin = []; // рабочии дни попавшие в отпуск, по сути то что и считается отпуском (минимальный диапазон)
-    //                let allDaysVacation = []; // все выбранные дни отпуска
-    //                let allDaysVacationMin = []; // все выбранные дни отпуска (минимальный диапазон)
-    //                let tail = []; // (хвост) рабочии дни попавшие в следующий год
-    //                let tailMin = []; // (хвост) рабочии дни попавшие в предыдущий год
-    //                let tailMinInterface = []; // хвост рабочих дней попавших в год выбранного интерфейса из минимального периода
-    //                let tailInterface = []; // хвост рабочих дней попавших в год выбранного интерфейса из максимального периода
-    //
-    //
-    //                /**
-    //                 * Создаём из начальной и конечной даты отпуска диапазон
-    //                 */
-    //                const range = moment.range(obj.maxFrom, obj.maxTo);
-    //
-    //                /**
-    //                 * Создаём из начальной и конечной даты отпуска диапазон (минимальный)
-    //                 */
-    //                const rangeMin = moment.range(obj.minFrom, obj.minTo);
-    //
-    //                /**
-    //                 * Обходим диапазон по дням (для этого в скобках константа day, можно по месяцам обойти month)
-    //                 * Заполняем массив всех дней попавших в период отпуска
-    //                 */
-    //                for (let day of range.by('day')) {
-    //                    allDaysVacation.push(day.format('YYYY-MM-DD'));
-    //                }
-    //
-    //                /**
-    //                 * Обходим диапазон по дням (для этого в скобках константа day, можно по месяцам обойти month)
-    //                 * Заполняем массив всех дней попавших в период отпуска
-    //                 */
-    //                for (let day of rangeMin.by('day')) {
-    //                    allDaysVacationMin.push(day.format('YYYY-MM-DD'));
-    //                }
-    //
-    //
-    //                /**
-    //                 * Заполняем массив праздничных дней попавших в период отпуска
-    //                 */
-    //                _.forEach(holidaysRf, function (val, key) {
-    //                    const m = moment(val, ['DD.MM.YYYY']);
-    //                    if (range.contains(m)) holidays.push(m.format('YYYY-MM-DD'));
-    //                    //(moment(day.format('YYYY-MM-DD')).isSame(moment(val, ['DD.MM.YYYY']).tz(zone))) ? holidays.push(day.format('YYYY-MM-DD')) : workdays[day.format('YYYYMMDD')]=day.format('YYYY-MM-DD');
-    //                });
-    //
-    //                /**
-    //                 * Заполняем массив праздничных дней попавших в период отпуска
-    //                 */
-    //                _.forEach(holidaysRf, function (val, key) {
-    //                    const m = moment(val, ['DD.MM.YYYY']);
-    //                    if (rangeMin.contains(m)) holidaysMin.push(m.format('YYYY-MM-DD'));
-    //                    //(moment(day.format('YYYY-MM-DD')).isSame(moment(val, ['DD.MM.YYYY']).tz(zone))) ? holidays.push(day.format('YYYY-MM-DD')) : workdays[day.format('YYYYMMDD')]=day.format('YYYY-MM-DD');
-    //                });
-    //
-    //
-    //                /**
-    //                 * Заполняем массив рабочими днями
-    //                 * @type {Array}
-    //                 */
-    //                workdays = _.difference(allDaysVacation, holidays);
-    //
-    //
-    //                /**
-    //                 * Заполняем массив рабочими днями
-    //                 * @type {Array}
-    //                 */
-    //                workdaysMin = _.difference(allDaysVacationMin, holidaysMin);
-    //
-    //
-    //                /**
-    //                 * Заполняем массив рабочими днями попавшими на другой год (хвост)
-    //                 * @type {Array}
-    //                 */
-    //                _.forEach(workdays, function (v, k) {
-    //                    (moment(v).get('year') == ((obj.yearTo !== obj.yearFrom) ? obj.yearTo : 1000) ) ? tail.push(v) : '';
-    //                    (moment(v).get('year') == ((obj.yearTo !== obj.yearFrom) ? obj.yearFrom : 1000) ) ? tailInterface.push(v) : '';
-    //                });
-    //
-    //
-    //                /**
-    //                 * Заполняем массив рабочими днями попавшими на предыдущий год (хвост)(минимальный диапазон)
-    //                 * @type {Array}
-    //                 */
-    //                _.forEach(workdaysMin, function (v, k) {
-    //                    (moment(v).get('year') == ((obj.yearMinTo !== obj.yearMinFrom) ? obj.yearMinFrom : 1000) ) ? tailMin.push(v) : '';
-    //                    (moment(v).get('year') == ((obj.yearMinTo !== obj.yearMinFrom) ? obj.yearMinTo : 1000) ) ? tailMinInterface.push(v) : '';
-    //                });
-    //
-    //
-    //                /**
-    //                 * Хвостик от отпуска в следующем году
-    //                 * @type {number}
-    //                 */
-    //                obj.diff = tail.length;
-    //
-    //                /**
-    //                 * Хвостик от отпуска в следующем году
-    //                 * @type {number}
-    //                 */
-    //                obj.diffMin = tailMin.length;
-    //
-    //                /**
-    //                 * Кол-во отпускных дней пренадлежащих только году интерфейса
-    //                 * @type {number}
-    //                 */
-    //                obj.selectDaysYearsPeriod = obj.allDays - obj.diff - obj.diffMin;
-    //
-    //                /**
-    //                 * Кол-во отпускных дней пренадлежащих только году интерфейса
-    //                 * @type {number}
-    //                 */
-    //                    //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
-    //
-    //                obj.holidaysMin = holidaysMin;
-    //                obj.holidays = holidays;
-    //                obj.workdays = workdays;
-    //                obj.workdaysMin = workdaysMin;
-    //                obj.allDaysVacation = allDaysVacation;
-    //                obj.allDaysVacationMin = allDaysVacationMin;
-    //                obj.tailMinInterface = tailMinInterface;
-    //                obj.tailInterface = tailInterface;
-    //
-    //                /**
-    //                 * Дни отпуска попавшие в следующий год
-    //                 * @type {Array}
-    //                 */
-    //                obj.tail = tail;
-    //
-    //                /**
-    //                 * Дни отпуска попавшие в следующий год
-    //                 * @type {Array}
-    //                 */
-    //                obj.tailMin = tailMin;
-    //
-    //
-    //                res.send(obj);
-    //            });
-    //
-    //
-    //        });
-    //},
-
 
     /**
      * Обновить 'кол-во строк в таблице' пользователю
@@ -655,30 +414,11 @@ module.exports = {
 
 
     /**
-     * Чат отпуска
+     * SOCKET событие hello
      * @param req
      * @param res
      * @returns {*}
      */
-    //joinChat: function (req, res) {
-    //
-    //    // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
-    //    if (!req.isSocket) {
-    //        return res.badRequest();
-    //    }
-    //    // TODO: ^ Потяните это в политику `isSocketRequest`
-    //
-    //    // Присоединитесь к комнате для этого отпуска (в качестве запрашивающего сокета)
-    //    Schedule.subscribe(req, req.param('id'));
-    //
-    //    // Присоединитесь к комнате отпуска для анимации ввода
-    //    sails.sockets.join(req, 'vacation' + req.param('id'));
-    //    // Schedule.watch(req);
-    //    console.log('Connect chat ' + 'vacation' + req.param('id'));
-    //    return res.ok();
-    //}
-    //,
-
     hello: function (req, res) {
 
         /**
@@ -720,7 +460,61 @@ module.exports = {
          * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
          */
         return    res.json({
-            anyData: 'we want to send back'
+            anyData: 'we want to send hello'
+        });
+
+        /**
+         * TODO END SOCKET
+         */
+    },
+
+    /**
+     * SOCKET событие badges
+     * @param req
+     * @param res
+     * @returns {*}
+     */
+    badges: function (req, res) {
+        /**
+         * TODO SOCKET
+         * Убедитьсь, что это запрос сокета, а не традиционный HTTP
+         */
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
+        sails.sockets.join(req, 'list');
+
+
+        // Передавать уведомление всем сокетам, которые присоединились
+        // к комнате «list», за исключением нашего нового добавленного сокета:
+        //sails.sockets.broadcast('list', 'hello', {howdy: 'hi there!'}, req);
+
+
+        /**
+         * На данный момент мы отправили сообщение сокета всем сокетам, у которых есть
+         * подключение к комнате «list». Но это не обязательно означает, что они
+         * are _listening_. Другими словами, чтобы фактически обрабатывать сообщение сокета,
+         * подключенные сокеты должны прослушивать это конкретное событие (в этом
+         * case, мы передали наше сообщение с именем события «hello»).
+         * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
+         *
+         *  io.socket.on('hello', function (broadcastedData){
+         *  console.log(data.howdy);
+         *  // => 'hi there!'
+         *  }
+         */
+
+        /**
+         * Теперь, когда мы транслируем наше сообщение сокету, нам все равно нужно продолжить
+         * с любой другой логикой, о которой мы должны заботиться в наших действиях, а затем отправить
+         * ответ. В этом случае мы как раз завернуты, поэтому мы продолжим
+         * Ответьте на запрос с помощью 200 OK.
+         * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
+         * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
+         */
+        return    res.json({
+            anyData: 'we want to send badges'
         });
 
         /**

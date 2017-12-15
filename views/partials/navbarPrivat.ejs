@@ -1,6 +1,7 @@
 <div ng-controller="navPageController" ng-cloak class="container-fluid">
     <nav class="navbar navbar-inverse navbar-fixed-top" ng-if="me">
         <div class="container">
+
             <div class="navbar-header">
                 <button ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" type="button" class="navbar-toggle collapsed"
                         data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -16,6 +17,8 @@
                 <!--<a class="navbar-brand " href="/"> КС</a>-->
             </div>
             <div id="navbar" class="navbar-collapse collapse">
+
+
                 <ul class="nav navbar-nav">
                     <!--<li><a href="/">Home</a></li>-->
                     <!--<li><a ui-sref="home.admin.calendars">Посещаемость</a></li>-->
@@ -30,9 +33,16 @@
 
                     <!-- Also a way to navigate -->
                     <!--<li><a href="/videos">Videos</a></li>-->
-                    <li class="dropdown">
+                    <li ng-controller="ListScheduleController" class="dropdown"  ng-click="badg()">
+                        <!--<span style="color:grey" ng-repeat="badge in badges"> {{badge.badges[0].name}} - {{badge.action}} <br></span>-->
+                        <div ng-show="badges.length" class="badges-position">
+                            <div class="badge danger"  ng-mouseover="showAlert($event)">
+                                {{badges.length}}
+                            </div>
+                        </div>
                         <a ng-if="(me.kadr || me.admin || me.leader)" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             Кадровая служба
+
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <!--<li class="dropdown-header">Редактирование</li>-->

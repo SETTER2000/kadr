@@ -379,9 +379,9 @@ angular.module('ScheduleModule')
                 locale: info.ru, // язык
                 mode: "range", // диапазон дат выбрать
                 dateFormat: info.dateFormat, // формат даты
-                minDate: 'today', // минимальная дата
                 allowInput: false, // ручной ввод даты
                 inline: false, // календарь открыт: true; false закрыт
+                minDate: 'today',
                 // Обработчик события на изменения даты
                 //onChange: function(selectedDates, dateStr, instance) {
                 //    console.log('selectedDates',selectedDates);
@@ -423,7 +423,7 @@ angular.module('ScheduleModule')
                 //    return new Date(str.selectedDates);
                 //}
                 //maxDate: info.maxDate // максимальная дата
-                defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
+                //defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
             };
 
             $scope.minYear = function () {

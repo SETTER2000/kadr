@@ -1,4 +1,4 @@
-angular.module('AdminModule', ['ui.router', 'ngResource', 'ngAnimate'])
+angular.module('AdminModule', ['ui.router', 'ngResource', 'ngAnimate','ngMaterial'])
     .config(function ($stateProvider) {
         $stateProvider
             .state('home.admin', {

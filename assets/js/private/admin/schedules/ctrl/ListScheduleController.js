@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     angular.module('ScheduleModule')
-        .controller('ListScheduleController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Schedules', 'Users', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Schedules, Users) {
+        .controller('ListScheduleController', ['$scope', '$location', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Schedules', 'Users', '$window', function ($scope, $location, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, Schedules, Users) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             $scope.$on('defaultRowsTable', function (event, data) {
@@ -11,19 +11,65 @@
 
 
             /**
-             * TODO WEBSOCKET: Подключаемся к сокету для прослушивания сервера
-             * и обработки события hello
+             * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
-            $scope.howdy = 'Привет!';
             io.socket.on('hello', function (data) {
                 console.log('Socket room list: ' + data.howdy + ' подключился только что к комнате list!');
                 $scope.items = data.howdy;
                 $scope.$apply();
             });
-            //$scope.hello = function () {
-                io.socket.get('/say/hello', function gotResponse(data, jwRes) {
+            //$scope.badges = [{hop:22},{jop:77}];
+            $scope.badges = [];
+            $scope.badg = function () {
+                io.socket.get('/say/badges', function gotResponse(data, jwRes) {
                     console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
+                    return $scope.badges = [];
                 });
+
+            };
+
+
+            $scope.showAlert = function(ev) {
+                // Appending dialog to document.body to cover sidenav in docs app
+                // Modal dialogs should fully cover application
+                // to prevent interaction outside of dialog
+              //  {{badge.badges[0].name}} - {{badge.action}}
+                let r='';
+                for(let badge in $scope.badges){
+                    console.log(badge);
+                   //r  =+ badge.badges[0].name +'-'+ badge.action + '<br>';
+                }
+
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .parent(angular.element(document.querySelector('#popupContainer')))
+                        .clickOutsideToClose(true)
+                        .title(r)
+                        .textContent(r)
+                        .ariaLabel('Список действий')
+                        .ok('Закрыть')
+                        .targetEvent(ev)
+                );
+            };
+
+
+
+            /**
+             * TODO WEBSOCKET: Подключаемся к сокету обработка события badges
+             */
+            io.socket.on('badges', function (data) {
+                console.log('Socket room list: ' + data.badges + ' подключился только что к комнате list!');
+                if($state.includes('home.admin.schedules')) return;
+                $scope.badges.push(data);
+                $scope.$apply();
+            });
+            //$scope.hello = function () {
+            io.socket.get('/say/hello', function gotResponse(data, jwRes) {
+                console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+            });
+            io.socket.get('/say/badges', function gotResponse(data, jwRes) {
+                console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
+            });
             //};
 
 
@@ -53,7 +99,7 @@
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено',
                 title: 'Рассылка сообщений закончена.',
-                startProject:'Старт проекта'
+                startProject: 'Старт проекта'
             };
 
 
