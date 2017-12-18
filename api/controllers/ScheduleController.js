@@ -188,7 +188,7 @@ module.exports = {
                                 Schedule.find().exec((err, findSchedule)=>{
                                     if (err)  return res.serverError(err);
                                     sails.sockets.broadcast('list', 'hello', {howdy: findSchedule}, req);
-                                    sails.sockets.broadcast('list', 'badges', {badges: findSchedule, action:'создан'}, req);
+                                    sails.sockets.broadcast('list', 'badges', {badges: [createSchedule], action:'создан'}, req);
                                     res.send(createSchedule);
                                 });
 
@@ -216,37 +216,7 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        let tm = moment(req.param('start'));
-        //let task = '* ' + tm.get('minute') + ' ' + tm.get('hour') + ' ' + tm.date() + ' ' + (tm.format('M')) + ' *';
         if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
-        // sails.on('updateCron', () => {
-        //     console.log('СОБЫТИЕ updateCron! !!!', 'an event occurred!');
-        //     Schedule.find().exec((err, findsSchedule)=>{
-        //         if(err) return res.serverError(err);
-        //         sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
-        //     });
-        // });
-
-
-        //let job = new CronJob({
-        //    cronTime: task,
-        //    onTick: function () {
-        //        console.log('Задача: ' + req.param('name'));
-        //        console.log('Задача должна быть запущена в: ' + moment(req.param('start')).format("LLLL"));
-        //        console.log('Время для Cron: ' + task);
-        //        this.stop();
-        //    },
-        //    onComplete: function () {
-        //        console.log('Задача выполнена в: ' + new Date());
-        //
-        //    },
-        //    start: false,
-        //    timeZone: 'Europe/Moscow'
-        //});
-        //job.start();
-
-        console.log('moment(this.start,[])', moment(new Date(req.param('start')), ['X']));
-        //console.log('AAAAAA', (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X'])) ? 1 : 0));
         let obj = {
             section: 'График отпусков',
             sections: 'Графики отпусков',
@@ -271,23 +241,20 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-
                 Schedule.update(req.param('id'), obj)
                     .populate('whomCreated')
                     .populate('whomUpdated')
                     .exec(function updateObj(err, objEdit) {
                         if (err) return res.negotiate(err);
-                        //sails.log(obj.section + ' обновлён: ', objEdit);
-                        //sails.log(obj.section + ' обновлён пользователем:', findUser.getFullName());
                         findUser.save(function (err) {
                             if (err) return res.negotiate(err);
                             Schedule.find().exec((err, findsSchedule)=>{
                                 if(err) return res.serverError(err);
                                 sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
+                                // console.log('objEdit', objEdit);
                                 sails.sockets.broadcast('list', 'badges', {badges: objEdit, action:'обновлён'}, req);
                                 res.ok();
                             });
-
                         });
                     });
             });
@@ -387,7 +354,7 @@ module.exports = {
                 Schedule.find().exec((err, findSchedule)=>{
                     if (err)  return res.serverError(err);
                     sails.sockets.broadcast('list', 'hello', {howdy: findSchedule}, req);
-                    sails.sockets.broadcast('list', 'badges', {badges: findSchedule, action:'удалён'}, req);
+                    sails.sockets.broadcast('list', 'badges', {badges: [finds], action:'удалён'}, req);
                     res.ok();
                 });
 
