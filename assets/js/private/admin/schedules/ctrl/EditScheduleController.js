@@ -7,7 +7,10 @@ angular.module('ScheduleModule')
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
-                error: 'Ошибка!',
+                error: function (num) {
+                    if (!angular.isNumber) return;
+                    return 'Ошибка ' + num + '!';
+                },
                 warning: 'ВНИМАНИЕ!',
                 requiredJpg: 'Расширение файла должно быть jpg.',
                 isSimilar: 'Есть похожий: ',
@@ -70,8 +73,6 @@ angular.module('ScheduleModule')
                     tmpl: 'Шаблон №4 - нет вариантов'
                 }
             ];
-
-
 
 
 //$scope.$watch('selection', function (value) {
@@ -226,7 +227,7 @@ angular.module('ScheduleModule')
             };
             $scope.fixYear = function () {
                 if (!angular.isNumber($scope.item.year)) {
-                    toastr.error('Год введён не корректно!', info.error);
+                    toastr.error('Год введён не корректно!', info.error(8966));
                 }
                 return;
             };
@@ -514,12 +515,36 @@ angular.module('ScheduleModule')
                 }
             });
             $scope.$watch('item.start', function (value) {
-                if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY HH:mm"]).isValid() || !$scope.item.action) return;
+
 
                 if (value) {
+                    console.log('FFFF', $scope.item.status);
+                    if(($scope.item.status === 'Проект' && moment(value).isBefore(moment()))) {
+                        toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
+                            {
+                                //"closeButton": true,
+                                //"debug": false,
+                                //"newestOnTop": false,
+                                "progressBar": true,
+                                //"positionClass": "toast-top-right",
+                                //"preventDuplicates": false,
+                                //"showDuration": "300",
+                                //"hideDuration": "1000",
+                                //"timeOut": "5000",
+                                //"extendedTimeOut": "1000",
+                                //"showEasing": "swing",
+                                //"hideEasing": "linear",
+                                //"showMethod": "fadeIn",
+                                //"hideMethod": "fadeOut"
+                            });
+                        return;
+                    }
+                    if ($scope.item.status !== 'Проект'  || moment(value, ["DD.MM.YYYY HH:mm"]).isValid() || !$scope.item.action) return;
                     let nm;
+
+                    console.log('FORMAT', value);
                     nm = (moment(value).isSameOrBefore(moment())) ? 'Проект запущен' : 'Запуск проекта';
-                    toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(value).format('llll'), info.warning,
+                    toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
                         {
                             //"closeButton": true,
                             //"debug": false,
@@ -562,7 +587,7 @@ angular.module('ScheduleModule')
                     // $scope.refresh();
                 }, function (err) {
                     //console.log(err);
-                    toastr.error(err, info.error + ' 122! ');
+                    toastr.error(err, info.error(122));
                 })
             };
 
@@ -597,7 +622,7 @@ angular.module('ScheduleModule')
                 var u = item.start;
 
                 //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm']).format('YYYY-MM-DD HH:mm')) : null;
+                item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
                 //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
@@ -609,8 +634,7 @@ angular.module('ScheduleModule')
             $scope.saveEdit = function (item) {
                 item = reversValue(item);
                 console.log('Перед созданием', item);
-                if (!item.htmlData) return toastr.error(info.messageErr, info.error);
-
+                if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
 
 
                 if (angular.isDefined(item.id)) {
@@ -619,7 +643,7 @@ angular.module('ScheduleModule')
                             $scope.refresh();
                         },
                         function (err) {
-                            toastr.error(err.data.invalidAttributes, info.error + ' 11445!');
+                            toastr.error(err.data, info.error(11445));
                         }
                     );
                 } else {
@@ -650,7 +674,7 @@ angular.module('ScheduleModule')
                                 //$state.go('home.admin.schedules');
                             },
                             function (err) {
-                                toastr.error(err.data, info.error + ' 89336!');
+                                toastr.error(err.data, info.error(89336));
                             });
                     }
                 }
@@ -720,7 +744,7 @@ angular.module('ScheduleModule')
                         },
                         function (err) {
                             //console.log('ERR: ', err);
-                            toastr.error(err.data.invalidAttributes, info.error + ' 44006!');
+                            toastr.error(err.data.invalidAttributes, info.error(44006));
                         });
                 }
             };
@@ -738,7 +762,7 @@ angular.module('ScheduleModule')
                             $scope.refresh();
                         },
                         function (err) {
-                            toastr.error(err.data.invalidAttributes, info.error + ' 44016!');
+                            toastr.error(err.data.invalidAttributes, info.error(792));
                         });
                 }
             };
@@ -755,7 +779,7 @@ angular.module('ScheduleModule')
                             $scope.refresh();
                         },
                         function (err) {
-                            toastr.error(err.data.invalidAttributes, info.error + ' 44016!');
+                            toastr.error(err.data.invalidAttributes, info.error(1564));
                         });
                 }
             };
@@ -774,7 +798,7 @@ angular.module('ScheduleModule')
                         },
                         function (err) {
                             //console.log(info.error, err);
-                            toastr.error(err.data.invalidAttributes, info.error + ' 90!');
+                            toastr.error(err.data.invalidAttributes, info.error(90));
                         });
                 }
             };

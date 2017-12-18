@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     angular.module('ScheduleModule')
-        .controller('ListScheduleController', ['$scope', '$location', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Schedules', 'Users', '$window', function ($scope, $location, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, Schedules, Users) {
+        .controller('ListScheduleController', ['$scope', '$location', 'ngDialog', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Schedules', 'Users', '$window', function ($scope, $location, ngDialog, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, Schedules, Users) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             $scope.$on('defaultRowsTable', function (event, data) {
@@ -29,22 +29,18 @@
             };
 
 
-            $scope.showAlert = function(ev) {
+            $scope.showAlert = function (ev) {
                 // Appending dialog to document.body to cover sidenav in docs app
                 // Modal dialogs should fully cover application
                 // to prevent interaction outside of dialog
-              //  {{badge.badges[0].name}} - {{badge.action}}
-                let r='';
-                for(let badge in $scope.badges){
-                    console.log(badge);
-                   //r  =+ badge.badges[0].name +'-'+ badge.action + '<br>';
-                }
+                //  {{badge.badges[0].name}} - {{badge.action}}
+                console.log('$scope.badges', $scope.badges);
 
                 $mdDialog.show(
                     $mdDialog.alert()
                         .parent(angular.element(document.querySelector('#popupContainer')))
                         .clickOutsideToClose(true)
-                        .title(r)
+                        .title('События')
                         .textContent(r)
                         .ariaLabel('Список действий')
                         .ok('Закрыть')
@@ -52,17 +48,115 @@
                 );
             };
 
+            $scope.showPrompt = function (ev) {
+                // Appending dialog to document.body to cover sidenav in docs app
+                var confirm = $mdDialog.prompt()
+                    .title('Действия')
+                    //.title('Как бы вы назвали свою собаку?')
+                    .textContent('msdfvkmd<br>sdfgsfg')
+                    .placeholder('Имя собаки')
+                    //.ariaLabel('Имя собаки')
+                    //.initialValue('Buddy')
+                    .targetEvent(ev)
+                    .required(true)
+                    .ok('Okay!')
+                    .cancel('Я человек кошка');
+
+                $mdDialog.show(confirm).then(function (result) {
+                    $scope.status = 'Вы решили назвать свою собаку ' + result + '.';
+                }, function () {
+                    $scope.status = 'Вы не назвали свою собаку.';
+                });
+            };
+
+            function DialogController($scope, $mdDialog) {
+                $scope.badges = [];
+                io.socket.on('badges', function (data) {
+                    console.log('Socket DialogController room list. Count: ' + data.badges.length + ', ' + data.action + ' !');
+                    if ($state.includes('home.admin.schedules')) return;
+                    $scope.badges.push(data);
+                    $scope.$apply();
+                });
+                $scope.tui = $scope.badges.length;
+                $scope.hide = function () {
+                    $mdDialog.hide();
+                };
+
+                $scope.cancel = function () {
+                    $mdDialog.cancel();
+                };
+
+
+                $scope.answer = function (answer) {
+                    $mdDialog.hide(answer);
+                };
+            }
+
+
+            $scope.showTabDialog = function (ev) {
+                $mdDialog.show({
+                        controller: DialogController,
+                        templateUrl: '/js/private/admin/schedules/views/dialog_1.tab.tmpl.html',
+                        parent: angular.element(document.body),
+                        targetEvent: ev,
+                        clickOutsideToClose: true
+                    })
+                    .then(function (answer) {
+                        $scope.status = 'You said the information was "' + answer + '".';
+                    }, function () {
+                        $scope.status = 'You cancelled the dialog.';
+                    });
+            };
+
+
+            $scope.showAdvanced = function (ev, data) {
+                $mdDialog.show({
+                        controller: DialogController,
+                        templateUrl: '/js/private/admin/schedules/views/dialog_1.tmpl.html',
+                        parent: angular.element(document.body),
+                        targetEvent: ev,
+                        clickOutsideToClose: true,
+                        fullscreen: $scope.customFullscreen, // Only for -xs, -sm breakpoint,s.
+                    })
+                    .then(function (answer) {
+                        $scope.status = 'You said the information was "' + answer + '".';
+                    }, function () {
+                        $scope.status = 'You cancelled the dialog.';
+                    });
+            };
 
 
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события badges
              */
             io.socket.on('badges', function (data) {
+                console.log('ОТВЕТ data:', data);
                 console.log('Socket room list: ' + data.badges + ' подключился только что к комнате list!');
-                if($state.includes('home.admin.schedules')) return;
+                if ($state.includes('home.admin.schedules')) return;
                 $scope.badges.push(data);
+
+                let r = '';
+                for (let key in $scope.badges) {
+                    console.log('$scope.badges[key]', $scope.badges[key]);
+                    r += $scope.badges[key].badges[0].name + ' ' + data.action + ' ' + moment($scope.badges[key].badges[0].updatedAt).format('DD.MM.YYYY HH:mm:ss')
+                        +'<br>';
+                    //console.log("ACTION: ", $scope.badges[key].action);
+                }
+                $scope.tui = r;
+
+
                 $scope.$apply();
             });
+
+            $scope.clickToOpen = function () {
+                ngDialog.open({
+                    template: $scope.tui,
+                    plain: true
+                });
+                //ngDialog.open({ template: '/js/private/admin/schedules/views/popupTmpl.html', className: 'ngdialog-theme-default' });
+            };
+
+
             //$scope.hello = function () {
             io.socket.get('/say/hello', function gotResponse(data, jwRes) {
                 console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);

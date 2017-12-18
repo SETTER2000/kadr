@@ -36,9 +36,10 @@
                     <li ng-controller="ListScheduleController" class="dropdown"  ng-click="badg()">
                         <!--<span style="color:grey" ng-repeat="badge in badges"> {{badge.badges[0].name}} - {{badge.action}} <br></span>-->
                         <div ng-show="badges.length" class="badges-position">
-                            <div class="badge danger"  ng-mouseover="showAlert($event)">
+                            <div class="badge danger"  ng-mouseover="clickToOpen()">
                                 {{badges.length}}
                             </div>
+
                         </div>
                         <a ng-if="(me.kadr || me.admin || me.leader)" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             Кадровая служба

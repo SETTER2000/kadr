@@ -1,5 +1,5 @@
 angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
-        'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment', 'ngSanitize'])
+        'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment', 'ngSanitize','ngDialog'])
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
     }])

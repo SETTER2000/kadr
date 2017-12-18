@@ -41,7 +41,8 @@
     "angular-toastr": "^2.1.1",
     "moment-precise-range": "^1.0.1",
     "angular-messages": "^1.6.6",
-    "angular-sanitize": "bower-angular-sanitize#^1.6.7"
+    "angular-sanitize": "bower-angular-sanitize#^1.6.7",
+    "ng-dialog": "^1.4.0"
   },
   "devDependencies": {
     "angular-translate": "^2.15.0",

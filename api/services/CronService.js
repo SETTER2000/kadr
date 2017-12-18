@@ -13,97 +13,164 @@ require('moment-precise-range-plugin');
 moment.locale('ru');
 module.exports = {
     task0: function (options, done) {
+        /**
+         *  Добавить 5 минут после запуска
+         *  это промежуток в котором сможет запуститься проект в случаи отключения сервера
+         *  и вновь поднятия его в период между установленным запуском проекта и плюс одной минутой.
+         *  В противном случаи если запуск сервера произойдет позже этого времени, то проект
+         *  не будет запущен.
+         * @type {number}
+         */
+        let afterMin = 5;
+
         Schedule.find({action: true, worked: false})
             .exec((err, finds) => {
                 if (err) return res.serverError(err);
-                if (!finds.length)return ;
+                if (!finds.length)return;
                 console.log('Cron tasks: ', finds.length);
                 _.forEach(finds, function (task) {
-                    //if (task.jobRunning) return;
-                    let job = new CronJob({
-                        cronTime: task.start,
-                        onTick: function () {
-                            console.log('Задача ' + task.name + ' запущена в: ' + moment(task.start).format("LLLL"));
-                            User.find({action: true, fired: false}).exec((err, usersFind)=> {
-                                "use strict";
-                                if (err) return res.serverError(err);
-                                if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
-                                let strEmail = '';
-                                if (_.isArray(usersFind) && (usersFind.length > 0)) {
-                                    let a = [];
-                                    _.forEach(usersFind, function (val, key) {
-                                        a.push(val.email);
+                    if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
+                        User.find({action: true, fired: false}).exec((err, usersFind)=> {
+                            "use strict";
+                            if (err) return res.serverError(err);
+                            if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
+                            let strEmail = '';
+                            if (_.isArray(usersFind) && (usersFind.length > 0)) {
+                                let a = [];
+                                _.forEach(usersFind, function (val, key) {
+                                    a.push(val.email);
+                                });
+                                strEmail = a.join(',');
+                            }
+                            sails.log('Email для рассылки: ', strEmail);
+                            strEmail = (strEmail) ? strEmail : '';
+                            let options = {
+                                to: strEmail, // Кому: можно несколько получателей указать через запятую
+                                subject: ' ✔ ' + task.name, // Тема письма
+                                text: task.htmlData[0].tmpl, // простой текст письма без форматирования
+                                html: task.htmlData[0].tmpl  // html текст письма
+                            };
+                            EmailService.sender(options, function (err) {
+                                if (err) return;
+                                console.log('Задача выполнена в: ' + new Date());
+                                Schedule.update({id: task.id}, {
+                                    worked: true,
+                                    status: 'В работе'
+                                }).exec((err, upd) => {
+                                    if (err) return res.serverError();
+                                    Schedule.find().exec((err, findsSchedule)=> {
+                                        if (err) return res.serverError(err);
+                                        sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule});
+                                        console.log('UPDATE OK! worked:', upd);
                                     });
-                                    // assuming openFiles is an array of file names
-                                    //async.each(usersFind, function(file, callback) {
-                                    //
-                                    //    // Perform operation on file here.
-                                    //    console.log('Processing file ' + file);
-                                    //    a.push(file.email);
-                                    //    if( file.length > 32 ) {
-                                    //        console.log('This file name is too long');
-                                    //        callback('File name too long');
-                                    //    } else {
-                                    //        // Do work to process file here
-                                    //        console.log('File processed');
-                                    //        callback();
-                                    //    }
-                                    //}, function(err) {
-                                    //    // if any of the file processing produced an error, err would equal that error
-                                    //    if( err ) {
-                                    //        // One of the iterations produced an error.
-                                    //        // All processing will now stop.
-                                    //        console.log('A file failed to process');
-                                    //    } else {
-                                    //        console.log('All files have been processed successfully');
-                                    //    }
-                                    //});
-                                    strEmail = a.join(',');
-                                }
-                                sails.log('Email для рассылки: ', strEmail);
-                                strEmail = (strEmail) ? strEmail : '';
-                                let options = {
-                                    to: strEmail, // Кому: можно несколько получателей указать через запятую
-                                    subject: ' ✔ ' + task.name, // Тема письма
-                                    text: task.htmlData[0].tmpl, // простой текст письма без форматирования
-                                    html: task.htmlData[0].tmpl  // html текст письма
-                                };
-                                EmailService.sender(options);
-                                this.stop();
+                                });
                             });
-                        },
-                        onComplete: function () {
-                            console.log('Задача выполнена в: ' + new Date());
+                        });
+                    } else {
+                        if (moment().isAfter(moment(task.start).add(afterMin, 'minutes'))) {
                             Schedule.update({id: task.id}, {
-                                worked: true,
-                                status: 'В работе'
+                                worked: true
                             }).exec((err, upd) => {
                                 if (err) return res.serverError();
-                                // sails.emit('updateCron');
                                 Schedule.find().exec((err, findsSchedule)=> {
                                     if (err) return res.serverError(err);
                                     sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule});
-                                    console.log('UPDATE OK! worked:', upd);
+                                    return console.log('UPDATE OK!:', upd);
                                 });
                             });
-                        },
-                        start: true,
-                        timeZone: zone
-                    });
-                    //job.start();
-                    //console.log(job);
-                    //sails.log('job status', job.running);
-                    if (job.running) console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
-                    //if (job.running) {
-                    //    Schedule.update({id: task.id}, {
-                    //        jobRunning: true
-                    //    }).exec((err, upd) => {
-                    //        if (err) return res.serverError();
-                    //        sails.log('Задача ' + task.name + ' установлена:', upd);
-                    //        //sails.sockets.broadcast('list', 'badges', {badges: upd});
-                    //    });
-                    //}
+                        }else{
+                            console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
+                        }
+
+                    }
                 });
+
+                //_.forEach(finds, function (task) {
+                //    //if (task.jobRunning) return;
+                //    let job = new CronJob({
+                //        cronTime: task.start,
+                //        onTick: function () {
+                //            console.log('Задача ' + task.name + ' запущена в: ' + moment(task.start).format("LLLL"));
+                //            User.find({action: true, fired: false}).exec((err, usersFind)=> {
+                //                "use strict";
+                //                if (err) return res.serverError(err);
+                //                if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
+                //                let strEmail = '';
+                //                if (_.isArray(usersFind) && (usersFind.length > 0)) {
+                //                    let a = [];
+                //                    _.forEach(usersFind, function (val, key) {
+                //                        a.push(val.email);
+                //                    });
+                //                    // assuming openFiles is an array of file names
+                //                    //async.each(usersFind, function(file, callback) {
+                //                    //
+                //                    //    // Perform operation on file here.
+                //                    //    console.log('Processing file ' + file);
+                //                    //    a.push(file.email);
+                //                    //    if( file.length > 32 ) {
+                //                    //        console.log('This file name is too long');
+                //                    //        callback('File name too long');
+                //                    //    } else {
+                //                    //        // Do work to process file here
+                //                    //        console.log('File processed');
+                //                    //        callback();
+                //                    //    }
+                //                    //}, function(err) {
+                //                    //    // if any of the file processing produced an error, err would equal that error
+                //                    //    if( err ) {
+                //                    //        // One of the iterations produced an error.
+                //                    //        // All processing will now stop.
+                //                    //        console.log('A file failed to process');
+                //                    //    } else {
+                //                    //        console.log('All files have been processed successfully');
+                //                    //    }
+                //                    //});
+                //                    strEmail = a.join(',');
+                //                }
+                //                sails.log('Email для рассылки: ', strEmail);
+                //                strEmail = (strEmail) ? strEmail : '';
+                //                let options = {
+                //                    to: strEmail, // Кому: можно несколько получателей указать через запятую
+                //                    subject: ' ✔ ' + task.name, // Тема письма
+                //                    text: task.htmlData[0].tmpl, // простой текст письма без форматирования
+                //                    html: task.htmlData[0].tmpl  // html текст письма
+                //                };
+                //                EmailService.sender(options);
+                //                this.stop();
+                //            });
+                //        },
+                //        onComplete: function () {
+                //            console.log('Задача выполнена в: ' + new Date());
+                //            Schedule.update({id: task.id}, {
+                //                worked: true,
+                //                status: 'В работе'
+                //            }).exec((err, upd) => {
+                //                if (err) return res.serverError();
+                //                // sails.emit('updateCron');
+                //                Schedule.find().exec((err, findsSchedule)=> {
+                //                    if (err) return res.serverError(err);
+                //                    sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule});
+                //                    console.log('UPDATE OK! worked:', upd);
+                //                });
+                //            });
+                //        },
+                //        start: true,
+                //        timeZone: zone
+                //    });
+                //    //job.start();
+                //    //console.log(job);
+                //    //sails.log('job status', job.running);
+                //    if (job.running) console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
+                //    //if (job.running) {
+                //    //    Schedule.update({id: task.id}, {
+                //    //        jobRunning: true
+                //    //    }).exec((err, upd) => {
+                //    //        if (err) return res.serverError();
+                //    //        sails.log('Задача ' + task.name + ' установлена:', upd);
+                //    //        //sails.sockets.broadcast('list', 'badges', {badges: upd});
+                //    //    });
+                //    //}
+                //});
             });
     },
     // task1: function (options, done) {

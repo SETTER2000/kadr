@@ -145,6 +145,7 @@ module.exports = {
     create: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         //if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
+        if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         let obj = {
             section: 'График отпусков',
             sections: 'Графики отпусков',
@@ -216,8 +217,8 @@ module.exports = {
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         let tm = moment(req.param('start'));
-        let task = '* ' + tm.get('minute') + ' ' + tm.get('hour') + ' ' + tm.date() + ' ' + (tm.format('M')) + ' *';
-
+        //let task = '* ' + tm.get('minute') + ' ' + tm.get('hour') + ' ' + tm.date() + ' ' + (tm.format('M')) + ' *';
+        if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         // sails.on('updateCron', () => {
         //     console.log('СОБЫТИЕ updateCron! !!!', 'an event occurred!');
         //     Schedule.find().exec((err, findsSchedule)=>{
@@ -283,7 +284,7 @@ module.exports = {
                             Schedule.find().exec((err, findsSchedule)=>{
                                 if(err) return res.serverError(err);
                                 sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
-                                sails.sockets.broadcast('list', 'badges', {badges: findsSchedule, action:'обновлён'}, req);
+                                sails.sockets.broadcast('list', 'badges', {badges: objEdit, action:'обновлён'}, req);
                                 res.ok();
                             });
 

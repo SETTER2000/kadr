@@ -20,6 +20,7 @@ module.exports = {
         transporter.verify(function (error, success) {
             if (error) {
                 console.log(error);
+                return false;
             } else {
                 console.log('Подключение к почтовому серверу: Ok!');
             }
@@ -40,17 +41,45 @@ module.exports = {
         options.bcc = sails.config.email.bcc; // скрытую копию сообщения куда отправлять
 
 
-        // send mail with defined transport object
+        //// send mail with defined transport object
         transporter.sendMail(options, (error, info) => {
             if (error) {
-                return console.log(error);
+                console.log('ERR EMAIL SERVICE', error);
+                return done(error);
             }
+
             console.log('Message sent: %s', info.messageId);
+
+            return done();
+
             // Preview only available when sending through an Ethereal account
             //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
             // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
             // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
         });
+
+        //function myFunc(arg) {
+        //    console.log(`arg was => ${arg}`);
+        //    // send mail with defined transport object
+        //    transporter.sendMail(options, (error, info) => {
+        //        if (error) {
+        //            console.log('ERR EMAIL SERVICE', error);
+        //            return done(error);
+        //        }
+        //
+        //        console.log('Message sent: %s', info.messageId);
+        //
+        //        return done();
+        //
+        //        // Preview only available when sending through an Ethereal account
+        //        //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        //
+        //        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
+        //        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+        //    });
+        //}
+        //
+        //setTimeout(myFunc, 100000, 'funky');
     }
 };
