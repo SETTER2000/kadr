@@ -48,13 +48,20 @@
                         <ul class="dropdown-menu">
                             <!--<li class="dropdown-header">Редактирование</li>-->
                             <!--<li><a ng-if="(me.kadr || me.admin || me.leader)" ui-sref="home.admin.users.exit">Выход сотрудника</a></li>-->
-                            <li><a ng-if="(me.admin)" ui-sref="home.admin.schedules">График отпусков</a></li>
-                            <li><a ng-if="(me.admin)" ui-sref="home.admin.documents">Документы и отчётность</a></li>
+                            <li><a ng-if="(me.admin || me.kadr)" ui-sref="home.admin.schedules">График отпусков</a></li>
+                            <!--<li><a ng-if="(me.admin)" ui-sref="home.admin.documents">Документы и отчётность</a></li>-->
 
                         </ul>
                     </li>
 
-                    <li class="dropdown">
+                    <li  ng-controller="ListVacationController"   class="dropdown" ng-click="badg()">
+
+                        <div ng-show="bdgs.length" class="badges-position">
+                            <div class="badge danger"  ng-mouseover="clickToOpen()">
+                                {{bdgs.length}}
+                            </div>
+
+                        </div>
                         <a ng-if="(me.kadr || me.admin || me.leader)" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             Справочники
                             <span class="caret"></span></a>
@@ -66,11 +73,12 @@
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.positions">Должности</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.structures">Структура компании</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.skds">Отработанное время</a></li>
-                            <li><a ng-if="(me.admin)" ui-sref="home.admin.vacations">Отпуска</a></li>
+                            <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.vacations">Отпуска</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.furloughs">Тип отпуска</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" href="/admin/calendar/58b92215d19963601fad8fec/месяц">Посещаемость</a></li>
                             <li><a ng-if="me.admin" ui-sref="home.admin.users.administration">Группы</a></li>
                         </ul>
+
                     </li>
 
 

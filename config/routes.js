@@ -26,8 +26,8 @@ module.exports.routes = {
      *                 JSON API ENDPOINTS                        *
      *************************************************************/
 
-     // 'PUT /login': 'UserController.loginLDAP',
-    'PUT /login': 'UserController.login',
+    'PUT /login': 'UserController.loginLDAP',
+    //'PUT /login': 'UserController.login',
     'GET /logout': 'PageController.logout',
     'POST /logout': 'UserController.logout',
     // 'GET /mail/send': 'MailController.send',
@@ -336,17 +336,16 @@ module.exports.routes = {
     //'GET /pd': 'Attendance.fPeriod',
 
 
-
     /****************************
      *     SOCKETS CONNECT      *
      ***************************/
 
     // Schedule Controller
-    'GET /say/hello': 'ScheduleController.hello',
-    'GET /say/badges': 'ScheduleController.badges',
-
-
-
+    'GET /say/schedule/hello': 'ScheduleController.hello',
+    'GET /say/schedule/badges': 'ScheduleController.badges',
+  // Schedule Controller
+    'GET /say/vacation/hello':  'VacationController.hello',
+    'GET /say/vacation/badges': 'VacationController.badges',
 
 
     'GET /:login': {

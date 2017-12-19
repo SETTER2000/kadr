@@ -515,17 +515,16 @@ angular.module('ScheduleModule')
                 }
             });
             $scope.$watch('item.start', function (value) {
-
-
                 if (value) {
                     console.log('FFFF', $scope.item.status);
-                    if(($scope.item.status === 'Проект' && moment(value).isBefore(moment()))) {
+                    console.log('FFFF++',value);
+                    if(($scope.item.status === 'Проект' && moment(value,['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
                         toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
                             {
                                 //"closeButton": true,
                                 //"debug": false,
                                 //"newestOnTop": false,
-                                "progressBar": true,
+                                "progressBar": true
                                 //"positionClass": "toast-top-right",
                                 //"preventDuplicates": false,
                                 //"showDuration": "300",
@@ -549,7 +548,7 @@ angular.module('ScheduleModule')
                             //"closeButton": true,
                             //"debug": false,
                             //"newestOnTop": false,
-                            "progressBar": true,
+                            "progressBar": true
                             //"positionClass": "toast-top-right",
                             //"preventDuplicates": false,
                             //"showDuration": "300",
@@ -600,23 +599,7 @@ angular.module('ScheduleModule')
             };
 
             $scope.htmlData = '<h4 class="text-danger" ng-cloak>Пожалуйста, вставьте шаблон сообщения!</h4>';
-            //$scope.delFoto = function (item) {
-            //    item.avatarUrl = '';
-            //    if (angular.isDefined(item.id)) {
-            //        item.$update(item, function (success) {
-            //                //toastr.success(success);
-            //                //toastr.options.closeButton = true;
-            //                toastr.success(info.changed);
-            //                $scope.refresh();
-            //            },
-            //            function (err) {
-            //                //console.log(err);
-            //                toastr.error(err.data.invalidAttributes, info.error + ' 87445!');
-            //            }
-            //        );
-            //    }
-            //
-            //};
+
 
             var reversValue = function (item) {
                 var u = item.start;

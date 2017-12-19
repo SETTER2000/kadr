@@ -645,6 +645,7 @@ md-checkbox .md-container {
   padding: 3px;
 
 }
+
 .badge.hide {
   padding: 3px;
   display: none;
@@ -654,11 +655,23 @@ md-checkbox .md-container {
 .badges-position {
   display: block;
   top: 11px;
-  left: 132px;
+  right: 21px;
   position: absolute;
   width: 5px;
   z-index: 10;
 }
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus{
+  border-color: transparent;
+}
+//.badges-position-vacation {
+//  display: block;
+//  top: 11px;
+//  right: 21px;
+//  position: absolute;
+//  width: 5px;
+//  z-index: 10;
+//}
+
 //.dgt>.badges-position {
 //  display: none;
 //}
@@ -668,9 +681,20 @@ md-checkbox .md-container {
   background-color: red;
 
 }
-.dialog{
+
+.dialog {
+  font-size: .9em;
   margin: 20px 2px;
 }
+
+.dialog .glyphicon {
+  line-height: 3;
+}
+
+.dialog .list-group {
+  margin-bottom: 0;
+}
+
 //.chat-window {
 //  .chat {
 //    list-style: none;

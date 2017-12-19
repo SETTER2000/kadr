@@ -13,6 +13,7 @@ const moment = MomentRange.extendMoment(Moment);
 moment.locale('ru');
 var arrJobs = [];
 const _ = require('lodash');
+const async = require('async');
 const path = require('path');
 const fs = require('fs');
 const http = require('http');
@@ -123,10 +124,48 @@ module.exports = {
                                     if (err) return res.serverError(err);
                                     if (!schedules) return res.notFound();
 
-                                    //_.forEach(vacations, function (vaca) {
+                                    //_.forEach(schedules, function (vaca) {
                                     //    console.log('FROMUSHKA: ', vaca.from);
                                     //});
-                                    //console.log('VACA', vacations);
+                                    // assuming openFiles is an array of file names
+                                    async.each(schedules, function (file, callback) {
+
+                                        // Perform operation on file here.
+                                        console.log('Обработан файл ', file.year);
+
+                                        if (file.length > 32) {
+                                            console.log('Это имя слишком длинное');
+                                            callback('Слишком длинное имя файла');
+                                        } else {
+                                            // Do work to process file here
+                                            //console.log('Обработан файл');
+
+                                            Vacation.find({
+                                                from: {
+                                                    '>=': new Date(moment(file.year, ["YYYY"])),
+                                                    '<': new Date(moment(file.year, ["YYYY"]).add(1, 'year'))
+                                                }
+                                            }).exec((err, findVacation)=> {
+                                                if(err) res.serverError(err);
+                                                //console.log('moment(file.year, ["YYYY"])', moment(file.year, ["YYYY"]));
+                                                //console.log('moment(file.year, ["YYYY"]+++)',moment(file.year, ["YYYY"]).add(1, 'year'));
+                                                console.log('findVacation: '+file.year+' ', findVacation.length);
+                                            });
+
+
+                                            callback();
+                                        }
+                                    }, function (err) {
+                                        // if any of the file processing produced an error, err would equal that error
+                                        if (err) {
+                                            // One of the iterations produced an error.
+                                            // All processing will now stop.
+                                            console.log('Не удалось обработать файл');
+                                        } else {
+                                            console.log('Все файлы успешно обработаны');
+                                        }
+                                    });
+                                    console.log('VACA', schedules.length);
                                     res.send(schedules);
                                 });
                         });
@@ -184,11 +223,17 @@ module.exports = {
                                 if (err) {
                                     return res.serverError(err);
                                 }
-                                //sails.sockets.broadcast('list', 'hello', {howdy: createSchedule}, req);
-                                Schedule.find().exec((err, findSchedule)=>{
+                                //sails.sockets.broadcast('schedule', 'hello', {howdy: createSchedule}, req);
+                                Schedule.find().exec((err, findSchedule)=> {
                                     if (err)  return res.serverError(err);
-                                    sails.sockets.broadcast('list', 'hello', {howdy: findSchedule}, req);
-                                    sails.sockets.broadcast('list', 'badges', {badges: [createSchedule], action:'создан'}, req);
+                                    sails.sockets.broadcast('schedule', 'hello', {howdy: findSchedule}, req);
+                                    sails.sockets.broadcast('schedule', 'badges', {
+                                        badges: [createSchedule],
+                                        action: 'создан',
+                                        shortName: findUser.getShortName(),
+                                        fullName: findUser.getFullName(),
+                                        avatarUrl: findUser.avatarUrl
+                                    }, req);
                                     res.send(createSchedule);
                                 });
 
@@ -248,11 +293,17 @@ module.exports = {
                         if (err) return res.negotiate(err);
                         findUser.save(function (err) {
                             if (err) return res.negotiate(err);
-                            Schedule.find().exec((err, findsSchedule)=>{
-                                if(err) return res.serverError(err);
-                                sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule}, req);
-                                // console.log('objEdit', objEdit);
-                                sails.sockets.broadcast('list', 'badges', {badges: objEdit, action:'обновлён'}, req);
+                            Schedule.find().exec((err, findsSchedule)=> {
+                                if (err) return res.serverError(err);
+                                sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule}, req);
+                                console.log('objEdit', findUser);
+                                sails.sockets.broadcast('schedule', 'badges', {
+                                    badges: objEdit,
+                                    action: 'обновлён',
+                                    shortName: findUser.getShortName(),
+                                    fullName: findUser.getFullName(),
+                                    avatarUrl: findUser.avatarUrl
+                                }, req);
                                 res.ok();
                             });
                         });
@@ -339,25 +390,37 @@ module.exports = {
      */
     destroy: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        Schedule.findOne(req.param('id')).exec((err, finds) => {
+        User.findOne({id: req.session.me}).exec((err, finOneUser)=> {
             "use strict";
             if (err) return res.serverError(err);
-            if (!finds) return res.notFound();
-            //console.log('DELETE OBJ: ', arrJobs.length);
-            //(arrJobs.length > 0) ? console.log('_idleStart STR: ', arrJobs[0]._timeout._idleStart) : '';
-            //console.log('START: ', finds.start);
 
-            Schedule.destroy({id:finds.id}, (err) => {
-                if (err) return next(err);
-                console.log('Отпуск удалил:', req.session.me);
-                console.log('Отпуск удалён:', finds);
-                Schedule.find().exec((err, findSchedule)=>{
-                    if (err)  return res.serverError(err);
-                    sails.sockets.broadcast('list', 'hello', {howdy: findSchedule}, req);
-                    sails.sockets.broadcast('list', 'badges', {badges: [finds], action:'удалён'}, req);
-                    res.ok();
+
+            Schedule.findOne(req.param('id')).exec((err, finds) => {
+                "use strict";
+                if (err) return res.serverError(err);
+                if (!finds) return res.notFound();
+                //console.log('DELETE OBJ: ', arrJobs.length);
+                //(arrJobs.length > 0) ? console.log('_idleStart STR: ', arrJobs[0]._timeout._idleStart) : '';
+                //console.log('START: ', finds.start);
+
+                Schedule.destroy({id: finds.id}, (err) => {
+                    if (err) return next(err);
+                    console.log('Отпуск удалил:', req.session.me);
+                    console.log('Отпуск удалён:', finds);
+                    Schedule.find().exec((err, findSchedule)=> {
+                        if (err)  return res.serverError(err);
+                        sails.sockets.broadcast('schedule', 'hello', {howdy: findSchedule}, req);
+                        sails.sockets.broadcast('schedule', 'badges', {
+                            badges: [finds],
+                            action: 'удалён',
+                            shortName: finOneUser.getShortName(),
+                            fullName: finOneUser.getFullName(),
+                            avatarUrl: finOneUser.avatarUrl
+                        }, req);
+                        res.ok();
+                    });
+
                 });
-
             });
         });
     },
@@ -397,12 +460,12 @@ module.exports = {
             return res.badRequest();
         }
         // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
-        sails.sockets.join(req, 'list');
+        sails.sockets.join(req, 'schedule');
 
 
         // Передавать уведомление всем сокетам, которые присоединились
         // к комнате «list», за исключением нашего нового добавленного сокета:
-        //sails.sockets.broadcast('list', 'hello', {howdy: 'hi there!'}, req);
+        //sails.sockets.broadcast('schedule', 'hello', {howdy: 'hi there!'}, req);
 
 
         /**
@@ -427,7 +490,7 @@ module.exports = {
          * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
          * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
          */
-        return    res.json({
+        return res.json({
             anyData: 'we want to send hello'
         });
 
@@ -451,12 +514,12 @@ module.exports = {
             return res.badRequest();
         }
         // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
-        sails.sockets.join(req, 'list');
+        sails.sockets.join(req, 'schedule');
 
 
         // Передавать уведомление всем сокетам, которые присоединились
         // к комнате «list», за исключением нашего нового добавленного сокета:
-        //sails.sockets.broadcast('list', 'hello', {howdy: 'hi there!'}, req);
+        //sails.sockets.broadcast('schedule', 'hello', {howdy: 'hi there!'}, req);
 
 
         /**
@@ -481,7 +544,7 @@ module.exports = {
          * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
          * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
          */
-        return    res.json({
+        return res.json({
             anyData: 'we want to send badges'
         });
 

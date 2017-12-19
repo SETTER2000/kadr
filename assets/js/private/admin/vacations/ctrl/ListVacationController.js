@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
     angular.module('VacationModule')
-        .controller('ListVacationController', ['$scope', '$location', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Vacations', 'Users', '$window', function ($scope, $location, moment, $http, toastr, $rootScope, $timeout, $state, Vacations, Users) {
+        .controller('ListVacationController', ['$scope', '$location', 'ngDialog', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Vacations', 'Users', '$window', function ($scope, $location, ngDialog, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, Vacations, Users) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
 
@@ -25,7 +25,7 @@
             $scope.infoArea = 'Пересечения';
             $scope.daysSelectHolidayArea = 'Дней';
             $scope.added = 'Добавить отпуск';
-            $scope.children = ['Отпуск по беременности и родам','Отпуск по уходу за ребенком'];
+            $scope.children = ['Отпуск по беременности и родам', 'Отпуск по уходу за ребенком'];
             $scope.showBt = 1;
             $scope.countHolidayRF = 28;
             // показать формочку выбора кол-ва строк на странице
@@ -52,7 +52,64 @@
             };
 
 
-            io.socket.put('/interfaces/'+ $scope.me.id + '/join', function (data, JWR) {
+
+            /**
+             * TODO WEBSOCKET: Подключаемся к сокету обработка события badges
+             */
+
+            $scope.bdgs = [];
+            $scope.badg = function () {
+                io.socket.get('/say/badges', function gotResponse(data, jwRes) {
+                    console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
+                    $scope.bdgs = [];
+                });
+            };
+            io.socket.on('badges-vacation', function (data) {
+                console.log('ОТВЕТ data:', data);
+                //if ($state.includes('home.admin.schedules')) return;
+                $scope.bdgs.push(data);
+
+                console.log('BDGS-1: ', $scope.bdgs);
+                $scope.$apply();
+            });
+
+            /**
+             * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
+             */
+            io.socket.on('hello', function (data) {
+                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
+                $scope.items = data.howdy;
+                $scope.$apply();
+            });
+
+            $scope.clickToOpen = function () {
+                //$scope.rowsAction = $scope.bdgs;
+                //$scope.bdgs = [];
+                ngDialog.open({
+                    //template: '<div class="dialog"><p>'+$scope.bdgs.join('<br>')+'</p><button class="btn btn-link pull-right" ui-sref="home.admin.schedules" target="_blank">Перейти</button></div>',
+                    //plain: true,
+                    template: '/js/private/admin/vacations/views/popupTmpl.html',
+                    className: 'ngdialog-theme-default',
+                    //controller: "ListScheduleController",
+                    scope: $scope
+                });
+                //ngDialog.open({ template: '/js/private/admin/schedules/views/popupTmpl.html', className: 'ngdialog-theme-default' });
+            };
+
+            io.socket.get('/say/vacation/hello', function gotResponse(data, jwRes) {
+                console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+            });
+            io.socket.get('/say/vacation/badges', function gotResponse(data, jwRes) {
+                console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
+            });
+
+            /**
+             * TODO WEBSOCKET: End
+             */
+
+
+
+            io.socket.put('/interfaces/' + $scope.me.id + '/join', function (data, JWR) {
                 // If something went wrong, handle the error.
                 if (JWR.statusCode !== 200) {
                     console.error(JWR);
@@ -70,7 +127,6 @@
                 // in this callback in order for our changes to the scope to actually take effect.
                 $scope.$apply();
             });
-
 
 
             //$scope.days = moment.duration(2).days();
@@ -93,16 +149,20 @@
             //$scope.end = end.from(start, true); // "5 days"
 
 
-
-
             var tabs = [
-                    { title: '14.11.2017 по 17.11.2017', content: 'Woah...that is a really long title!' },
-                    { title: '02.10.2017 по 07.10.2017', content: "Tabs will become paginated if there isn't enough room for them."},
-                    { title: '01.10.2017 по 03.10.2017', content: "You can swipe left and right on a mobile device to change tabs."},
-                    { title: '15.09.2017 по 05.10.2017', content: "You can bind the selected tab via the selected attribute on the md-tabs element."},
-                    { title: '01.10.2017 по 08.10.2017', content: "If you set the selected tab binding to -1, it will leave no tab selected."},
-                    { title: '30.10.2017 по 04.11.2017', content: "If you remove a tab, it will try to select a new one."},
-                    { title: '08.10.2018 по 10.10.2018', content: "There's an ink bar that follows the selected tab, you can turn it off if you want."},
+                    {title: '14.11.2017 по 17.11.2017', content: 'Woah...that is a really long title!'},
+                    {title: '02.10.2017 по 07.10.2017', content: "Tabs will become paginated if there isn't enough room for them."},
+                    {title: '01.10.2017 по 03.10.2017', content: "You can swipe left and right on a mobile device to change tabs."},
+                    {
+                        title: '15.09.2017 по 05.10.2017',
+                        content: "You can bind the selected tab via the selected attribute on the md-tabs element."
+                    },
+                    {title: '01.10.2017 по 08.10.2017', content: "If you set the selected tab binding to -1, it will leave no tab selected."},
+                    {title: '30.10.2017 по 04.11.2017', content: "If you remove a tab, it will try to select a new one."},
+                    {
+                        title: '08.10.2018 по 10.10.2018',
+                        content: "There's an ink bar that follows the selected tab, you can turn it off if you want."
+                    },
                     //{ title: 'Seven', content: "If you set ng-disabled on a tab, it becomes unselectable. If the currently selected tab becomes disabled, it will try to select the next tab."},
                     //{ title: 'Eight', content: "If you look at the source, you're using tabs to look at a demo for tabs. Recursion!"},
                     //{ title: 'Nine', content: "If you set md-theme=\"green\" on the md-tabs element, you'll get green tabs."},
@@ -122,31 +182,20 @@
                 previous = null;
             $scope.tabs = tabs;
             $scope.selectedIndex = 0;
-            $scope.$watch('selectedIndex', function(current, old){
+            $scope.$watch('selectedIndex', function (current, old) {
                 previous = selected;
                 selected = tabs[current];
-                if ( old + 1 && (old != current)) $log.debug('Goodbye ' + previous.title + '!');
+                if (old + 1 && (old != current)) $log.debug('Goodbye ' + previous.title + '!');
                 //if ( current + 1 )                $log.debug('Hello ' + selected.title + '!');
             });
             $scope.addTab = function (title, view) {
                 view = view || title + " Content View";
-                tabs.push({ title: title, content: view, disabled: false});
+                tabs.push({title: title, content: view, disabled: false});
             };
             $scope.removeTab = function (tab) {
                 var index = tabs.indexOf(tab);
                 tabs.splice(index, 1);
             };
-
-
-
-
-
-
-
-
-
-
-
 
 
             if (moment().isLeapYear()) {
@@ -410,7 +459,6 @@
                     console.log(err);
                 })
             };
-
 
 
             $scope.reverse = true;

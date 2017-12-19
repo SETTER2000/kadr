@@ -60,8 +60,8 @@ module.exports = {
                                     if (err) return res.serverError();
                                     Schedule.find().exec((err, findsSchedule) => {
                                         if (err) return res.serverError(err);
-                                        sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule});
-                                        sails.sockets.broadcast('list', 'badges', {badges: upd, action:'рассылка закончена'});
+                                        sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
+                                        sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'рассылка закончена'});
                                         console.log('UPDATE OK! worked:', upd);
                                     });
                                 });
@@ -75,8 +75,8 @@ module.exports = {
                                 if (err) return res.serverError();
                                 Schedule.find().exec((err, findsSchedule) => {
                                     if (err) return res.serverError(err);
-                                    sails.sockets.broadcast('list', 'hello', {howdy: findsSchedule});
-                                    sails.sockets.broadcast('list', 'badges', {badges: upd, action:'повреждён'});
+                                    sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
+                                    sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'повреждён'});
                                     return console.log('UPDATE OK!:', upd);
                                 });
                             });

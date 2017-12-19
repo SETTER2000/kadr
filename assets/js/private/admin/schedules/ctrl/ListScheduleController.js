@@ -10,153 +10,57 @@
             });
 
 
-            /**
-             * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
-             */
-            io.socket.on('hello', function (data) {
-                console.log('Socket room list: ' + data.howdy + ' подключился только что к комнате list!');
-                $scope.items = data.howdy;
-                $scope.$apply();
-            });
-
-            //$scope.badges = [{hop:22},{jop:77}];
-            $scope.bdgs = [];
-            $scope.badg = function () {
-                io.socket.get('/say/badges', function gotResponse(data, jwRes) {
-                    console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
-                    return $scope.bdgs = [];
-                });
-            };
-
-
-            $scope.showTabDialog = function (ev) {
-                $mdDialog.show({
-                    controller: DialogController,
-                    templateUrl: '/js/private/admin/schedules/views/dialog_1.tab.tmpl.html',
-                    parent: angular.element(document.body),
-                    targetEvent: ev,
-                    clickOutsideToClose: true
-                })
-                    .then(function (answer) {
-                        $scope.status = 'You said the information was "' + answer + '".';
-                    }, function () {
-                        $scope.status = 'You cancelled the dialog.';
-                    });
-            };
-
-
-            $scope.showAdvanced = function (ev, data) {
-                $mdDialog.show({
-                    controller: DialogController,
-                    templateUrl: '/js/private/admin/schedules/views/dialog_1.tmpl.html',
-                    parent: angular.element(document.body),
-                    targetEvent: ev,
-                    clickOutsideToClose: true,
-                    fullscreen: $scope.customFullscreen, // Only for -xs, -sm breakpoint,s.
-                })
-                    .then(function (answer) {
-                        $scope.status = 'You said the information was "' + answer + '".';
-                    }, function () {
-                        $scope.status = 'You cancelled the dialog.';
-                    });
-            };
-
-
-            $scope.showAlert = function (ev) {
-                // Appending dialog to document.body to cover sidenav in docs app
-                // Modal dialogs should fully cover application
-                // to prevent interaction outside of dialog
-                //  {{badge.badges[0].name}} - {{badge.action}}
-                // console.log('$scope.badges', $scope.badges);
-
-                $mdDialog.show(
-                    $mdDialog.alert()
-                        .parent(angular.element(document.querySelector('#popupContainer')))
-                        .clickOutsideToClose(true)
-                        .title('События')
-                        .textContent(r)
-                        .ariaLabel('Список действий')
-                        .ok('Закрыть')
-                        .targetEvent(ev)
-                );
-            };
-
-
-            $scope.showPrompt = function (ev) {
-                // Appending dialog to document.body to cover sidenav in docs app
-                var confirm = $mdDialog.prompt()
-                    .title('Действия')
-                    //.title('Как бы вы назвали свою собаку?')
-                    .textContent('msdfvkmd<br>sdfgsfg')
-                    .placeholder('Имя собаки')
-                    //.ariaLabel('Имя собаки')
-                    //.initialValue('Buddy')
-                    .targetEvent(ev)
-                    .required(true)
-                    .ok('Okay!')
-                    .cancel('Я человек кошка');
-
-                $mdDialog.show(confirm).then(function (result) {
-                    $scope.status = 'Вы решили назвать свою собаку ' + result + '.';
-                }, function () {
-                    $scope.status = 'Вы не назвали свою собаку.';
-                });
-            };
-
-
-            function DialogController($scope, $mdDialog) {
-                $scope.badges = [];
-                io.socket.on('badges', function (data) {
-                    console.log('Socket DialogController room list. Count: ' + data.badges.length + ', ' + data.action + ' !');
-                    if ($state.includes('home.admin.schedules')) return;
-                    $scope.badges.push(data);
-                    $scope.$apply();
-                });
-
-                $scope.hide = function () {
-                    $mdDialog.hide();
-                };
-
-                $scope.cancel = function () {
-                    $mdDialog.cancel();
-                };
-
-
-                $scope.answer = function (answer) {
-                    $mdDialog.hide(answer);
-                };
-            }
 
 
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события badges
              */
+
+            $scope.bdgs = [];
+            $scope.badg = function () {
+                io.socket.get('/say/badges', function gotResponse(data, jwRes) {
+                    console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
+                    $scope.bdgs = [];
+                });
+            };
             io.socket.on('badges', function (data) {
                 console.log('ОТВЕТ data:', data);
-                if ($state.includes('home.admin.schedules')) return;
-                $scope.bdgs.push(data.badges[0].name + ': ' + data.action + ' в ' + moment(data.badges[0].updatedAt).format('DD.MM.YYYY HH:mm:ss'));
+                //if ($state.includes('home.admin.schedules')) return;
+                $scope.bdgs.push(data);
+
+                console.log('BDGS-1: ', $scope.bdgs);
+                $scope.$apply();
+            });
+
+            /**
+             * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
+             */
+            io.socket.on('hello', function (data) {
+                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
+                $scope.items = data.howdy;
                 $scope.$apply();
             });
 
             $scope.clickToOpen = function () {
+                //$scope.rowsAction = $scope.bdgs;
+                //$scope.bdgs = [];
                 ngDialog.open({
-                    template: '<div class="dialog">'+$scope.bdgs.join('<br>')+'</div>',
-                    plain: true,
-                    className: 'ngdialog-theme-default'
+                    //template: '<div class="dialog"><p>'+$scope.bdgs.join('<br>')+'</p><button class="btn btn-link pull-right" ui-sref="home.admin.schedules" target="_blank">Перейти</button></div>',
+                    //plain: true,
+                    template: '/js/private/admin/schedules/views/popupTmpl.html',
+                    className: 'ngdialog-theme-default',
+                    //controller: "ListScheduleController",
+                    scope: $scope
                 });
                 //ngDialog.open({ template: '/js/private/admin/schedules/views/popupTmpl.html', className: 'ngdialog-theme-default' });
             };
 
-
-            //$scope.hello = function () {
-            io.socket.get('/say/hello', function gotResponse(data, jwRes) {
+            io.socket.get('/say/schedule/hello', function gotResponse(data, jwRes) {
                 console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
             });
-            io.socket.get('/say/badges', function gotResponse(data, jwRes) {
+            io.socket.get('/say/schedule/badges', function gotResponse(data, jwRes) {
                 console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
             });
-            //};
-
 
             /**
              * TODO WEBSOCKET: End
@@ -273,11 +177,11 @@
             $scope.loadOptions = function () {
                 return $timeout(function () {
                     $scope.options = $scope.options || [
-                        {display: "Работают", value: "work"},
-                        {display: "Уволены", value: "list"},
-                        {display: "Не активированы / Заблокированы", value: "action"},
-                        {display: "Все", value: "table"}
-                    ];
+                            {display: "Работают", value: "work"},
+                            {display: "Уволены", value: "list"},
+                            {display: "Не активированы / Заблокированы", value: "action"},
+                            {display: "Все", value: "table"}
+                        ];
                 }, 1);
             };
 

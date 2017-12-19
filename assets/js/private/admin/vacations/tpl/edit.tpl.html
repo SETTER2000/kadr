@@ -3,7 +3,7 @@
 <div class="col-sm-11  col-md-12  main">
     <div class="page-header">
         <h2>
-            <p ng-class="{'fired':!item.action}">{{item.sc()}}: {{item.name}} <span ng-if="daysSelectHoliday">({{daysSelectHoliday}})</span><span
+            <p ng-class="{'fired':!item.action}">{{item.sc()}} <span ng-show="{{!edit}}">создать</span>: {{item.name}} <span ng-if="daysSelectHoliday">({{daysSelectHoliday}})</span><span
                     ng-if="!item.action"
                     ng-bind="item.deactivation()"></span>
             </p>

@@ -85,7 +85,7 @@
     "myUpdate": "rm -rf node_modules && rm -rf package-lock.json && npm install",
     "debug": "node debug app.js",
     "start": "node app.js",
-    "sails":"sails lift"
+    "sails": "sails lift"
   },
   "main": "app.js",
   "repository": {

@@ -329,6 +329,13 @@ module.exports = {
                                                             '<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
                                                         };
                                                         EmailService.sender(options);
+                                                        sails.sockets.broadcast('vacation', 'badges-vacation', {
+                                                            badges: [createVacation],
+                                                            action: 'создан',
+                                                            shortName: findUser.getShortName(),
+                                                            fullName: findUser.getFullName(),
+                                                            avatarUrl: findUser.avatarUrl
+                                                        }, req);
                                                         return res.send(createVacation);
                                                     });
                                                 });
@@ -490,6 +497,13 @@ module.exports = {
                                             sails.log('Обновил отпуск (' + objEdit[0].id + '):', obj.whomUpdated);
                                             findUser.save(function (err) {
                                                 if (err) return res.negotiate(err);
+                                                sails.sockets.broadcast('vacation', 'badges-vacation', {
+                                                    badges: objEdit,
+                                                    action: 'обновлён',
+                                                    shortName: findUser.getShortName(),
+                                                    fullName: findUser.getFullName(),
+                                                    avatarUrl: findUser.avatarUrl
+                                                }, req);
                                                 res.ok();
                                             });
                                         });
@@ -509,19 +523,30 @@ module.exports = {
      */
     destroy: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        Vacation.findOne(req.param('id')).exec((err, finds) => {
+        User.findOne({id: req.session.me}).exec((err, findUser)=> {
             "use strict";
-            if (err) return res.serverError(err);
-            if (!finds) return res.notFound();
+            if(err) return res.serverError(err);
 
-            Vacation.destroy(req.param('id'), (err) => {
-                if (err) return next(err);
-                console.log('Отпуск удалил:', req.session.me);
-                console.log('Отпуск удалён:', finds);
-                res.ok();
+            Vacation.findOne(req.param('id')).exec((err, finds) => {
+                "use strict";
+                if (err) return res.serverError(err);
+                if (!finds) return res.notFound();
+
+                Vacation.destroy(req.param('id'), (err) => {
+                    if (err) return next(err);
+                    console.log('Отпуск удалил:', req.session.me);
+                    console.log('Отпуск удалён:', finds);
+                    sails.sockets.broadcast('vacation', 'badges-vacation', {
+                        badges: [finds],
+                        action: 'удалён',
+                        shortName: findUser.getShortName(),
+                        fullName: findUser.getFullName(),
+                        avatarUrl: findUser.avatarUrl
+                    }, req);
+                    return res.ok();
+                });
             });
         });
-
         // res.redirect('/admin/users');
 
 
@@ -1099,6 +1124,116 @@ module.exports = {
             'stoppedTyping', {}, (req.isSocket ? req : undefined));
 
         return res.ok();
+    }
+    ,
+
+    ///**
+    // * SOCKET событие hello
+    // * @param req
+    // * @param res
+    // * @returns {*}
+    // */
+    hello: function (req, res) {
+
+        /**
+         * TODO SOCKET
+         * Убедитьсь, что это запрос сокета, а не традиционный HTTP
+         */
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
+        sails.sockets.join(req, 'vacation');
+
+
+        // Передавать уведомление всем сокетам, которые присоединились
+        // к комнате «list», за исключением нашего нового добавленного сокета:
+        //sails.sockets.broadcast('schedule', 'hello', {howdy: 'hi there!'}, req);
+
+
+        /**
+         * На данный момент мы отправили сообщение сокета всем сокетам, у которых есть
+         * подключение к комнате «list». Но это не обязательно означает, что они
+         * are _listening_. Другими словами, чтобы фактически обрабатывать сообщение сокета,
+         * подключенные сокеты должны прослушивать это конкретное событие (в этом
+         * case, мы передали наше сообщение с именем события «hello»).
+         * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
+         *
+         *  io.socket.on('hello', function (broadcastedData){
+         *  console.log(data.howdy);
+         *  // => 'hi there!'
+         *  }
+         */
+
+        /**
+         * Теперь, когда мы транслируем наше сообщение сокету, нам все равно нужно продолжить
+         * с любой другой логикой, о которой мы должны заботиться в наших действиях, а затем отправить
+         * ответ. В этом случае мы как раз завернуты, поэтому мы продолжим
+         * Ответьте на запрос с помощью 200 OK.
+         * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
+         * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
+         */
+        return res.json({
+            anyData: 'we want to send hello'
+        });
+
+        /**
+         * TODO END SOCKET
+         */
+    },
+
+    /**
+     * SOCKET событие badges
+     * @param req
+     * @param res
+     * @returns {*}
+     */
+    badges: function (req, res) {
+        /**
+         * TODO SOCKET
+         * Убедитьсь, что это запрос сокета, а не традиционный HTTP
+         */
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
+        sails.sockets.join(req, 'vacation');
+
+
+        // Передавать уведомление всем сокетам, которые присоединились
+        // к комнате «vacation», за исключением нашего нового добавленного сокета:
+        //sails.sockets.broadcast('schedule', 'hello', {howdy: 'hi there!'}, req);
+
+
+        /**
+         * На данный момент мы отправили сообщение сокета всем сокетам, у которых есть
+         * подключение к комнате «vacation». Но это не обязательно означает, что они
+         * are _listening_. Другими словами, чтобы фактически обрабатывать сообщение сокета,
+         * подключенные сокеты должны прослушивать это конкретное событие (в этом
+         * case, мы передали наше сообщение с именем события «hello»).
+         * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
+         *
+         *  io.socket.on('hello', function (broadcastedData){
+         *  console.log(data.howdy);
+         *  // => 'hi there!'
+         *  }
+         */
+
+        /**
+         * Теперь, когда мы транслируем наше сообщение сокету, нам все равно нужно продолжить
+         * с любой другой логикой, о которой мы должны заботиться в наших действиях, а затем отправить
+         * ответ. В этом случае мы как раз завернуты, поэтому мы продолжим
+         * Ответьте на запрос с помощью 200 OK.
+         * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
+         * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
+         */
+        return res.json({
+            anyData: 'we want to send badges'
+        });
+
+        /**
+         * TODO END SOCKET
+         */
     }
 }
 ;
