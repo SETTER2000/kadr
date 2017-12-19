@@ -27,7 +27,7 @@ module.exports.routes = {
      *************************************************************/
 
     'PUT /login': 'UserController.loginLDAP',
-    //'PUT /login': 'UserController.login',
+    // 'PUT /login': 'UserController.login',
     'GET /logout': 'PageController.logout',
     'POST /logout': 'UserController.logout',
     // 'GET /mail/send': 'MailController.send',

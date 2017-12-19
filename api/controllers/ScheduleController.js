@@ -77,8 +77,8 @@ module.exports = {
         else {
             //console.log('SORT USER:', q);
             User.findOne({id: req.session.me})
-                //.populate('vacations')
-                //.populate('positions')
+            //.populate('vacations')
+            //.populate('positions')
                 .populate('interfaces')
                 .exec(function foundVacation(err, findOneUser) {
                     if (err) return res.serverError(err);
@@ -93,8 +93,8 @@ module.exports = {
                     //}
                     //let from = {$gte: new Date(moment(findOneUser.interfaces[0].year, ["YYYY"]).startOf("year"))};
                     User.find(q)
-                        //.populate('vacations')
-                        //.populate('positions')
+                    //.populate('vacations')
+                    //.populate('positions')
                         .populate('interfaces')
                         .exec(function foundUser(err, users) {
                             if (err) return res.serverError(err);
@@ -145,11 +145,11 @@ module.exports = {
                                                     '>=': new Date(moment(file.year, ["YYYY"])),
                                                     '<': new Date(moment(file.year, ["YYYY"]).add(1, 'year'))
                                                 }
-                                            }).exec((err, findVacation)=> {
-                                                if(err) res.serverError(err);
+                                            }).exec((err, findVacation) => {
+                                                if (err) res.serverError(err);
                                                 //console.log('moment(file.year, ["YYYY"])', moment(file.year, ["YYYY"]));
                                                 //console.log('moment(file.year, ["YYYY"]+++)',moment(file.year, ["YYYY"]).add(1, 'year'));
-                                                console.log('findVacation: '+file.year+' ', findVacation.length);
+                                                console.log('findVacation: ' + file.year + ' ', findVacation.length);
                                             });
 
 
@@ -167,12 +167,38 @@ module.exports = {
                                     });
                                     console.log('VACA', schedules.length);
                                     res.send(schedules);
+
+
+
+                                    /**
+                                     * Выбрать пользователей и суммировать их выбранные дни на отпуск планируемого года
+                                     */
+
+                                   // db.vacation.aggregate([{$match:{$and:[{from:{$gte:ISODate("2017-01-01")}},{from:{$lt:ISODate("2018-01-01")}},{action:{$eq:true}}]}},{$group:{'_id':'$owner', count:{$sum:'$daysSelectHoliday'}}}]).pretty()
+
+                                    /**
+                                     * Выбрать пользователей которые запланировали отпуска на установленый год.
+                                     * т.е. сумма дней взятых на отпуск в плановом году больше или равна 28 дням
+                                     * Если planned = true - лимит выбран
+                                     */
+
+                                  /*  db.vacation.aggregate([
+                                        {$match:{ $and:[{from:{$gte: ISODate("2017-01-01")}},{from:{$lt: ISODate("2018-01-01")}},{action: {$eq: true}}]}},
+                                        {$group: {
+                                            '_id': '$owner',count: {$sum: '$daysSelectHoliday'}
+                                        } },
+                                        {$project:{_id:1, count:1, planned:{$cond:{if:{$gte:['$count',28]}, then:true, else:false}}}}
+                                    ]).pretty()
+                                    */
+
+
                                 });
                         });
                 });
         }
 
-    },
+    }
+    ,
 
 
     /**
@@ -208,7 +234,7 @@ module.exports = {
             to: new Date(req.param('to'))
         };
 
-        Schedule.find({year: obj.year}).exec((err, findSchedule)=> {
+        Schedule.find({year: obj.year}).exec((err, findSchedule) => {
             if (err) return res.serverError(err);
             if (findSchedule.length > 0) return res.badRequest('На ' + obj.year + ' год уже есть график отпусков.');
             User.findOne({id: obj.whomCreated})
@@ -224,8 +250,8 @@ module.exports = {
                                     return res.serverError(err);
                                 }
                                 //sails.sockets.broadcast('schedule', 'hello', {howdy: createSchedule}, req);
-                                Schedule.find().exec((err, findSchedule)=> {
-                                    if (err)  return res.serverError(err);
+                                Schedule.find().exec((err, findSchedule) => {
+                                    if (err) return res.serverError(err);
                                     sails.sockets.broadcast('schedule', 'hello', {howdy: findSchedule}, req);
                                     sails.sockets.broadcast('schedule', 'badges', {
                                         badges: [createSchedule],
@@ -251,7 +277,8 @@ module.exports = {
                 });
         });
 
-    },
+    }
+    ,
 
 
     /**
@@ -293,7 +320,7 @@ module.exports = {
                         if (err) return res.negotiate(err);
                         findUser.save(function (err) {
                             if (err) return res.negotiate(err);
-                            Schedule.find().exec((err, findsSchedule)=> {
+                            Schedule.find().exec((err, findsSchedule) => {
                                 if (err) return res.serverError(err);
                                 sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule}, req);
                                 console.log('objEdit', findUser);
@@ -309,7 +336,8 @@ module.exports = {
                         });
                     });
             });
-    },
+    }
+    ,
 
 
     /**
@@ -321,7 +349,7 @@ module.exports = {
      * @param res
      */
     ticket: function (req, res) {
-        User.find({action: true, fired: false}).exec((err, usersFind)=> {
+        User.find({action: true, fired: false}).exec((err, usersFind) => {
             "use strict";
             if (err) return res.serverError(err);
             if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
@@ -381,7 +409,8 @@ module.exports = {
 
         });
 
-    },
+    }
+    ,
     /**
      * Удалить
      * @param req
@@ -390,7 +419,7 @@ module.exports = {
      */
     destroy: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        User.findOne({id: req.session.me}).exec((err, finOneUser)=> {
+        User.findOne({id: req.session.me}).exec((err, finOneUser) => {
             "use strict";
             if (err) return res.serverError(err);
 
@@ -407,8 +436,8 @@ module.exports = {
                     if (err) return next(err);
                     console.log('Отпуск удалил:', req.session.me);
                     console.log('Отпуск удалён:', finds);
-                    Schedule.find().exec((err, findSchedule)=> {
-                        if (err)  return res.serverError(err);
+                    Schedule.find().exec((err, findSchedule) => {
+                        if (err) return res.serverError(err);
                         sails.sockets.broadcast('schedule', 'hello', {howdy: findSchedule}, req);
                         sails.sockets.broadcast('schedule', 'badges', {
                             badges: [finds],
@@ -423,7 +452,8 @@ module.exports = {
                 });
             });
         });
-    },
+    }
+    ,
 
     /**
      * Обновить 'кол-во строк в таблице' пользователю
@@ -434,14 +464,15 @@ module.exports = {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         console.log('req in', req.param('defaultRows'));
         Schedule.update(req.session.me, {
-                defaultRows: req.param('defaultRows')
-            })
+            defaultRows: req.param('defaultRows')
+        })
             .exec(function (err, update) {
                 if (err) return res.negotiate(err);
                 //console.log('req out', update);
                 return res.ok(update);
             });
-    },
+    }
+    ,
 
 
     /**
@@ -497,7 +528,8 @@ module.exports = {
         /**
          * TODO END SOCKET
          */
-    },
+    }
+    ,
 
     /**
      * SOCKET событие badges
