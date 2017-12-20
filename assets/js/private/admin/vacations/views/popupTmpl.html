@@ -5,6 +5,8 @@
             <span class="pull-right">
                 <span class="glyphicon" aria-hidden="true" title="{{bg.action}}"
                   ng-class="{'glyphicon-pencil':(bg.action==='обновлён'),'glyphicon-envelope':(bg.action==='рассылка закончена'),'glyphicon-ok':(bg.action==='создан'),'glyphicon-trash':(bg.action==='удалён'),'text-danger':(bg.action==='удалён'),'text-success':(bg.action==='создан | рассылка закончена'),'text-primary':(bg.action==='обновлён')}"></span>
+                <span title="{{bg.action}}" class="fa " ng-class="{'fa-paper-plane-o':(bg.action==='новое сообщение')}" aria-hidden="true"></span>
+
             </span>
             <img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp;   {{bg.badges[0].name}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
         </a>

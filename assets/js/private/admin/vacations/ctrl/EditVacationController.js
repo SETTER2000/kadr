@@ -77,11 +77,11 @@ angular.module('VacationModule')
              * Получить идентификатор отпуска из текущего URL-адреса:
              * /admin/vacations/edit/5a2a6006a6daf7103082dbfb
              */
-            $scope.fromUrlVideoId = window.location.pathname.split('/')[4];
+            $scope.vacationId = window.location.pathname.split('/')[4];
             /**
              * Отправьте запрос сокета, чтобы присоединиться к комнате чата.
              */
-            io.socket.put('/vacation/' + $scope.fromUrlVideoId + '/join', function (data, JWR) {
+            io.socket.put('/vacation/' + $scope.vacationId + '/join', function (data, JWR) {
                 // Если что-то пошло не так, обработайте ошибку.
                 if (JWR.statusCode !== 200) {
                     console.error(JWR);
@@ -119,7 +119,7 @@ angular.module('VacationModule')
             });
 
             $scope.sendMessage = function () {
-                io.socket.post('/vacation/' + $scope.fromUrlVideoId + '/chat', {
+                io.socket.post('/vacation/' + $scope.vacationId + '/chat', {
                     message: $scope.message,
                     name: $scope.item.name
                     //owner:'59f855fc58f4be1ccc2d7bf4'
@@ -139,7 +139,7 @@ angular.module('VacationModule')
 
             $scope.whenTyping = function (event) {
                 io.socket.request({
-                    url: '/vacation/' + $scope.fromUrlVideoId + '/typing',
+                    url: '/vacation/' + $scope.vacationId + '/typing',
                     method: 'put'
                 }, function (data, JWR) {
                     // Если что-то пошло не так, обработайте ошибку.
@@ -152,7 +152,7 @@ angular.module('VacationModule')
 
             $scope.whenNotTyping = function (event) {
                 io.socket.request({
-                    url: '/vacation/' + $scope.fromUrlVideoId + '/stoppedTyping',
+                    url: '/vacation/' + $scope.vacationId + '/stoppedTyping',
                     method: 'put'
                 }, function (data, JWR) {
                     // Если что-то пошло не так, обработайте ошибку.
@@ -462,7 +462,7 @@ $scope.iod = function () {
     );
 };
 
-            console.log('MAAAAAAAAAAAAAXXXXXXXXXXXX:',  $scope.iod());
+
             $scope.dateOpts = {
                 locale: info.ru, // язык
                 mode: "range", // диапазон дат выбрать
@@ -514,12 +514,10 @@ $scope.iod = function () {
             };
 
 
-            console.log('+++++++++++++///=====', $scope.dateOpts.maxDate);
+
 
 
             io.socket.on('interface', function (e) {
-                //console.log('new chat received!', e);
-                //console.log('e.interfaces[0].year', e.interfaces[0].year);
                 $scope.yearFrom = e.interfaces[0].year;
                 /**
                  * Устанавливаем год интерфейса для пересечений

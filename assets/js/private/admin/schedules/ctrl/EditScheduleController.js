@@ -8,7 +8,7 @@ angular.module('ScheduleModule')
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
                 error: function (num) {
-                    if (!angular.isNumber) return;
+                    if (!angular.isNumber(num)) return;
                     return 'Ошибка ' + num + '!';
                 },
                 warning: 'ВНИМАНИЕ!',
@@ -20,6 +20,10 @@ angular.module('ScheduleModule')
                 passDefault: '111111',
                 redirectSelf: 'home.admin.schedules',
                 messageErr: 'Сообщение не установлено!',
+                filedErr: function (nameFiled,text) {
+                    if (!angular.isString(text)) return;
+                    return 'Поле ' + nameFiled + ' - '+text+'!';
+                },
                 ru: 'ru',
                 dateFormat: "d.m.Y",
                 dateTimeFormat: "d.m.Y H:i",
@@ -75,34 +79,10 @@ angular.module('ScheduleModule')
             ];
 
 
-//$scope.$watch('selection', function (value) {
-            //    let ar = [];
-            //    console.log('value DDDDDDDDDDD', value);
-            //    if (value) {
-            //        ar.push(value);
-            //        $scope.item.htmlData = ar;
-            //    }
-            //});
-
-            //
-            //console.log('SSSSSSSSDDDDDDDD changeTmpl', $scope.changeTmpl);
-            //console.log('SSSSSSSSDDDDDDDD textSX', $scope.textSX);
-
-            //console.log('selection', $scope.selection);
-            //console.log('item.htmlData', $scope.item.htmlData);
             $scope.toogle = function () {
                 $scope.comment = ($scope.comment) ? false : true;
             };
 
-            //$scope.htmlData = '<h1>Уважаемые коллеги!</h1> ' +
-            //    '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в 2018 году ' +
-            //    'Генеральным директором подписан приказ о подготовке графика отпусков на ' + $scope.year + ' год.</p> ' +
-            //    '<p>Коллеги, прошу  в срок до  <b>01.12.' + $scope.year + '</b> ' +
-            //    'запланировать свои отпуска на ' + $scope.year + ' год и внести информацию в единую информационную систему по ' +
-            //    'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>';
-
-
-            //if('item.htmlData')
 
             $scope.expr = "start | date:'dd.MM.yyyy HH:mm'";
             $scope.parseExpression = function () {
@@ -112,12 +92,8 @@ angular.module('ScheduleModule')
 
 
             $scope.radioData = [
-                //{label: 'испытательный срок', value: false},
                 {label: 'работает', value: false},
-                //{ label: 'работает',  value: false, isDisabled: true },
                 {label: 'уволен', value: true},
-                //{label: 'временно включён', value: false},
-                //{ label: '4', value: '4' }
             ];
 
             $scope.addPersonName = 'Выбрать согласующих для';
@@ -355,17 +331,11 @@ angular.module('ScheduleModule')
             };
 
 
-            //loadAll_o();
-            /**
-             * Create filter function for a query string
-             */
             function createFilterFor(query) {
-                var lowercaseQuery = angular.lowercase(query);
-
+                let lowercaseQuery = angular.lowercase(query);
                 return function filterFn(state) {
                     return (state.value.indexOf(lowercaseQuery) === 0);
                 };
-
             }
 
 
@@ -374,7 +344,6 @@ angular.module('ScheduleModule')
             $scope.close = 1;
 
             $scope.loginAdmin = false;
-
 
             $scope.dateOpts = {
                 locale: info.ru, // язык
@@ -444,16 +413,16 @@ angular.module('ScheduleModule')
                 //defaultDate: 'today'
             };
 
-
-            $scope.toggleBlur = function (mx) {
-                //if(!mx) mx.selectedDates = new Date();
-                ////console.log('mx.selectedDates: ', mx.selectedDates);
-                ////console.log('SelectedDates XX7:',moment.parseZone(mx.selectedDates[1]).format());
-                //
-                //$scope.query.sd = mx.selectedDates;
-                //$scope.mx = mx.selectedDates;
-                //$scope.refresh();
-            };
+            //
+            // $scope.toggleBlur = function (mx) {
+            //     //if(!mx) mx.selectedDates = new Date();
+            //     ////console.log('mx.selectedDates: ', mx.selectedDates);
+            //     ////console.log('SelectedDates XX7:',moment.parseZone(mx.selectedDates[1]).format());
+            //     //
+            //     //$scope.query.sd = mx.selectedDates;
+            //     //$scope.mx = mx.selectedDates;
+            //     //$scope.refresh();
+            // };
 
             var uploader = $scope.uploader = new FileUploader({
                 url: '/file/upload',
@@ -485,39 +454,25 @@ angular.module('ScheduleModule')
                         console.log('EDIT SCHEDULE', schedules);
                         $scope.flatpicker.setDate(schedules.period);
                         $scope.schedules = schedules;
-                        //$scope.nameLinkFn();
-
-                        //$scope.selection = {name: schedules.htmlData[0].name};
-                        //$scope.getBoss();
                     }, function (err) {
                         // активируем по умолчанию создаваемую запись
                         item.action = true;
                         item.status = 'Проект';
                         item.countData = 0;
-
-                        //item.sc = function () {
-                        //    return 'Отпуск';
-                        //};
-
                     }
                 );
                 $scope.item.year = item.getYear();
                 $scope.getAllUsers();
                 $scope.item.name = item.getFullName();
-                //console.log('refresh',$scope.item);
-                //console.log('refresh1',$scope.schedule);
             };
 
             $scope.$watch('item.action', function (value, old) {
                 if (value !== undefined && !value) {
-
                     toastr.warning('Проект не будет запущен.<br> Активируйте проект, для этого установите активность.', info.warning);
                 }
             });
             $scope.$watch('item.start', function (value) {
                 if (value) {
-                    console.log('FFFF', $scope.item.status);
-                    console.log('FFFF++',value);
                     if(($scope.item.status === 'Проект' && moment(value,['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
                         toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
                             {
@@ -616,8 +571,9 @@ angular.module('ScheduleModule')
 
             $scope.saveEdit = function (item) {
                 item = reversValue(item);
-                console.log('Перед созданием', item);
+                // console.log('Перед созданием', item);
                 if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
+                if (!item.to) return toastr.error(info.filedErr('"по"', 'не заполнено'), info.error(5828));
 
 
                 if (angular.isDefined(item.id)) {
@@ -640,8 +596,6 @@ angular.module('ScheduleModule')
                      angular.isDefined(item.birthday) &&
                      angular.isDefined(item.email)*/
                     ) {
-
-
                         let ar = [];
                         ar.push(item.htmlData[0]);
                         item.htmlData = ar;

@@ -208,8 +208,8 @@ module.exports = {
                      * Проще сказать, если отпуску разрешено пересекаться с уже созданными отпусками, то
                      * сообщение о пересечении не выводится пользователю и отпуск добавляется в БД, ну и наоборот.
                      */
-                        // Выбираем все типы отпусков которым не разрешено совпадение
-                    Furlough.find({fixIntersec: false}).exec((err, findFurlough)=> {
+                    // Выбираем все типы отпусков которым не разрешено совпадение
+                    Furlough.find({fixIntersec: false}).exec((err, findFurlough) => {
                         if (err) return res.serverError(err);
                         console.log('obj.furlough.id', obj.furlough.id);
                         console.log('findFurlough', findFurlough);
@@ -237,16 +237,16 @@ module.exports = {
                              * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                              */
                             collection.aggregate([
-                                    {
-                                        $match: {
-                                            $or: [
-                                                {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                                {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                                {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                            ]
-                                        }
+                                {
+                                    $match: {
+                                        $or: [
+                                            {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                            {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                            {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
+                                        ]
                                     }
-                                ])
+                                }
+                            ])
                                 .toArray(function (err, results) {
                                     if (err) return res.serverError(err);
                                     console.log('results', results);
@@ -413,16 +413,16 @@ module.exports = {
                      * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                      */
                     collection.aggregate([
-                            {
-                                $match: {
-                                    $or: [
-                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
-                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
-                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
-                                    ]
-                                }
+                        {
+                            $match: {
+                                $or: [
+                                    {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                    {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                    {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
+                                ]
                             }
-                        ])
+                        }
+                    ])
                         .toArray(function (err, results) {
                             if (err) return res.serverError(err);
                             if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
@@ -476,7 +476,7 @@ module.exports = {
 
                                     Vacation.find()
                                         .populate('intersec', {where: {id: req.param('id')}})
-                                        .exec((err, findVacation)=> {
+                                        .exec((err, findVacation) => {
                                             if (err) return res.negotiate(err);
                                             //console.log('FIND VACAT', findVacation);
                                             _.forEach(findVacation, function (v, k) {
@@ -523,9 +523,9 @@ module.exports = {
      */
     destroy: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        User.findOne({id: req.session.me}).exec((err, findUser)=> {
+        User.findOne({id: req.session.me}).exec((err, findUser) => {
             "use strict";
-            if(err) return res.serverError(err);
+            if (err) return res.serverError(err);
 
             Vacation.findOne(req.param('id')).exec((err, finds) => {
                 "use strict";
@@ -765,7 +765,7 @@ module.exports = {
                      * Кол-во отпускных дней пренадлежащих только году интерфейса
                      * @type {number}
                      */
-                        //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
+                    //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
 
                     obj.holidaysMin = holidaysMin;
                     obj.holidays = holidays;
@@ -1017,23 +1017,20 @@ module.exports = {
         console.log('REQ .subdomains', req.subdomains);
         console.log('REQ .body', req.body);
         // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
-        if (!req.isSocket) {
-            return res.badRequest();
-        }
+        if (!req.isSocket) return res.badRequest();
+
         // TODO: ^ pull this into a `isSocketRequest` policy
 
 
         User.findOne({
-                id: req.session.me
-            })
+            id: req.session.me
+        })
             .exec(function (err, foundUser) {
                 if (err) return res.negotiate(err);
                 if (!foundUser) return res.notFound();
 
                 // Трансляция события WebSocket всем остальным, находящимся в настоящее время в сети,
-                // поэтому их пользователь
-                // агенты могут обновлять интерфейс для них.
-                //console.log('foundUser', foundUser);
+                // поэтому их  агенты могут обновлять интерфейс для них.
                 //Vacation.publishUpdate(req.param('id'), {
                 //    message: req.param('message'),
                 //    username: foundUser.getFullName(),
@@ -1042,19 +1039,32 @@ module.exports = {
                 //});
                 Chat.create({
                     message: req.param('message'),
+                    name: req.param('message'),
                     sender: req.session.me,
                     vacation: req.param('id'),
                     avatarUrl: foundUser.avatarUrl,
                     username: foundUser.getLastFirstName()
                 }).exec(function (err, createdChat) {
                     if (err) return res.negotiate(err);
+
+
                     sails.sockets.broadcast('vacation' + req.param('id'), 'vacation', {
                         message: req.param('message'),
+                        name: req.param('message'),
                         username: foundUser.getLastFirstName(),
                         created: 'только сейчас',
                         avatarUrl: foundUser.avatarUrl,
                         sender: req.session.me
                     });
+                    createdChat.id = req.param('id');
+                    sails.sockets.broadcast('vacation', 'badges-vacation', {
+                        badges: [createdChat],
+                        action: 'новое сообщение',
+                        shortName: foundUser.getShortName(),
+                        fullName: foundUser.getFullName(),
+                        avatarUrl: foundUser.avatarUrl
+                    }, req);
+
                     let strEmail = '';
 
                     if (_.isArray(foundUser.matchings) && (foundUser.matchings.length > 0)) {
@@ -1076,7 +1086,7 @@ module.exports = {
                         '<p><a href="' + sails.config.appUrl.http + '/admin/vacations/edit/' + req.param('id') + '">перейти в чат</a></p>'
                     };
 
-                    EmailService.sender(options);
+                    // EmailService.sender(options);
 
                     return res.ok();
 

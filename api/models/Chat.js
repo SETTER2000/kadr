@@ -6,21 +6,24 @@
  */
 
 module.exports = {
-  connection: 'userMongodbServer',
-  attributes: {
-    avatarUrl:{
-      type:'string'
-    },
-    message: {
-      type: 'string'
-    },
+    connection: 'userMongodbServer',
+    attributes: {
+        avatarUrl: {
+            type: 'string'
+        },
+        name: {
+            type: 'string'
+        },
+        message: {
+            type: 'string'
+        },
 
-    sender: {
-      model: 'user'
-    },
+        sender: {
+            model: 'user'
+        },
 
-    vacation: {
-      model: 'vacation'
+        vacation: {
+            model: 'vacation'
+        }
     }
-  }
 };

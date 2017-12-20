@@ -306,17 +306,21 @@ module.exports = {
             worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
         };
 
+
+
         ((obj.status === 'Проект') || (obj.status === 'В работе')) ? obj.countData = +req.param('countData') : '';
 
         User.findOne({id: obj.whomUpdated})
             .exec((err, findUser) => {
                 "use strict";
+
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
+
                 Schedule.update(req.param('id'), obj)
                     .populate('whomCreated')
-                    .populate('whomUpdated')
-                    .exec(function updateObj(err, objEdit) {
+                    .populate('whomUpdated').exec((err, objEdit) =>{
+                    console.log(err);
                         if (err) return res.negotiate(err);
                         findUser.save(function (err) {
                             if (err) return res.negotiate(err);
