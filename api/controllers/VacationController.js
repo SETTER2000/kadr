@@ -1056,7 +1056,7 @@ module.exports = {
                         avatarUrl: foundUser.avatarUrl,
                         sender: req.session.me
                     });
-                    createdChat.id = req.param('id');
+                    // createdChat.id = req.param('id');
                     sails.sockets.broadcast('vacation', 'badges-vacation', {
                         badges: [createdChat],
                         action: 'новое сообщение',
