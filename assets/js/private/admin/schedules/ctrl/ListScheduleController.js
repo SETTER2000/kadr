@@ -10,27 +10,30 @@
             });
 
 
-
-
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события badges
              */
 
             $scope.bdgs = [];
-            $scope.badg = function () {
-                io.socket.get('/say/badges', function gotResponse(data, jwRes) {
-                    console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
-                    $scope.bdgs = [];
-                });
-            };
-            io.socket.on('badges', function (data) {
-                console.log('ОТВЕТ data:', data);
-                //if ($state.includes('home.admin.schedules')) return;
-                $scope.bdgs.push(data);
+            //$scope.badg = function () {
+            //    return $scope.bdgs = [];
+            //};
 
-                console.log('BDGS-1: ', $scope.bdgs);
+
+            io.socket.on('badges', function (data) {
+                console.log('badges',data);
+                $scope.bdgs.push(data);
                 $scope.$apply();
             });
+
+
+            $rootScope.$on('ngDialog.closing', function (e, $dialog) {
+                console.log('ngDialog closed: ' + $dialog.attr('id'));
+                if($dialog.attr('aria-describedby') === 'RONA')  $scope.bdgs = [];
+
+                $scope.$apply();
+            });
+
 
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
@@ -42,14 +45,42 @@
             });
 
             $scope.clickToOpen = function () {
-                //$scope.rowsAction = $scope.bdgs;
-                //$scope.bdgs = [];
                 ngDialog.open({
-                    //template: '<div class="dialog"><p>'+$scope.bdgs.join('<br>')+'</p><button class="btn btn-link pull-right" ui-sref="home.admin.schedules" target="_blank">Перейти</button></div>',
-                    //plain: true,
+                    showClose:true,
                     template: '/js/private/admin/schedules/views/popupTmpl.html',
                     className: 'ngdialog-theme-default',
-                    //controller: "ListScheduleController",
+                    /**
+                     * true - позволяет закрыть модальное окно щёлкнув по оверлейному слою
+                     */
+                    closeByDocument: true,
+                    /**
+                     * true - закрывать модальное окно при переходе на другую страницу
+                     */
+                    closeByNavigation: false,
+                    /**
+                     * false - отключить кэширование шаблона
+                     */
+                    cache: false,
+                    /**
+                     * Имя диалогового окна
+                     */
+                    name: 'schedule',
+                    /**
+                     * true - установит фокус на элементе закрытия окна и в Chrome
+                     * появится синий бордюр вокруг кнопки
+                     */
+                    trapFocus: false,
+                    /**
+                     * Ширина окна 400 - это 400px
+                     * можно так '40%'
+                     */
+                    width: 480,
+                    /**
+                     * true - закрыть можно кнопкой Esc
+                     */
+                    closeByEscape :  true,
+                    ariaLabelledById: 'fox',
+                    ariaDescribedById:'RONA',
                     scope: $scope
                 });
                 //ngDialog.open({ template: '/js/private/admin/schedules/views/popupTmpl.html', className: 'ngdialog-theme-default' });

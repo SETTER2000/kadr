@@ -52,24 +52,18 @@
             };
 
 
-
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события badges
              */
-
             $scope.bdgs = [];
-            $scope.badg = function () {
-                io.socket.get('/say/badges', function gotResponse(data, jwRes) {
-                    console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
-                    $scope.bdgs = [];
-                });
-            };
             io.socket.on('badges-vacation', function (data) {
-                console.log('ОТВЕТ data:', data);
-                //if ($state.includes('home.admin.schedules')) return;
+                console.log('badges-vacation',data);
                 $scope.bdgs.push(data);
+                $scope.$apply();
+            });
 
-                console.log('BDGS-1: ', $scope.bdgs);
+            $rootScope.$on('ngDialog.closing', function (e, $dialog) {
+                if($dialog.attr('aria-describedby') === 'RONA2') $scope.bdgs = [];
                 $scope.$apply();
             });
 
@@ -83,17 +77,47 @@
             });
 
             $scope.clickToOpen = function () {
-                //$scope.rowsAction = $scope.bdgs;
-                //$scope.bdgs = [];
                 ngDialog.open({
-                    //template: '<div class="dialog"><p>'+$scope.bdgs.join('<br>')+'</p><button class="btn btn-link pull-right" ui-sref="home.admin.schedules" target="_blank">Перейти</button></div>',
-                    //plain: true,
+                    /**
+                     * true - если нужен крестик закрытия в правом верхнем углу окна
+                     */
+                    showClose: true,
                     template: '/js/private/admin/vacations/views/popupTmpl.html',
                     className: 'ngdialog-theme-default',
-                    //controller: "ListScheduleController",
+                    /**
+                     * true - позволяет закрыть модальное окно щёлкнув по оверлейному слою
+                     */
+                    closeByDocument: true,
+                    /**
+                     * true - закрывать модальное окно при переходе на другую страницу
+                     */
+                    closeByNavigation: false,
+                    /**
+                     * false - отключить кэширование шаблона
+                     */
+                    cache: false,
+                    /**
+                     * Имя диалогового окна
+                     */
+                    name: 'vacation',
+                    /**
+                     * true - установит фокус на элементе закрытия окна и в Chrome
+                     * появится синий бордюр вокруг кнопки
+                     */
+                    trapFocus: false,
+                    /**
+                     * Ширина окна 400 - это 400px
+                     * можно так '40%'
+                     */
+                    width: 480,
+                    /**
+                     * true - закрыть можно кнопкой Esc
+                     */
+                    closeByEscape :  true,
+                    ariaLabelledById: 'fox2',
+                    ariaDescribedById:'RONA2',
                     scope: $scope
                 });
-                //ngDialog.open({ template: '/js/private/admin/schedules/views/popupTmpl.html', className: 'ngdialog-theme-default' });
             };
 
             io.socket.get('/say/vacation/hello', function gotResponse(data, jwRes) {

@@ -77,8 +77,8 @@ module.exports = {
         else {
             //console.log('SORT USER:', q);
             User.findOne({id: req.session.me})
-            //.populate('vacations')
-            //.populate('positions')
+                //.populate('vacations')
+                //.populate('positions')
                 .populate('interfaces')
                 .exec(function foundVacation(err, findOneUser) {
                     if (err) return res.serverError(err);
@@ -93,8 +93,8 @@ module.exports = {
                     //}
                     //let from = {$gte: new Date(moment(findOneUser.interfaces[0].year, ["YYYY"]).startOf("year"))};
                     User.find(q)
-                    //.populate('vacations')
-                    //.populate('positions')
+                        //.populate('vacations')
+                        //.populate('positions')
                         .populate('interfaces')
                         .exec(function foundUser(err, users) {
                             if (err) return res.serverError(err);
@@ -169,12 +169,11 @@ module.exports = {
                                     res.send(schedules);
 
 
-
                                     /**
                                      * Выбрать пользователей и суммировать их выбранные дни на отпуск планируемого года
                                      */
 
-                                   // db.vacation.aggregate([{$match:{$and:[{from:{$gte:ISODate("2017-01-01")}},{from:{$lt:ISODate("2018-01-01")}},{action:{$eq:true}}]}},{$group:{'_id':'$owner', count:{$sum:'$daysSelectHoliday'}}}]).pretty()
+                                    // db.vacation.aggregate([{$match:{$and:[{from:{$gte:ISODate("2017-01-01")}},{from:{$lt:ISODate("2018-01-01")}},{action:{$eq:true}}]}},{$group:{'_id':'$owner', count:{$sum:'$daysSelectHoliday'}}}]).pretty()
 
                                     /**
                                      * Выбрать пользователей которые запланировали отпуска на установленый год.
@@ -182,14 +181,15 @@ module.exports = {
                                      * Если planned = true - лимит выбран
                                      */
 
-                                  /*  db.vacation.aggregate([
-                                        {$match:{ $and:[{from:{$gte: ISODate("2017-01-01")}},{from:{$lt: ISODate("2018-01-01")}},{action: {$eq: true}}]}},
-                                        {$group: {
-                                            '_id': '$owner',count: {$sum: '$daysSelectHoliday'}
-                                        } },
-                                        {$project:{_id:1, count:1, planned:{$cond:{if:{$gte:['$count',28]}, then:true, else:false}}}}
-                                    ]).pretty()
-                                    */
+                                    /*
+                                     db.vacation.aggregate([
+                                     {$match:{ $and:[{from:{$gte: ISODate("2017-01-01")}},{from:{$lt: ISODate("2018-01-01")}},{action: {$eq: true}}]}},
+                                     {$group: {
+                                     '_id': '$owner',count: {$sum: '$daysSelectHoliday'}
+                                     } },
+                                     {$project:{_id:1, count:1, planned:{$cond:{if:{$gte:['$count',28]}, then:true, else:false}}}}
+                                     ]).pretty()
+                                     */
 
 
                                 });
@@ -464,8 +464,8 @@ module.exports = {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         console.log('req in', req.param('defaultRows'));
         Schedule.update(req.session.me, {
-            defaultRows: req.param('defaultRows')
-        })
+                defaultRows: req.param('defaultRows')
+            })
             .exec(function (err, update) {
                 if (err) return res.negotiate(err);
                 //console.log('req out', update);
@@ -473,7 +473,23 @@ module.exports = {
             });
     }
     ,
+    /**
+     * Возвращает максимальный номер года
+     * на который есть график отпусков
+     * @param req
+     * @param res
+     */
+    maxYear: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        Schedule.find({sort: 'year DESC', limit: 1}).exec((err, findOne)=> {
+            "use strict";
+            if (err) res.serverError(err);
+            console.log('findOne', findOne);
+            //sails.sockets.broadcast('schedule', 'hello', {howdy: {name:findOne[0].year}}, req);
+            res.ok(findOne[0]);
 
+        });
+    },
 
     /**
      * SOCKET событие hello

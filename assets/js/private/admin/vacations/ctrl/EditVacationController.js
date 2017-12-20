@@ -36,7 +36,11 @@ angular.module('VacationModule')
                 ru: 'ru',
                 dateFormat: "d.m.Y",
                 minDate: "01-01-1950",
-                //maxDate:"31-12-2002",
+                //maxDate: function () {
+                //
+                //
+                //
+                //},
                 maxTwoWeek: '14 дней максимальный период планирования для одного отпуска. Вы можете запланировать несколько отпусков последовательно. ВНИМАНИЕ! Если необходим отпуск более 14 дней рекомендуем согласовать период с руководителем и кадровой службой. ',
             };
 
@@ -55,6 +59,13 @@ angular.module('VacationModule')
                 loading: false
             };
 
+
+
+
+
+            //$scope.$watch('maxD', function (val) {
+            //    if (val) $scope.dateOpts['maxDate'] = val;
+            //});
             /**
              * TODO Chat
              * Пока нет соединения с комнотой чата,
@@ -287,6 +298,7 @@ angular.module('VacationModule')
                     return holiday;
                 };
             }
+
             Calendar.prototype.showData = function () {
                 return console.log('Доступные данные:', this.getData());
             };
@@ -440,8 +452,17 @@ angular.module('VacationModule')
             //console.log('holiday:', holiday);
             //var holiday = ['01.01.2018', '23.02.2018']; // праздник
             let celebration = Working.getCelebration(); // пораньше на час
-            //console.log('UUUU', moment($scope.yearFrom, ['YYYY']));
-            //console.log('UUUU2', $scope.yearFrom);
+$scope.iod = function () {
+    $http.get('/schedule/max-year').then(function success(response) {
+          return $scope.r=   moment(response.data.year, ['YYYY']).endOf("year").format('DD-MM-YYYY');
+        },
+        function errorCallback(response) {
+            //console.log('ERRR==', response);
+        }
+    );
+};
+
+            console.log('MAAAAAAAAAAAAAXXXXXXXXXXXX:',  $scope.iod());
             $scope.dateOpts = {
                 locale: info.ru, // язык
                 mode: "range", // диапазон дат выбрать
@@ -488,9 +509,13 @@ angular.module('VacationModule')
                 //    console.log('new Date(str)',new Date(str.selectedDates));
                 //    return new Date(str.selectedDates);
                 //}
-                //maxDate: info.maxDate // максимальная дата
-                defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
+                //maxDate: '31-12-2019'// максимальная дата
+                //defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
             };
+
+
+            console.log('+++++++++++++///=====', $scope.dateOpts.maxDate);
+
 
             io.socket.on('interface', function (e) {
                 //console.log('new chat received!', e);

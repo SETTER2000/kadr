@@ -137,6 +137,7 @@ module.exports.routes = {
      * Schedule
      */
     'PUT /schedule/update-rows': 'ScheduleController.updateDefaultRows',
+    'GET /schedule/max-year': 'ScheduleController.maxYear',
 
     //'POST /schedule/:id/chat':          'ScheduleController.chat',
     //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',
