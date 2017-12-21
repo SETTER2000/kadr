@@ -208,7 +208,7 @@ module.exports = {
                      * Проще сказать, если отпуску разрешено пересекаться с уже созданными отпусками, то
                      * сообщение о пересечении не выводится пользователю и отпуск добавляется в БД, ну и наоборот.
                      */
-                    // Выбираем все типы отпусков которым не разрешено совпадение
+                        // Выбираем все типы отпусков которым не разрешено совпадение
                     Furlough.find({fixIntersec: false}).exec((err, findFurlough) => {
                         if (err) return res.serverError(err);
                         console.log('obj.furlough.id', obj.furlough.id);
@@ -237,16 +237,16 @@ module.exports = {
                              * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                              */
                             collection.aggregate([
-                                {
-                                    $match: {
-                                        $or: [
-                                            {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                            {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                            {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                        ]
+                                    {
+                                        $match: {
+                                            $or: [
+                                                {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                                {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                                {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
+                                            ]
+                                        }
                                     }
-                                }
-                            ])
+                                ])
                                 .toArray(function (err, results) {
                                     if (err) return res.serverError(err);
                                     console.log('results', results);
@@ -413,16 +413,16 @@ module.exports = {
                      * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                      */
                     collection.aggregate([
-                        {
-                            $match: {
-                                $or: [
-                                    {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
-                                    {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
-                                    {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
-                                ]
+                            {
+                                $match: {
+                                    $or: [
+                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
+                                    ]
+                                }
                             }
-                        }
-                    ])
+                        ])
                         .toArray(function (err, results) {
                             if (err) return res.serverError(err);
                             if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
@@ -522,6 +522,7 @@ module.exports = {
      * @param next
      */
     destroy: function (req, res, next) {
+        console.log('REGGG DELETE' , req.param('id'));
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.findOne({id: req.session.me}).exec((err, findUser) => {
             "use strict";
@@ -765,7 +766,7 @@ module.exports = {
                      * Кол-во отпускных дней пренадлежащих только году интерфейса
                      * @type {number}
                      */
-                    //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
+                        //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
 
                     obj.holidaysMin = holidaysMin;
                     obj.holidays = holidays;
@@ -1016,6 +1017,10 @@ module.exports = {
         console.log('REQ host', req.host);
         console.log('REQ .subdomains', req.subdomains);
         console.log('REQ .body', req.body);
+        console.log('LENGTH MESSAGE:', req.param('message').length);
+        if (req.param('message').length > 900) {
+            return res.badRequest('Сообщение слишком длинное.');
+        }
         // Ничто, кроме запросов сокетов, никогда не должно ударять по этой конечной точке.
         if (!req.isSocket) return res.badRequest();
 
@@ -1023,8 +1028,8 @@ module.exports = {
 
 
         User.findOne({
-            id: req.session.me
-        })
+                id: req.session.me
+            })
             .exec(function (err, foundUser) {
                 if (err) return res.negotiate(err);
                 if (!foundUser) return res.notFound();
@@ -1037,18 +1042,22 @@ module.exports = {
                 //    created: 'только сейчас',
                 //    avatarURL: foundUser.avatarURL
                 //});
-                Chat.create({
+
+                let obj = {
                     message: req.param('message'),
                     name: req.param('message'),
                     sender: req.session.me,
                     vacation: req.param('id'),
                     avatarUrl: foundUser.avatarUrl,
                     username: foundUser.getLastFirstName()
-                }).exec(function (err, createdChat) {
+                };
+
+
+                Chat.create(obj).exec(function (err, createdChat) {
                     if (err) return res.negotiate(err);
 
 
-                    sails.sockets.broadcast('vacation' + req.param('id'), 'vacation', {
+                    sails.sockets.broadcast('vacation' + obj.vacation, 'vacation', {
                         message: req.param('message'),
                         name: req.param('message'),
                         username: foundUser.getLastFirstName(),
@@ -1059,10 +1068,15 @@ module.exports = {
                     // createdChat.id = req.param('id');
                     sails.sockets.broadcast('vacation', 'badges-vacation', {
                         badges: [createdChat],
+                        timeUpdate:createdChat.updatedAt,
                         action: 'новое сообщение',
                         shortName: foundUser.getShortName(),
                         fullName: foundUser.getFullName(),
-                        avatarUrl: foundUser.avatarUrl
+                        fi: foundUser.getLastFirstName(),
+                        avatarUrl: foundUser.avatarUrl,
+                        userId: foundUser.id, // кто отправил
+                        vacationId: obj.vacation // id отпуска
+                        //sender: req.session.me, // кто отправил
                     }, req);
 
                     let strEmail = '';
@@ -1085,8 +1099,8 @@ module.exports = {
                         '<p>' + req.param('message') + '</p>' +
                         '<p><a href="' + sails.config.appUrl.http + '/admin/vacations/edit/' + req.param('id') + '">перейти в чат</a></p>'
                     };
-
-                    // EmailService.sender(options);
+                    console.log('OBJECT CHAT:', obj);
+                    EmailService.sender(options);
 
                     return res.ok();
 

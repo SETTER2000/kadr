@@ -57,7 +57,13 @@
              */
             $scope.bdgs = [];
             io.socket.on('badges-vacation', function (data) {
+
+                data.getTime= function () {
+                    return moment(this.timeUpdate).fromNow();
+                };
                 console.log('badges-vacation',data);
+                console.log('DAAAAAAAAAAAA:', data.getTime());
+                
                 $scope.bdgs.push(data);
                 $scope.$apply();
             });
@@ -109,7 +115,8 @@
                      * Ширина окна 400 - это 400px
                      * можно так '40%'
                      */
-                    width: 480,
+                    width: 550,
+                    padding:0,
                     /**
                      * true - закрыть можно кнопкой Esc
                      */

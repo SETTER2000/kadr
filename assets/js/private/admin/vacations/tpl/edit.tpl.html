@@ -1,9 +1,10 @@
 <!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
 
 <div class="col-sm-11  col-md-12  main">
-    <div class="page-header">
+    <div class="page-header" ng-cloak>
         <h2>
-            <p ng-class="{'fired':!item.action}">{{item.sc()}} <span ng-show="{{!edit}}">создать</span>: {{item.name}} <span ng-if="daysSelectHoliday">({{daysSelectHoliday}})</span><span
+            <p ng-class="{'fired':!item.action}">{{item.sc()}} <span ng-show="{{!edit}}">создать</span>: {{item.name}} <span
+                    ng-if="daysSelectHoliday">({{daysSelectHoliday}})</span><span
                     ng-if="!item.action"
                     ng-bind="item.deactivation()"></span>
             </p>
@@ -158,7 +159,9 @@
                                         <div class="chat-body">
                                             <img class="chat-avatar" ng-src="{{chat.avatarUrl}}">
                                             <div class="header">
-                                                <span class="username"> <a href="/admin/user/{{chat.sender}}">{{chat.username}} </a></span>
+                                                <span class="username">
+                                                    <a href="/admin/user/{{chat.sender}}">{{chat.username}} </a>
+                                                </span>
                                                 <small class="pull-right">{{chat.created }}{{chat.time}}</small>
                                             </div>
                                             <p class="message">
@@ -170,18 +173,26 @@
                             </div>
                             <div class="panel-footer">
                                 <div class="input-group">
-                                    <span class="input-group-addon not-border"> <img class="chat-avatar-comment" ng-src="{{me.avatarUrl}}"></span>
+                                    <span class="input-group-addon not-border">
+                                        <img class="chat-avatar-comment " ng-src="{{me.avatarUrl}}"></span>
+                                    <input  required rows="1" class="form-control input-sm myTextarea" ng-model="message"
+                                              placeholder="Написать комментарий..." ng-keypress="whenTyping($event)"
+                                              ng-focus="whenTyping($event)" ng-blur="whenNotTyping($event)" ng-disabled="!me">
 
-                                    <input id="btn-input" required type="text" class="form-control input-sm" ng-model="message"
-                                           placeholder="Написать комментарий..." ng-keypress="whenTyping($event)"
-                                           ng-focus="whenTyping($event)" ng-blur="whenNotTyping($event)" ng-disabled="!me">
+                                    <!--<textarea id="btn-input" required rows="1" class="form-control input-sm myTextarea" ng-model="message"-->
+                                              <!--placeholder="Написать комментарий..." ng-keypress="whenTyping($event)"-->
+                                              <!--ng-focus="whenTyping($event)" ng-blur="whenNotTyping($event)" ng-disabled="!me"></textarea>-->
 
 
                 <span class="input-group-btn">
-                  <button type="submit" ng-disabled="!hasJoinedRoom || !me" class="btn btn-link btn-sm" id="btn-chat">
-                      <i class="fa " ng-class="{'fa-paper-plane-o':!message.length,'fa-paper-plane': message.length}"
-                         aria-hidden="true"></i>
+                  <button ng-disabled="countCh<0" type="submit" ng-disabled="!hasJoinedRoom || !me" class="btn btn-link btn-sm"
+                          id="btn-chat">
+                      <small ng-class="{'text-danger':(countCh < 11), 'text-warning':(countCh<100), 'text-success':(countCh>99 )}"><i
+                              class="fa " ng-class="{'fa-paper-plane-o':!message.length,'fa-paper-plane': message.length}"
+                              aria-hidden="true"></i> <span ng-show="(countCh<100)">{{countsChar(message)}}</span>
+                      </small>
                   </button>
+
                 </span>
                                 </div>
                                 <div ng-show="typing">
@@ -211,7 +222,7 @@
                     <!--{{dateOpts.maxDate}}-->
                     <div class="form-group">
                         <label class="sr-only" for="exampleInputPassword33"></label>
-                        <input  required class="form-control  flatpickr flatpickr-calendar"
+                        <input required class="form-control  flatpickr flatpickr-calendar"
                                ng-flatpickr
                                fp-opts="dateOpts"
                                fp-on-setup="datePostSetup(fpItem)"

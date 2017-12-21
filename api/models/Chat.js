@@ -12,10 +12,12 @@ module.exports = {
             type: 'string'
         },
         name: {
-            type: 'string'
+            type: 'string',
+            maxLength: 900
         },
         message: {
-            type: 'string'
+            type: 'string',
+            maxLength: 900
         },
 
         sender: {

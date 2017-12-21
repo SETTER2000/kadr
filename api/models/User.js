@@ -296,7 +296,7 @@ module.exports = {
 
 
         getLastFirstName: function () {
-            return this.lastName + ' ' + this.firstName ;
+            return  this.firstName + ' ' +  this.lastName;
         },
         getFullName: function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;

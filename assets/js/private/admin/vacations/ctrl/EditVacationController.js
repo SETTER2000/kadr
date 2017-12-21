@@ -60,12 +60,13 @@ angular.module('VacationModule')
             };
 
 
+            $scope.countsChar = function (message) {
+                if (!message)return $scope.countCh = undefined;
+                $scope.countCh = (900 - message.length);
+                return $scope.countCh
+            };
 
 
-
-            //$scope.$watch('maxD', function (val) {
-            //    if (val) $scope.dateOpts['maxDate'] = val;
-            //});
             /**
              * TODO Chat
              * Пока нет соединения с комнотой чата,
@@ -85,6 +86,8 @@ angular.module('VacationModule')
                 // Если что-то пошло не так, обработайте ошибку.
                 if (JWR.statusCode !== 200) {
                     console.error(JWR);
+
+                    toastr.error(JWR.body, info.error);
                     // TODO
                     return;
                 }
@@ -119,6 +122,36 @@ angular.module('VacationModule')
             });
 
             $scope.sendMessage = function () {
+                $scope.vacationId = window.location.pathname.split('/')[4];
+                /**
+                 * Отправьте запрос сокета, чтобы присоединиться к комнате чата.
+                 */
+                io.socket.put('/vacation/' + $scope.vacationId + '/join', function (data, JWR) {
+                    // Если что-то пошло не так, обработайте ошибку.
+                    if (JWR.statusCode !== 200) {
+                        console.error(JWR);
+
+                        toastr.error(JWR.body, info.error);
+                        // TODO
+                        return;
+                    }
+                    /**
+                     *  Если сервер дал нам свое благословение и указал, что мы
+                     *  можем успешно присоединиться к комнате, тогда мы установим это в
+                     *  scope, чтобы пользователь мог начать отправлять чаты.
+                     *  Обратите внимание, что на этом этапе мы также сможем запустить _receiving_ чаты.
+                     *
+                     */
+                    $scope.hasJoinedRoom = true;
+                    /**
+                     * Поскольку io.socket.get () не является объектом angular, нам нужно вызвать
+                     * $scope.$apply()
+                     * в этом обратном вызове, чтобы наши изменения в scope действительно вступили в силу.
+                     */
+                    $scope.$apply();
+                });
+                if(!$scope.vacationId) toastr.error('ID отпуска к сообщению не установлен',info.error);
+
                 io.socket.post('/vacation/' + $scope.vacationId + '/chat', {
                     message: $scope.message,
                     name: $scope.item.name
@@ -127,6 +160,7 @@ angular.module('VacationModule')
                     // Если что-то пошло не так, обработайте ошибку.
                     if (JWR.statusCode !== 200) {
                         console.error(JWR);
+                        toastr.error(JWR.body, info.error);
                         return;
                     }
                     // Очистите поле сообщения чата. (но сначала сохраним его содержимое, чтобы мы могли добавить его)
@@ -145,6 +179,7 @@ angular.module('VacationModule')
                     // Если что-то пошло не так, обработайте ошибку.
                     if (JWR.statusCode !== 200) {
                         console.error(JWR);
+                        toastr.error(JWR.body, info.error);
                         return;
                     }
                 });
@@ -158,6 +193,7 @@ angular.module('VacationModule')
                     // Если что-то пошло не так, обработайте ошибку.
                     if (JWR.statusCode !== 200) {
                         console.error(JWR);
+                        toastr.error(JWR.body, info.error);
                         return;
                     }
                 });
@@ -384,7 +420,6 @@ angular.module('VacationModule')
                 }
                 return arr;
             };
-
             Calendar.prototype.getCountDay = function (arr) {
                 if (angular.isArray(arr) && arr.length == 2) {
                     let h = this.getHoliday();
@@ -432,35 +467,21 @@ angular.module('VacationModule')
                     //return count;
                 }
             };
-            //$scope.$on('changeInterface', function (event, args) {
-            //    console.log(args);
-            //    $scope.yearFrom = args.message.year;
-            //    $scope.apply();
-            //});
 
 
             let Working = new Calendar();
-            //console.log(Working.getHoliday()); // все праздники, массив
-            //Working.year = 2016;
-            //Working.showData();
-            //console.log('DAYS: ',Working.getDayOff());
-            //console.log('DAYS: ',Working.getDayOff());
-            //console.log('getCreateDate', Working.getCreateDate());
-            //var dayOff = ['09.09.2017', '10.09.2017', '2.12.2017', '23.09.2017', '24.09.2017']; // выходной
             let dayOff = Working.getDayOff(); //праздники и выходные
             let holiday = Working.getHoliday(); // праздник
-            //console.log('holiday:', holiday);
-            //var holiday = ['01.01.2018', '23.02.2018']; // праздник
             let celebration = Working.getCelebration(); // пораньше на час
-$scope.iod = function () {
-    $http.get('/schedule/max-year').then(function success(response) {
-          return $scope.r=   moment(response.data.year, ['YYYY']).endOf("year").format('DD-MM-YYYY');
-        },
-        function errorCallback(response) {
-            //console.log('ERRR==', response);
-        }
-    );
-};
+            $scope.iod = function () {
+                $http.get('/schedule/max-year').then(function success(response) {
+                        return $scope.r = moment(response.data.year, ['YYYY']).endOf("year").format('DD-MM-YYYY');
+                    },
+                    function errorCallback(response) {
+                        //console.log('ERRR==', response);
+                    }
+                );
+            };
 
 
             $scope.dateOpts = {
@@ -514,33 +535,14 @@ $scope.iod = function () {
             };
 
 
-
-
-
             io.socket.on('interface', function (e) {
                 $scope.yearFrom = e.interfaces[0].year;
                 /**
                  * Устанавливаем год интерфейса для пересечений
                  */
                 $scope.me.interfaces[0].year = e.interfaces[0].year;
-
-                //Working.onValueUpdate(function(selectedDates, dateStr, instance){
-                //    instance.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
-                //});
-                //$scope.dateOpts.defaultDate = ['11.10.2010', '11.10.2010'];
-                //$scope.chats.push({
-                //    created: e.created,
-                //    username: e.username,
-                //    message: e.message,
-                //    gravatarURL: e.gravatarURL
-                //});
-                //Working.changeMonth(0, false); // go to January
-                //console.log('e.idUser',e.idUser);
-                //$scope.getIntersections(e.idUser);
-
                 $scope.refresh();
                 $scope.$apply();
-                //
             });
 
 
@@ -550,9 +552,7 @@ $scope.iod = function () {
                     return fpItem.clear();
                 }
             };
-//$scope.$watch('yearFrom', function (value) {
-//    $scope.yearFrom = value;
-//});
+
             /**
              * Это функция срабатывает каждый раз после выбора даты
              * Принимает объект flatpicker c вновь выбранными датами или одной датой
@@ -567,49 +567,13 @@ $scope.iod = function () {
              */
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
-
-                //console.log('DASSS', fpItem);
                 /**
                  * Кол-во выбраных дней
                  */
                 $scope.daysSelectHoliday = Working.getCountDay(fpItem.selectedDates);
-
-
                 if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
                     toastr.warning(info.maxTwoWeek);
                 }
-
-                //$scope.$watch('maxTwoWeek', function (value) {
-                //    $scope.item.$update($scope.item, function (success) {
-                //            toastr.success(info.changed);
-                //            //$scope.refresh();
-                //        },
-                //        function (err) {
-                //            toastr.error(err.data, info.error + ' 11445!');
-                //        }
-                //    );
-                //});
-                //$scope.maxWeek = function () {
-                //    $scope.item.$update($scope.item, function (success) {
-                //            toastr.success(info.changed);
-                //            console.log('success', success);
-                //            //$scope.refresh();
-                //            $scope.item = success;
-                //        },
-                //        function (err) {
-                //            toastr.error(err.data, info.error + ' 11445!');
-                //        }
-                //    );
-                //};
-
-                //fpItem.jumpToDate(moment().year($scope.me.interfaces[0].year)._d);
-                //console.log('DDDDDDD6', moment().year($scope.me.interfaces[0].year));
-                //console.log('POPP:', moment().month());
-                //console.log('Текущие пересечения', $scope.intersection);
-                //
-                //console.log('Выбранный период', fpItem.selectedDates);
-
-                //console.log('******************************************************* // ************************************* ');
                 if ($scope.intersection) {
                     let x = [];
                     $scope.intersection.forEach(function (val, key, arr) {
@@ -650,10 +614,6 @@ $scope.iod = function () {
                     return $scope.intersection = x;
                 }
             };
-
-            //$scope.$watch('intersection', function (value) {
-            //    console.log('NPR: ', value);
-            //});
 
             /**
              * Очищает непосредственно объект Flatpicker в отличие
@@ -715,10 +675,8 @@ $scope.iod = function () {
                 let item = $scope.item = Vacations.get({id: $stateParams.vacationId}, function (vacations) {
                         //console.log('VACATION ITEM:', vacations);
                         $scope.vacations = vacations;
-
                         $scope.tm = vacations.chats;
                         $scope.chats = $scope.chatTime();
-
                         $scope.flatpicker.setDate(vacations.name);
 
                         item.getBirthday();
@@ -738,7 +696,8 @@ $scope.iod = function () {
 
             $scope.delete2 = function (item) {
                 console.log('item', item);
-                item.$delete(item, function (success) {
+                item.$delete({id: item.id}, function (success) {
+                    console.log('****!!', success);
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
                     // $location.path("/table");

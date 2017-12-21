@@ -26,8 +26,8 @@ module.exports.routes = {
      *                 JSON API ENDPOINTS                        *
      *************************************************************/
 
-    // 'PUT /login': 'UserController.loginLDAP',
-    'PUT /login': 'UserController.login',
+     'PUT /login': 'UserController.loginLDAP',
+    //'PUT /login': 'UserController.login',
     'GET /logout': 'PageController.logout',
     'POST /logout': 'UserController.logout',
     // 'GET /mail/send': 'MailController.send',
@@ -74,6 +74,13 @@ module.exports.routes = {
     'GET /user/getUsersDepartment/:id': 'UserController.getUsersDepartment',
     'GET /user/get-all': 'UserController.getAllUsersName',
     'POST /users/ldap': 'UserController.searchLDAP',
+
+
+    //'POST /user/:id/chat':          'UserController.chat',
+    //'PUT  /user/:id/join':          'UserController.joinChat',
+    //'PUT  /user/:id/typing':        'UserController.typing',
+    //'PUT  /user/:id/stoppedTyping': 'UserController.stoppedTyping',
+
 
     /**
      * Тестовые роуты

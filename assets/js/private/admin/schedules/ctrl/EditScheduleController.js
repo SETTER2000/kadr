@@ -533,7 +533,7 @@ angular.module('ScheduleModule')
 
 
             $scope.delete2 = function (item) {
-                item.$delete(item, function (success) {
+                item.$delete({id:item.id}, function (success) {
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
                     // $location.path("/table");

@@ -1,7 +1,6 @@
 <div ng-controller="navPageController" ng-cloak class="container-fluid">
     <nav class="navbar navbar-inverse navbar-fixed-top" ng-if="me">
         <div class="container">
-
             <div class="navbar-header">
                 <button ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" type="button" class="navbar-toggle collapsed"
                         data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -11,63 +10,41 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="/#" class="pull-left brighten">
-                    <!--<img height="29" width="29" src="/images/logo.png" style="margin: 10px; ">-->
                     <img height="21" width="100" src="/images/logo.png" style="margin: 15px; ">
                 </a>
-                <!--<a class="navbar-brand " href="/"> КС</a>-->
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-
-
                 <ul class="nav navbar-nav">
-                    <!--<li><a href="/">Home</a></li>-->
-                    <!--<li><a ui-sref="home.admin.calendars">Посещаемость</a></li>-->
-                    <!--<li><a href="/admin/calendar/58b92215d19963601fad8fec/месяц">Посещаемость</a></li>-->
-                    <!--<li><a ui-sref="account">Выход нового сотрудника</a></li>-->
-                    <!--<li><a ui-sref="account">Аккаунт</a></li>-->
-                    <!--<li><a ui-sref="contact.detail">Detail</a></li>-->
-                    <!--<li><a ui-sref="home.admin">Admin</a></li>-->
-                    <!--<li><a ui-sref="home.admin.users">Users</a></li>-->
-                    <!--<li><a ui-sref="admin.users.edit({userId:'588b46b6d20dd30c17b27f03'})">Users Edit</a></li>-->
-                    <!--<li><a ui-sref="contact">Contact</a>-->
-
-                    <!-- Also a way to navigate -->
-                    <!--<li><a href="/videos">Videos</a></li>-->
                     <li ng-controller="ListScheduleController" class="dropdown" >
-                        <!--<span style="color:grey" ng-repeat="badge in badges"> {{badge.badges[0].name}} - {{badge.action}} <br></span>-->
-                        <div ng-show="bdgs.length" class="badges-position">
+                        <div ng-if="(me.admin || me.kadr)" ng-show="bdgs.length" class="badges-position">
                             <div class="badge danger"  ng-mouseover="clickToOpen()">
                                 {{bdgs.length}}
                             </div>
-
                         </div>
+
                         <a ng-if="(me.kadr || me.admin || me.leader)" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             Кадровая служба
 
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <!--<li class="dropdown-header">Редактирование</li>-->
-                            <!--<li><a ng-if="(me.kadr || me.admin || me.leader)" ui-sref="home.admin.users.exit">Выход сотрудника</a></li>-->
                             <li><a ng-if="(me.admin || me.kadr)" ui-sref="home.admin.schedules">График отпусков</a></li>
                             <!--<li><a ng-if="(me.admin)" ui-sref="home.admin.documents">Документы и отчётность</a></li>-->
-
                         </ul>
                     </li>
 
                     <li  ng-controller="ListVacationController"   class="dropdown" >
 
-                        <div ng-show="bdgs.length" class="badges-position">
+                        <div ng-if="(me.admin || me.kadr)" ng-show="bdgs.length" class="badges-position">
                             <div class="badge danger"  ng-mouseover="clickToOpen()">
                                 {{bdgs.length}}
                             </div>
-
                         </div>
+
+
                         <a ng-if="(me.kadr || me.admin || me.leader)" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             Справочники
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <!--<li class="dropdown-header">Редактирование</li>-->
-                            <!--<li><a ng-if="(me.kadr || me.admin || me.leader)" ui-sref="home.admin.users.exit">Выход сотрудника</a></li>-->
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.users">Сотрудники</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.departments">Подразделения</a></li>
                             <li><a ng-if="(me.kadr || me.admin)" ui-sref="home.admin.positions">Должности</a></li>
@@ -78,10 +55,7 @@
                             <li><a ng-if="(me.kadr || me.admin)" href="/admin/calendar/58b92215d19963601fad8fec/месяц">Посещаемость</a></li>
                             <li><a ng-if="me.admin" ui-sref="home.admin.users.administration">Группы</a></li>
                         </ul>
-
                     </li>
-
-
                     <li>
                     </li>
                 </ul>
@@ -94,15 +68,12 @@
                         <a href="/profile" class="pointer"> {{me.fullName}} ({{me.phoneInner}})</a>
                     </li>
                     <li>
-
                         <form class="navbar-form navbar-right" autocomplete="off">
                             <button class="btn btn-success btn-md" ng-click="signOut()">Выход</button>
                         </form>
-
                     </li>
                 </ul>
-
-            </div><!--/.nav-collapse -->
+            </div>
         </div>
     </nav>
 </div>
