@@ -24,14 +24,11 @@ angular.module('VacationModule')
 
             var info = {
                 changed: 'Изменения сохранены!',
-                passChange: 'Пароль обновлён!',
                 error: 'Ошибка!',
-                requiredJpg: 'Расширение файла должно быть jpg.',
                 isSimilar: 'Есть похожий: ',
                 ok: 'OK!',
                 objectDelete: 'Объект удалён.',
                 newUserOk: 'Успешно создан.',
-                passDefault: '111111',
                 redirectSelf: 'home.admin.vacations',
                 ru: 'ru',
                 dateFormat: "d.m.Y",
@@ -85,10 +82,8 @@ angular.module('VacationModule')
             io.socket.put('/vacation/' + $scope.vacationId + '/join', function (data, JWR) {
                 // Если что-то пошло не так, обработайте ошибку.
                 if (JWR.statusCode !== 200) {
-                    console.error(JWR);
-
-                    toastr.error(JWR.body, info.error);
-                    // TODO
+                    console.log('JJJJJJJAA',JWR);
+                    if(angular.isString(JWR.body)) toastr.error(JWR.body, info.error);
                     return;
                 }
                 /**
@@ -197,7 +192,7 @@ angular.module('VacationModule')
                         return;
                     }
                 });
-            };//</whenNotTyping>
+            };
 
 
             function Calendar() {
@@ -439,7 +434,6 @@ angular.module('VacationModule')
                     return count;
                 }
             };
-
             /**
              * Метод проверяет,
              * пересекается ли выбраный период с уже созданными ранее периодами
@@ -468,11 +462,12 @@ angular.module('VacationModule')
                 }
             };
 
-
             let Working = new Calendar();
             let dayOff = Working.getDayOff(); //праздники и выходные
             let holiday = Working.getHoliday(); // праздник
             let celebration = Working.getCelebration(); // пораньше на час
+
+
             $scope.iod = function () {
                 $http.get('/schedule/max-year').then(function success(response) {
                         return $scope.r = moment(response.data.year, ['YYYY']).endOf("year").format('DD-MM-YYYY');
@@ -482,19 +477,45 @@ angular.module('VacationModule')
                     }
                 );
             };
+            $scope.iod();
+            $scope.$watch('r', function (val) {
+                if(val) console.log('++++++++++++++++NEW YERA',val); $scope.dateOpts.maxDate = val;
+            });
 
 
             $scope.dateOpts = {
                 locale: info.ru, // язык
                 mode: "range", // диапазон дат выбрать
                 dateFormat: info.dateFormat, // формат даты
-                minDate: info.minDate, // минимальная дата
+                minDate: 'today', // минимальная дата
                 allowInput: true, // ручной ввод даты
                 inline: true, // календарь открыт
                 // Обработчик события на изменения даты
                 //onChange: function(selectedDates, dateStr, instance) {
                 //    console.log('selectedDates',selectedDates);
                 //},
+
+                // onReady запускается после того, как календарь находится в готовом состоянии
+                onReady: [
+                    function(selectedDates, dateStr, instance){
+                        /**
+                         *  Устанавливаем на календарь максимально доступный год,
+                         *  который запланирован в Графике отпусков
+                         */
+                        $http.get('/schedule/max-year').then(function success(response) {
+                                instance.config.maxDate = moment(response.data.year, ['YYYY']).endOf("year").format('DD-MM-YYYY');
+                            },
+                            function errorCallback(response) {
+                                //console.log('ERRR==', response);
+                            }
+                        );
+
+                    },
+                    function(selectedDates, dateStr, instance){
+                        //...
+                    }
+                ],
+                
                 // Обработчик события на изменения года
                 onYearChange: function (selectedDates, dateStr, instance) {
                     //console.log('CHANGE1', instance);
