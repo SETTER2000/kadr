@@ -30,7 +30,7 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
 
-        var q = {
+        let q = {
             limit: req.param('limit'),
             sort: req.param('sort')
         };
@@ -39,31 +39,8 @@ module.exports = {
             y[req.param('property')] = {'like': req.param('char')};
             q.where = y;
         }
-        //if (!_.isUndefined(req.param('where'))){
-        //    q.where = JSON.parse(req.param('where'));
-        //}
-        //console.log('Q: ', q);
-        //console.log('REQ_ALL:',req.allParams());
-
-        //Vacation.find(q)
-        //    .populate('furlough')
-        //    .populate('owner')
-        //    .populate('whomCreated')
-        //    .populate('whomUpdated')
-        //    .exec(function foundVacation(err, vacations) {
-        //        if (err) return res.serverError(err);
-        //        if (!vacations) return res.notFound();
-        //
-        //        _.forEach(vacations, function (vaca) {
-        //            console.log('FROMUSHKA: ', vaca.from);
-        //        });
-        //        //console.log('VACA', vacations);
-        //    return    res.send(vacations);
-        //    });
-
 
         if (req.param('id')) {
-            //console.log('VACTION ID:', req.param('id'));
             Vacation.findOne(req.param('id'))
                 .populate('furlough')
                 .populate('owner')
@@ -74,13 +51,10 @@ module.exports = {
                 .exec(function foundVacation(err, vacations) {
                     if (err) return res.serverError(err);
                     if (!vacations) return res.notFound();
-                    //console.log('vacations RESPONS one :', vacations);
-
-                    return res.ok(vacations);
+                    return res.send(vacations);
                 });
         }
         else {
-            //console.log('SORT USER:', q);
             User.findOne({id: req.session.me})
                 .populate('vacations')
                 .populate('positions')
@@ -109,19 +83,8 @@ module.exports = {
                                 let ob = {};
                                 ob.from = from;
                                 ob.owner = user.id;
-                                //console.log('user.id === req.session.me', user.id +'=== '+req.session.me);
-                                //if (user.id === req.session.me) {
-                                //    console.log('FIO:::', ob.from= new Date(moment(user.interfaces[0].year, ["YYYY"]).startOf("year")));
-                                //}
-                                //console.log('UIP: ', user);
-                                //console.log('LENGTH: ', user.vacations.length);
-                                //if (user.vacations.length > 0) us.push({'owner': user.id});
                                 us.push(ob);
                             });
-
-                            //console.log('ОТОБРАННЫЕ:', us);
-                            //console.log('USER ODIN:', users[0]);
-                            //console.log('DDDDDDDDDDDDDDASreq.session :', req.session.me);
                             Vacation.find(us)
                                 .populate('furlough')
                                 .populate('owner')
@@ -131,11 +94,6 @@ module.exports = {
                                 .exec(function foundVacation(err, vacations) {
                                     if (err) return res.serverError(err);
                                     if (!vacations) return res.notFound();
-
-                                    //_.forEach(vacations, function (vaca) {
-                                    //    console.log('FROMUSHKA: ', vaca.from);
-                                    //});
-                                    //console.log('VACA', vacations);
                                     res.ok(vacations);
                                 });
                         });
@@ -154,10 +112,6 @@ module.exports = {
     create: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
-
-        console.log('OWNER', req.param('owner'));
-        console.log('furlough', req.param('furlough'));
-
         let obj = {
             section: 'Отпуск',
             sections: 'Отпуска',
@@ -173,11 +127,6 @@ module.exports = {
             from: new Date(req.param('from')),
             to: new Date(req.param('to'))
         };
-
-        // console.log('req.body: ', req.body);
-        // console.log('OWNER: ', req.param('owner'));
-        // console.log('furlough: ', req.param('furlough'));
-        // console.log('OWNER SESS ME: ', req.session.me);
 
         /**
          * Выбираем объект пользователя на которого будет записан отпуск
@@ -208,18 +157,14 @@ module.exports = {
                      * Проще сказать, если отпуску разрешено пересекаться с уже созданными отпусками, то
                      * сообщение о пересечении не выводится пользователю и отпуск добавляется в БД, ну и наоборот.
                      */
-                        // Выбираем все типы отпусков которым не разрешено совпадение
+                    // Выбираем все типы отпусков которым не разрешено совпадение
                     Furlough.find({fixIntersec: false}).exec((err, findFurlough) => {
                         if (err) return res.serverError(err);
-                        console.log('obj.furlough.id', obj.furlough.id);
-                        console.log('findFurlough', findFurlough);
                         //if (findFurlough.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
                         let b = [];
                         _.forEach(findFurlough, function (val, key) {
                             b.push(val.id);
                         });
-
-                        console.log('ID типов отпусков, не разр. пересечение:', b);
                         /**
                          * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
                          * По сути проверяем чтоб не было пересечения со своим же отпуском
@@ -237,19 +182,19 @@ module.exports = {
                              * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                              */
                             collection.aggregate([
-                                    {
-                                        $match: {
-                                            $or: [
-                                                {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                                {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                                {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                            ]
-                                        }
+                                {
+                                    $match: {
+                                        $or: [
+                                            {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                            {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                            {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
+                                        ]
                                     }
-                                ])
+                                }
+                            ])
                                 .toArray(function (err, results) {
                                     if (err) return res.serverError(err);
-                                    console.log('results', results);
+
                                     //if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
                                     /**
                                      * Заполнить поле vacations объектами отпусков с которыми
@@ -292,14 +237,12 @@ module.exports = {
                                                 findUser.vacations.add(createVacation.id);
                                                 findUser.vacationWhomCreated.add(createVacation.id);
                                                 _.forEach(users, function (v, k) {
-                                                    // console.log('Отпуска пересекаемые с нашим:', v.vacations);
                                                     if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
                                                         _.forEach(v.vacations, function (val, key) {
                                                             createVacation.intersec.add(val.id)
                                                         });
                                                     }
                                                 });
-                                                // console.log('findUser++:', findUser);
                                                 let strEmail = '';
                                                 if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
                                                     let a = [];
@@ -359,10 +302,6 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
 
-        console.log('UPDATE req.owner', req.param('owner'));
-        console.log('UPDATE req.session', req.session);
-
-
         let obj = {
             id: req.param('id'),
             name: req.param('name'),
@@ -396,7 +335,6 @@ module.exports = {
                 });
 
 
-                //console.log('INTERSECTIONS A:', a);
                 /**
                  * Проверяем пересекается ли отпуск с уже существующим для данного пользователя.
                  * По сути проверяем чтоб не было пересечения со своим же отпуском
@@ -413,16 +351,16 @@ module.exports = {
                      * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                      */
                     collection.aggregate([
-                            {
-                                $match: {
-                                    $or: [
-                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
-                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
-                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
-                                    ]
-                                }
+                        {
+                            $match: {
+                                $or: [
+                                    {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                    {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                    {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
+                                ]
                             }
-                        ])
+                        }
+                    ])
                         .toArray(function (err, results) {
                             if (err) return res.serverError(err);
                             if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
@@ -464,7 +402,6 @@ module.exports = {
                                 .exec((err, users) => {
                                     if (err) return res.serverError(err);
                                     _.forEach(users, function (v, k) {
-                                        // console.log('Отпуска пересекаемые с нашим:', v.vacations);
                                         if (_.isArray(v.vacations) && (v.vacations.length > 0)) {
                                             _.forEach(v.vacations, function (val, key) {
                                                 obj.intersec.push(val.id);
@@ -472,20 +409,17 @@ module.exports = {
                                         }
                                     });
 
-                                    //console.log('obj.intersec', obj.intersec);
 
                                     Vacation.find()
                                         .populate('intersec', {where: {id: req.param('id')}})
                                         .exec((err, findVacation) => {
                                             if (err) return res.negotiate(err);
-                                            //console.log('FIND VACAT', findVacation);
+
                                             _.forEach(findVacation, function (v, k) {
                                                 if (v.intersec.length) {
                                                     findVacation[k].intersec.remove(req.param('id'));
-                                                    //console.log('XX', findVacation[k].intersec);
                                                     findVacation[k].save(function (err) {
                                                         if (err) return res.negotiate(err);
-                                                        //console.log('XX2', findVacation[k].intersec);
                                                     });
                                                 }
                                             });
@@ -522,7 +456,6 @@ module.exports = {
      * @param next
      */
     destroy: function (req, res, next) {
-        console.log('REGGG DELETE' , req.param('id'));
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.findOne({id: req.session.me}).exec((err, findUser) => {
             "use strict";
@@ -566,7 +499,6 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
-                //console.log('findUser:', findUser);
                 let intfaceYear = (findUser['interfaces'].length) ? findUser['interfaces'][0].year : moment().get('year');
                 let year = (req.param('year')) ? req.param('year') : intfaceYear;
 
@@ -591,18 +523,13 @@ module.exports = {
                 }).exec((err, findVacations) => {
                     if (err) return res.serverError(err);
                     if (!findVacations) return res.notFound();
-                    _.forEach(findVacations, function (v, k) {
-                        console.log('VALUE: ', v.name);
-                    });
-                    console.log('***************************//******************************** ');
-                    //console.log('findVacations', findVacations);
                     let obj = {};
 
                     // Праздники в RF
                     let holidaysRf = sails.config.holidaysRf.data;
                     //let holidaysRf = ["01.01.2017", "02.01.2017", "03.01.2017", "04.01.2017", "05.01.2017", "06.01.2017", "07.01.2017", "08.01.2017", "23.02.2017", "08.03.2017", "01.05.2017", "09.05.2017", "12.06.2017", "04.11.2017", "01.01.2018", "02.01.2018", "03.01.2018", "04.01.2018", "05.01.2018", "06.01.2018", "07.01.2018", "08.01.2018", "23.02.2018", "08.03.2018", "01.05.2018", "09.05.2018", "12.06.2018", "04.11.2018", "01.01.2019", "02.01.2019", "03.01.2019", "04.01.2019", "05.01.2019", "06.01.2019", "07.01.2019", "08.01.2019", "23.02.2019", "08.03.2019", "01.05.2019", "09.05.2019", "12.06.2019", "04.11.2019"];
 
-                    //console.log('holidays',holidays);
+
                     let vacationPeriodsFrom = findVacations.map(function (vacation) {
                         return moment.tz(vacation.from, zone);
                     });
@@ -766,7 +693,7 @@ module.exports = {
                      * Кол-во отпускных дней пренадлежащих только году интерфейса
                      * @type {number}
                      */
-                        //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
+                    //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
 
                     obj.holidaysMin = holidaysMin;
                     obj.holidays = holidays;
@@ -805,7 +732,6 @@ module.exports = {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
         let year = (req.param('year')) ? req.param('year') : moment().year();
-        //console.log('YEAR:', year);
         User.findOne({id: req.session.me})
             .populate('vacationWhomCreated')
             .populate('vacations')
@@ -821,7 +747,6 @@ module.exports = {
                         '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
                 }
                 year = findUser.interfaces[0].year;
-                //console.log('YEAR Vacation :', year);
                 Vacation.native(function (err, collection) {
                     if (err) return res.serverError(err);
                     collection.aggregate([
@@ -831,14 +756,11 @@ module.exports = {
                         {$sort: {'_id.year': 1}}
                     ]).toArray(function (err, results) {
                         if (err) return res.serverError(err);
-                        //console.log('Выбраные года:', results);
                         if (!results.length) return res.ok({count: 0});
                         let obYear = {count: 0};
                         _.forEach(results, function (value, key) {
-                            //console.log('VALUE', value);
                             if (value['_id'].year == year) obYear = value;
                         });
-                        //console.log('RESPONSE YEARS ARR: ', obYear);
                         return res.ok(obYear);
                     });
                 });
@@ -872,7 +794,6 @@ module.exports = {
                 ]
             ).toArray(function (err, results) {
                 if (err) return res.serverError(err);
-                console.log(results);
                 return res.send(results);
             });
         });
@@ -884,10 +805,7 @@ module.exports = {
      * Отпуска из списка пересечений
      */
     getIntersections: function (req, res) {
-        //console.log('INTERSECTIO:', req.param('id'));
         let userID = (req.param('id')) ? req.param('id') : req.session.me;
-        //(req.param('id')) ? res.ok(req.param('id')) : res.ok(req.session.me);
-        //console.log('IDDD:', userID);
         User.findOne({id: userID})
             .populate('intersections')
             .populate('vacations')
@@ -896,22 +814,15 @@ module.exports = {
                 if (err) return res.serverError(err);
                 if (!user) return res.badRequest();
                 if (!user.intersections.length) return res.ok();
-                //console.log('GETTT', user.getShortName());
-                //return res.ok(user.intersections);
                 let ar = [];
                 _.forEach(user.intersections, function (val, key) {
                     ar.push(val.id);
                 });
-                //console.log('user.intersections', user.intersections);
-                //console.log('ar', ar);
                 Vacation.find({where: {owner: ar}}, {sort: 'from'})
                     .populate('furlough')
                     .populate('owner', {sort: 'lastName'})
                     .exec((err, vacationsFind) => {
                         if (err) return res.serverError(err);
-
-                        //console.log('RESPONSE: ', vacationsFind);
-
                         res.ok(vacationsFind);
                     });
             });
@@ -936,9 +847,7 @@ module.exports = {
             //    ]}
             //    }
             //]).pretty();
-            // console.log('FROM:', req.param('from'));
-            // console.log('TO:', req.param('to'));
-            // console.log('OWNER:', req.param('owner')); //
+
             collection.aggregate(
                 [
                     {
@@ -953,7 +862,6 @@ module.exports = {
                 ]
             ).toArray(function (err, results) {
                 if (err) return res.serverError(err);
-                //console.log(results);
                 return res.send(results);
             });
         });
@@ -983,6 +891,29 @@ module.exports = {
     ,
 
     /**
+     * Кол-во дней оставшихся по годам на отпуск
+     */
+    getDaysToYears: function (req, res) {
+        // db.vacation.aggregate([{$match:{$and:[{from:{$gte: ISODate("2018-01-01")}},{from:{$lt: ISODate("2019-01-01")}},{action: {$eq: true}}, {owner:ObjectId('58a461e66723246b6c2bc641')}]}}, {$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}}, { $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
+        Vacation.native(function (err, collection) {
+            if (err) return res.serverError(err);
+            console.log('BODY', req.param('year'));
+//             collection.aggregate([{$match:{owner:ObjectId(req.param('owner')),action:true}},{$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}},{ $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
+            collection.aggregate([{$match: {$and: [{from: {$gte: new Date(moment(req.param('year')).startOf("year"))}}, {from: {$lt: new Date(moment(req.param('year'),).endOf("year"))}}, {action: {$eq: true}}, {owner: ObjectId(req.param('owner'))}]}}, {
+                $group: {
+                    '_id': '$owner',
+                    selected: {$sum: '$daysSelectHoliday'}
+                }
+            }, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
+                .toArray(function (err, results) {
+                    if (err) return res.serverError(err);
+                    res.send(results);
+                });
+        });
+    },
+
+
+    /**
      * Чат отпуска
      * @param req
      * @param res
@@ -1008,16 +939,6 @@ module.exports = {
 
 
     chat: function (req, res) {
-        console.log(' vacation', req.param('id'));
-        console.log(' message', req.param('message'));
-        console.log('sender me', req.session.me);
-        console.log('REQ me', req.session);
-        var values = req.allParams();
-        console.log('REQ host', values);
-        console.log('REQ host', req.host);
-        console.log('REQ .subdomains', req.subdomains);
-        console.log('REQ .body', req.body);
-        console.log('LENGTH MESSAGE:', req.param('message').length);
         if (req.param('message').length > 900) {
             return res.badRequest('Сообщение слишком длинное.');
         }
@@ -1028,8 +949,8 @@ module.exports = {
 
 
         User.findOne({
-                id: req.session.me
-            })
+            id: req.session.me
+        })
             .exec(function (err, foundUser) {
                 if (err) return res.negotiate(err);
                 if (!foundUser) return res.notFound();
@@ -1068,7 +989,7 @@ module.exports = {
                     // createdChat.id = req.param('id');
                     sails.sockets.broadcast('vacation', 'badges-vacation', {
                         badges: [createdChat],
-                        timeUpdate:createdChat.updatedAt,
+                        timeUpdate: createdChat.updatedAt,
                         action: 'новое сообщение',
                         shortName: foundUser.getShortName(),
                         fullName: foundUser.getFullName(),
@@ -1099,7 +1020,6 @@ module.exports = {
                         '<p>' + req.param('message') + '</p>' +
                         '<p><a href="' + sails.config.appUrl.http + '/admin/vacations/edit/' + req.param('id') + '">перейти в чат</a></p>'
                     };
-                    console.log('OBJECT CHAT:', obj);
                     EmailService.sender(options);
 
                     return res.ok();
@@ -1184,7 +1104,6 @@ module.exports = {
          * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
          *
          *  io.socket.on('hello', function (broadcastedData){
-         *  console.log(data.howdy);
          *  // => 'hi there!'
          *  }
          */
@@ -1238,7 +1157,6 @@ module.exports = {
          * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
          *
          *  io.socket.on('hello', function (broadcastedData){
-         *  console.log(data.howdy);
          *  // => 'hi there!'
          *  }
          */

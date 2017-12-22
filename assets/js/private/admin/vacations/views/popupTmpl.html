@@ -1,6 +1,7 @@
 <h5><em>События</em></h5>
 <div class="dialog">
     <div class="list-group" ng-repeat="bg in bdgs">
+       <!-- Д р у г и е  с о о б щ е н и я -->
         <a ng-if="!bg.vacationId" type="button" ui-sref="home.admin.vacations.edit({ vacationId: bg.badges[0].id })"
            class="list-group-item">
             <span class="pull-right">
@@ -11,20 +12,10 @@
 
             </span>
             <img ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp; {{bg.badges[0].name}} |
-            {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
+            {{bg.badges[0].daysSelectHoliday}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
         </a>
 
-        <!--Сообщения чата-->
-        <!--<a ng-if="bg.vacationId" type="button" ui-sref="home.admin.vacations.edit({ vacationId: bg.vacationId })" class="list-group-item">
-            &lt;!&ndash;<span class="pull-right">
-                <span class="glyphicon" aria-hidden="true" title="{{bg.action}}"
-                  ng-class="{'glyphicon-pencil':(bg.action==='обновлён'),'glyphicon-envelope':(bg.action==='рассылка закончена'),'glyphicon-ok':(bg.action==='создан'),'glyphicon-trash':(bg.action==='удалён'),'text-danger':(bg.action==='удалён'),'text-success':(bg.action==='создан | рассылка закончена'),'text-primary':(bg.action==='обновлён')}"></span>
-                <span title="{{bg.action}}" class="fa " ng-class="{'fa-paper-plane-o':(bg.action==='новое сообщение')}" aria-hidden="true"></span>
-
-            </span>
-            <img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo events">
-            &nbsp;   {{bg.badges[0].name}} <br> <small>{{bg.getTime()}}</small>&ndash;&gt;
-        </a>-->
+        <!-- С о о б щ е н и я  ч а т а -->
         <div ng-if="bg.vacationId" class="media list-group-item">
             <div class="media-left media-middle">
                 <a ui-sref="home.admin.vacations.edit({ vacationId: bg.vacationId })">
@@ -36,16 +27,16 @@
                     <strong>{{bg.fi}}</strong>
                     <small class="time">{{bg.action}}</small>
                     <br>
-                        <span>
-                        {{bg.badges[0].name.substr(0, 108)}} <span ng-if="bg.badges[0].name.length > 108">
-                            <a ui-sref="home.admin.vacations.edit({ vacationId: bg.vacationId })">...</a>
-                        </span>
+                        {{bg.badges[0].name.substr(0, 108)}}
+                            <span ng-if="bg.badges[0].name.length > 108">
+                                <a ui-sref="home.admin.vacations.edit({ vacationId: bg.vacationId })">...</a>
+                            </span>
                         <br>
-                            <abbr class="time">
+                            <small class="time">
                                 <i title="Доставлено" class="fa " ng-class="{'fa-check':(bg.action==='новое сообщение')}"
                                    aria-hidden="true"></i>
                                 {{bg.getTime()}}
-                            </abbr>
+                            </small>
                 </p>
 
             </div>

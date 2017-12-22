@@ -26,8 +26,8 @@ module.exports.routes = {
      *                 JSON API ENDPOINTS                        *
      *************************************************************/
 
-     'PUT /login': 'UserController.loginLDAP',
-    //'PUT /login': 'UserController.login',
+     // 'PUT /login': 'UserController.loginLDAP',
+    'PUT /login': 'UserController.login',
     'GET /logout': 'PageController.logout',
     'POST /logout': 'UserController.logout',
     // 'GET /mail/send': 'MailController.send',
@@ -118,6 +118,7 @@ module.exports.routes = {
     'GET /vacation/getYears': 'VacationController.getYears',
     'GET /vacation/get-intersections/:id': 'VacationController.getIntersections',
     'GET /vacation/get-intersections': 'VacationController.getIntersections',
+    'GET /vacation/get-days-to-years': 'VacationController.getDaysToYears',
     'POST /vacation/get-intersections-user': 'VacationController.getIntersectionsUser',
 
     'POST /vacation/:id/chat': 'VacationController.chat',
@@ -145,6 +146,7 @@ module.exports.routes = {
      */
     'PUT /schedule/update-rows': 'ScheduleController.updateDefaultRows',
     'GET /schedule/max-year': 'ScheduleController.maxYear',
+    'GET /schedule/min-year': 'ScheduleController.minYear',
 
     //'POST /schedule/:id/chat':          'ScheduleController.chat',
     //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',

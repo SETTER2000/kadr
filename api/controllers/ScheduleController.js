@@ -485,13 +485,29 @@ module.exports = {
      */
     maxYear: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        Schedule.find({sort: 'year DESC', limit: 1}).exec((err, findOne)=> {
+        Schedule.find({sort: 'year DESC',  action:true,limit: 1}).exec((err, findOne)=> {
             "use strict";
             if (err) res.serverError(err);
             console.log('findOne', findOne);
             //sails.sockets.broadcast('schedule', 'hello', {howdy: {name:findOne[0].year}}, req);
             res.ok(findOne[0]);
 
+        });
+    },
+
+    /**
+     * Возвращает минимальный номер года
+     * на который есть график отпусков
+     * @param req
+     * @param res
+     */
+    minYear: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        Schedule.find({sort: 'year', action:true, limit: 1}).exec((err, findOne)=> {
+            "use strict";
+            if (err) res.serverError(err);
+            console.log('findOne', findOne);
+            res.ok(findOne[0]);
         });
     },
 

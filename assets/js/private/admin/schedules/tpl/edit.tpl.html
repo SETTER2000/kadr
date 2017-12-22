@@ -61,9 +61,14 @@
 
                             <div ng-if="(me.admin || me.kadr)" class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-if="((item.status ==='Проект') || me.admin)" ng-model="item.action">
-                                    <input type="checkbox" ng-if="(item.status !=='Проект' && !me.admin)" disabled ng-model="item.action">
-                                    Активность
+                                    <!--<input type="checkbox" ng-if="((item.status ==='Проект') || me.admin)" ng-model="item.action">-->
+                                    <!--<input type="checkbox" ng-if="(item.status !=='Проект' && !me.admin)" disabled ng-model="item.action">-->
+
+                                <md-switch ng-model="item.action" aria-label="Switch 1">
+                                   <span ng-if="item.action">Активность</span>
+                                   <span ng-if="!item.action">Не активен</span>
+                                </md-switch>
+
                                 </label>
                             </div>
 
