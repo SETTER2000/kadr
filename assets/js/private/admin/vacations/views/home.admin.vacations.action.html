@@ -48,7 +48,9 @@
         <td class="text-center">
             <div ng-if="item.getIntersec()">
                 <a class="position" href="{{item.getEditUrl(item.id)}}">
-                    <span class="glyphicon glyphicon-ok "></span> +{{item.getIntersec().length}}
+                    <!--<span class="glyphicon glyphicon-ok "></span>-->
+                    <i class="fa fa-random" aria-hidden="true"></i>
+                    +{{item.getIntersec().length}}
                 </a>
                 <!--{{item.getIntersec() | json}}-->
             </div>

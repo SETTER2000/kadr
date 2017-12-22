@@ -21,6 +21,9 @@
                     <span class="glyphicon glyphicon-trash"></span> Удалить
                 </button>
 
+                <button ng-show="edit" ui-sref="home.admin.vacations.create" type="button" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span> Добавить
+                </button>
                 <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
                     <span class="glyphicon glyphicon-check"></span> Сохранить
                 </button>
@@ -97,7 +100,7 @@
 
                                     <!-- List group -->
                                     <ul class="list-group">
-                                        <li class="list-group-item new"><span class="badge new" ng-class="{'text-danger':(remains<0)}">{{remains}}</span>Осталось в этом году</li>
+                                        <li class="list-group-item new"><span class="badge new" ng-class="{'text-danger':(remains<0)}">{{remains}}</span>Осталось в {{me.interfaces[0].year}} году</li>
                                         <li class="list-group-item new"><span class="badge new">0</span>Отгулы</li>
                                         <li class="list-group-item new"><span class="badge new">0</span>Осталось в следующем году</li>
 

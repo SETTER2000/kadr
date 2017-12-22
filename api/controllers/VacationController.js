@@ -157,7 +157,7 @@ module.exports = {
                      * Проще сказать, если отпуску разрешено пересекаться с уже созданными отпусками, то
                      * сообщение о пересечении не выводится пользователю и отпуск добавляется в БД, ну и наоборот.
                      */
-                    // Выбираем все типы отпусков которым не разрешено совпадение
+                        // Выбираем все типы отпусков которым не разрешено совпадение
                     Furlough.find({fixIntersec: false}).exec((err, findFurlough) => {
                         if (err) return res.serverError(err);
                         //if (findFurlough.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
@@ -182,16 +182,16 @@ module.exports = {
                              * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                              */
                             collection.aggregate([
-                                {
-                                    $match: {
-                                        $or: [
-                                            {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
-                                            {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
-                                            {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
-                                        ]
+                                    {
+                                        $match: {
+                                            $or: [
+                                                {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}]},
+                                                {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}]},
+                                                {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}]}
+                                            ]
+                                        }
                                     }
-                                }
-                            ])
+                                ])
                                 .toArray(function (err, results) {
                                     if (err) return res.serverError(err);
 
@@ -247,7 +247,7 @@ module.exports = {
                                                 if (_.isArray(findUser.matchings) && (findUser.matchings.length > 0)) {
                                                     let a = [];
                                                     _.forEach(findUser.matchings, function (val, key) {
-                                                        console.log('EMAIl:', val.email);
+                                                        //console.log('EMAIl:', val.email);
                                                         a.push(val.email);
                                                     });
                                                     strEmail = a.join(',');
@@ -260,7 +260,7 @@ module.exports = {
                                                         if (err) return res.negotiate(err);
 
                                                         strEmail = (strEmail) ? strEmail : '';
-                                                        console.log('Согласующие:', strEmail);
+                                                        //console.log('Согласующие:', strEmail);
                                                         let options = {
                                                             to: strEmail, // Кому: можно несколько получателей указать через запятую
                                                             subject: ' ✔ ' + obj.section + ' создан! ' + findUser.getFullName(), // Тема письма
@@ -271,7 +271,7 @@ module.exports = {
                                                             '<p> C ' + moment(obj.from).format('LLLL') + ' по ' + moment(obj.to).format('LLLL') + '</p>' +
                                                             '<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
                                                         };
-                                                        EmailService.sender(options);
+                                                        if (obj.action) EmailService.sender(options);
                                                         sails.sockets.broadcast('vacation', 'badges-vacation', {
                                                             badges: [createVacation],
                                                             action: 'создан',
@@ -351,16 +351,16 @@ module.exports = {
                      * начало отпуска больше входящему началу отпуска и конец отпуска меньше входящему концу отпуска
                      */
                     collection.aggregate([
-                        {
-                            $match: {
-                                $or: [
-                                    {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
-                                    {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
-                                    {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
-                                ]
+                            {
+                                $match: {
+                                    $or: [
+                                        {$and: [{from: {$lte: obj.from}}, {to: {$gte: obj.from}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                        {$and: [{from: {$lte: obj.to}}, {to: {$gte: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]},
+                                        {$and: [{from: {$gt: obj.from}}, {to: {$lt: obj.to}}, {owner: ObjectId(obj.owner)}, {_id: {$ne: ObjectId(req.param('id'))}}]}
+                                    ]
+                                }
                             }
-                        }
-                    ])
+                        ])
                         .toArray(function (err, results) {
                             if (err) return res.serverError(err);
                             if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
@@ -693,7 +693,7 @@ module.exports = {
                      * Кол-во отпускных дней пренадлежащих только году интерфейса
                      * @type {number}
                      */
-                    //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
+                        //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
 
                     obj.holidaysMin = holidaysMin;
                     obj.holidays = holidays;
@@ -898,13 +898,14 @@ module.exports = {
         Vacation.native(function (err, collection) {
             if (err) return res.serverError(err);
             console.log('BODY', req.param('year'));
+            //console.log('MOMENT YEAR',new Date(moment(req.param('year'),['YYYY'])));
 //             collection.aggregate([{$match:{owner:ObjectId(req.param('owner')),action:true}},{$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}},{ $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
-            collection.aggregate([{$match: {$and: [{from: {$gte: new Date(moment(req.param('year')).startOf("year"))}}, {from: {$lt: new Date(moment(req.param('year'),).endOf("year"))}}, {action: {$eq: true}}, {owner: ObjectId(req.param('owner'))}]}}, {
-                $group: {
-                    '_id': '$owner',
-                    selected: {$sum: '$daysSelectHoliday'}
-                }
-            }, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
+            collection.aggregate([{$match: {$and: [{from: {$gte: new Date(moment(req.param('year'), ['YYYY']))}}, {from: {$lt: new Date(moment(req.param('year'), ['YYYY']).endOf("year"))}}, {action: {$eq: true}}, {owner: ObjectId(req.param('owner'))}]}}, {
+                    $group: {
+                        '_id': '$owner',
+                        selected: {$sum: '$daysSelectHoliday'}
+                    }
+                }, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
                 .toArray(function (err, results) {
                     if (err) return res.serverError(err);
                     res.send(results);
@@ -933,7 +934,7 @@ module.exports = {
         // Присоединитесь к комнате отпуска для анимации ввода
         sails.sockets.join(req, 'vacation' + req.param('id'));
         // Vacation.watch(req);
-        console.log('Connect chat ' + 'vacation' + req.param('id'));
+        //console.log('Connect chat ' + 'vacation' + req.param('id'));
         return res.ok();
     },
 
@@ -949,8 +950,8 @@ module.exports = {
 
 
         User.findOne({
-            id: req.session.me
-        })
+                id: req.session.me
+            })
             .exec(function (err, foundUser) {
                 if (err) return res.negotiate(err);
                 if (!foundUser) return res.notFound();
@@ -1005,7 +1006,7 @@ module.exports = {
                     if (_.isArray(foundUser.matchings) && (foundUser.matchings.length > 0)) {
                         let a = [];
                         _.forEach(foundUser.matchings, function (val, key) {
-                            console.log('EMAIl:', val.email);
+                            //console.log('EMAIl:', val.email);
                             a.push(val.email);
                         });
                         strEmail = a.join(',');

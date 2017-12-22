@@ -466,18 +466,17 @@ angular.module('VacationModule')
             let dayOff = Working.getDayOff(); //праздники и выходные
             let holiday = Working.getHoliday(); // праздник
             let celebration = Working.getCelebration(); // пораньше на час
-         $scope.yearGet =   ($scope.edit && $scope.item) ? $scope.item.from : $scope.me.interfaces[0].year;
-
+            $scope.yearGet = ($scope.edit && $scope.item) ? $scope.item.from : $scope.me.interfaces[0].year;
 
 
             $scope.getDaysYear = function (ownerId, year) {
                 $http.get('/vacation/get-days-to-years?owner=' + ownerId + '&year=' + year)
                     .then(function onSuccess(sailsResponse) {
-                        console.log('***************sailsResponse: ', sailsResponse.data);
+                        //console.log('***************sailsResponse: ', sailsResponse.data);
 
-                        $scope.remains = 0;
+                        $scope.remains = $scope.remainsDub = 28;
                         if (sailsResponse.data.length > 0) {
-                            return $scope.remains = sailsResponse.data[0].remains;
+                            return $scope.remains = $scope.remainsDub = sailsResponse.data[0].remains;
                         }
 
 
@@ -491,7 +490,24 @@ angular.module('VacationModule')
             };
             $scope.$watch('item.owner.id', function (ownerId) {
                 if (ownerId) {
-                    $scope.getDaysYear(ownerId,$scope.yearGet);
+                    $scope.getDaysYear(ownerId, $scope.yearFrom);
+                }
+            });
+
+            $scope.$watch('minDateConfig', function (val, old) {
+                console.log('NEW', val);
+                console.log('OLD', old);
+                if (val) {
+                    //$scope.getDaysYear(val, $scope.yearFrom);
+                }
+            });
+            $scope.$watch('me.interfaces', function (val, old) {
+                console.log('NEW interfaces', val[0].year);
+                console.log('OLD interfaces', old[0].year);
+                if (val) {
+
+                    $scope.interFa = val[0].year;
+
                 }
             });
 
@@ -505,25 +521,35 @@ angular.module('VacationModule')
                 // minDate: 'today', // минимальная дата
                 allowInput: true, // ручной ввод даты
                 inline: true, // календарь открыт
-                currentYear: $scope.me.interfaces[0].year,
+                //currentYear: $scope.me.interfaces[0].year,
                 // Обработчик события на изменения даты
                 //onChange: function(selectedDates, dateStr, instance) {
                 //    console.log('selectedDates',selectedDates);
                 //},
                 // defaultDate : ['2018-01-01','2019-12-31'],
                 onYearChange: function (selectedDates, dateStr, instance) {
-                    $scope.getDaysYear($scope.item.owner.id, instance.currentYear);
-                    $scope.$apply();
+                    console.log('onYearChange', instance.currentYear);
+                    if ($scope.item.owner && instance.currentYear) {
+                        $scope.getDaysYear($scope.item.owner.id, instance.currentYear);
+                        $scope.$apply();
+                    }
                 },
 
                 // onReady запускается после того, как календарь находится в готовом состоянии
                 onReady: [
-                    // function (selectedDates, dateStr, instance) {
-                    // console.log('****************--' , instance);
-                    //     // instance.defaultDate = ['2018-01-01','2019-12-31'];
-                    // }
+                    //function (selectedDates, dateStr, instance){
+                    //    let yr = $scope.me.interfaces[0].year;
+                    //    console.log('INTERSEC', yr);
+                    //    if (!$scope.edit) instance.setDate([2018, 2018], true, "Y");
+                    //
+                    //},
+
                     function (selectedDates, dateStr, instance) {
                         console.log('****************--', instance);
+                        let yr = moment($scope.me.interfaces[0].year, ['YYYYY']).format('YYYY-MM-DD');
+                        console.log('INTERSEC', yr);
+                        if (!$scope.edit) instance.setDate([yr, yr], true, "Y-m-d");
+
                         /**
                          *  Устанавливаем на календарь максимально доступный год,
                          *  который запланирован в Графике отпусков
@@ -532,31 +558,23 @@ angular.module('VacationModule')
                             .then(function onSuccess(sailsResponse) {
                                 // console.log('***************sailsResponse: ', sailsResponse.data.year);
                                 instance.config.maxDate = moment(sailsResponse.data.year, ['YYYY']).endOf("year").format('DD-MM-YYYY');
+
                             })
                             .catch(function onError(sailsResponse) {
                                 //console.log(sailsResponse);
                             })
                             .finally(function eitherWay() {
                                 $scope.userList.loading = false;
-                            });
 
-                        // $scope.schedules = Schedules.query({}, function (schedules) {
-                        //     let arr = [];
-                        //     schedules.forEach(function (obj) {
-                        //         if(obj.action) arr.push(obj);
-                        //     });
-                        //     instance.config.maxDate = moment(arr[arr.length-1].year, ['YYYY']).endOf("year").format('DD-MM-YYYY');
-                        //     instance.config.minDate = $scope.curentYear=moment(arr[0].year, ['YYYY']).startOf("year").format('DD-MM-YYYY');
-                        // }, function (err) {
-                        //     toastr.error(err.data.details, 'Ошибка-773! ' + err.data.message);
-                        // });
+                            });
                     },
                     function (selectedDates, dateStr, instance) {
                         $http.get('/schedule/min-year')
                             .then(function onSuccess(sailsResponse) {
-                                let u = sailsResponse.data.year;
-                                instance.config.minDate = moment(sailsResponse.data.year, ['YYYY']).startOf("year").format('DD-MM-YYYY');
-                                instance.currentYear = u;
+
+                                instance.config.minDate = $scope.minDateConfig = moment(sailsResponse.data.year, ['YYYY']).startOf("year").format('DD-MM-YYYY');
+
+                                console.log('MIN DATE:', instance.config.minDate);
                             })
                             .catch(function onError(sailsResponse) {
                                 //console.log(sailsResponse);
@@ -564,30 +582,25 @@ angular.module('VacationModule')
                             .finally(function eitherWay() {
                                 $scope.userList.loading = false;
                             });
-                    },
-                    // function (selectedDates, dateStr, instance) {
-                    //     return $http.get('/schedule/min-year')
-                    //         .then(function success(sailsResponse) {
-                    //             console.log('****************', sailsResponse.data.year);
-                    //             instance.currentYear = 2018;
-                    //         })
-                    //         .catch(function onError(sailsResponse) {
-                    //             //console.log(sailsResponse);
-                    //         })
-                    //         .finally(function eitherWay() {
-                    //         });
-                    //
-                    // }
+                    }
                 ],
+                onDayCreate:[
+                    function (dObj, dStr, fp, dayElem) {
+                        if (!$scope.sArr.length) return console.log('NNNNNNNNNNNNNNNNNNNNN');
+                        $scope.sArr.forEach(function (v, k, arr) {
+                            if (moment(arr[k].from).isSame(dayElem.dateObj) || moment(arr[k].to).isSame(dayElem.dateObj) || moment(dayElem.dateObj).isBetween(arr[k].from, arr[k].to)) {
+                                //dayElem.style.backgroundImage = '/images/whirlpool.png';
+                                //dayElem.style.backgroundImage = "url('/images/45degreee_fabric_@2X.png')";
+                                //dayElem.style.backgroundImage = "url('/images/whirlpool.png')";
+                                dayElem.style.backgroundImage = "url('/images/leather_1_@2X.png')";
+                                dayElem.style.color = "#393939";
+                            }
 
-                // Обработчик события на изменения года
-                // onYearChange: function (selectedDates, dateStr, instance) {
-                //     //console.log('CHANGE1', instance);
-                //     $scope.yearFrom = instance.currentYear;
-                //     //console.log('ESS',  $scope.yearFrom);
-                //     $scope.$apply();
-                // },
-                onDayCreate: function (dObj, dStr, fp, dayElem) {
+                        });
+
+                    },
+
+                    function (dObj, dStr, fp, dayElem) {
                     dayOff.forEach(function (v, k, arr) {
                         if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
                             dayElem.innerHTML += "<span   class='event busy'></span>";
@@ -603,6 +616,12 @@ angular.module('VacationModule')
                             dayElem.innerHTML += "<span title='Праздник'  class='event busy holiday'></span>";
                         }
                     });
+                }],
+
+                onChange: function (dObj, dStr, fp, dayElem) {
+                    //console.log('dObj', dObj);
+                    let f = Working.getCountDay(dObj);
+                    if (f && $scope.remains)  $scope.remains = ($scope.remainsDub - f);
                 },
                 //disable: [
                 //    function(date) {
@@ -652,6 +671,7 @@ angular.module('VacationModule')
              */
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
+
                 /**
                  * Кол-во выбраных дней
                  */
@@ -724,7 +744,6 @@ angular.module('VacationModule')
             };
 
             $scope.$watch('item.owner.id', function (value, old) {
-
                 $scope.getIntersections(value);
                 if (value) {
                     Users.get({id: value}, function (user) {
@@ -749,16 +768,38 @@ angular.module('VacationModule')
                 $http.get(query).then(function (response) {
                     $scope.intersection = response.data;
                     $scope.datePostSetup($scope.flatpicker);
+                    console.log('-------------RASSSS', $scope.intersection);
                 }, function errorCallback(err) {
                     console.log('ERROR:', err);
                 });
             };
 
             $scope.getIntersections();
+            $scope.sArr = [];
+            $scope.rex = function (arr) {
+
+                if (!angular.isArray(arr)) return arr;
+                if ($scope.flatpicker) console.log('$scope.flatpicker', $scope.flatpicker);
+                arr.forEach(function (v, k, ar) {
+                    //console.log('v.from:',moment(v.from).year());
+                    //console.log('v.from+++:',$scope.interFa);
+                    if (moment(v.from).year() == $scope.interFa) {
+                        //console.log(' NEEEEEEE111', v);
+                        $scope.sArr.push(v);
+                    }
+                });
+                console.log('POP*******OO', $scope.sArr);
+                return $scope.sArr;
+            };
+
+            $scope.$watch('intersection', function (val) {
+                //console.log('$scope.intersection4444444:', val);
+                if (val)  $scope.rex(val);
+            });
 
             $scope.refresh = function () {
                 let item = $scope.item = Vacations.get({id: $stateParams.vacationId}, function (vacations) {
-                        console.log('VACATION ITEM:', vacations);
+                        //console.log('VACATION ITEM:', vacations);
                         $scope.vacations = vacations;
                         $scope.tm = vacations.chats;
                         $scope.chats = $scope.chatTime();
@@ -780,9 +821,7 @@ angular.module('VacationModule')
             };
 
             $scope.delete2 = function (item) {
-                console.log('item', item);
                 item.$delete({id: item.id}, function (success) {
-                    console.log('****!!', success);
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
                     // $location.path("/table");
@@ -799,13 +838,13 @@ angular.module('VacationModule')
 
             $scope.saveEdit = function (item) {
                 $scope.fixTwoWeek();
-                if (!angular.isDefined(item)) toastr.error('Нет объекта для сохранения.', 'Ошибка!');
+                if (!angular.isDefined(item)) return toastr.error('Нет объекта для сохранения.', 'Ошибка!');
                 if (!angular.isDefined(item.name)) return toastr.error('Дата не может быть пустой.', 'Ошибка!');
                 if (!angular.isDefined(item.furlough)) return toastr.error('Тип отпуска не может быть пустой.', 'Ошибка!');
                 item.from = $scope.flatpicker.selectedDates[0];
                 item.to = $scope.flatpicker.selectedDates[1];
                 item.daysSelectHoliday = +$scope.daysSelectHoliday;
-                console.log('XXXXXXXP', $scope.item);
+                if (item.daysSelectHoliday <= 0) return toastr.error('Не корректно выбраны даты отпуска. Возможно выбраны праздничные дни.', 'Ошибка!');
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);

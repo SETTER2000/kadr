@@ -19,7 +19,7 @@ module.exports = {
         // Проверка подключения
         transporter.verify(function (error, success) {
             if (error) {
-                console.log('Ошибка! Не могу подключиться к почтовому серверу.', error);
+                sails.log('Ошибка! Не могу подключиться к почтовому серверу.', error);
                 return false;
             } else {
                 console.log('Подключение к почтовому серверу: Ok!');
@@ -48,7 +48,7 @@ module.exports = {
                 return false;
             }
 
-            console.log('Message sent: %s', info.messageId);
+            //console.log('Message sent: %s', info.messageId);
 
             return done();
 

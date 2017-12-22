@@ -372,8 +372,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                 scope.$watch('defaultRows', function (value, old) {
                     if (value > 0) {
                         scope.defaultRows = value;
-                        console.log('value NEW в дериктиве pagination', value);
-                        console.log('value OLD в дериктиве pagination', old);
                         scope.$emit('defaultRowsTable',{
                             defaultRows:scope.defaultRows
                         });

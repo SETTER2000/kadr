@@ -22,9 +22,7 @@
             //    "hideMethod": "fadeOut"
             //};
 
-            //$rootScope.$on('getAllUsers', function (event, data) {
-            //    console.log('MESSAGqqqddsSSS: ',data); // ‘Some data’
-            //});
+
            $scope.getAllUsers=function(){
               return 222;
            };
@@ -47,7 +45,7 @@
                     });
                 };
                 f(root);
-                console.log('WATCHERS.LENGTH', watchers.length);
+
             })();
             /**
              * PAGINATION
@@ -59,7 +57,6 @@
             //    //return $scope.wind = (!$scope.wind);
             //};
             $scope.$on('defaultRowsTable', function (event,data) {
-                console.log('defaultRowsTable',data); // Данные, которые нам прислали
                 return  $scope.defaultRows =  data.defaultRows;
             });
 
@@ -70,68 +67,20 @@
             //$scope.defaultRows =6;
             $scope.limitRows = [2, 3, 5, 7,10, 15, 30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
-            console.log('defaultRows:::', $scope.defaultRows);
             $scope.$watch('defaultRows', function (value,old) {
                 $http.put('/user/update-rows',{
                         defaultRows: $scope.defaultRows
                     })
                     .then(function onSuccess(sailsResponse) {
-                        console.log('sailsResponse in ListController: ',sailsResponse.data[0].defaultRows);
                          $scope.defaultRows = $scope.me.defaultRows=sailsResponse.data[0].defaultRows;
-                   
-                        // $scope.userProfile.properties.gravatarURL = sailsResponse.data.gravatarURL;
-                        // window.location = '#/profile/' + $scope.editProfile.properties.id;
-                        //window.location = '/profile';
-                        //toastr.success(info.passChange);
-                        //$scope.editProfile.loading = false;
                     })
                     .catch(function onError(sailsResponse) {
-                        // console.log('sailsresponse: ', sailsResponse)
-                        // Otherwise, display generic error if the error is unrecognized.
-                        //$scope.editProfile.changePassword.errorMsg = $scope.unexpected + (sailsResponse.data || sailsResponse.status);
                         toastr.error('ERRDDD!',$scope.editProfile.changePassword.errorMsg);
                     })
                     .finally(function eitherWay() {
                         $scope.editProfile.loading = false;
                     });
-                //console.log('value NEW', value);
-                //console.log('value OLD', old);
-                //$scope.countDefaultRows();
             });
-
-            //$scope.countDefaultRows = function () {
-            //
-            //  $http.put('/user/update-rows',{
-            //            defaultRows: $scope.defaultRows
-            //        })
-            //        .then(function onSuccess(sailsResponse) {
-            //            console.log('sailsResponse in ListController: ',sailsResponse.data[0].defaultRows);
-            //           return $scope.defaultRows = sailsResponse.data[0].defaultRows;
-            //            // $scope.userProfile.properties.gravatarURL = sailsResponse.data.gravatarURL;
-            //            // window.location = '#/profile/' + $scope.editProfile.properties.id;
-            //            //window.location = '/profile';
-            //            //toastr.success(info.passChange);
-            //            //$scope.editProfile.loading = false;
-            //        })
-            //        .catch(function onError(sailsResponse) {
-            //            // console.log('sailsresponse: ', sailsResponse)
-            //            // Otherwise, display generic error if the error is unrecognized.
-            //            //$scope.editProfile.changePassword.errorMsg = $scope.unexpected + (sailsResponse.data || sailsResponse.status);
-            //            toastr.error('ERRDDD!',$scope.editProfile.changePassword.errorMsg);
-            //        })
-            //        .finally(function eitherWay() {
-            //            $scope.editProfile.loading = false;
-            //        });
-            //};
-
-            //$scope.fioArea = 'ФИО';
-            //$scope.drArea = 'ДР11';
-            //$scope.loginArea = 'Логин';
-            //$scope.emailArea = 'Email';
-            //$scope.updatedAtArea = 'Update';
-            //$scope.roomArea = 'Комната';
-            //$scope.departmentArea = 'Отдел';
-            //$scope.positionArea = 'Должность';
 
             $scope.nameHeader = {
                 fioArea: 'ФИО',
@@ -168,25 +117,6 @@
                 size: false
             };
 
-            //$scope.days = moment.duration(2).days();
-            //$scope.hours = moment.duration(2).hours();
-            //$scope.month = moment.duration().months();
-            //$scope.months = moment.duration().asMonths();
-            //$scope.seconds = moment.duration(1000).seconds();
-            //var a = moment('2016-01-21 09:38:00', ['DD.MM.YYYY HH:mm:ss', 'YYYY-MM-DD HH:mm:ss']);
-            //var b = moment('2016-01-21 13:54:00', ['DD.MM.YYYY HH:mm:ss', 'YYYY-MM-DD HH:mm:ss']);
-            //$scope.diff = b.diff(a, 'm');
-            //$scope.exampleDate = moment().hour(8).minute(0).second(0).toDate();
-            //$scope.local = moment().local().format("ddd, hA");
-            //$scope.local = moment().local().format("dddd, MMMM Do YYYY, h:mm:ss a");
-            //$scope.localTime = moment().local().format();
-            //$scope.localTime = moment.parseZone('2016-05-03T22:15:01+02:00').local().format();
-            //$scope.localTime = moment().utc().local().hours();
-            //var start = moment([2007, 0, 5]);
-            //var end = moment([2007, 0, 10]);
-            //end.from(start);       // "in 5 days"
-            //$scope.end = end.from(start, true); // "5 days"
-
             if (moment().isLeapYear()) {
                 $scope.yearLeap = 'Да!';
             } else {
@@ -200,18 +130,6 @@
                 time: new Date()
             };
 
-            //$scope.calendar = moment().calendar(null, {
-            //    sameDay: function (now) {
-            //        if (this.isBefore(now)) {
-            //            return '[Случится сегодня]';
-            //        } else {
-            //            return '[Произошло сегодня]';
-            //        }
-            //        /* ... */
-            //    }
-            //});
-
-
             /**
              * Фильтры для каждой выбираемой страницы
              *
@@ -224,13 +142,9 @@
             };
 
             $scope.$watch('modeSelect.value', function (value, old) {
-                console.log('modeSelect OLD', old);
-                console.log('modeSelect NEW', value);
                 $scope.ftObj = $scope.filterTemplate[value];
             });
             $scope.$watch('searchText', function (value, old) {
-                console.log('OLD', old);
-                console.log('NEW', value);
                 $scope.searchText = value;
                 // $scope.refresh();
             });

@@ -62,7 +62,7 @@ module.exports = {
                                         if (err) return res.serverError(err);
                                         sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
                                         sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'рассылка закончена'});
-                                        console.log('UPDATE OK! worked:', upd);
+                                        console.log('UPDATE OK!');
                                     });
                                 });
                             });
@@ -77,7 +77,7 @@ module.exports = {
                                     if (err) return res.serverError(err);
                                     sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
                                     sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'повреждён'});
-                                    return console.log('UPDATE OK!:', upd);
+                                    return console.log('UPDATE OK+!');
                                 });
                             });
                         } else {
