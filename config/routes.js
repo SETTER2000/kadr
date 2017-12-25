@@ -119,7 +119,9 @@ module.exports.routes = {
     'GET /vacation/get-intersections/:id': 'VacationController.getIntersections',
     'GET /vacation/get-intersections': 'VacationController.getIntersections',
     'GET /vacation/get-days-to-years': 'VacationController.getDaysToYears',
+    'GET /vacation/dub/:ownerId/:furloughId': 'VacationController.createDub',
     'POST /vacation/get-intersections-user': 'VacationController.getIntersectionsUser',
+
 
     'POST /vacation/:id/chat': 'VacationController.chat',
     'PUT  /vacation/:id/join': 'VacationController.joinChat',
@@ -147,6 +149,7 @@ module.exports.routes = {
     'PUT /schedule/update-rows': 'ScheduleController.updateDefaultRows',
     'GET /schedule/max-year': 'ScheduleController.maxYear',
     'GET /schedule/min-year': 'ScheduleController.minYear',
+    'GET /schedule/to-years': 'ScheduleController.getHolidaysToYears',
 
     //'POST /schedule/:id/chat':          'ScheduleController.chat',
     //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',
@@ -240,6 +243,7 @@ module.exports.routes = {
     'DELETE /vacations/:id': 'VacationController.destroy', // удалить
     'PUT /vacations/:id': 'VacationController.update', // обновить
 
+
     /**
      * Schedule
      */
@@ -323,6 +327,7 @@ module.exports.routes = {
     'GET /admin/furloughs/create/': 'PageController.showHomePage',
 
     'GET /admin/vacations/edit/:id': 'PageController.showHomePage',
+    'GET /admin/vacations/create/:ownerId/:furloughId': 'PageController.showHomePage',
     'GET /admin/vacations/create/': 'PageController.showHomePage',
 
 

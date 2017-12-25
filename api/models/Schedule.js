@@ -138,6 +138,7 @@ module.exports = {
         getEditUrl:function () {
             return 'schedules/edit/' + this._id;
         }
+
     }
 };
 

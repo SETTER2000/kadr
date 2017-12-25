@@ -23,9 +23,9 @@
             //};
 
 
-           $scope.getAllUsers=function(){
-              return 222;
-           };
+            $scope.getAllUsers = function () {
+                return 222;
+            };
             /**
              * Просто проверочнпая функция, которая
              * проверяет кол-во наблюдателей (watchers) в модуле.
@@ -50,32 +50,30 @@
             /**
              * PAGINATION
              */
-            //$scope.handshake = function () {
-            //    $rootScope.$broadcast('defaultRowsTable',{
-            //        item:'sssss'
-            //    });
-            //    //return $scope.wind = (!$scope.wind);
-            //};
-            $scope.$on('defaultRowsTable', function (event,data) {
-                return  $scope.defaultRows =  data.defaultRows;
+                //$scope.handshake = function () {
+                //    $rootScope.$broadcast('defaultRowsTable',{
+                //        item:'sssss'
+                //    });
+                //    //return $scope.wind = (!$scope.wind);
+                //};
+            $scope.$on('defaultRowsTable', function (event, data) {
+                return $scope.defaultRows = data.defaultRows;
             });
 
 
-
-
-            $scope.defaultRows = ($scope.me.defaultRows)?$scope.me.defaultRows :15;
+            $scope.defaultRows = ($scope.me.defaultRows) ? $scope.me.defaultRows : 15;
             //$scope.defaultRows =6;
-            $scope.limitRows = [2, 3, 5, 7,10, 15, 30, 50, 70, 100];
+            $scope.limitRows = [2, 3, 5, 7, 10, 15, 30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
-            $scope.$watch('defaultRows', function (value,old) {
-                $http.put('/user/update-rows',{
+            $scope.$watch('defaultRows', function (value, old) {
+                $http.put('/user/update-rows', {
                         defaultRows: $scope.defaultRows
                     })
                     .then(function onSuccess(sailsResponse) {
-                         $scope.defaultRows = $scope.me.defaultRows=sailsResponse.data[0].defaultRows;
+                        $scope.defaultRows = $scope.me.defaultRows = sailsResponse.data[0].defaultRows;
                     })
                     .catch(function onError(sailsResponse) {
-                        toastr.error('ERRDDD!',$scope.editProfile.changePassword.errorMsg);
+                        toastr.error('ERRDDD!', $scope.editProfile.changePassword.errorMsg);
                     })
                     .finally(function eitherWay() {
                         $scope.editProfile.loading = false;

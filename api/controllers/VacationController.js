@@ -195,7 +195,7 @@ module.exports = {
                                 .toArray(function (err, results) {
                                     if (err) return res.serverError(err);
 
-                                    //if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
+                                    if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
                                     /**
                                      * Заполнить поле vacations объектами отпусков с которыми
                                      * пересекается вновь создаваемый отпуск.
@@ -897,7 +897,7 @@ module.exports = {
         // db.vacation.aggregate([{$match:{$and:[{from:{$gte: ISODate("2018-01-01")}},{from:{$lt: ISODate("2019-01-01")}},{action: {$eq: true}}, {owner:ObjectId('58a461e66723246b6c2bc641')}]}}, {$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}}, { $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
         Vacation.native(function (err, collection) {
             if (err) return res.serverError(err);
-            console.log('BODY', req.param('year'));
+            //console.log('BODY', req.param('year'));
             //console.log('MOMENT YEAR',new Date(moment(req.param('year'),['YYYY'])));
 //             collection.aggregate([{$match:{owner:ObjectId(req.param('owner')),action:true}},{$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}},{ $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
             collection.aggregate([{$match: {$and: [{from: {$gte: new Date(moment(req.param('year'), ['YYYY']))}}, {from: {$lt: new Date(moment(req.param('year'), ['YYYY']).endOf("year"))}}, {action: {$eq: true}}, {owner: ObjectId(req.param('owner'))}]}}, {
@@ -912,7 +912,13 @@ module.exports = {
                 });
         });
     },
-
+    createDub: function (req, res) {
+        let obj={
+            owner:{id:req.param('ownerId')},
+            furlough:{id:req.param('furloughId')}
+        };
+        res.ok(obj);
+    },
 
     /**
      * Чат отпуска

@@ -187,24 +187,24 @@ module.exports = {
                 if (!findUser) return res.notFound();
                 Schedule.update(req.param('id'), obj)
                     .populate('whomCreated')
-                    .populate('whomUpdated').exec((err, objEdit) =>{
+                    .populate('whomUpdated').exec((err, objEdit) => {
+                    if (err) return res.negotiate(err);
+                    findUser.save(function (err) {
                         if (err) return res.negotiate(err);
-                        findUser.save(function (err) {
-                            if (err) return res.negotiate(err);
-                            Schedule.find().exec((err, findsSchedule) => {
-                                if (err) return res.serverError(err);
-                                sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule}, req);
-                                sails.sockets.broadcast('schedule', 'badges', {
-                                    badges: objEdit,
-                                    action: 'обновлён',
-                                    shortName: findUser.getShortName(),
-                                    fullName: findUser.getFullName(),
-                                    avatarUrl: findUser.avatarUrl
-                                }, req);
-                                res.ok();
-                            });
+                        Schedule.find().exec((err, findsSchedule) => {
+                            if (err) return res.serverError(err);
+                            sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule}, req);
+                            sails.sockets.broadcast('schedule', 'badges', {
+                                badges: objEdit,
+                                action: 'обновлён',
+                                shortName: findUser.getShortName(),
+                                fullName: findUser.getFullName(),
+                                avatarUrl: findUser.avatarUrl
+                            }, req);
+                            res.ok();
                         });
                     });
+                });
             });
     },
 
@@ -320,7 +320,7 @@ module.exports = {
      */
     maxYear: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        Schedule.find({sort: 'year DESC',  action:true,limit: 1}).exec((err, findOne)=> {
+        Schedule.find({sort: 'year DESC', action: true, limit: 1}).exec((err, findOne)=> {
             "use strict";
             if (err) res.serverError(err);
             res.ok(findOne[0]);
@@ -337,11 +337,43 @@ module.exports = {
      */
     minYear: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        Schedule.find({sort: 'year', action:true, limit: 1}).exec((err, findOne)=> {
+        Schedule.find({sort: 'year', action: true, limit: 1}).exec((err, findOne)=> {
             "use strict";
             if (err) res.serverError(err);
             res.ok(findOne[0]);
         });
+    },
+
+
+    /**
+     * Возвращает кол-во запланированных отпусков
+     */
+    getHolidaysToYears: function (req, res) {
+        Vacation.native(function (err, collection) {
+            if (err) return res.serverError(err);
+            let start = new Date(moment(req.param('year'), ['YYYY']).format('YYYY-MM-DD'));
+            let end = new Date(moment(req.param('year'), ['YYYY']).add(1, 'year').format('YYYY-MM-DD'));
+            let y = 0;
+         collection.aggregate([{$match: {$and: [{from: {$gte: start}}, {from: {$lt: end}}, {action: {$eq: true}}]}}, {
+                    $group: {
+                        _id: "$owner",
+                        cntDs: {$sum: "$daysSelectHoliday"}
+                    }
+                }, {$project: {id: 1, summa: {$cond: {if: {$gte: ["$cntDs", 28]}, then: 1, else: 0}}}}])
+                .toArray(function (err, results) {
+                    if (err) return res.serverError(err);
+                   //return results;
+                    _.forEach(results, function (value, key) {
+                        console.log('numSelected', value.summa);
+                        y += value.summa;
+                    });
+                    //console.log('y', y);
+                    return res.send({sumDays: y});
+                });
+
+        });
+
+
     },
 
 

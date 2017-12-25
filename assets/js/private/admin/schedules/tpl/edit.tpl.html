@@ -137,12 +137,9 @@
                             </label>
                             <!--<br> 0 из {{(items | filter :{fired:false}).length}}-->
                             <div class="form-inline">
+
                                 <div class="form-group">
-                                    <input type="number" ng-disabled="true" class="form-control not-border"
-                                           ng-bind="item.fromQuantity=0" ng-model="item.fromQuantity">
-                                </div>из
-                                <div class="form-group">
-                                         <input type="number" ng-disabled="true" class="form-control not-border"
+                                   <span style="margin:0 20px;"> {{sumDays}} </span>   из       <input type="number" ng-disabled="true" class="form-control not-border"
                                            ng-bind="item.countData=(items | filter :{fired:false}).length" ng-model="item.countData">
                                 </div>
                             </div>

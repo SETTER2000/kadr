@@ -20,9 +20,9 @@ angular.module('ScheduleModule')
                 passDefault: '111111',
                 redirectSelf: 'home.admin.schedules',
                 messageErr: 'Сообщение не установлено!',
-                filedErr: function (nameFiled,text) {
+                filedErr: function (nameFiled, text) {
                     if (!angular.isString(text)) return;
-                    return 'Поле ' + nameFiled + ' - '+text+'!';
+                    return 'Поле ' + nameFiled + ' - ' + text + '!';
                 },
                 ru: 'ru',
                 dateFormat: "d.m.Y",
@@ -52,7 +52,7 @@ angular.module('ScheduleModule')
 
             //$scope.examples = ['settings', 'home', 'options', 'other'];
             $scope.year = moment().get('year');
-            console.log('YEARRRR', $scope.year);
+
             $scope.examples = [
                 {
                     name: '№1',
@@ -89,6 +89,24 @@ angular.module('ScheduleModule')
                 var fn = $parse($scope.expr);
                 $scope.item.start = $scope.timeDate = fn($scope.item);
             };
+
+            $scope.$watch('year', function (val,old) {
+                if(val){
+                    $http.get('/schedule/to-years?year=' + val)
+                        .then(function (data) {
+                            $scope.sumDays = data.data.sumDays;
+                        });
+                }
+            });
+
+            $scope.$watch('schedules', function (val,old) {
+                if(val){
+                    $http.get('/schedule/to-years?year=' + val.year)
+                        .then(function (data) {
+                            $scope.sumDays = data.data.sumDays;
+                        });
+                }
+            });
 
 
             $scope.radioData = [
@@ -142,8 +160,8 @@ angular.module('ScheduleModule')
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
                 //$scope.to = fpItem.selectedDates[1];
-                console.log('DASSS 1', fpItem.selectedDates[0]);
-                console.log('DASSS 2', fpItem.selectedDates[1]);
+                //console.log('DASSS 1', fpItem.selectedDates[0]);
+                //console.log('DASSS 2', fpItem.selectedDates[1]);
                 $scope.item.from = fpItem.selectedDates[0];
                 $scope.item.to = fpItem.selectedDates[1];
                 /**
@@ -232,6 +250,7 @@ angular.module('ScheduleModule')
             $scope.searchTextChange = function (text) {
                 //console.log('SEARCH', text);
             };
+
 
             $scope.selectedItemChange = function (obj) {
                 if (angular.isDefined(obj.email)) {
@@ -451,7 +470,7 @@ angular.module('ScheduleModule')
             $scope.refresh = function () {
                 let item = $scope.item = Schedules.get({id: $stateParams.scheduleId},
                     function (schedules) {
-                        console.log('EDIT SCHEDULE', schedules);
+                        console.log('EDIT SCHEDULE *******', schedules);
                         $scope.flatpicker.setDate(schedules.period);
                         $scope.schedules = schedules;
                     }, function (err) {
@@ -473,7 +492,7 @@ angular.module('ScheduleModule')
             });
             $scope.$watch('item.start', function (value) {
                 if (value) {
-                    if(($scope.item.status === 'Проект' && moment(value,['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
+                    if (($scope.item.status === 'Проект' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
                         toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
                             {
                                 //"closeButton": true,
@@ -493,7 +512,7 @@ angular.module('ScheduleModule')
                             });
                         return;
                     }
-                    if ($scope.item.status !== 'Проект'  || moment(value, ["DD.MM.YYYY HH:mm"]).isValid() || !$scope.item.action) return;
+                    if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY HH:mm"]).isValid() || !$scope.item.action) return;
                     let nm;
 
                     console.log('FORMAT', value);
@@ -533,7 +552,7 @@ angular.module('ScheduleModule')
 
 
             $scope.delete2 = function (item) {
-                item.$delete({id:item.id}, function (success) {
+                item.$delete({id: item.id}, function (success) {
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
                     // $location.path("/table");

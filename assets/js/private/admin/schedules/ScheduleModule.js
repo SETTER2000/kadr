@@ -109,7 +109,7 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
         $rootScope.$stateParams = $stateParams;
         amMoment.changeLocale('ru');
     })
-    .factory('Schedules', function ($resource, $state, $rootScope, Users, CONF_MODULE_SCHEDULE) {
+    .factory('Schedules', function ($resource, $state, $rootScope,$http, Users, CONF_MODULE_SCHEDULE) {
         var Schedules = $resource(
             CONF_MODULE_SCHEDULE.baseUrl,
             {scheduleId: '@id'},
@@ -160,8 +160,12 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
         //Schedules.prototype.ok = function () {
         //    return alert('Сотрудник: ' + this.getFullName() + ' изменён!');
         //};
-        //Schedules.prototype.er = function () {
-        //    return alert('ОШИБКА!!! Сотрудник: ' + this.getFullName() + ' - изменения не приняты!');
+        //Schedules.prototype.getDaysSelected = function () {
+        //    $http.get('/schedule/to-years?year=2018')
+        //        .then(function (days) {
+        //            console.log('DAYS HOLIDAYS', days);
+        //            return ;
+        //        });
         //};
         Schedules.prototype.getAvatar = function () {
             return this.avatarUrl;

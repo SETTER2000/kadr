@@ -41,6 +41,8 @@
             io.socket.on('hello', function (data) {
                 console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
                 $scope.items = data.howdy;
+                console.log('Данные события hello', data);
+                
                 $scope.$apply();
             });
 

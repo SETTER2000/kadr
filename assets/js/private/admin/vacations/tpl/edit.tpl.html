@@ -21,7 +21,8 @@
                     <span class="glyphicon glyphicon-trash"></span> Удалить
                 </button>
 
-                <button ng-show="edit" ui-sref="home.admin.vacations.create" type="button" class="btn btn-primary">
+                <button ng-show="edit" ng-click="dub(item)" type="button" class="btn btn-primary">
+                <!--<button ng-show="edit" ui-sref="home.admin.vacations.create" type="button" class="btn btn-primary">-->
                     <span class="glyphicon glyphicon-plus"></span> Добавить
                 </button>
                 <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
@@ -334,7 +335,7 @@
 
         </div>
     </div>
-
+    <pre  ng-if="debug"><h4>{{item| json}}</h4></pre>
 </div>
 
 

@@ -61,8 +61,8 @@
                 data.getTime= function () {
                     return moment(this.timeUpdate).fromNow();
                 };
-                console.log('badges-vacation',data);
-                console.log('DAAAAAAAAAAAA:', data.getTime());
+                //console.log('badges-vacation',data);
+                //console.log('DAAAAAAAAAAAA:', data.getTime());
                 
                 $scope.bdgs.push(data);
                 $scope.$apply();

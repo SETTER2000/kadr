@@ -14,7 +14,13 @@ angular.module('VacationModule')
             //console.log('3',t.count("days"));               //=> 1
             //console.log('4',t.isPast());                   //=> true
             //console.log('5',t.contains("2017-10-25T10:00"А)); //=> true
+            //$scope.item = {};
+            //$scope.item.furlough = {id: '599d87cbb88be82bf00a176f'};
+            //
+            //$scope.ownerId = window.location.pathname.split('/')[4];
+            //console.log('$scope.ownerId0', $scope.ownerId);
 
+            $scope.debug = true;
             /**
              * Выбор отображения года в календаре, при загрузке странице
              * Пользователям показывается текущий год
@@ -512,6 +518,25 @@ angular.module('VacationModule')
             });
 
 
+            //$scope.getCountSelectedHolidays = function () {
+            //
+            //    let qer = '/vacation/to-years?from=' + moment($scope.item.year,['YYYY']).format('YYYY-MM-DD') + '&to=' + moment($scope.item.year,['YYYY']).add(1,'year').format('YYYY-MM-DD');
+            //    console.log('YEEEEEE', qer);
+            //
+            //    $http.get(qer).then(function (success) {
+            //        console.log('DD', success.data);
+            //        console.log('POPPP', success.data.filter((obj)=> {
+            //            return (obj.numSelected > 0) ? obj.numSelected : '';
+            //        }));
+            //        $scope.countSelectedHolidays = success.data.filter((obj)=> {
+            //            return (obj.numSelected > 0) ? obj.numSelected : '';
+            //        }).length;
+            //    });
+            //};
+            //
+            //console.log('XXXXXXXXXXX',$scope.getCountSelectedHolidays());
+
+
             // var minDate = moment('2018', ['YYYY']).subtract(1,'year').startOf("year").format('DD-MM-YYYY');
 
             $scope.dateOpts = {
@@ -545,9 +570,7 @@ angular.module('VacationModule')
                     //},
 
                     function (selectedDates, dateStr, instance) {
-                        console.log('****************--', instance);
                         let yr = moment($scope.me.interfaces[0].year, ['YYYYY']).format('YYYY-MM-DD');
-                        console.log('INTERSEC', yr);
                         if (!$scope.edit) instance.setDate([yr, yr], true, "Y-m-d");
 
                         /**
@@ -584,9 +607,9 @@ angular.module('VacationModule')
                             });
                     }
                 ],
-                onDayCreate:[
+                onDayCreate: [
                     function (dObj, dStr, fp, dayElem) {
-                        if (!$scope.sArr.length) return console.log('NNNNNNNNNNNNNNNNNNNNN');
+                        if (!$scope.sArr.length) return;
                         $scope.sArr.forEach(function (v, k, arr) {
                             if (moment(arr[k].from).isSame(dayElem.dateObj) || moment(arr[k].to).isSame(dayElem.dateObj) || moment(dayElem.dateObj).isBetween(arr[k].from, arr[k].to)) {
                                 //dayElem.style.backgroundImage = '/images/whirlpool.png';
@@ -601,22 +624,22 @@ angular.module('VacationModule')
                     },
 
                     function (dObj, dStr, fp, dayElem) {
-                    dayOff.forEach(function (v, k, arr) {
-                        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-                            dayElem.innerHTML += "<span   class='event busy'></span>";
-                        }
-                    });
-                    celebration.forEach(function (v, k, arr) {
-                        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-                            dayElem.innerHTML += "<span title='На час пораньше'  class='event celebration'>*</span>";
-                        }
-                    });
-                    holiday.forEach(function (v, k, arr) {
-                        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-                            dayElem.innerHTML += "<span title='Праздник'  class='event busy holiday'></span>";
-                        }
-                    });
-                }],
+                        dayOff.forEach(function (v, k, arr) {
+                            if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
+                                dayElem.innerHTML += "<span   class='event busy'></span>";
+                            }
+                        });
+                        celebration.forEach(function (v, k, arr) {
+                            if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
+                                dayElem.innerHTML += "<span title='На час пораньше'  class='event celebration'>*</span>";
+                            }
+                        });
+                        holiday.forEach(function (v, k, arr) {
+                            if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
+                                dayElem.innerHTML += "<span title='Праздник'  class='event busy holiday'></span>";
+                            }
+                        });
+                    }],
 
                 onChange: function (dObj, dStr, fp, dayElem) {
                     //console.log('dObj', dObj);
@@ -768,7 +791,6 @@ angular.module('VacationModule')
                 $http.get(query).then(function (response) {
                     $scope.intersection = response.data;
                     $scope.datePostSetup($scope.flatpicker);
-                    console.log('-------------RASSSS', $scope.intersection);
                 }, function errorCallback(err) {
                     console.log('ERROR:', err);
                 });
@@ -788,7 +810,6 @@ angular.module('VacationModule')
                         $scope.sArr.push(v);
                     }
                 });
-                console.log('POP*******OO', $scope.sArr);
                 return $scope.sArr;
             };
 
@@ -799,7 +820,7 @@ angular.module('VacationModule')
 
             $scope.refresh = function () {
                 let item = $scope.item = Vacations.get({id: $stateParams.vacationId}, function (vacations) {
-                        //console.log('VACATION ITEM:', vacations);
+                        console.log('VACATION ITEM:', vacations);
                         $scope.vacations = vacations;
                         $scope.tm = vacations.chats;
                         $scope.chats = $scope.chatTime();
@@ -873,6 +894,7 @@ angular.module('VacationModule')
                 }
             };
 
+
             $scope.addPosition = function () {
                 if (angular.isArray($scope.item.positions)) {
                     $scope.item.positions.push({});
@@ -921,5 +943,42 @@ angular.module('VacationModule')
                 return !angular.equals($scope.item, original);
             };
 
+
+            $scope.dub = function (item) {
+                //let item = angular.copy($scope.item);
+                $http.get('/vacation/dub/' + item.owner.id + '/' + item.furlough.id)
+                    .then(function onSuccess(sailsResponse) {
+
+                        $scope.item2 = sailsResponse.data;
+                        console.log('--------------RTTT: ', $scope.item2);
+               
+                    })
+                    .catch(function onError(sailsResponse) {
+                        console.log(sailsResponse);
+                    })
+                    .finally(function eitherWay() {
+                        $scope.userList.loading = false;
+                    });
+                //$state.go('home.admin.vacations.create',item);
+                $scope.$watch('item2', function (val,old) {
+                    console.log('VVal',  val);
+                    console.log('VVal -old',  old);
+                    if (val) {
+                        $scope.item.owner = $scope.item2.owner;
+                        $scope.item.furlough = $scope.item2.furlough;
+
+
+                    }
+                });
+                $state.go('home.admin.vacations.create', {ownerId: '59661ce496798b6c1ae0624a', furloughId: '599d87cbb88be82bf00a176f'});
+
+            };
             $scope.refresh();
+
+            //if(!edit){
+            //
+            //    $scope.ownerId = window.location.pathname.split('/')[4];
+            //    $scope.furloughId = window.location.pathname.split('/')[5];
+            //    $scope.item = {owner:{id:$scope.ownerId}, furlough:{id:$scope.furloughId}}
+            //}
         }]);

@@ -37,7 +37,7 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                 }
             })
             .state('home.admin.vacations.create', {
-                url: '/create/:vacationId',
+                url: '/create/:ownerId/:furloughId',
                 views: {
                     '@': {
                         templateUrl: '/js/private/admin/vacations/tpl/edit.tpl.html',
