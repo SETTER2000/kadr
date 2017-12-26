@@ -388,15 +388,14 @@
 
             <!-- V A C A T I O N S  -->
 
-                <div class="panel panel-success new" >
+                <div class="panel panel-success new" ng-if="daysYear.length">
                     <div class="panel-heading">
                         <h3 class="panel-title">Отпуска (планирование)
 
                         </h3>
                     </div>
-                    <ul class="list-group" ng-repeat="ds in daysYear2 | orderBy:year:-1" >
+                    <ul class="list-group" ng-repeat="ds in daysYear | orderBy:year:-1" >
                         <li class="list-group-item new" ng-class="{'text-danger':(ds.remains>0)}">
-
                             <span class="badge new " title="дней" ng-class="{'text-danger':(ds.remains>0)}">{{ds.remains}}</span>
                             {{ds.year}} <span style="padding: 0 35%" ng-if="ds.remains>0" class="pull-right"> не запланировано</span></li>
                     </ul>

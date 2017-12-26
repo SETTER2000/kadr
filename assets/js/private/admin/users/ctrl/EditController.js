@@ -124,19 +124,14 @@ angular.module('UserModule')
                 }
                 $scope.selectedItem = obj;
             };
-
+            $scope.daysYear =[];
             $scope.owId = window.location.pathname.split('/')[4];
-            console.log('OWNERRRRR', $scope.owId);
+            //console.log('OWNERRRRR', $scope.owId);
             $http.get('/vacation/daysInYear/owner/' + $scope.owId).then(function (success) {
-
                 console.log('RESPONM', success.data);
-                if (success.data) $scope.daysYear = success.data;
-                $scope.daysYear =[];
-
+                if (angular.isArray(success.data)) $scope.daysYear = success.data;
             });
-            //$scope.$watch('daysYear', function (val) {
-            //    if (val) $scope.daysYear2 = val;
-            //});
+
             $scope.selectedItemChangeIAgree = function (obj) {
                 if (angular.isDefined(obj.email)) {
                     obj.del = true;
