@@ -119,7 +119,8 @@ module.exports.routes = {
     'GET /vacation/get-intersections/:id': 'VacationController.getIntersections',
     'GET /vacation/get-intersections': 'VacationController.getIntersections',
     'GET /vacation/get-days-to-years': 'VacationController.getDaysToYears',
-    'GET /vacation/dub/:ownerId/:furloughId': 'VacationController.createDub',
+    'GET /vacation/daysInYear/owner/:owner': 'VacationController.daysInYear',
+    //'GET /vacation/dub/:ownerId/:furloughId': 'VacationController.createDub',
     'POST /vacation/get-intersections-user': 'VacationController.getIntersectionsUser',
 
 

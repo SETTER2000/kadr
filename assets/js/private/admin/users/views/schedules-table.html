@@ -184,7 +184,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- C O U N T  D A T A S E A R C H -->
         <td class="text-center">
-            {{ item.countData }}
+          {{item.vacations | countSelectedDays}} &nbsp; из &nbsp;{{ item.countData }}
         </td>
 
         <!-- Y E A R -->

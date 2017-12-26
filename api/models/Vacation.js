@@ -93,6 +93,9 @@ module.exports = {
         //tutorialAssoc: {
         //    model: 'tutorial'
         //},
+        year: {
+            model: 'schedule'
+        },
         chats: {
             collection: 'chat',
             via: 'vacation'

@@ -112,6 +112,10 @@ module.exports = {
             model: 'user'
         },
 
+        vacations: {
+            collection: 'vacation',
+            via: 'year'
+        },
         ///**
         // * Чат
         // */

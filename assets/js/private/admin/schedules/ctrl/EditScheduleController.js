@@ -487,7 +487,7 @@ angular.module('ScheduleModule')
 
             $scope.$watch('item.action', function (value, old) {
                 if (value !== undefined && !value) {
-                    toastr.warning('Проект не будет запущен.<br> Активируйте проект, для этого установите активность.', info.warning);
+                    toastr.warning('Рассылка не будет запущена.<br> Для запуска активируйте проект установив активность.', info.warning);
                 }
             });
             $scope.$watch('item.start', function (value) {
@@ -559,8 +559,8 @@ angular.module('ScheduleModule')
                     // $scope.$apply(function() { $location.path("/admin/schedule"); });
                     // $scope.refresh();
                 }, function (err) {
-                    //console.log(err);
-                    toastr.error(err, info.error(122));
+                    console.log(err);
+                    toastr.error(err.data,info.error(733));
                 })
             };
 

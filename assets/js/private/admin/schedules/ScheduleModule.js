@@ -1,5 +1,5 @@
 angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
-        'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment', 'ngSanitize','ngDialog'])
+        'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment', 'ngSanitize', 'ngDialog'])
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
     }])
@@ -109,7 +109,7 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
         $rootScope.$stateParams = $stateParams;
         amMoment.changeLocale('ru');
     })
-    .factory('Schedules', function ($resource, $state, $rootScope,$http, Users, CONF_MODULE_SCHEDULE) {
+    .factory('Schedules', function ($resource, $state, $rootScope, $http, Users, CONF_MODULE_SCHEDULE) {
         var Schedules = $resource(
             CONF_MODULE_SCHEDULE.baseUrl,
             {scheduleId: '@id'},
@@ -295,6 +295,34 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
                 if (!v['owner'].fired) arr.push(v);
             });
             return arr;
+        }
+    })
+    .filter('countSelectedDays', function () {
+        return function (value) {
+            if (angular.isArray(value)) {
+                let d = 0;
+                let result = [];
+                let y = {};
+                value.forEach(function (v, k, a) {
+                    if (angular.isArray(y[v.owner])) {
+                        y[v.owner].push(v.daysSelectHoliday);
+                    } else {
+                        y[v.owner] = [];
+                        y[v.owner].push(v.daysSelectHoliday);
+                    }
+                });
+                for (var prop in y) {
+                    result.push(y[prop].reduce(function (sum, current) {
+                        return sum + current;
+                    }, 0));
+                }
+                result.forEach(function (v) {
+                    if (v >= 28) d++;
+                });
+                return d;
+            } else {
+                return value;
+            }
         }
     })
 

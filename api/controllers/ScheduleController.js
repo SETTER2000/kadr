@@ -40,6 +40,7 @@ module.exports = {
             Schedule.findOne(req.param('id'))
                 .populate('whomCreated')
                 .populate('whomUpdated')
+                .populate('vacations')
                 .exec(function foundVacation(err, vacations) {
                     if (err) return res.serverError(err);
                     if (!vacations) return res.notFound();
@@ -57,9 +58,29 @@ module.exports = {
                         .exec(function foundUser(err, users) {
                             if (err) return res.serverError(err);
                             if (!users) return res.notFound();
+
+                          /*  {
+                                where: { /!* ... *!/ },
+                                groupBy: [ /!* ... *!/ ],
+                                    sum: [ /!* ... *!/ ],
+                                average: [ /!* ... *!/ ],
+                                count: true,
+                                min: [ /!* ... *!/ ],
+                                max: [ /!* ... *!/ ],
+                                sort: { /!* ... *!/ },
+                                skip: 2353,
+                                    limit: 25
+                            }*/
                             Schedule.find()
                                 .populate('whomCreated')
                                 .populate('whomUpdated')
+                                .populate('vacations', {
+                                    //where: {
+                                    //   from: { '>=': new Date('2018-01-01'), '<': new Date('2019-01-01') }
+                                    //},
+                                    //limit: 3,
+                                    //sort: 'hipness DESC'
+                                })
                                 .exec(function foundSchedule(err, schedules) {
                                     if (err) return res.serverError(err);
                                     if (!schedules) return res.notFound();
@@ -82,7 +103,7 @@ module.exports = {
                                         if (err) {
                                             console.log('Не удалось обработать файл');
                                         } else {
-                                            console.log('Все файлы успешно обработаны');
+                                            //console.log('Все файлы успешно обработаны');
                                         }
                                     });
                                     res.send(schedules);
@@ -268,29 +289,34 @@ module.exports = {
         User.findOne({id: req.session.me}).exec((err, finOneUser) => {
             "use strict";
             if (err) return res.serverError(err);
-            Schedule.findOne(req.param('id')).exec((err, finds) => {
-                "use strict";
-                if (err) return res.serverError(err);
-                if (!finds) return res.notFound();
-                Schedule.destroy({id: finds.id}, (err) => {
-                    if (err) return next(err);
-                    console.log('Отпуск удалил:', req.session.me);
-                    console.log('Отпуск удалён:', finds);
-                    Schedule.find().exec((err, findSchedule) => {
-                        if (err) return res.serverError(err);
-                        sails.sockets.broadcast('schedule', 'hello', {howdy: findSchedule}, req);
-                        sails.sockets.broadcast('schedule', 'badges', {
-                            badges: [finds],
-                            action: 'удалён',
-                            shortName: finOneUser.getShortName(),
-                            fullName: finOneUser.getFullName(),
-                            avatarUrl: finOneUser.avatarUrl
-                        }, req);
-                        res.ok();
-                    });
+            Schedule.findOne(req.param('id'))
+                .populate('vacations')
+                .exec((err, finds) => {
+                    "use strict";
+                    if (err) return res.serverError(err);
+                    if (!finds) return res.notFound();
+                    if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с этим годом.');
+                    Schedule.destroy({id: finds.id}, (err) => {
+                        if (err) return next(err);
+                        console.log('Отпуск удалил:', req.session.me);
+                        console.log('Отпуск удалён:', finds);
+                        Schedule.find()
+                            .populate('vacations')
+                            .exec((err, findSchedule) => {
+                                if (err) return res.serverError(err);
+                                sails.sockets.broadcast('schedule', 'hello', {howdy: findSchedule}, req);
+                                sails.sockets.broadcast('schedule', 'badges', {
+                                    badges: [finds],
+                                    action: 'удалён',
+                                    shortName: finOneUser.getShortName(),
+                                    fullName: finOneUser.getFullName(),
+                                    avatarUrl: finOneUser.avatarUrl
+                                }, req);
+                                res.ok();
+                            });
 
+                    });
                 });
-            });
         });
     },
 
@@ -354,7 +380,7 @@ module.exports = {
             let start = new Date(moment(req.param('year'), ['YYYY']).format('YYYY-MM-DD'));
             let end = new Date(moment(req.param('year'), ['YYYY']).add(1, 'year').format('YYYY-MM-DD'));
             let y = 0;
-         collection.aggregate([{$match: {$and: [{from: {$gte: start}}, {from: {$lt: end}}, {action: {$eq: true}}]}}, {
+            collection.aggregate([{$match: {$and: [{from: {$gte: start}}, {from: {$lt: end}}, {action: {$eq: true}}]}}, {
                     $group: {
                         _id: "$owner",
                         cntDs: {$sum: "$daysSelectHoliday"}
@@ -362,7 +388,7 @@ module.exports = {
                 }, {$project: {id: 1, summa: {$cond: {if: {$gte: ["$cntDs", 28]}, then: 1, else: 0}}}}])
                 .toArray(function (err, results) {
                     if (err) return res.serverError(err);
-                   //return results;
+                    //return results;
                     _.forEach(results, function (value, key) {
                         console.log('numSelected', value.summa);
                         y += value.summa;

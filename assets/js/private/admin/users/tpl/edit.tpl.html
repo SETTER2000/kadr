@@ -150,7 +150,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="exampleInputPassword3">Password</label>
-                                    <input class="form-control" type="text"  ng-model="contact.value" required>
+                                    <input class="form-control" type="text" ng-model="contact.value" required>
                                 </div>
                                 <button type="button" class="btn btn-default" ng-click="removeContact(contact)">x</button>
                             </div>
@@ -346,13 +346,14 @@
             </div>
 
         </div>
-        <div  ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
 
 
             <!-- D E C R E E -->
 
             <div ng-if="(me.admin || me.kadr) && edit" ng-controller="ListVacationController">
-                <div ng-repeat="vac in   filtered=(items |  filter:{owner: {login:item.login}} | searchObjectVal:'furlough':'name':['Отпуск по беременности и родам','Отпуск по уходу за ребенком'] ) " ng-cloak>
+                <div ng-repeat="vac in   filtered=(items |  filter:{owner: {login:item.login}} | searchObjectVal:'furlough':'name':['Отпуск по беременности и родам','Отпуск по уходу за ребенком'] ) "
+                     ng-cloak>
                     <div class="panel" ng-if="filtered.length"
                          ng-class="{'panel-danger':!item.fired, 'panel-default':item.fired}">
                         <div class="panel-heading">
@@ -383,6 +384,23 @@
                     <ng-include src="uploaderView"></ng-include>
                 </div>
             </div>
+
+
+            <!-- V A C A T I O N S  -->
+
+                <div class="panel panel-success new" >
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Отпуска (планирование)
+
+                        </h3>
+                    </div>
+                    <ul class="list-group" ng-repeat="ds in daysYear2 | orderBy:year:-1" >
+                        <li class="list-group-item new" ng-class="{'text-danger':(ds.remains>0)}">
+
+                            <span class="badge new " title="дней" ng-class="{'text-danger':(ds.remains>0)}">{{ds.remains}}</span>
+                            {{ds.year}} <span style="padding: 0 35%" ng-if="ds.remains>0" class="pull-right"> не запланировано</span></li>
+                    </ul>
+                </div>
 
 
             <!-- C H A N G E  P A S S -->

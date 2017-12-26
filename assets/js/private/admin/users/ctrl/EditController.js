@@ -124,6 +124,19 @@ angular.module('UserModule')
                 }
                 $scope.selectedItem = obj;
             };
+
+            $scope.owId = window.location.pathname.split('/')[4];
+            console.log('OWNERRRRR', $scope.owId);
+            $http.get('/vacation/daysInYear/owner/' + $scope.owId).then(function (success) {
+
+                console.log('RESPONM', success.data);
+                if (success.data) $scope.daysYear = success.data;
+                $scope.daysYear =[];
+
+            });
+            //$scope.$watch('daysYear', function (val) {
+            //    if (val) $scope.daysYear2 = val;
+            //});
             $scope.selectedItemChangeIAgree = function (obj) {
                 if (angular.isDefined(obj.email)) {
                     obj.del = true;
@@ -241,7 +254,6 @@ angular.module('UserModule')
             $scope.close = 1;
 
             $scope.loginAdmin = false;
-
 
 
             $scope.dateOpts = {
@@ -505,7 +517,7 @@ angular.module('UserModule')
             };
 
             $scope.delete2 = function (item) {
-                item.$delete({id:item.id}, function (success) {
+                item.$delete({id: item.id}, function (success) {
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
                     // $location.path("/table");
