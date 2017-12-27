@@ -107,7 +107,7 @@ module.exports.routes = {
      */
     'GET /getStructure': 'StructureController.get',
     'GET /getStructure/:id': 'StructureController.get',
-
+    'GET /vacation/delete-all/:year': 'VacationController.deleteAllVacationToYear',
 
     /**
      * Vacation
@@ -122,6 +122,7 @@ module.exports.routes = {
     'GET /vacation/daysInYear/owner/:owner': 'VacationController.daysInYear',
     //'GET /vacation/dub/:ownerId/:furloughId': 'VacationController.createDub',
     'POST /vacation/get-intersections-user': 'VacationController.getIntersectionsUser',
+
 
 
     'POST /vacation/:id/chat': 'VacationController.chat',

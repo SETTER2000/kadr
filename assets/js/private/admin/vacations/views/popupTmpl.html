@@ -11,8 +11,8 @@
                       aria-hidden="true"></span>
 
             </span>
-            <img ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp; {{bg.badges[0].name}} |
-            {{bg.badges[0].daysSelectHoliday}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
+            <img ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp; {{bg.badges[0].name}} <span ng-if="!bg.badges[0].delimiter">|</span>
+            {{bg.badges[0].daysSelectHoliday}} <span ng-if="!bg.badges[0].delimiter">|</span> {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
         </a>
 
         <!-- С о о б щ е н и я  ч а т а -->

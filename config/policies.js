@@ -86,6 +86,7 @@ module.exports.policies = {
         //'*': 'isLoggedIn',
         create: ['isLoggedIn', 'isAdminOrKadr'],
         delete: ['isLoggedIn', 'isAdmin'],
+        //deleteAllVacationToYear: ['isLoggedIn', 'isAdmin'],
         update: ['isLoggedIn', 'isAdminOrKadr'],
         getDaysPeriodYear: ['isLoggedIn', 'isAdminOrKadr'],
         //daysInYear: ['isLoggedIn', 'isAdminOrKadr'],
@@ -96,7 +97,7 @@ module.exports.policies = {
     } ,
 
     ScheduleController: {
-        //'*': 'isLoggedIn',
+        '*': 'isLoggedIn',
         //create: ['isLoggedIn', 'isAdminOrKadr'],
         create: true,
         get: true,

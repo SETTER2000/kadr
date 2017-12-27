@@ -74,6 +74,7 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
                     }
                 }
             })
+
             //.state('home.admin.schedules.administration', {
             //    url: '/administration',
             //    views: {

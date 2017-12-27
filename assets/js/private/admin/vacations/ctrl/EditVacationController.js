@@ -58,10 +58,10 @@ angular.module('VacationModule')
             $scope.toogle = function () {
                 $scope.comment = ($scope.comment) ? false : true;
             };
+
             $scope.showVacation = {
                 loading: false
             };
-
 
             $scope.countsChar = function (message) {
                 if (!message) return $scope.countCh = undefined;

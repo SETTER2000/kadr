@@ -491,7 +491,11 @@ module.exports = {
                             numCar: req.param('numCar'),
                             brandCar: req.param('brandCar'),
                             dateInWork: req.param('dateInWork'),
-                            lastLoggedIn: new Date()
+                            lastLoggedIn: new Date(),
+                            notice:[
+                                {name: 'Уведомление о начале сбора информации.', order: 1, value: true},
+                                {name: 'Дополнительное уведомление о не заполненной информации по отпуску.', oreder: 2, value: false}
+                            ]
                             //gravatarUrl: gravatarUrl
                         }, function (err, newUser) {
                             if (err) return res.negotiate(err);
@@ -830,7 +834,8 @@ module.exports = {
             pfr: req.param('pfr'),
             avatarUrl: req.param('avatarUrl'),
             room: req.param('room'),
-            furlough: req.param('furlough')
+            furlough: req.param('furlough'),
+            notice:req.param('notice')
         };
 
         //console.log('Param ID: ', req.param('id'));

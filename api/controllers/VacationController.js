@@ -467,6 +467,7 @@ module.exports = {
         User.findOne({id: req.session.me}).exec((err, findUser) => {
             "use strict";
             if (err) return res.serverError(err);
+            if (!findUser) return res.serverError(err);
 
             Vacation.findOne(req.param('id')).exec((err, finds) => {
                 "use strict";
@@ -493,6 +494,46 @@ module.exports = {
 
     }
     ,
+
+    /**
+     * Удалить все зависимости графика отпусков согласно году запроса
+     * @param req
+     * @param res
+     * @param next
+     */
+    deleteAllVacationToYear: function (req, res, next) {
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.findOne({id: req.session.me}).exec((err, findUser) => {
+            "use strict";
+            if (err) return res.serverError(err);
+            if (!findUser) return res.serverError(err);
+            Vacation.find()
+                .populate('year', {where: {year: req.param('year')}})
+                .exec((err, finds) => {
+                    "use strict";
+                    if (err) return res.serverError(err);
+                    if (!finds) return res.notFound();
+                    let y = [];
+                    _.forEach(finds, function (v, k) {
+                        if (v.year) y.push(v.id);
+                    });
+                    Vacation.destroy(y, (err) => {
+                        if (err) return next(err);
+                        console.log('Отпуска удалил:', req.session.me);
+                        console.log('Отпуски удалены:', finds);
+                        sails.sockets.broadcast('vacation', 'badges-vacation', {
+                            badges: [{name: 'Удалены зависимости графика отпусков ' + req.param('year'), delimiter: true}],
+                            action: 'удалён',
+                            shortName: findUser.getShortName(),
+                            fullName: findUser.getFullName(),
+                            avatarUrl: findUser.avatarUrl
+                        }, req);
+                        //return res.view('page/showhomepage', { me: req.session.me});
+                        return res.redirect('/admin/schedules');
+                    });
+                });
+        });
+    },
 
     /**
      * Кол-во дней оставшихся на отпуск в следующем году
@@ -761,7 +802,7 @@ module.exports = {
                     _.forEach(results, function (value) {
                         console.log(value.schedule_docs[0].year);
 
-                       value.year =  value.schedule_docs[0].year;
+                        value.year = value.schedule_docs[0].year;
                         value.schedule_docs = '';
                         ar.push(value);
 
@@ -803,8 +844,7 @@ module.exports = {
                 return res.send(results);
             });
         });
-    }
-    ,
+    },
 
 
     /**
@@ -919,13 +959,6 @@ module.exports = {
         });
     },
 
-    //createDub: function (req, res) {
-    //    let obj = {
-    //        owner: {id: req.param('ownerId')},
-    //        furlough: {id: req.param('furloughId')}
-    //    };
-    //    res.ok(obj);
-    //},
 
     /**
      * Чат отпуска

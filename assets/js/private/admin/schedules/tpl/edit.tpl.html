@@ -8,12 +8,14 @@
 
             </p>
             <p ng-if="!item.name">Новый график</p>
-            <a href="#" class="btn btn-xs disabled" ng-class="{'btn-primary':(item.status==='Проект'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Утвержден')}" ng-hide="item.fired" role="button">
-               {{item.status}}
+            <a href="#" class="btn btn-xs disabled"
+               ng-class="{'btn-primary':(item.status==='Проект'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Утвержден')}"
+               ng-hide="item.fired" role="button">
+                {{item.status}}
             </a>
 
             <!--<a href="#" class="btn btn-primary btn-xs disabled" ng-hide="item.fired" role="button">-->
-                <!--Собрано данных: 0 из {{item.countData }}</a>-->
+            <!--Собрано данных: 0 из {{item.countData }}</a>-->
 
 
             <!--<a href="#" class="btn btn-info btn-xs " ng-if="item.decree"  title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>-->
@@ -22,7 +24,7 @@
 
 
             <div class="btn-group-xs pull-right">
-                <button class="btn btn-primary btn-md " type="button" ng-click="toogle()">
+                <button ng-disabled="!item.to" class="btn btn-primary btn-md " type="button" ng-click="toOpen()">
                     <span class="glyphicon glyphicon-list-alt"></span> {{item.nameLinkFn()}}
                 </button>
                 <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
@@ -64,14 +66,13 @@
                                     <!--<input type="checkbox" ng-if="((item.status ==='Проект') || me.admin)" ng-model="item.action">-->
                                     <!--<input type="checkbox" ng-if="(item.status !=='Проект' && !me.admin)" disabled ng-model="item.action">-->
 
-                                <md-switch ng-model="item.action" aria-label="Switch 1">
-                                   <span ng-if="item.action">Активность</span>
-                                   <span ng-if="!item.action">Не активен</span>
-                                </md-switch>
+                                    <md-switch ng-model="item.action" aria-label="Switch 1">
+                                        <span ng-if="item.action">Активность</span>
+                                        <span ng-if="!item.action">Не активен</span>
+                                    </md-switch>
 
                                 </label>
                             </div>
-
 
 
                             <!-- Y E A R -->
@@ -139,14 +140,13 @@
                             <div class="form-inline">
 
                                 <div class="form-group">
-                                   <span style="margin:0 20px;"> {{sumDays}} </span>   из       <input type="number" ng-disabled="true" class="form-control not-border"
-                                           ng-bind="item.countData=(items | filter :{fired:false}).length" ng-model="item.countData">
+                                    <span style="margin:0 20px;"> {{sumDays}} </span> из <input type="number" ng-disabled="true"
+                                                                                                class="form-control not-border"
+                                                                                                ng-bind="item.countData=(items | filter :{fired:false}).length"
+                                                                                                ng-model="item.countData">
                                 </div>
                             </div>
                         </div>
-
-
-
 
 
                         <div ng-if="(me.admin && item.id)" class="row">
@@ -218,40 +218,22 @@
 
         </div>
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+            <div class="row" ng-if="item.to">
+                <div class="col-md-12">
+            <!-- У В Е Д О М Л Е Н И Е  О  Н А Ч А Л Е  С Б О Р А  И Н Ф О Р М А Ц И И -->
 
             <form class="form-horizontal" ng-show="comment">
                 <div class="form-group animate-if">
-
-                    <label for="inputPassword" class="col-sm-2 control-label">Шаблон: </label>
-                    <div class="col-sm-4">
-                        <!--ng-options="name for example in examples"-->
+                    <label  class="col-sm-6 control-label">Шаблон о начале сбора информации: </label>
+                    <div class="col-sm-2">
                         <select class="form-control size-xs" ng-model="item.htmlData[0]"
                                 ng-options="option.name for option in examples track by option.tmpl"
                         ></select>
-
                     </div>
-
-
                 </div>
             </form>
 
-
-            <!--П И С Ь М О  С О Т Р У Д Н И К А М-->
-
-
-            <!--<div ng-if="comment" class="animate-if">-->
-            <!--&lt;!&ndash;<textarea rows="6" class="form-control" ng-model="item.htmlData"/>&ndash;&gt;-->
-            <!--<textarea rows="6" class="form-control" ng-model="item.htmlData"/>-->
-            <!--</div>-->
-            <!--<p class="text-left" ng-bind-html="item.htmlData"></p>-->
-
-
-            <!--<tt>item.htmlData = {{item.htmlData[0].name }}</tt><br/>-->
-
-
             <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch on="item.htmlData[0].name">
-                <!--<textarea style="width: 100%; height: 120px; border: none" class="animate-switch" ng-switch-when="settings|options"-->
-                <!--ng-switch-when-separator="|">{{htmlData}}</textarea>-->
                 <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
                           class="animate-switch" ng-switch-when="№1">    {{item.htmlData[0].tmpl}}</textarea>
                 <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
@@ -260,19 +242,50 @@
                           class="animate-switch" ng-switch-when="№3"> {{item.htmlData[0].tmpl}}</textarea>
                 <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
                           class="animate-switch" ng-switch-when="№4">   {{item.htmlData[0].tmpl}}</textarea>
-                <!--<div class="animate-switch" ng-switch-default>default</div>-->
-
             </div>
+
+            <code class="pull-right new" ng-bind-html="item.htmlData[0].description"></code>
             <div ng-if="item.htmlData[0].tmpl" class="text-left well" ng-bind-html="item.htmlData[0].tmpl"></div>
             <a href="#" style="text-decoration: none" ng-click="toogle()">
                 <div ng-if="!item.htmlData[0].tmpl" class="text-left well" ng-bind-html="htmlData"></div>
             </a>
 
+                </div>
+            </div>
+            <div class="row" ng-if="item.to">
+                <div class="col-md-12">
+ <!-- Д О П О Л Н И Т Е Л Ь Н О Е  У В Е Д О М Л Е Н И Е  О  Н Е  З А П О Л Н Е Н Н О Й  И Н Ф О Р М А Ц И И   -->
 
+            <form class="form-horizontal" ng-show="comment2">
+                <div class="form-group animate-if">
+                    <label  class="col-sm-6 control-label">Шаблон о не заполненной информации: </label>
+                    <div class="col-sm-2">
+                        <select class="form-control size-xs" ng-model="item.htmlData[1]"
+                                ng-options="option2.name for option2 in examples2 track by option2.tmpl"
+                        ></select>
+                    </div>
+                </div>
+            </form>
 
+            <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch on="item.htmlData[1].name">
+                <textarea required ng-trim="true" ng-model="item.htmlData[1].tmpl" style="width: 100%; height: 120px; border: none"
+                          class="animate-switch" ng-switch-when="№1">    {{item.htmlData[0].tmpl}}</textarea>
+                <textarea required ng-trim="true" ng-model="item.htmlData[1].tmpl" style="width: 100%; height: 120px; border: none"
+                          class="animate-switch" ng-switch-when="№2">{{item.htmlData[0].tmpl}}</textarea>
+                <textarea required ng-trim="true" ng-model="item.htmlData[1].tmpl" style="width: 100%; height: 120px; border: none"
+                          class="animate-switch" ng-switch-when="№3"> {{item.htmlData[0].tmpl}}</textarea>
+                <textarea required ng-trim="true" ng-model="item.htmlData[1].tmpl" style="width: 100%; height: 120px; border: none"
+                          class="animate-switch" ng-switch-when="№4">   {{item.htmlData[0].tmpl}}</textarea>
+            </div>
 
+            <code class="pull-right new" ng-bind-html="item.htmlData[1].description"></code>
+            <div ng-if="item.htmlData[1].tmpl" class="text-left well" ng-bind-html="item.htmlData[1].tmpl"></div>
+            <a href="#" style="text-decoration: none" ng-click="toogle2()">
+                <div ng-if="!item.htmlData[1].tmpl" class="text-left well" ng-bind-html="htmlData2"></div>
+            </a>
 
-
+                </div>
+            </div>
             <!-- I N F O  P A N E L -->
 
             <div ng-if="me.admin" class="panel"

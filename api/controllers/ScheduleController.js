@@ -295,7 +295,7 @@ module.exports = {
                     "use strict";
                     if (err) return res.serverError(err);
                     if (!finds) return res.notFound();
-                    if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с этим годом.');
+                    if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с '+req.param('year')+' годом. <a style="color: #abef98"  target="_blank" href="/vacation/delete-all/'+req.param('year')+'"><i class="fa fa-link" aria-hidden="true"></i> Удалить </a>');
                     Schedule.destroy({id: finds.id}, (err) => {
                         if (err) return next(err);
                         console.log('Отпуск удалил:', req.session.me);

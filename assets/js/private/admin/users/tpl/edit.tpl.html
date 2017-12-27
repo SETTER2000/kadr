@@ -388,17 +388,79 @@
 
             <!-- V A C A T I O N S  -->
 
-                <div class="panel panel-success new" ng-if="daysYear.length">
+                <div class="panel panel-info new" ng-if="daysYear.length">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Отпуска (планирование)
-
-                        </h3>
+                        <h3 class="panel-title">Отпуск (планирование) <span ng-click="getOpen2()" class="glyphicon  pull-right" ng-class="{'glyphicon-menu-up':opn2,'glyphicon-menu-down': !opn2}" ></span></h3>
                     </div>
-                    <ul class="list-group" ng-repeat="ds in daysYear | orderBy:year:-1" >
+                    <ul ng-if="opn2" class="list-group animate-if" ng-repeat="ds in daysYear | orderBy:year:-1" >
                         <li class="list-group-item new" ng-class="{'text-danger':(ds.remains>0)}">
-                            <span class="badge new " title="дней" ng-class="{'text-danger':(ds.remains>0)}">{{ds.remains}}</span>
+                            <span ng-if="(ds.remains!=0)" class="badge new " title="дней" ng-class="{'text-danger':(ds.remains>0)}">{{ds.remains}}</span>
+                            <span class=" badge new " title="отпуска запланированы"><span class="glyphicon text-success"  ng-class="{'glyphicon-ok':(ds.remains==0)}"></span></span>
                             {{ds.year}} <span style="padding: 0 35%" ng-if="ds.remains>0" class="pull-right"> не запланировано</span></li>
                     </ul>
+                </div>
+
+
+
+            <!-- N O T I C E  -->
+            <!--<div class="inset" ng-repeat="nota in notice | orderBy:order" >-->
+                <!--<md-switch ng-model="nota.value"  aria-label="Switch 1">  <span class="pul-right">{{nota.name}}</span> </md-switch>-->
+            <!--</div>-->
+                <div class="panel panel-info new" ng-cloak>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Уведомления <span ng-click="getOpen()" class="glyphicon  pull-right" ng-class="{'glyphicon-menu-up':opn,'glyphicon-menu-down': !opn}" ></span></h3>
+                    </div>
+                    <md-content ng-if="opn"  class="animate-if" style="height: 300px;" >
+                        <section>
+                            <md-subheader class="md-primary">График отпусков</md-subheader>
+                            <md-list layout-padding>
+                                <md-list-item  ng-repeat="nota in item.notice | orderBy:order">
+
+                                        <md-switch ng-model="nota.value" ng-change="saveEdit(item)"> <span ng-if="nota.value">(получает)</span><span ng-if="!nota.value">(не получает)</span> <span style="align-content: flex-end">{{nota.name}}</span> </md-switch>
+                                        <!--<h4>{{nota.who}}</h4>-->
+                                        <!--<p>-->
+                                            <!--{{nota.notes}}-->
+                                        <!--</p>-->
+
+                                </md-list-item>
+                            </md-list>
+                        </section>
+
+                        <section>
+                            <md-subheader class="md-warn">Сообщения</md-subheader>
+                            <md-list layout="column" layout-padding>
+                                <md-list-item class="md-3-line" ng-repeat="message in messages">
+                                    <img ng-src="{{message.face}}" class="md-avatar" alt="{{message.who}}">
+                                    <div class="md-list-item-text">
+                                        <h3>{{message.what}}</h3>
+                                        <h4>{{message.who}}</h4>
+                                        <p>
+                                            {{message.notes}}
+                                        </p>
+                                    </div>
+                                </md-list-item>
+                            </md-list>
+                        </section>
+
+                        <section>
+                            <md-subheader>Подтверждения</md-subheader>
+                            <md-list layout="column" layout-padding>
+                                <md-list-item class="md-3-line" ng-repeat="message in messages">
+                                    <img ng-src="{{message.face}}" class="md-avatar" alt="{{message.who}}">
+                                    <div class="md-list-item-text">
+                                        <h3>{{message.what}}</h3>
+                                        <h4>{{message.who}}</h4>
+                                        <p>
+                                            {{message.notes}}
+                                        </p>
+                                    </div>
+                                </md-list-item>
+                            </md-list>
+                        </section>
+
+
+                    </md-content>
+
                 </div>
 
 

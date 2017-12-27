@@ -55,32 +55,75 @@ angular.module('ScheduleModule')
 
             $scope.examples = [
                 {
-                    name: '№1',
-                    tmpl: '<h1>Уважаемые коллеги!</h1> ' +
-                    '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в ' + ($scope.year + 1) + ' году ' +
-                    'Генеральным директором подписан приказ о подготовке графика отпусков на ' + ($scope.year + 1) + ' год.</p> ' +
-                    '<p>Коллеги, прошу  в срок до  <b>01.12.' + $scope.year + ' </b> ' +
-                    'запланировать свои отпуска на ' + ($scope.year + 1) + ' год и внести информацию в единую информационную систему по ' +
-                    'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>' +
-                    '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
-                },
-                {
+                    description: 'Уведомление о начале сбора информации',
                     name: '№2',
                     tmpl: 'Шаблон №2 - нет вариантов'
                 },
                 {
+                    description: 'Уведомление о начале сбора информации',
                     name: '№3',
                     tmpl: 'Шаблон №3 - нет вариантов'
                 },
                 {
+                    description: 'Уведомление о начале сбора информации',
                     name: '№4',
                     tmpl: 'Шаблон №4 - нет вариантов'
                 }
             ];
+            $scope.to = '';
+            $scope.$watch('item.to', function (val, old) {
+                $scope.to = val;
+                if (val) {
+                    $scope.examples2[0] = {
+                        description: 'Дополнительное уведомление о не заполненной информации.',
+                        name: '№1',
+                        tmpl: '<h1>Уважаемый коллега!</h1> ' +
+                        '<p>Вы не заполнили график отпусков на следующий календарный год. Просьба проделать данную работу до <b>' + moment($scope.to).format('DD.MM.YYYY') + '</b></p>' +
+                        '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
+                    };
 
+                    $scope.examples[0]= {
+                        description: 'Уведомление о начале сбора информации',
+                        name: '№1',
+                        tmpl: '<h1>Уважаемые коллеги!</h1> ' +
+                        '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в ' + ($scope.year + 1) + ' году ' +
+                        'Генеральным директором подписан приказ о подготовке графика отпусков на ' + ($scope.year + 1) + ' год.</p> ' +
+                        '<p>Коллеги, прошу  в срок до  <b>' + moment($scope.to).format('DD.MM.YYYY') + ' </b> ' +
+                        'запланировать свои отпуска на ' + ($scope.year + 1) + ' год и внести информацию в единую информационную систему по ' +
+                        'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>' +
+                        '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
+                    };
+                }
+            });
+            $scope.examples2 = [
+                {
+                    description: 'Дополнительное уведомление о не заполненной информации.',
+                    name: '№2',
+                    tmpl: 'Шаблон №2 - нет вариантов'
+                },
+                {
+                    description: 'Дополнительное уведомление о не заполненной информации.',
+                    name: '№3',
+                    tmpl: 'Шаблон №3 - нет вариантов'
+                },
+                {
+                    description: 'Дополнительное уведомление о не заполненной информации.',
+                    name: '№4',
+                    tmpl: 'Шаблон №4 - нет вариантов'
+                }
+            ];
+            $scope.toOpen = function () {
+                $scope.toogle();
+                $scope.toogle2();
+            };
 
             $scope.toogle = function () {
                 $scope.comment = ($scope.comment) ? false : true;
+            };
+
+
+            $scope.toogle2 = function () {
+                $scope.comment2 = ($scope.comment2) ? false : true;
             };
 
 
@@ -90,17 +133,28 @@ angular.module('ScheduleModule')
                 $scope.item.start = $scope.timeDate = fn($scope.item);
             };
 
-            $scope.$watch('year', function (val,old) {
-                if(val){
+            $scope.$watch('year', function (val, old) {
+                if (val) {
                     $http.get('/schedule/to-years?year=' + val)
                         .then(function (data) {
                             $scope.sumDays = data.data.sumDays;
                         });
                 }
             });
+            //href="/vacation/delete-all/'+req.param('year')+'"
+            $scope.addiction = function() {
+                console.log('EYY********S: ', year );
+                if(!angular.isNumber(year)) return;
+                if (val) {
+                    $http.get('/vacation/delete-all/' + year)
+                        .then(function (res) {
+                            console.log('EYYYYYYEEEESS: ', res.data );
+                        });
+                }
+            };
 
-            $scope.$watch('schedules', function (val,old) {
-                if(val){
+            $scope.$watch('schedules', function (val, old) {
+                if (val) {
                     $http.get('/schedule/to-years?year=' + val.year)
                         .then(function (data) {
                             $scope.sumDays = data.data.sumDays;
@@ -552,7 +606,7 @@ angular.module('ScheduleModule')
 
 
             $scope.delete2 = function (item) {
-                item.$delete({id: item.id}, function (success) {
+                item.$delete({id: item.id, year:item.year}, function (success) {
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
                     // $location.path("/table");
@@ -560,7 +614,7 @@ angular.module('ScheduleModule')
                     // $scope.refresh();
                 }, function (err) {
                     console.log(err);
-                    toastr.error(err.data,info.error(733));
+                    toastr.error(err.data, info.error(733));
                 })
             };
 
@@ -573,6 +627,7 @@ angular.module('ScheduleModule')
             };
 
             $scope.htmlData = '<h4 class="text-danger" ng-cloak>Пожалуйста, вставьте шаблон сообщения!</h4>';
+            $scope.htmlData2 = '<h4 class="text-danger" ng-cloak>Пожалуйста, вставьте шаблон дополнительного уведомления!</h4>';
 
 
             var reversValue = function (item) {
@@ -590,8 +645,9 @@ angular.module('ScheduleModule')
 
             $scope.saveEdit = function (item) {
                 item = reversValue(item);
-                // console.log('Перед созданием', item);
+                 console.log('********************************Перед созданием', item);
                 if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
+                if (!item.htmlData[1]) return toastr.error(info.messageErr, info.error(5979));
                 if (!item.to) return toastr.error(info.filedErr('"по"', 'не заполнено'), info.error(5828));
 
 
@@ -616,8 +672,12 @@ angular.module('ScheduleModule')
                      angular.isDefined(item.email)*/
                     ) {
                         let ar = [];
-                        ar.push(item.htmlData[0]);
-                        item.htmlData = ar;
+                        if (!angular.isArray(item.htmlData)) {
+                            for(let key in item.htmlData){
+                                ar.push(item.htmlData[key]);
+                            }
+                            item.htmlData = ar;
+                        }
                         //toastr.success(info.newOk, info.ok);
                         //$state.go('home.admin.schedules');
                         item.$save(item, function (success) {
@@ -635,6 +695,7 @@ angular.module('ScheduleModule')
                     }
                 }
             };
+
 
             $scope.addContact = function () {
                 if (angular.isArray($scope.item.contacts)) {

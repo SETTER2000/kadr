@@ -168,7 +168,10 @@ module.exports = {
         gravatarUrl: {
             type: 'string'
         },
-
+        notice: {
+            type: 'array',
+            defaultsTo: []
+        },
         avatarUrl: {
             type: 'string'
         },
@@ -296,7 +299,7 @@ module.exports = {
 
 
         getLastFirstName: function () {
-            return  this.firstName + ' ' +  this.lastName;
+            return this.firstName + ' ' + this.lastName;
         },
         getFullName: function () {
             return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;

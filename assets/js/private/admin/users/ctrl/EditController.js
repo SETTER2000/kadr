@@ -29,6 +29,102 @@ angular.module('UserModule')
                 //{label: 'временно включён', value: false},
                 //{ label: '4', value: '4' }
             ];
+            var imagePath = '/images/user/avatar/58e35656594105801c9d9203/port.jpg';
+            $scope.messages = [
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+                {
+                    face: imagePath,
+                    what: 'Brunch this weekend?',
+                    who: 'Min Li Chan',
+                    when: '3:08PM',
+                    notes: " I'll be in your neighborhood doing errands"
+                },
+            ];
+
+            $scope.getOpen = function () {
+                return $scope.opn = ($scope.opn) ? false : true;
+            };
+            $scope.getOpen2 = function () {
+                return $scope.opn2 = ($scope.opn2) ? false : true;
+            };
+            $scope.notice = [
+                {name: 'Уведомление о начале сбора информации.', order: 1, value: true},
+                {name: 'Дополнительное уведомление о не заполненной информации по отпуску.', oreder: 2, value: false}
+            ];
+
+            //$scope.gotlib= function () {
+            //    console.log('NEW VAL:', $scope.notice);
+            //    $scope.saveEdit(item);
+            //};
 
             $scope.addPersonName = 'Выбрать согласующих для';
             $scope.addPersonAnnounced = 'Выбрать оповещаемых для';
@@ -124,7 +220,7 @@ angular.module('UserModule')
                 }
                 $scope.selectedItem = obj;
             };
-            $scope.daysYear =[];
+            $scope.daysYear = [];
             $scope.owId = window.location.pathname.split('/')[4];
             //console.log('OWNERRRRR', $scope.owId);
             $http.get('/vacation/daysInYear/owner/' + $scope.owId).then(function (success) {
@@ -589,7 +685,7 @@ angular.module('UserModule')
                 //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-
+//item.notice = $scope.notice;
                 item = reversValue(item);
                 if (angular.isDefined(item.id)) {
                     item.$update(item, function (success) {
