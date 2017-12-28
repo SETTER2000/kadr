@@ -259,6 +259,7 @@
              */
             $scope.getDays = function () {
                 $http.get('/vacation/getNextDays').then(function success(response) {
+                //$http.get('/vacation/getNextDays/599d87cbb88be82bf00a176f').then(function success(response) {
                         $scope.days = response.data;
                         console.log('POPP:', days);
                     },
@@ -267,7 +268,7 @@
                     }
                 );
             };
-
+            console.log('DAYS:', $scope.getDays());
             /**
              * Получить год с коллекции интерфейса пользователя
              */

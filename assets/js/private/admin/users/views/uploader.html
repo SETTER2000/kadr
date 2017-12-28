@@ -211,7 +211,7 @@
                         </md-tab>
                         <md-tab label="Пересечения">
                             <md-content class="md-padding">
-                                <div ng-repeat="inter in item.intersections | filter:{fired:false}" layout="column" ng-cloak>
+                                <div ng-repeat="inter in item.intersections | filter:{fired:false} | changeFoto:'100x100'" layout="column" ng-cloak>
                                     <md-content class="md-padding">
                                         <form ng-submit="$event.preventDefault()">
                                             <div class="media">

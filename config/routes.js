@@ -114,7 +114,7 @@ module.exports.routes = {
      */
     'GET /vacation/calendar': 'VacationController.dataCalendar',
     'GET /vacation/getNextDays': 'VacationController.getDaysPeriodYear',
-    //'GET /vacation/getNextDays/:id': 'VacationController.getDaysPeriodYear',
+    //'GET /vacation/getNextDays/:furlough': 'VacationController.getDaysPeriodYear',
     'GET /vacation/getYears': 'VacationController.getYears',
     'GET /vacation/get-intersections/:id': 'VacationController.getIntersections',
     'GET /vacation/get-intersections': 'VacationController.getIntersections',

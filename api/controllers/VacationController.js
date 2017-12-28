@@ -539,7 +539,8 @@ module.exports = {
      */
     getDaysPeriodYear: function (req, res) {
         Interface.create(req, res);
-        User.findOne({id: req.session.me})
+        //User.findOne({id: '58e35656594105801c9d9203'})
+            User.findOne({id: req.session.me})
             .populate('interfaces')
             .populate('vacations')
             .exec((err, findUser) => {
@@ -548,10 +549,12 @@ module.exports = {
                 if (!findUser) return res.notFound();
                 let intfaceYear = (findUser['interfaces'].length) ? findUser['interfaces'][0].year : moment().get('year');
                 let year = (req.param('year')) ? req.param('year') : intfaceYear;
-
+                console.log('YYYYYYYYY', req.params.all());
                 Vacation.find({
                     where: {
+                        //owner: '58e35656594105801c9d9203',
                         owner: req.session.me,
+                        //furlough: ObjectId(req.param('furlough')),
                         or: [
                             {
                                 from: {
@@ -564,7 +567,8 @@ module.exports = {
                                     '>=': new Date(moment(year, ["YYYY"]).startOf('year')), // set to January 1st, 12:00 am this year
                                     '<=': new Date(moment(year, ["YYYY"]).endOf("year")) // set the moment to 12-31 23:59:59.999 this year
                                 }
-                            }
+                            },
+
                         ]
                     }
                 }).exec((err, findVacations) => {
@@ -740,7 +744,6 @@ module.exports = {
                      * Кол-во отпускных дней пренадлежащих только году интерфейса
                      * @type {number}
                      */
-                        //obj.selectDaysYearsPeriodMin = obj.allDays - obj.diffMin;
 
                     obj.holidaysMin = holidaysMin;
                     obj.holidays = holidays;
@@ -766,11 +769,8 @@ module.exports = {
 
                     res.send(obj);
                 });
-
-
             });
-    }
-    ,
+    },
 
     /**
      * Кол-во дней взятых на отпуск конкретным пользователем
@@ -779,6 +779,9 @@ module.exports = {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         console.log(req.params.all());
 
+        if (req.param('owner') === 'undefined') return res.badRequest();
+
+        console.log('REGSSS', req.params.all());
         Vacation.native(function (err, collection) {
             if (err) return res.serverError(err);
             //collection.aggregate([{$match:{owner:ObjectId(req.param('owner')),action:true}},{$group:{'_id':'$year',selected:{$sum:'$daysSelectHoliday'}}},{ $project:{selected:1,year:1,remains:{$subtract:[28,"$selected"]}}}])
@@ -946,7 +949,12 @@ module.exports = {
             //console.log('BODY', req.param('year'));
             //console.log('MOMENT YEAR',new Date(moment(req.param('year'),['YYYY'])));
 //             collection.aggregate([{$match:{owner:ObjectId(req.param('owner')),action:true}},{$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}},{ $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
-            collection.aggregate([{$match: {$and: [{from: {$gte: new Date(moment(req.param('year'), ['YYYY']))}}, {from: {$lt: new Date(moment(req.param('year'), ['YYYY']).endOf("year"))}}, {furlough:ObjectId(req.param('furlough'))},{action: {$eq: true}}, {owner: ObjectId(req.param('owner'))}]}}, {$group: {'_id': '$owner', selected: {$sum: '$daysSelectHoliday'}}}, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
+            collection.aggregate([{$match: {$and: [{from: {$gte: new Date(moment(req.param('year'), ['YYYY']))}}, {from: {$lt: new Date(moment(req.param('year'), ['YYYY']).endOf("year"))}}, {furlough: ObjectId(req.param('furlough'))}, {action: {$eq: true}}, {owner: ObjectId(req.param('owner'))}]}}, {
+                    $group: {
+                        '_id': '$owner',
+                        selected: {$sum: '$daysSelectHoliday'}
+                    }
+                }, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
                 .toArray(function (err, results) {
                     if (err) return res.serverError(err);
                     res.send(results);

@@ -3,7 +3,8 @@
         <div class="pull-left">
             <div class="pagination">
                 <div class="btn-toolbar relavs" role="toolbar">
-                    <button ng-if="showBtn()" class="btn btn-default btn-group" role="group" ui-sref="{{urlBtn()}}" title="{{added}}"
+                    <button ng-cloak ng-if="showBtn()" class="btn btn-default btn-group"
+                            role="group" ui-sref="{{urlBtn()}}" title="{{added}}"
                             type="button">
                         {{added}}
                     </button>

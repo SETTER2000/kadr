@@ -223,10 +223,13 @@ angular.module('UserModule')
             $scope.daysYear = [];
             $scope.owId = window.location.pathname.split('/')[4];
             //console.log('OWNERRRRR', $scope.owId);
-            $http.get('/vacation/daysInYear/owner/' + $scope.owId).then(function (success) {
-                console.log('RESPONM', success.data);
-                if (angular.isArray(success.data)) $scope.daysYear = success.data;
-            });
+            if($scope.owId){
+                $http.get('/vacation/daysInYear/owner/' + $scope.owId).then(function (success) {
+                    console.log('RESPONM', success.data);
+                    if (angular.isArray(success.data)) $scope.daysYear = success.data;
+                });
+            }
+
 
             $scope.selectedItemChangeIAgree = function (obj) {
                 if (angular.isDefined(obj.email)) {

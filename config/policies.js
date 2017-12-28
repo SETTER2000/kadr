@@ -88,7 +88,7 @@ module.exports.policies = {
         delete: ['isLoggedIn', 'isAdmin'],
         //deleteAllVacationToYear: ['isLoggedIn', 'isAdmin'],
         update: ['isLoggedIn', 'isAdminOrKadr'],
-        getDaysPeriodYear: ['isLoggedIn', 'isAdminOrKadr'],
+        //getDaysPeriodYear: ['isLoggedIn', 'isAdminOrKadr'],
         //daysInYear: ['isLoggedIn', 'isAdminOrKadr'],
         getYears:['isLoggedIn', 'isAdminOrKadr'],
         getIntersections:['isLoggedIn', 'isAdminOrKadr'],

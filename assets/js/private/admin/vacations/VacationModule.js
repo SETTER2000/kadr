@@ -37,7 +37,7 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                 }
             })
             .state('home.admin.vacations.create', {
-                url: '/create/:ownerId/:furloughId',
+                url: '/create',
                 views: {
                     '@': {
                         templateUrl: '/js/private/admin/vacations/tpl/edit.tpl.html',
@@ -242,7 +242,7 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
         }
     })
     .filter("changeFoto", function () {
-        return function (value, size) {
+        return function (value, size='150x150') {
             if (!angular.isArray(value) || !angular.isString(size)) return value;
             let arr = [];
             value.forEach(function (v, k, a) {
