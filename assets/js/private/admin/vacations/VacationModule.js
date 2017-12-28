@@ -241,5 +241,22 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
             return arr;
         }
     })
+    .filter("changeFoto", function () {
+        return function (value, size) {
+            if (!angular.isArray(value) || !angular.isString(size)) return value;
+            let arr = [];
+            value.forEach(function (v, k, a) {
+
+                if (!v.avatarUrl) {
+                    v.avatarUrl = 'http://via.placeholder.com/'+size;
+                }
+                arr.push(v);
+                //if (valueArr.indexOf(v[nameProperty][nameColllectionProperty]) !== -1) {
+                //    arr.push(v);
+                //}
+            });
+            return arr;
+        }
+    })
 ;
 

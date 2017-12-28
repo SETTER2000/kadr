@@ -21,7 +21,7 @@
                     <span class="glyphicon glyphicon-trash"></span> Удалить
                 </button>
 
-                <button ng-show="edit" ng-click="dub(item)" type="button" class="btn btn-primary">
+                <button ng-show="edit" ng-click="dub(item)" type="button" ng-disabled="(remains<=0)" class="btn btn-primary">
                 <!--<button ng-show="edit" ui-sref="home.admin.vacations.create" type="button" class="btn btn-primary">-->
                     <span class="glyphicon glyphicon-plus"></span> Добавить
                 </button>
@@ -51,31 +51,6 @@
                 </div>
                 <div class="panel-body">
                     <form name="userForm" novalidate ng-submit="saveEdit(item)" enctype="multipart/form-data">
-                        <!--<div class="form-inline">-->
-
-                            <!--&lt;!&ndash; A C T I O N &ndash;&gt;-->
-
-                            <!--<div class="form-group">-->
-                                <!--<div ng-if="(me.admin || me.kadr)" class="checkbox">-->
-                                    <!--<label>-->
-                                        <!--&lt;!&ndash;<input type="checkbox" ng-model="item.action">Активность&ndash;&gt;-->
-                                        <!--<md-switch ng-model="item.action" aria-label="Switch 1">-->
-                                            <!--<span ng-if="item.action">Активность</span>-->
-                                            <!--<span ng-if="!item.action">Не активен</span>-->
-                                        <!--</md-switch>-->
-                                    <!--</label>-->
-                                <!--</div>-->
-                            <!--</div>-->
-
-                            <!--&lt;!&ndash; P H O T O &ndash;&gt;-->
-
-                            <!--<div class=" pull-right">-->
-                                <!--<a href="{{user.getEditUrl(user.id)}}">-->
-                                    <!--<img class="img-thumbnail" width="80px" ng-src="{{selectAvatarUrl}}" alt="">-->
-                                <!--</a>-->
-                            <!--</div>-->
-                            <!--<div class="clearfix"></div>-->
-                        <!--</div>-->
                         <div class="row">
                             <div class="col-md-3">
                                 <!-- A C T I O N -->
@@ -121,7 +96,7 @@
 
                         <!-- T Y P E  F U R L O U G H -->
 
-                        <div ng-controller="ListFurloughController" class="form-group ">
+                        <div  ng-controller="ListFurloughController" class="form-group ">
                             <label class="control-label" ng-bind="items[0].sc()"></label>
                             <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
 
@@ -141,7 +116,7 @@
 
                         <!--  O W N E R  -->
 
-                        <div ng-controller="ListController" class="form-group ">
+                        <div ng-if="(item.furlough.id !== undefined)" ng-controller="ListController" class="form-group ">
                             <label class="control-label" ng-bind="items[0].sc()"></label>
                             <span ng-if="me.admin">{{filtered.length}}</span>
                             <select ng-disabled="edit" class="form-control" ng-model="item.owner.id">
@@ -152,9 +127,8 @@
                             </select>
 
                         </div>
-                        <div ng-controller="ListController" class="form-group ">
-                            <!--{{items | json}}-->
-                        </div>
+
+
                         <div class="form-group">
                             <!--<div class="form-group" style=" position: fixed;margin-left: 50px; margin-bottom: 70px; bottom:0; left:0;">-->
                             <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-md btn-success">

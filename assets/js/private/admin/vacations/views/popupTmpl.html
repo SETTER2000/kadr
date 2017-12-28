@@ -1,6 +1,6 @@
 <h5><em>События</em></h5>
 <div class="dialog">
-    <div class="list-group" ng-repeat="bg in bdgs">
+    <div class="list-group" ng-repeat="bg in bdgs | changeFoto:'150x150'">
        <!-- Д р у г и е  с о о б щ е н и я -->
         <a ng-if="!bg.vacationId" type="button" ui-sref="home.admin.vacations.edit({ vacationId: bg.badges[0].id })"
            class="list-group-item">

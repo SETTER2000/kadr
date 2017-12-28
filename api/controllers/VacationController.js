@@ -67,8 +67,7 @@ module.exports = {
                             findOneUser.lastName + ' ' + findOneUser.firstName +
                             '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
 
-                        return res.badRequest('ВНИМАНИЕ! Отсутствует свойство "год" в коллекции' +
-                            '. Перейдите по ссылке http://' + req.headers.host + '/interface/create');
+                        return res.badRequest('ВНИМАНИЕ! Отсутствует свойство "год" в коллекции.  <a target="_blank" class="kadr-link" href="http://' + req.headers.host + '/interface/create">Перейдите по ссылке</a>');
                     }
                     let from = {$gte: new Date(moment(findOneUser.interfaces[0].year, ["YYYY"]).startOf("year"))};
                     User.find(q)
@@ -940,18 +939,14 @@ module.exports = {
      * Кол-во дней оставшихся по годам на отпуск
      */
     getDaysToYears: function (req, res) {
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         // db.vacation.aggregate([{$match:{$and:[{from:{$gte: ISODate("2018-01-01")}},{from:{$lt: ISODate("2019-01-01")}},{action: {$eq: true}}, {owner:ObjectId('58a461e66723246b6c2bc641')}]}}, {$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}}, { $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
         Vacation.native(function (err, collection) {
             if (err) return res.serverError(err);
             //console.log('BODY', req.param('year'));
             //console.log('MOMENT YEAR',new Date(moment(req.param('year'),['YYYY'])));
 //             collection.aggregate([{$match:{owner:ObjectId(req.param('owner')),action:true}},{$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}},{ $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
-            collection.aggregate([{$match: {$and: [{from: {$gte: new Date(moment(req.param('year'), ['YYYY']))}}, {from: {$lt: new Date(moment(req.param('year'), ['YYYY']).endOf("year"))}}, {action: {$eq: true}}, {owner: ObjectId(req.param('owner'))}]}}, {
-                    $group: {
-                        '_id': '$owner',
-                        selected: {$sum: '$daysSelectHoliday'}
-                    }
-                }, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
+            collection.aggregate([{$match: {$and: [{from: {$gte: new Date(moment(req.param('year'), ['YYYY']))}}, {from: {$lt: new Date(moment(req.param('year'), ['YYYY']).endOf("year"))}}, {furlough:ObjectId(req.param('furlough'))},{action: {$eq: true}}, {owner: ObjectId(req.param('owner'))}]}}, {$group: {'_id': '$owner', selected: {$sum: '$daysSelectHoliday'}}}, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
                 .toArray(function (err, results) {
                     if (err) return res.serverError(err);
                     res.send(results);

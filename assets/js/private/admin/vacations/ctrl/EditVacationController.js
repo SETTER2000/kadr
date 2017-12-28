@@ -88,7 +88,6 @@ angular.module('VacationModule')
             io.socket.put('/vacation/' + $scope.vacationId + '/join', function (data, JWR) {
                 // Если что-то пошло не так, обработайте ошибку.
                 if (JWR.statusCode !== 200) {
-                    console.log('JJJJJJJAA', JWR);
                     if (angular.isString(JWR.body)) toastr.error(JWR.body, info.error);
                     return;
                 }
@@ -475,17 +474,41 @@ angular.module('VacationModule')
             $scope.yearGet = ($scope.edit && $scope.item) ? $scope.item.from : $scope.me.interfaces[0].year;
 
 
+            $scope.$watch('item.furlough.id', function (val) {
+                //console.log(' CHANGE $scope.item.furlough.id',  val);
+                //console.log(' CHANGE 99 $scope.item.owner.id',  $scope.item.owner.id);
+                if(val) {
+                    $scope.item.furlough.id = val;
+                   if($scope.item.owner) $scope.getDaysYear($scope.item.owner.id, $scope.yearFrom);
+                }
+            });
+            //$scope.$watch('remains', function (val) {
+            //    console.log('REMAINS ', val);
+            //    if (val <= 0) {
+            //        console.log('FLAT: ', $scope.flatpicker);
+            //        $scope.flatpicker.config._enable = [];
+            //        $scope.flatpicker.set('disable', [{from: $scope.flatpicker.config._minDate, to: $scope.flatpicker.config._maxDate}]);
+            //    }
+            //});
+
             $scope.getDaysYear = function (ownerId, year) {
-                $http.get('/vacation/get-days-to-years?owner=' + ownerId + '&year=' + year)
+                $http.get('/vacation/get-days-to-years?owner=' + ownerId + '&year=' + year + '&furlough=' + $scope.item.furlough.id)
                     .then(function onSuccess(sailsResponse) {
-                        //console.log('***************sailsResponse: ', sailsResponse.data);
-
                         $scope.remains = $scope.remainsDub = 28;
+                        //console.log('DATTT config', $scope.flatpicker.config);
+                        //$scope.flatpicker.set('enable',[ {from:$scope.flatpicker.config._minDate, to:$scope.flatpicker.config._maxDate}]);
                         if (sailsResponse.data.length > 0) {
-                            return $scope.remains = $scope.remainsDub = sailsResponse.data[0].remains;
+                            if (sailsResponse.data[0].remains <= 0 && !$scope.edit) {
+                                $scope.flatpicker.config._enable = [];
+                                $scope.flatpicker.set('disable', [{from: $scope.flatpicker.config._minDate, to: $scope.flatpicker.config._maxDate}]);
+                            }
+                            $scope.remains = $scope.remainsDub = sailsResponse.data[0].remains;
+                        } else {
+                            $scope.flatpicker.set('enable', [{
+                                from: $scope.flatpicker.config._minDate,
+                                to: $scope.flatpicker.config._maxDate
+                            }]);
                         }
-
-
                     })
                     .catch(function onError(sailsResponse) {
                         console.log(sailsResponse);
@@ -494,27 +517,15 @@ angular.module('VacationModule')
                         $scope.userList.loading = false;
                     });
             };
-            $scope.$watch('item.owner.id', function (ownerId) {
-                if (ownerId) {
-                    $scope.getDaysYear(ownerId, $scope.yearFrom);
-                }
-            });
+
 
             $scope.$watch('minDateConfig', function (val, old) {
-                console.log('NEW', val);
-                console.log('OLD', old);
                 if (val) {
                     //$scope.getDaysYear(val, $scope.yearFrom);
                 }
             });
             $scope.$watch('me.interfaces', function (val, old) {
-                console.log('NEW interfaces', val[0].year);
-                console.log('OLD interfaces', old[0].year);
-                if (val) {
-
-                    $scope.interFa = val[0].year;
-
-                }
+                if (val) $scope.interFa = val[0].year;
             });
 
 
@@ -769,13 +780,17 @@ angular.module('VacationModule')
             $scope.$watch('item.owner.id', function (value, old) {
                 $scope.getIntersections(value);
                 if (value) {
+
                     Users.get({id: value}, function (user) {
+
                         $scope.user = user;
-                        if (!$scope.user.avatarUrl) {
-                            return $scope.selectAvatarUrl = 'http://via.placeholder.com/150x150';
+                        console.log('USER', user);
+                        if (!user.avatarUrl) {
+                            $scope.selectAvatarUrl = 'http://via.placeholder.com/99x144';
                         }
                         $scope.selectAvatarUrl = user.avatarUrl;
-                        $scope.apply();
+                        $scope.getDaysYear(value, $scope.yearFrom);
+                        //$scope.apply();
                     }, function (err) {
                         console.log('ERRd:', err);
                     });
@@ -801,7 +816,7 @@ angular.module('VacationModule')
             $scope.rex = function (arr) {
 
                 if (!angular.isArray(arr)) return arr;
-                if ($scope.flatpicker) console.log('$scope.flatpicker', $scope.flatpicker);
+                //if ($scope.flatpicker) console.log('$scope.flatpicker', $scope.flatpicker);
                 arr.forEach(function (v, k, ar) {
                     //console.log('v.from:',moment(v.from).year());
                     //console.log('v.from+++:',$scope.interFa);
@@ -951,7 +966,7 @@ angular.module('VacationModule')
 
                         $scope.item2 = sailsResponse.data;
                         console.log('--------------RTTT: ', $scope.item2);
-               
+
                     })
                     .catch(function onError(sailsResponse) {
                         console.log(sailsResponse);
@@ -960,9 +975,9 @@ angular.module('VacationModule')
                         $scope.userList.loading = false;
                     });
                 //$state.go('home.admin.vacations.create',item);
-                $scope.$watch('item2', function (val,old) {
-                    console.log('VVal',  val);
-                    console.log('VVal -old',  old);
+                $scope.$watch('item2', function (val, old) {
+                    console.log('VVal', val);
+                    console.log('VVal -old', old);
                     if (val) {
                         $scope.item.owner = $scope.item2.owner;
                         $scope.item.furlough = $scope.item2.furlough;
