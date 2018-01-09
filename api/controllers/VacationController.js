@@ -549,7 +549,7 @@ module.exports = {
                 if (!findUser) return res.notFound();
                 let intfaceYear = (findUser['interfaces'].length) ? findUser['interfaces'][0].year : moment().get('year');
                 let year = (req.param('year')) ? req.param('year') : intfaceYear;
-                console.log('YYYYYYYYY', req.params.all());
+
                 Vacation.find({
                     where: {
                         //owner: '58e35656594105801c9d9203',

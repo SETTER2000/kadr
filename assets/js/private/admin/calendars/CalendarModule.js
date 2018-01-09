@@ -266,7 +266,7 @@ angular.module('CalendarModule', ['ui.router', 'ngResource', 'ngAnimate', 'angul
             //replace:true
         }
     })
-    .directive('calendar', function (Attendances) { // функция компиляции директивы (фабричная функция)
+    .directive('calendar', function (Attendances,moment) { // функция компиляции директивы (фабричная функция)
         return {
             restrict: 'E',
             scope: {

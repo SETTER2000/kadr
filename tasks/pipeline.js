@@ -38,7 +38,7 @@ var jsFilesToInject = [
     //'js/dependencies/angular-translate-loader-url.js',
     'js/dependencies/angular-resource.min.js',
     'js/dependencies/moment.min.js',
-    //'js/dependencies/moment-precise-range.js',
+    'js/dependencies/moment-precise-range.js',
     'js/dependencies/twix.js',
     'js/dependencies/moment-recur.js',
     'js/dependencies/ru.js',
