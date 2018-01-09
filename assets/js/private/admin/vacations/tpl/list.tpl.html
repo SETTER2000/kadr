@@ -274,8 +274,8 @@
 <div ui-view="list"></div>
 <div ui-view="attendance"></div>
 
-<pre class="pull-right" ng-if="debug"><h2>{{items| json}}</h2></pre>
+<pre  ng-if="(debug && me.admin)"><h4>{{item| json}}</h4></pre>
 
-</div>
+
 
 
