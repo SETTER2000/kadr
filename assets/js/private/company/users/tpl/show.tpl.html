@@ -1,0 +1,76 @@
+<div class="col-sm-11  col-md-12  main">
+    <div class="page-header">
+        <h2>{{item.getFullName()}}
+            <div class="btn-group-xs pull-right">
+                <a ui-sref="home.admin.users" class="btn btn-sm btn-warning">
+                    <span class="glyphicon glyphicon-list"></span>
+                </a>
+                <a ui-sref="home.admin.users.edit({ userId: item.id })" class="btn btn-sm btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+            </div>
+        </h2>
+    </div>
+    <div class="row">
+        <div class=" col-md-12">
+            <table class="table">
+                <tr>
+                    <th>ФИО</th>
+                    <td>{{item.getFullName()}}</td>
+                </tr>
+                <tr>
+                    <th>ДР</th>
+                    <td>{{item.birthday | date:'dd.MM.yyyy'}}</td>
+                </tr>
+                <tr>
+                    <th>Логин</th>
+                    <td>{{item.login}}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{item.email}}</td>
+                </tr>
+                <tr>
+                    <th>Должность</th>
+                    <td>{{item.position | json}}</td>
+                </tr>
+                <tr>
+                    <th>Отдел</th>
+                    <td>{{item.subdivision | json}}</td>
+                </tr>
+                <tr ng-if="!item.firedDate">
+                    <th>Работает с</th>
+                    <td>{{item.dateInWork | date: "dd.MM.yyyy"}} {{message}}</td>
+                </tr>
+                <tr ng-if="item.firedDate">
+                    <th>Работал</th>
+                    <td>{{item.dateInWork | date: "dd.MM.yyyy"}} - {{item.firedDate | date: "dd.MM.yyyy"}}</td>
+                </tr>
+                <tr ng-if="item.firedDate">
+                    <th>Уволен с</th>
+                    <td>{{item.firedDate | date: "dd.MM.yyyy"}}</td>
+                </tr>
+                <tr>
+                    <th colspan="20"></th>
+                </tr>
+
+
+                <!--<tr ng-cloak>-->
+                <!--<td>-->
+                <!--<a ui-sref="home.admin.users" class="btn btn-sm btn-warning">-->
+                <!--<span class="glyphicon glyphicon-list"></span>-->
+                <!--</a>-->
+
+                <!--</td>-->
+                <!--<td>-->
+                <!--<a ui-sref="home.admin.users.edit({userId:item.id})" class="btn btn-sm btn-warning">-->
+                <!--<span class="glyphicon glyphicon-pencil"></span>-->
+                <!--</a>-->
+                <!--</td>-->
+                <!--</tr>-->
+
+            </table>
+        </div>
+    </div>
+</div>
+

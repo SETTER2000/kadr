@@ -1,0 +1,219 @@
+<!--<h3>LIST {{filtered.length}}</h1>-->
+<!--<pagination-->
+<!--limit-rows="limitRows"-->
+<!--default-rows="defaultRows"-->
+<!--length-object="(items | filter:filter:ftObj  ).length"-->
+<!--current-page="currentPage"-->
+<!--added="added"-->
+<!--show-bt="showBt"-->
+<!--url-bt="urlBt"-->
+<!--on-select-page="selectCount=selectCount+1"-->
+<!--show-cont-it="showContIt"-->
+<!--show-str="showStr"-->
+<!--&gt;-->
+<!--</pagination>-->
+<pagination
+        limit-rows="limitRows"
+        default-rows="defaultRows"
+        length-object="countCurrentView=((items | filter:ftObj).length)?(items | filter:ftObj ).length:1"
+        current-page="currentPage"
+        added="added"
+        show-bt="showBt"
+        show-cont-it="showContIt"
+        show-str="showStr"
+        url-bt="urlBt"
+        on-select-page="selectCount=selectCount+1"
+
+>
+</pagination>
+<td-table dt-items="items" me="me" type="users" field-name="fieldName" name-header="nameHeader"
+          search-text="searchText" default-rows="defaultRows" current-page="currentPage"
+          filter-object="ftObj"></td-table>
+
+<!--<pagination-->
+        <!--limit-rows="limitRows"-->
+        <!--default-rows="defaultRows"-->
+        <!--length-object="countCurrentView=((items | filter:ftObj).length)?(items | filter:ftObj ).length:1"-->
+        <!--current-page="currentPage"-->
+        <!--added="added"-->
+        <!--show-bt="showBt"-->
+        <!--show-cont-it="showContIt"-->
+        <!--show-str="showStr"-->
+        <!--url-bt="urlBt"-->
+        <!--on-select-page="selectCount=selectCount+1"-->
+
+<!--&gt;-->
+<!--<pagination-->
+<!--limit-rows="limitRows"-->
+<!--default-rows="defaultRows"-->
+<!--length-object="(items | filter:{$:searchText, fired:mode} ).length"-->
+<!--current-page="currentPage"-->
+<!--added="added"-->
+<!--show-bt="showBt"-->
+<!--url-bt="urlBt"-->
+<!--on-select-page="selectCount=selectCount+1">-->
+<!--</pagination>-->
+
+<!--<table class="table table-hover">-->
+<!--&lt;!&ndash;<tr><th colspan="100">Найдено: {{filtered.length}}</th></tr>&ndash;&gt;-->
+<!--<tr>-->
+<!--<th>#</th><th></th>-->
+<!--<th>-->
+<!--<button class="btn btn-sm btn-default  not-border" ng-click="sortBy('lastName')">{{fioArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'lastName'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+<!--</th>-->
+<!--&lt;!&ndash;<th>&ndash;&gt;-->
+<!--&lt;!&ndash;<button class="btn  btn-sm btn-default" ng-click="sortBy('birthday')">{{drArea}}&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="sortOrder" ng-show="propertyName === 'birthday'"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{reverse: reverse}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</th>&ndash;&gt;-->
+<!--&lt;!&ndash;<th>&ndash;&gt;-->
+<!--&lt;!&ndash;<button class="btn  btn-sm btn-default" ng-click="sortBy('login')">{{loginArea}}&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="sortOrder" ng-show="propertyName === 'login'"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{reverse: reverse}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</th>&ndash;&gt;-->
+
+<!--<th>-->
+<!--<button class="btn  btn-sm btn-default not-border" ng-click="sortBy('departments[0].name')">{{departmentArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'departments[0].name'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+
+<!--</th>-->
+<!--<th>-->
+<!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('positions[0].name')">{{positionArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'positions[0].name'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+
+<!--</th>-->
+<!--<th>-->
+<!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">{{emailArea}}-->
+<!--<span class="sortOrder" ng-show="propertyName === 'email'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--</button>-->
+
+<!--</th>-->
+
+<!--<th class="wdt">-->
+<!--&lt;!&ndash;<button class="btn  btn-sm btn-default" ng-click="sortBy('contacts')">Контакты: {{fieldName}}&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="sortOrder" ng-show="propertyName === 'contacts'"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{reverse: reverse}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+<!--&lt;!&ndash; Single button &ndash;&gt;-->
+<!--&lt;!&ndash; Split button &ndash;&gt;-->
+<!--<div class="btn-group pull-right">-->
+<!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">-->
+<!--<span class="sortOrder" ng-show="propertyName === 'contacts'"-->
+<!--ng-class="{reverse: reverse}"></span>-->
+<!--Контакты: {{fieldName}}-->
+<!--</button>-->
+<!--<button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"-->
+<!--aria-haspopup="true" aria-expanded="false">-->
+<!--<span class="caret"></span>-->
+<!--<span class="sr-only">Контакты: {{fieldName}}</span>-->
+<!--</button>-->
+<!--<ul class="dropdown-menu">-->
+<!--&lt;!&ndash;<li><a href="#" ng-click="fieldName='Email'">Email</a></li>&ndash;&gt;-->
+<!--<li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>-->
+<!--<li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>-->
+<!--<li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>-->
+<!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
+<!--&lt;!&ndash;<li><a href="#">Separated link</a></li>&ndash;&gt;-->
+<!--</ul>-->
+<!--</div>-->
+<!--</th>-->
+<!--&lt;!&ndash;<th>&ndash;&gt;-->
+<!--&lt;!&ndash;<button class="btn  btn-sm btn-default" ng-click="sortBy('email')">Отработанное время&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="sortOrder" ng-show="propertyName === 'email'"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{reverse: reverse}"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</th>&ndash;&gt;-->
+<!--&lt;!&ndash;<th></th>&ndash;&gt;-->
+<!--&lt;!&ndash;<th></th>&ndash;&gt;-->
+<!--</tr>-->
+<!--&lt;!&ndash;| firstChar:param:charText&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="$even ? 'default' : 'success'"&ndash;&gt;-->
+<!--&lt;!&ndash;<tr><td ng-repeat="(key,property) in item">{{key}}</td></tr>&ndash;&gt;-->
+<!--<tr ng-repeat="item in filtered=(items | filter:{$:searchText, fired:mode} |-->
+<!--orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)">-->
+
+<!--<td>{{$index+1}}</td>-->
+<!--<td><img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}" alt=""></td>-->
+<!--<td>-->
+<!--<a href="{{item.getEditUrl(item.id)}}">-->
+<!--{{item.getFullName()}}-->
+<!--</a>-->
+<!--&lt;!&ndash;<button type="button" class="btn btn-lg btn-danger" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?">Click to toggle popover</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">&ndash;&gt;-->
+<!--&lt;!&ndash;{{item.getFullName()}}&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+<!--</td>-->
+<!--&lt;!&ndash;<td><a href='#' ng-click="getLastName(item)">{{item.getFullName()}}</a></td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td ng-if="">{{item.getFullName()}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>{{item.birthday | date:'dd.MM.yyyy'}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>{{item.login}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<ul class="position" ng-controller="ListDepartmentController" ng-repeat="subdivision in item.subdivision">&ndash;&gt;-->
+<!--&lt;!&ndash;<li ng-repeat="option in items | filter:subdivision.id">&ndash;&gt;-->
+<!--&lt;!&ndash;{{option.name}}&ndash;&gt;-->
+<!--&lt;!&ndash;</li>&ndash;&gt;-->
+<!--&lt;!&ndash;</ul>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td>&ndash;&gt;-->
+<!--&lt;!&ndash;<ul class="position" ng-controller="ListPositionController" ng-repeat="position in item.position">&ndash;&gt;-->
+<!--&lt;!&ndash;<li ng-repeat="option in items | filter:position.id">&ndash;&gt;-->
+<!--&lt;!&ndash;{{option.name}}&ndash;&gt;-->
+<!--&lt;!&ndash;</li>&ndash;&gt;-->
+<!--&lt;!&ndash;</ul>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+
+<!--<td>-->
+<!--<ul class="position" ng-controller="ListDepartmentController"-->
+<!--ng-repeat="subdivision in item.subdivision | filter:{$:searchText}">-->
+<!--<li ng-repeat="option in items | filter:{$:searchText,id:subdivision.id}">-->
+<!--{{option.name}}-->
+<!--</li>-->
+<!--</ul>-->
+<!--</td>-->
+<!--<td>-->
+<!--<ul class="position" ng-controller="ListPositionController" ng-repeat="position in item.positions">-->
+<!--<li ng-repeat="option in items | filter:position.id">-->
+<!--{{option.name}}-->
+<!--</li>-->
+<!--</ul>-->
+<!--</td>-->
+
+<!--<td> <a href="mailto:{{item.email}}">{{item.email}}</a></td>-->
+<!--<td width="250px" class="text-right">{{item.getContact(fieldName)}}</td>-->
+<!--&lt;!&ndash;<td>{{item.diff}}</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="btn-group-xs">&ndash;&gt;-->
+<!--&lt;!&ndash;<a ng-href="{{item.getShowUrl(item.id)}}" class="btn"&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{'btn-primary': !item.fired, ' btn-danger':item.fired}">&ndash;&gt;-->
+<!--&lt;!&ndash;<span class="glyphicon "&ndash;&gt;-->
+<!--&lt;!&ndash;ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"&ndash;&gt;-->
+<!--&lt;!&ndash;aria-hidden="true"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;<a ui-sref="admin.users.edit({userId:'588b46b6d20dd30c17b27f03'})">Users Edit</a>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;<a ui-sref="admin.users.edit({userId:item.id})" class="btn btn-sm btn-warning">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;</a>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;<a ng-href="{{item.getEditUrl(item.id)}}" class="btn btn-warning">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;&lt;!&ndash;</a>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--&lt;!&ndash;<td class="btn-group-xs">&ndash;&gt;-->
+<!--&lt;!&ndash;<a href="#">&ndash;&gt;-->
+<!--&lt;!&ndash;<span ng-if="mode" ng-click="delete(item)" class="glyphicon glyphicon-trash"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;</a>&ndash;&gt;-->
+<!--&lt;!&ndash;</td>&ndash;&gt;-->
+<!--</tr>-->
+<!--</table>-->

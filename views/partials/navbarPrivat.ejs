@@ -15,32 +15,30 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li ng-controller="ListScheduleController" class="dropdown" >
+
+
+                    <li ng-if="(!me.admin && !me.kadr)"><a ui-sref="home.company.vacations">Отпуска</a></li>
+
+
+                    <li ng-controller="ListScheduleController" class="dropdown">
                         <div ng-if="(me.admin || me.kadr)" ng-show="bdgs.length" class="badges-position">
-                            <div class="badge danger"  ng-mouseover="clickToOpen()">
+                            <div class="badge danger" ng-mouseover="clickToOpen()">
                                 {{bdgs.length}}
                             </div>
                         </div>
-
                         <a ng-if="(me.kadr || me.admin || me.leader)" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                            Кадровая служба
-
-                            <span class="caret"></span></a>
+                            Кадровая служба<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a ng-if="(me.admin || me.kadr)" ui-sref="home.admin.schedules">График отпусков</a></li>
                             <!--<li><a ng-if="(me.admin)" ui-sref="home.admin.documents">Документы и отчётность</a></li>-->
                         </ul>
                     </li>
-
-                    <li  ng-controller="ListVacationController"   class="dropdown" >
-
+                    <li ng-controller="ListVacationController" class="dropdown">
                         <div ng-if="(me.admin || me.kadr)" ng-show="bdgs.length" class="badges-position">
-                            <div class="badge danger"  ng-mouseover="clickToOpen()">
+                            <div class="badge danger" ng-mouseover="clickToOpen()">
                                 {{bdgs.length}}
                             </div>
                         </div>
-
-
                         <a ng-if="(me.kadr || me.admin || me.leader)" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             Справочники
                             <span class="caret"></span></a>
@@ -56,8 +54,7 @@
                             <li><a ng-if="me.admin" ui-sref="home.admin.users.administration">Группы</a></li>
                         </ul>
                     </li>
-                    <li>
-                    </li>
+                    <li> </li>
                 </ul>
                 <ul ng-show="me.id" class="nav navbar-nav navbar-right">
                     <li class="gravatarSm">

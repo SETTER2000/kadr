@@ -1,0 +1,61 @@
+<!--<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
+<div class="col-sm-11  col-md-12  main">
+    <div class="page-header">
+        <h2>{{item.getFullName()}}
+
+            <div class="btn-group-xs pull-right">
+                <!--<small>-->
+
+                    <!--<label class="checkbox-inline">-->
+                        <!--<input type="checkbox" ng-model="debug" value="option1"> отладка-->
+                    <!--</label>-->
+                    <!--<label class="checkbox-inline">-->
+                        <!--<input type="checkbox" ng-model="mode" value="option2"> режимы-->
+                    <!--</label>-->
+
+                <!--</small>-->
+                <a ng-href="{{item.getListUrl()}}"  class="btn btn-sm btn-warning">
+                    <span class="glyphicon glyphicon-list"></span>
+                </a>
+                <a ng-href="{{item.getEditUrl(item.id)}}" class="btn btn-sm btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+                <!--<button ui-sref="home.admin.users.settings" type="button" class="btn btn-success">-->
+                    <!--<span class="glyphicon glyphicon-cog"></span>-->
+                <!--</button>-->
+                <!--<button ui-sref="home.admin.users.create" type="button" class="btn btn-warning">-->
+                    <!--<span class="glyphicon glyphicon-plus"></span>-->
+                <!--</button>-->
+            </div>
+
+        </h2>
+    </div>
+    <div class="row">
+        <div class=" col-md-12">
+            <table class="table">
+                <tr> <th>ФИО</th> <td>{{item.getFullName()}}</td></tr>
+                    <tr><th>ДР</th><td>{{item.birthday | date:'dd.MM.yyyy'}}</td></tr>
+                    <tr><th>Логин</th><td>{{item.login}}</td></tr>
+                    <tr><th>Email</th> <td>{{item.email}}</td></tr>
+                    <tr><th colspan="20"></th></tr>
+
+
+                <!--<tr ng-cloak>-->
+                    <!--<td>-->
+                        <!--<a ui-sref="home.admin.users" class="btn btn-sm btn-warning">-->
+                            <!--<span class="glyphicon glyphicon-list"></span>-->
+                        <!--</a>-->
+
+                    <!--</td>-->
+                    <!--<td>-->
+                        <!--<a ui-sref="home.admin.users.edit({userId:item.id})" class="btn btn-sm btn-warning">-->
+                            <!--<span class="glyphicon glyphicon-pencil"></span>-->
+                        <!--</a>-->
+                    <!--</td>-->
+                <!--</tr>-->
+
+            </table>
+        </div>
+    </div>
+</div>
+

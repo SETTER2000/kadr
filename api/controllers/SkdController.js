@@ -151,32 +151,17 @@ module.exports = {
                     sort = {'_id.date': -1, '_id.name': +req.param('sortTrend')};
                 }
 
-                // sails.log('selectedYear');
-                // sails.log(selectedYear);
                 let skip = (+page * +limit);
                 Skd.native(function (err, collection) {
                     if (err) return res.serverError(err);
                     collection.find({}, {date: 1, _id: 0}).sort({"date": -1}).limit(1)
                         .toArray(function (err, dateLast) {
                             if (err) return res.serverError(err);
-                            //sails.log('DATE LAST');
-                            //console.log(dateLast[0].date);
-                            //sails.log('SDDD');
-                            //console.log(req.param('sd'));
-
                             Skd.native(function (err, collection) {
                                 if (err) return res.serverError(err);
-
                                 sails.log('Отработанное время. Поиск по дате:', req.param('sd'));
-
                                 //"2017-06-23"
                                 let searchDate = (req.param('sd')) ? req.param('sd') : '';
-
-                                //sails.log('MOMENT: ', moment(searchDate[1],['YYYY-MM-DD HH:mm:ss ZZ']).format('YYYY-MM-DD'));
-                                //sails.log('searchDate[1]: ', new Date(moment(searchDate[1],['YYYY-MM-DD HH:mm:ss ZZ']).format('YYYY-MM-DD')));
-                                ////sails.log('searchDate[0].moment: ', moment(searchDate[0], ).format('YYYY-MM-DD'));
-
-
                                 let match = (searchDate) ? {
                                     $match: {
                                         date: {
@@ -189,13 +174,6 @@ module.exports = {
                                         date: {$gte: dateLast[0].date}, name: reg
                                     }
                                 };
-                                //mat = {$match: {date: searchDate}};
-                                //sails.log('searchDate');
-                                //sails.log('searchDate', searchDate);
-                                //sails.log('match', match);
-                                //sails.log(match);
-                                //sails.log('new Date(searchDate)');
-                                //sails.log(moment(searchDate));
                                 collection.aggregate([match,
                                     {$sort: {startPeriod: 1}},
                                     {
@@ -212,7 +190,6 @@ module.exports = {
                                             maxEnd: {$max: "$endPeriod"},
                                             minStart: {$min: "$startPeriod"},
                                             periodСount: {$sum: 1}
-
                                         }
                                     },
                                     {$sort: sort},

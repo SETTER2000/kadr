@@ -156,4 +156,5 @@ angular.module('DashboardModule', ['ui.router', 'toastr', 'ngResource', 'ngAnima
             "progressBar": false,
         });
     })
+
 ;

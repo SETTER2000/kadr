@@ -46,6 +46,8 @@ var jsFilesToInject = [
 
     'js/dependencies/toastr/*.js',
     'js/dependencies/**/*.js',
+    'js/private/services/customServices.js',
+    'js/private/directives/directiveModule.js',
     'js/private/admin/skds/SkdModule.js',
     'js/private/admin/structures/StructureModule.js',
     'js/private/admin/departments/DepartmentModule.js',
@@ -53,15 +55,25 @@ var jsFilesToInject = [
     'js/private/admin/employees/EmployeeModule.js',
     'js/private/admin/attendances/AttendanceModule.js',
     'js/private/admin/schedules/ScheduleModule.js',
-
     'js/private/admin/positions/PositionModule.js',
     'js/private/admin/furloughs/FurloughModule.js',
     'js/private/admin/vacations/VacationModule.js',
     'js/public/signup/SignupModule.js',
     'js/private/admin/users/UserModule.js',
+
+    'js/private/company/users/UserFModule.js',
+    'js/private/company/vacations/VacationFModule.js',
+
+
     'js/private/admin/AdminModule.js',
+    'js/private/company/CompanyModule.js',
+
+
+
     'js/public/homepage/HomepageModule.js',
     'js/private/dashboard/DashboardModule.js',
+
+
     'js/private/HolidayModule.js',
     // All of the rest of your client-side js files
     // will be injected here in no particular order.

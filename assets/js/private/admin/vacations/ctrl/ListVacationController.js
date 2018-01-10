@@ -268,7 +268,7 @@
                     }
                 );
             };
-            console.log('DAYS:', $scope.getDays());
+            //console.log('DAYS B:', $scope.getDays());
             /**
              * Получить год с коллекции интерфейса пользователя
              */

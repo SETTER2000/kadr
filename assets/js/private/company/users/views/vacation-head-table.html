@@ -1,0 +1,82 @@
+
+    <th>#</th>
+    <th class="text-center">{{countCurrentView}}</th>
+    <th>
+        <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('from')">
+            {{fioArea}}
+<span class="sortOrder" ng-show="propertyName === 'from'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+
+    <th>
+        <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('owner.lastName')">
+            {{lastNameArea}}
+<span class="sortOrder" ng-show="propertyName === 'owner.lastName'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+
+    <th class="text-center">
+        <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('daysSelectHoliday')">
+            {{daysSelectHolidayArea}}
+<span class="sortOrder" ng-show="propertyName === 'daysSelectHoliday'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th>
+        <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('furlough.name')">
+            {{tipArea}}
+<span class="sortOrder" ng-show="propertyName === 'furlough.name'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th>
+        <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('status')">
+            {{statusArea}}
+<span class="sortOrder" ng-show="propertyName === 'status'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th>
+        <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('actions')">
+            {{actionsArea}}
+<span class="sortOrder" ng-show="propertyName === 'actions'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th >
+        <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('intersec')">
+            {{infoArea}}
+<span class="sortOrder" ng-show="propertyName === 'intersec'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th class="text-center">
+        <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('createdAt')">
+            {{createdAt}}
+<span class="sortOrder" ng-show="propertyName === 'createdAt'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th ng-if="me.admin" class="text-center">
+        <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('updatedAt')">
+            {{updatedAt}}
+<span class="sortOrder" ng-show="propertyName === 'updatedAt'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th class="text-center" ng-if="me.admin">
+        <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('whomCreated')">
+            {{whomCreatedArea}}
+<span class="sortOrder" ng-show="propertyName === 'whomCreated'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>
+    <th class="text-center" ng-if="me.admin">
+        <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('whomUpdated')">
+            {{whomUpdatedArea}}
+<span class="sortOrder" ng-show="propertyName === 'whomUpdatedArea'"
+      ng-class="{reverse: reverse}"></span>
+        </button>
+    </th>

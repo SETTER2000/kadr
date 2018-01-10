@@ -311,7 +311,7 @@
                 };
 
                 $scope.items = Schedules.query($scope.query, function (schedules) {
-                    console.log('SCHEDULE ITEMS:', schedules);
+                    //console.log('SCHEDULE ITEMS:', schedules);
                     $scope.items = schedules;
 
                     $scope.countCurrentView = schedules.length;

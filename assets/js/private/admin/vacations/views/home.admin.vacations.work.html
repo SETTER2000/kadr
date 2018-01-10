@@ -12,7 +12,7 @@
         days="days"
         url-bt="urlBt"
         on-select-page="selectCount=selectCount+1">
-</pagination>
+</pagination>88888
 <table class="table table-hover tus">
     <tr head-table type="vacation"></tr>
     <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true}  |
@@ -22,7 +22,7 @@
         </td>
         <td>
             <!--<pre>{{item.owner.avatarUrl | json}}</pre>-->
-            <a href="/admin/users/edit/{{item.owner.id}}">
+            <a ui-sref="home.admin.users.edit({userId:item.owner.id})">
                 <img ng-if="item.owner.avatarUrl" alt="{{ item.owner.getFullName() }}" ng-src="{{ item.owner.avatarUrl }}" class="photo"/>
                 <img ng-if="!item.owner.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет"
                      class="photo"/>

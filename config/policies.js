@@ -83,17 +83,17 @@ module.exports.policies = {
         //create: ['isLoggedIn']
     },
     VacationController: {
-        //'*': 'isLoggedIn',
-        create: ['isLoggedIn', 'isAdminOrKadr'],
+        '*': 'isLoggedIn',
+        //create: ['isLoggedIn', 'isAdminOrKadr'],
         delete: ['isLoggedIn', 'isAdmin'],
         //deleteAllVacationToYear: ['isLoggedIn', 'isAdmin'],
-        update: ['isLoggedIn', 'isAdminOrKadr'],
+        //update: ['isLoggedIn', 'isAdminOrKadr'],
         //getDaysPeriodYear: ['isLoggedIn', 'isAdminOrKadr'],
         //daysInYear: ['isLoggedIn', 'isAdminOrKadr'],
-        getYears:['isLoggedIn', 'isAdminOrKadr'],
-        getIntersections:['isLoggedIn', 'isAdminOrKadr'],
-        getIntersectionsUser:['isLoggedIn', 'isAdminOrKadr'],
-        dataCalendar:['isLoggedIn', 'isAdminOrKadr'],
+        //getYears:['isLoggedIn', 'isAdminOrKadr'],
+        //getIntersections:['isLoggedIn', 'isAdminOrKadr'],
+        //getIntersectionsUser:['isLoggedIn', 'isAdminOrKadr'],
+        //dataCalendar:['isLoggedIn', 'isAdminOrKadr']
     } ,
 
     ScheduleController: {

@@ -1,0 +1,129 @@
+<!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
+<div class="col-sm-11  col-md-12  main "  ng-cloak>
+    <div class="page-header">
+        <h2>
+            <p ng-if="item.lastName" ng-class="{'fired':item.fired}">
+                {{item.getFullName()}}
+                <span ng-if="!item.action">{{item.deactivation()}}</span>
+            </p>
+            <p ng-if="!item.lastName">Права доступа</p>
+            <!--<a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">работает c {{item.dateInWork |-->
+            <!--date:'dd.MM.yyyy' }}</a>-->
+            <!--<a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |-->
+            <!--date:'dd.MM.yyyy'}}</a>-->
+            <!--<div class="btn-group-xs pull-right">-->
+            <!--<button ng-click="saveEdit(item)" type="button" class="btn btn-success">-->
+            <!--<span class="glyphicon glyphicon-check"></span>-->
+            <!--</button>-->
+            <!--<a ng-href="{{item.getListUrl()}}" type="button" class="btn btn-warning">-->
+            <!--<span class="glyphicon glyphicon-list"></span>-->
+            <!--</a>-->
+            <!--</div>-->
+        </h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group">
+
+                <!--<span ng-if="(searchText.length>0)" class="input-group-addon" id="basic-addon1">-->
+                <!--{{filtered.length}}-->
+                <!--</span>-->
+
+                <input type="text" class="form-control" ng-model="searchText" placeholder="Поиск ...">
+                     <span class="input-group-btn">
+                       <button ng-click="searchText=''" class="btn btn-default" type="button">
+                           <span class="glyphicon glyphicon-remove"></span>
+                       </button>
+                     </span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Обновить руководящий состав</h3>
+                </div>
+                <div class="panel-body">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- USERS PAGE -->
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Группы</h3>
+                </div>
+                <div class="panel-body">
+
+
+                    <!-- Error state -->
+                    <div ng-show="userList.errorMsg">
+                        <h5>Oops!</h5>
+                        <p>Похоже, произошла ошибка. Пожалуйста, повторите попытку позже.</p>
+                        <code>
+                            {{userList.errorMsg}}
+                        </code>
+                    </div>
+                    <!-- Loading state -->
+                    <div ng-show="userList.loading">
+                        <span class="overlord-loading-spinner fa fa-spinner"></span>
+                        <span>Loading users...</span>
+                    </div>
+                    <!-- Empty state -->
+                    <div ng-show="userList.contents.length === 0">
+                        <!--
+                        Note that this empty state will never actually matter because there
+                        will always be at least one user (the currently-logged-in admin).
+                        -->
+                        <span>No users yet.</span>
+                    </div>
+                    <table class="table table-hover" ng-show="!userList.loading && userList.contents.length > 0">
+                        <tr>
+                            <th></th>
+                            <th>#</th>
+                            <!--<th>id</th>-->
+                            <th>ФИО</th>
+                            <th>foto</th>
+                            <th>login</th>
+                            <th>email</th>
+                            <th>action</th>
+                            <th>leader</th>
+                            <th>kadr</th>
+                            <th>admin</th>
+                            <th>deleted</th>
+
+                        </tr>
+
+                        <!--<tr ng-repeat="user in userList.contents">-->
+                        <tr ng-repeat="user in filtered=(userList.contents | filter:{$:searchText} |
+orderBy:propertyName:reverse |  limitTo: 1000)">
+                            <td></td>
+                            <td> {{$index+1}}</td>
+                            <!--<td> {{user.id}}</td>-->
+                            <td><a href="/admin/users/edit/{{user.id}}">{{user.lastName}} {{user.firstName.substr(0,1)}}.
+                                {{user.patronymicName.substr(0,1)}}.</a></td>
+                            <td> {{user.gravatarURL}}</td>
+                            <td> {{user.login}}</td>
+                            <td> {{user.email}}</td>
+                            <td><input type="checkbox" ng-model="user.action" ng-click="saveAction(user.id, user.action)"></td>
+                            <td><input type="checkbox" ng-model="user.leader" ng-click="saveLeader(user.id, user.leader)"></td>
+                            <td><input type="checkbox" ng-model="user.kadr" ng-click="saveKadr(user.id, user.kadr)"></td>
+                            <td><input type="checkbox" ng-model="user.admin" ng-click="saveAdmin(user.id, user.admin)"></td>
+                            <td><input type="checkbox" ng-model="user.deleted" ng-click="saveDeleted(user.id, user.deleted)"></td>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

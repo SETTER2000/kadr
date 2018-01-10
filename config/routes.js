@@ -274,8 +274,12 @@ module.exports.routes = {
     'GET /password-recovery-email-sent': 'PageController.passwordRecoveryEmailSent',
     'GET /password-reset-form/:passwordRecoveryToken': 'PageController.passwordReset',
 
-
+    'GET /company': 'PageController.showHomePage',
     'GET /admin': 'PageController.showHomePage',
+
+
+
+
     'GET /admin/users': 'PageController.getListUserPage',
     'GET /admin/users/administration': 'PageController.showAdminPage',
     'GET /admin/users/create': 'PageController.showHomePage',
@@ -292,7 +296,7 @@ module.exports.routes = {
     'GET /admin/positions': 'PageController.showHomePage',
     'GET /admin/employees': 'PageController.showHomePage',
     'GET /admin/furloughs': 'PageController.showHomePage',
-    'GET /admin/vacations': 'PageController.showHomePage',
+
 
 
     //'GET /admin/users/attendance': 'PageController.showHomePage',
@@ -328,9 +332,19 @@ module.exports.routes = {
     'GET /admin/furloughs/edit/:id': 'PageController.showHomePage',
     'GET /admin/furloughs/create/': 'PageController.showHomePage',
 
+
+    'GET /admin/vacations': 'PageController.showHomePage',
     'GET /admin/vacations/edit/:id': 'PageController.showHomePage',
     'GET /admin/vacations/create/:ownerId/:furloughId': 'PageController.showHomePage',
     'GET /admin/vacations/create/': 'PageController.showHomePage',
+
+
+    'GET /company/vacations': 'PageController.showHomePage',
+    'GET /company/vacations/edit/:id': 'PageController.showHomePage',
+    'GET /company/vacations/create/:ownerId/:furloughId': 'PageController.showHomePage',
+    'GET /company/vacations/create/': 'PageController.showHomePage',
+
+
 
 
     'GET /admin/schedules': 'PageController.showHomePage',

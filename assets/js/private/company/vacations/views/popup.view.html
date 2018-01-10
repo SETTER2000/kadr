@@ -1,0 +1,48 @@
+<h5><em>События</em></h5>
+<div class="dialog">
+    <div class="list-group" ng-repeat="bg in bdgs | changeFoto:'150x150'">
+       <!-- Д р у г и е  с о о б щ е н и я -->
+        <a ng-if="!bg.vacationId" type="button" ui-sref="home.admin.vacations.edit({ vacationId: bg.badges[0].id })"
+           class="list-group-item">
+            <span class="pull-right">
+                <span class="glyphicon" aria-hidden="true" title="{{bg.action}}"
+                      ng-class="{'glyphicon-pencil':(bg.action==='обновлён'),'glyphicon-envelope':(bg.action==='рассылка закончена'),'glyphicon-ok':(bg.action==='создан'),'glyphicon-trash':(bg.action==='удалён'),'text-danger':(bg.action==='удалён'),'text-success':(bg.action==='создан | рассылка закончена'),'text-primary':(bg.action==='обновлён')}"></span>
+                <span title="{{bg.action}}" class="fa " ng-class="{'fa-paper-plane-o':(bg.action==='новое сообщение')}"
+                      aria-hidden="true"></span>
+
+            </span>
+            <img ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp; {{bg.badges[0].name}} <span ng-if="!bg.badges[0].delimiter">|</span>
+            {{bg.badges[0].daysSelectHoliday}} <span ng-if="!bg.badges[0].delimiter">|</span> {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
+        </a>
+
+        <!-- С о о б щ е н и я  ч а т а -->
+        <div ng-if="bg.vacationId" class="media list-group-item">
+            <div class="media-left media-middle">
+                <a ui-sref="home.admin.vacations.edit({ vacationId: bg.vacationId })">
+                    <img ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="media-object photo events">
+                </a>
+            </div>
+            <div class="media-body ">
+                <p class="media-heading">
+                    <strong>{{bg.fi}}</strong>
+                    <small class="time">{{bg.action}}</small>
+                    <br>
+                        {{bg.badges[0].name.substr(0, 108)}}
+                            <span ng-if="bg.badges[0].name.length > 108">
+                                <a ui-sref="home.admin.vacations.edit({ vacationId: bg.vacationId })">...</a>
+                            </span>
+                        <br>
+                            <small class="time">
+                                <i title="Доставлено" class="fa " ng-class="{'fa-check':(bg.action==='новое сообщение')}"
+                                   aria-hidden="true"></i>
+                                {{bg.getTime()}}
+                            </small>
+                </p>
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

@@ -15,7 +15,14 @@ angular.module('Holiday', [
         'AttendanceModule',
         'ScheduleModule',
         'AdminModule',
-        'ngMaterial'
+        'ngMaterial',
+        'customServices',
+        'directiveModule',
+
+
+        'UserFModule',
+        'VacationFModule',
+        'CompanyModule'
     ])
     // .constant("baseUrl", "http://localhost\\:1337")
 

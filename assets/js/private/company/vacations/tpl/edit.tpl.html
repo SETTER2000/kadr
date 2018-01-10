@@ -1,0 +1,318 @@
+<!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
+
+<div class="col-sm-11  col-md-12  main">
+    <div class="page-header" ng-cloak>
+        <h2>
+            <p ng-class="{'fired':!item.action}">{{item.sc()}} <span ng-show="{{!edit}}">создать</span>: {{item.name}} <span
+                    ng-if="daysSelectHoliday">({{daysSelectHoliday}})</span><span
+                    ng-if="!item.action"
+                    ng-bind="item.deactivation()"></span>
+            </p>
+
+            <a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.owner.fired" role="button"> Работает c {{item.owner.dateInWork
+                |
+                date:'dd.MM.yyyy' }} <span ng-if="item.periodWork()">({{item.periodWork()}})</span></a>
+            <a href="#" class="btn btn-info btn-xs " ng-if="item.decree"
+               title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>
+            <a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |
+                date:'dd.MM.yyyy'}}</a>
+            <div class="btn-group-xs pull-right" ng-cloak>
+                <button ng-show="me.admin" ng-if="!item.action && edit" ng-click="delete2(item)" class="btn  btn-danger " ng-cloak>
+                    <span class="glyphicon glyphicon-trash"></span> Удалить
+                </button>
+
+                <button ng-show="edit" ng-click="dub(item)" type="button" ng-disabled="(remains<=0)" class="btn btn-primary">
+                <!--<button ng-show="edit" ui-sref="home.admin.vacations.create" type="button" class="btn btn-primary">-->
+                    <span class="glyphicon glyphicon-plus"></span> Добавить
+                </button>
+                <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
+                    <span class="glyphicon glyphicon-check"></span> Сохранить
+                </button>
+                <a ng-show="edit" ng-href="{{item.getListUrl()}}" type="button" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-list"></span> Список
+                </a>
+
+                <small ng-if="false">
+                    <md-tooltip md-direction="top">>14 дн.</md-tooltip>
+                    <md-checkbox ng-model="item.maxTwoWeek" class="small" aria-label="Checkbox 1"></md-checkbox>
+                </small>
+            </div>
+        </h2>
+    </div>
+    <div class="row">
+        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+            <div class="panel" ng-class="{'panel-warning':!item.fired, 'panel-default':item.fired}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Редактировать
+                        <a href="#" ng-click="closed()" class="pull-right">
+                            <span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>
+                        </a>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <form name="userForm" novalidate ng-submit="saveEdit(item)" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <!-- A C T I O N -->
+                                <div class="form-group">
+                                    <div ng-if="(me.admin || me.kadr)" class="checkbox">
+                                        <label>
+                                            <!--<input type="checkbox" ng-model="item.action">Активность-->
+                                            <md-switch ng-model="item.action" aria-label="Switch 1">
+                                                <span ng-if="item.action">Активность</span>
+                                                <span ng-if="!item.action">Не активен</span>
+                                            </md-switch>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="panel panel-default new">
+                                    <!-- Default panel contents -->
+                                    <!--<div class="panel-heading">Panel heading</div>-->
+                                    <!--<div class="panel-body">-->
+                                        <!--<p>...</p>-->
+                                    <!--</div>-->
+
+                                    <!-- List group -->
+                                    <ul class="list-group">
+                                        <li class="list-group-item new"><span class="badge new" ng-class="{'text-danger':(remains<0)}">{{remains}}</span>Осталось в {{me.interfaces[0].year}} году</li>
+                                        <li class="list-group-item new"><span class="badge new">0</span>Отгулы</li>
+                                        <li class="list-group-item new"><span class="badge new">0</span>Осталось в следующем году</li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <!-- P H O T O -->
+                                <div class=" pull-right">
+                                    <a href="{{user.getEditUrl(user.id)}}">
+                                        <img ng-cloak class="img-thumbnail" width="130px" ng-src="{{selectAvatarUrl}}" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- T Y P E  F U R L O U G H -->
+
+                        <div  ng-controller="ListFurloughController" class="form-group ">
+                            <label class="control-label" ng-bind="items[0].sc()"></label>
+                            <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
+
+                            <!--<div class="form-inline" ng-repeat="furlough in item.furloughs">-->
+                            <!--<div class="form-group">-->
+                            <select required ng-disabled="edit" class="form-control" ng-model="item.furlough.id">
+                                <option ng-repeat="option in items | filter:{action:true} | orderBy: 'name'" value="{{option.id}}">
+                                    {{option.name}}
+                                </option>
+                            </select>
+                            <!--</div>-->
+
+                            <!--<button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>-->
+                            <!--</div>-->
+                        </div>
+
+
+                        <!--  O W N E R  -->
+
+                        <div ng-if="(item.furlough.id !== undefined)" ng-controller="ListFController" class="form-group ">
+                            <label class="control-label" ng-bind="items[0].sc()"></label>
+                            <span ng-if="me.admin">{{filtered.length}}</span>
+                            <select ng-disabled="edit" class="form-control" ng-model="item.owner.id">
+                                <option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )"
+                                        value="{{option.id}}">
+                                    {{option.getFullName()}}
+                                </option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <!--<div class="form-group" style=" position: fixed;margin-left: 50px; margin-bottom: 70px; bottom:0; left:0;">-->
+                            <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-md btn-success">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Сохранить
+                            </button>
+
+                            <button ng-show="edit" type="submit" class="btn btn-md btn-success">
+                                <span class="glyphicon glyphicon-check"></span>
+                                Сохранить
+                            </button>
+                            <a ng-if="me.admin" ng-href="{{item.getListUrl()}}" class="btn btn-md btn-warning">
+                                <span class="glyphicon glyphicon-list"> </span>
+                                Список
+                            </a>
+                            <button class="btn btn-md btn-primary" type="button" ng-click="clear()">
+                                <span class="glyphicon glyphicon-erase"> </span>
+                                Очистить
+                            </button>
+
+                            <button title="Комментировать" ng-disabled="(edit && chats.length) || (!edit) || (comment)"
+                                    class="btn btn-md btn-link pull-right" type="button" ng-click="toogle()">
+                                <i class="fa fa-comment-o" aria-hidden="true"></i>
+                                Комментарий
+                            </button>
+                            <!--<button ng-if="!item.id" ng-click="revert()" ng-disabled="!canRevert()" class="btn btn-md btn-primary">-->
+                            <!--<span class="glyphicon glyphicon-erase"> </span>-->
+                            <!--Очистить-->
+                            <!--</button>-->
+
+
+                            <!--<button ng-if="item.id" ui-sref="home.admin.users.edit(data.id)"-->
+                            <!--class="btn btn-default btn-md pull-right" role="button">-->
+                            <!--<span class="glyphicon glyphicon-trash"></span>-->
+                            <!--</button>-->
+
+                        </div>
+                    </form>
+
+
+                    <!-- C H A T -->
+
+                    <form ng-show="(edit && chats.length) || (comment)" role="form" ng-submit="sendMessage()">
+                        <div class="panel panel-default">
+                            <!--<div class="panel-heading lead">-->
+                            <!--&lt;!&ndash;<i class="fa fa-comment"></i> Чат&ndash;&gt;-->
+                            <!--</div>-->
+                            <div class="panel-body">
+                                <ul class="chat-window">
+                                    <li class="chat clearfix" ng-repeat="chat in chats">
+                                        <div class="chat-body">
+                                            <img class="chat-avatar" ng-src="{{chat.avatarUrl}}">
+                                            <div class="header">
+                                                <span class="username">
+                                                    <a href="/admin/user/{{chat.sender}}">{{chat.username}} </a>
+                                                </span>
+                                                <small class="pull-right">{{chat.created }}{{chat.time}}</small>
+                                            </div>
+                                            <p class="message">
+                                                {{chat.message}}
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="panel-footer">
+                                <div class="input-group">
+                                    <span class="input-group-addon not-border">
+                                        <img class="chat-avatar-comment " ng-src="{{me.avatarUrl}}"></span>
+                                    <input  required rows="1" class="form-control input-sm myTextarea" ng-model="message"
+                                              placeholder="Написать комментарий..." ng-keypress="whenTyping($event)"
+                                              ng-focus="whenTyping($event)" ng-blur="whenNotTyping($event)" ng-disabled="!me">
+
+                                    <!--<textarea id="btn-input" required rows="1" class="form-control input-sm myTextarea" ng-model="message"-->
+                                              <!--placeholder="Написать комментарий..." ng-keypress="whenTyping($event)"-->
+                                              <!--ng-focus="whenTyping($event)" ng-blur="whenNotTyping($event)" ng-disabled="!me"></textarea>-->
+
+
+                <span class="input-group-btn">
+                  <button ng-disabled="countCh<0" type="submit" ng-disabled="!hasJoinedRoom || !me" class="btn btn-link btn-sm"
+                          id="btn-chat">
+                      <small ng-class="{'text-danger':(countCh < 11), 'text-warning':(countCh<100), 'text-success':(countCh>99 )}"><i
+                              class="fa " ng-class="{'fa-paper-plane-o':!message.length,'fa-paper-plane': message.length}"
+                              aria-hidden="true"></i> <span ng-show="(countCh<100)">{{countsChar(message)}}</span>
+                      </small>
+                  </button>
+
+                </span>
+                                </div>
+                                <div ng-show="typing">
+                                    {{usernameTyping}} печатает...<i class="overlord-loading-spinner fa fa-spinner"></i>
+                                </div>
+                            </div>
+                        </div><!-- class="panel panel-primary" -->
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6" ng-if="item.id">
+            <div ng-switch on="modeSelect.value">
+                <div ng-switch-when="uploader">
+                    <ng-include src="uploaderView"></ng-include>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6" ng-if="close">
+            <div class="row">
+                <div class="col-md-6">
+
+
+                    <!-- C A L E N D A R -->
+
+                    <div class="form-group">
+                        <label class="sr-only" for="exampleInputPassword33"></label>
+                        <input required class="form-control  flatpickr flatpickr-calendar"
+                               ng-flatpickr
+                               fp-opts="dateOpts"
+                               fp-on-setup="datePostSetup(fpItem)"
+                               ng-model="item.name">
+                            <span class="input-group-btn">
+                              <!--<button class="btn btn-default" type="button" ng-click="clear()"><span class="glyphicon glyphicon-remove"></span></button>-->
+                            </span>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Отпуска из списка пересечений
+                        </h3>
+                    </div>
+                    <div class="panel-body" ng-if="intersection.length">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr ng-class="{danger:intr.inr}" ng-repeat="intr in  intersection | filter:{from:yearFrom}" ng-cloak>
+                                    <th>{{intr.name}}</th>
+                                    <!--<th>{{intr.from}} * {{moment('2017-08-06')}}</th>-->
+                                    <td>{{intr.owner['lastName']}} {{intr.owner['firstName'].substr(0,1)}}.
+                                        {{intr.owner['patronymicName'].substr(0,1)}}.
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--{{intersection[0] | json}}-->
+                            <!--Год: {{me.interface}}-->
+                            <!--Год: {{yearFrom}}-->
+                            <span ng-if="me.kadr || me.admin"></span> Интерфейс выбран на: <a
+                                href="/admin/vacations">{{me.interfaces[0].year}}</a>
+                            год
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- I N F O R M A T I O N -->
+
+            <div class="panel" ng-if="me.admin"
+                 ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Информация
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr ng-repeat="(key, value) in item">
+                                <th>{{key}}</th>
+                                <td>{{value  }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <pre  ng-if="(debug && me.admin)"><h4>{{item| json}}</h4></pre>
+</div>
+
+
+<!--<div ui-view></div>-->
+<!--<div ui-view="users"></div>-->
+
