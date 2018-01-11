@@ -5,14 +5,14 @@
             function ($scope, $location, ngDialog, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, VacationsF, logService, errorService, calendarService) {
                 $scope.me = window.SAILS_LOCALS.me;
                 //if (!$scope.me.kadr && !$scope.me.company) $state.go('home');
-
+                $scope.ownerID = $scope.me.id;
                 /**
                  * PAGINATION
                  */
                 $scope.defaultRows = 15;
                 $scope.limitRows = [30, 50, 70, 100];
                 $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
-
+                $scope.debug = false;
                 $scope.fioArea = 'Период с .. по ..';
                 $scope.loginArea = 'Логин';
                 $scope.tipArea = 'Тип';

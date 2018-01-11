@@ -1,4 +1,7 @@
 angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimate', 'angularMoment','ngMaterial'])
+    .config(function (calendarServiceProvider) {
+        calendarServiceProvider.enabledService(true).holidaySet().monthsSet().officialHolidaysRF();
+    })
     .config(function ($stateProvider) {
         $stateProvider
             .state('home.admin.vacations', {

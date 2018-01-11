@@ -79,7 +79,21 @@
                                         <li class="list-group-item new"><span class="badge new" ng-class="{'text-danger':(remains<0)}">{{remains}}</span>Осталось в {{me.interfaces[0].year}} году</li>
                                         <li class="list-group-item new"><span class="badge new">0</span>Отгулы</li>
                                         <li class="list-group-item new"><span class="badge new">0</span>Осталось в следующем году</li>
-
+                                        <li ng-if="allDaysYearHoliday && me.admin" class="list-group-item new">
+                                            {{allDaysYearHoliday}}
+                                        </li>
+                                        <li ng-if="allDaysYearHoliday && me.admin" class="list-group-item new">
+                                            {{getAllWorkDays}}
+                                        </li>
+                                        <li ng-if="allDaysYearHoliday && me.admin" class="list-group-item new">
+                                            {{getHours40Year}}
+                                        </li>
+                                        <li ng-if="allDaysYearHoliday && me.admin" class="list-group-item new">
+                                            {{getHours36Year}}
+                                        </li>
+                                        <li ng-if="allDaysYearHoliday && me.admin" class="list-group-item new">
+                                            {{getHours24Year}}
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

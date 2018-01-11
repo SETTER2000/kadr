@@ -290,6 +290,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
         }
     })
     .filter("firedUser", function () {
+        // уволен не уволен
         return function (value) {
             if (!angular.isArray(value)) return value;
             let arr = [];
@@ -735,65 +736,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             }
         };
     })
-    .directive('tdTable', function () {
-        return {
-            restrict: "E",
-            scope: {
-                'searchText': '=',
-                'dtItems': '=',
-                'filterObject': '=',
-                //'filterKennel': '=',
-                'currentPage': '=',
-                'defaultRows': '=',
-                'nameHeader': '=',
-                'fieldName': '=', // Какой тип контакта показывать по умолчанию
-                'me': '='
-            },
 
-            templateUrl: function (elem, attr) {
-                return '/js/private/admin/users/views/' + attr.type + '-table.html';
-            },
-            replace: true,
-
-            link: function (scope) {
-                // scope.$watch('searchText', function (value) {
-                //     console.log('searchText:', value);
-                //     scope.searchText = value;
-                //
-                // });
-                // scope.$watch('nameHeader', function (value) {
-                //     console.log('nameHeader:', value);
-                //     scope.nameHeader = value;
-                //
-                // });
-                // scope.$watch('currentPage', function (value) {
-                //     console.log('currentPage:', value);
-                //     scope.currentPage = value;
-                //
-                // });
-                // scope.$watch('defaultRows', function (value) {
-                //     console.log('defaultRows:', value);
-                //     scope.defaultRows = value;
-                //
-                // });
-                scope.$watch('dtItems', function (value) {
-                    console.log('dtItems:', value);
-                    scope.items = value;
-                });
-                // scope.$watch('filterObject', function (value) {
-                //     console.log('filterObject:', value);
-                //     scope.filterObject = value;
-                // });
-                scope.sortBy = function (propertyName) {
-                    scope.reverse = (scope.propertyName === propertyName) ? !scope.reverse : true;
-                    scope.propertyName = propertyName;
-                };
-
-                // scope.items = scope[attributes["dtItems"]];
-                // scope.filterObject = scope[attributes["filterObject"]];
-                // scope.filterObject.searchText = scope[attributes["searchText"]];
-            },
-        };
-    })
 
 ;

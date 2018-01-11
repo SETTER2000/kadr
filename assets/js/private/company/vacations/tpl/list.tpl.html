@@ -17,24 +17,24 @@
     <div class="row">
         <div class="col-md-10">
             <div class="btn-toolbar" role="toolbar" aria-label="0">
-                <alfavit
-                        object-name="objectName"
-                        get-char-text="getCharText(ch)"
-                        filed-name="filedName"
-                        where="where"
-                        interface="interface"
-                        select-year="options2"
-                        show-interface-year="showInterfaceYear"
-                        char-text="charText"
-                        count-char="countChar">
-                </alfavit>
-                <word-part object-name="objectName"
-                           filed-name="filedName"
-                           where="where"
-                           count-char="countChar"
-                           char-text="charText"
-                           get-char-text="getCharText(ch)">
-                </word-part>
+                <!--<alfavit-->
+                        <!--object-name="objectName"-->
+                        <!--get-char-text="getCharText(ch)"-->
+                        <!--filed-name="filedName"-->
+                        <!--where="where"-->
+                        <!--interface="interface"-->
+                        <!--select-year="options2"-->
+                        <!--show-interface-year="showInterfaceYear"-->
+                        <!--char-text="charText"-->
+                        <!--count-char="countChar">-->
+                <!--</alfavit>-->
+                <!--<word-part object-name="objectName"-->
+                           <!--filed-name="filedName"-->
+                           <!--where="where"-->
+                           <!--count-char="countChar"-->
+                           <!--char-text="charText"-->
+                           <!--get-char-text="getCharText(ch)">-->
+                <!--</word-part>-->
                 <div ng-if="!searchText" ng-repeat="it in arrButton" class="btn-group btn-group-sm"
                      role="group" aria-label="4">
                     <button ng-click="getPage(it.numberPage)" type="button" ng-bind="it.numberPage"
@@ -67,14 +67,14 @@
     </div>
 
 
-    <div class="well">
-        <div class="btn-group" tri-button counter="buttons.totalClicks" source="button.names">
-            <button class="btn btn-default" ng-repeat="name in buttons.names">
-                {{name}}
-            </button>
-        </div>
-        <h5>Total clicks: {{buttons.totalClicks}}</h5>
-    </div>
+    <!--<div class="well">-->
+        <!--<div class="btn-group" tri-button counter="buttons.totalClicks" source="button.names">-->
+            <!--<button class="btn btn-default" ng-repeat="name in buttons.names">-->
+                <!--{{name}}-->
+            <!--</button>-->
+        <!--</div>-->
+        <!--<h5>Total clicks: {{buttons.totalClicks}}</h5>-->
+    <!--</div>-->
 
 
     <div class="row" >
@@ -112,7 +112,7 @@
 <div ui-view="list"></div>
 <div ui-view="attendance"></div>
 
-<pre  ng-if="(debug && me.admin)"><h4>{{item| json}}</h4></pre>
+
 
 
 

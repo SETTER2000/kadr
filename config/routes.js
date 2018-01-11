@@ -336,13 +336,13 @@ module.exports.routes = {
     'GET /admin/vacations': 'PageController.showHomePage',
     'GET /admin/vacations/edit/:id': 'PageController.showHomePage',
     'GET /admin/vacations/create/:ownerId/:furloughId': 'PageController.showHomePage',
-    'GET /admin/vacations/create/': 'PageController.showHomePage',
+    'GET /admin/vacations/create': 'PageController.showHomePage',
 
 
     'GET /company/vacations': 'PageController.showHomePage',
     'GET /company/vacations/edit/:id': 'PageController.showHomePage',
     'GET /company/vacations/create/:ownerId/:furloughId': 'PageController.showHomePage',
-    'GET /company/vacations/create/': 'PageController.showHomePage',
+    'GET /company/vacations/create': 'PageController.showHomePage',
 
 
 

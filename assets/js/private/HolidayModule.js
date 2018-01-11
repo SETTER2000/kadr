@@ -2,6 +2,8 @@ angular.module('Holiday', [
         'ui.router',
         'ngResource',
         'ngAnimate',
+        'customServices',
+        'directiveModule',
         'SkdModule',
         'StructureModule',
         'PositionModule',
@@ -16,8 +18,7 @@ angular.module('Holiday', [
         'ScheduleModule',
         'AdminModule',
         'ngMaterial',
-        'customServices',
-        'directiveModule',
+
 
 
         'UserFModule',

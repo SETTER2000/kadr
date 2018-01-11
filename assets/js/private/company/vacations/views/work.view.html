@@ -15,7 +15,7 @@
 </pagination>
 <table class="table table-hover tus">
     <tr head-table type="vacation"></tr>
-    <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true}  |
+    <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true,owner:{id:ownerID}}  |
        orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
         <td>
             {{$index+1}}
@@ -107,7 +107,7 @@
         </td>
     </tr>
 </table>
-
+<pre  ng-if="(debug )"><h4>{{items | json}}</h4></pre>
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
