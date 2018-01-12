@@ -469,7 +469,7 @@ angular.module('ScheduleModule')
             };
 
             $scope.minYear = function () {
-                let o = moment().add(0, 'year').get('year');
+                let o = moment().add(1, 'year').get('year');
                 return o;
             };
 
