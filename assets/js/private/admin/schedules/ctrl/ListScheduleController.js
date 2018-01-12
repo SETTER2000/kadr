@@ -115,7 +115,7 @@
                 sixArea: 'Кол-во дней',
                 sevenArea: 'Создал',
                 eightArea: 'Обновил',
-                nineArea: 'Кол-во собраных данных',
+                nineArea: 'Собрано данных',
                 tenArea: 'Обновил',
                 actionArea: 'Активность',
                 createdAtArea: 'Создано',
