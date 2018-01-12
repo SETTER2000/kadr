@@ -1,6 +1,31 @@
 angular.module('VacationFModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimate', 'angularMoment','ngMaterial'])
     .config(function ($stateProvider) {
         $stateProvider
+            //.state('home.company.vacation.create', {
+            //    url: '/create',
+            //    views: {
+            //        '@': {
+            //            templateUrl: '/js/private/company/vacations/tpl/edit.tpl.html',
+            //            controller: 'EditVacationFController'
+            //        }
+            //    }
+            //})
+            .state('home.company.vacation', {
+                url: '/vacation/:vacationId',
+                views: {
+                    '@': {
+                        templateUrl: '/js/private/company/vacations/tpl/list.tpl.html',
+                        controller: 'ListVacationFController'
+                    },
+                    'sidebar-right@home.company.vacation': {
+                        templateUrl: '/js/private/company/vacations/views/sidebar-right.view.html'
+                    },
+                    'edit@home.company.vacation': {
+                        templateUrl: '/js/private/company/vacations/tpl/edit-list.tpl.html',
+                        controller: 'EditVacationFController'
+                    }
+                }
+            })
             .state('home.company.vacations', {
                 url: '/vacations',
                 views: {
@@ -10,60 +35,33 @@ angular.module('VacationFModule', ['ui.router', 'toastr', 'ngResource', 'ngAnima
                     },
                     'sidebar-right@home.company.vacations': {
                         templateUrl: '/js/private/company/vacations/views/sidebar-right.view.html'
-                    }
-                }
-            })
-            .state('home.company.vacations.edit', {
-                url: '/edit/:vacationId',
-                views: {
-                    '@': {
-                        templateUrl: '/js/private/company/vacations/tpl/edit.tpl.html',
+                    },
+                    'edit@home.company.vacations': {
+                        templateUrl: '/js/private/company/vacations/tpl/edit-list.tpl.html',
                         controller: 'EditVacationFController'
                     }
                 }
             })
-            //.state('home.company.vacations.settings', {
-            //    url: '/settings',
-            //    templateUrl: '/js/private/company/vacations/views/home.company.vacations.settings.html',
-            //    controller: 'ListVacationFController'
-            //})
-            .state('home.company.vacation', {
-                url: '/vacation/:vacationId',
-                views: {
-                    '@': {
-                        templateUrl: '/js/private/company/departments/tpl/show.tpl.html',
-                        controller: 'VacationFController'
-                    }
-                }
-            })
-            .state('home.company.vacations.create', {
-                url: '/create',
-                views: {
-                    '@': {
-                        templateUrl: '/js/private/company/vacations/tpl/edit.tpl.html',
-                        controller: 'EditVacationFController'
-                    }
-                }
-            })
-
-
-            //.state('home.company.vacation.report',{
+            //.state('home.company.vacations.edit', {
+            //    url: '/edit/:vacationId',
             //    views: {
-            //        'filters': {
-            //            templateUrl: 'report-filters.html',
-            //            controller: 'ListVacationFController'
-            //        },
-            //        'tabledata': {
-            //            templateUrl: 'report-table.html',
-            //            controller: 'ListVacationFController'
-            //        },
-            //        'graph': {
-            //            templateUrl: 'report-graph.html',
-            //            controller: 'ListVacationFController'
+            //        '@': {
+            //            templateUrl: '/js/private/company/vacations/tpl/edit.tpl.html',
+            //            controller: 'EditVacationFController'
             //        }
             //    }
             //})
-
+            //
+            //.state('home.company.vacation', {
+            //    url: '/vacation/:vacationId',
+            //    views: {
+            //        '@': {
+            //            templateUrl: '/js/private/company/departments/tpl/show.tpl.html',
+            //            controller: 'VacationFController'
+            //        }
+            //    }
+            //})
+            //
         ;
     })
     .constant('CONF_MODULE_VACATION', {baseUrl: '/vacations/:vacationId'})

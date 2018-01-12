@@ -2,10 +2,9 @@
     'use strict';
     angular.module('FurloughModule')
         .controller('ListFurloughController', ['$scope', 'Furloughs', 'toastr', '$state', function ($scope, Furloughs, toastr, $state) {
-            if (!$scope.me) $state.go('home');
-            //$scope.me = window.SAILS_LOCALS.me;
+            $scope.me = window.SAILS_LOCALS.me;
             //if(!$scope.me.admin) $location.path('/') ;
-            //if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
+            if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
 
             /**
              * Поле сортировки объекта по умолчанию.

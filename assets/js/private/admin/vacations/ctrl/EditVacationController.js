@@ -630,7 +630,8 @@ angular.module('VacationModule')
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
-                            $scope.refresh();
+                            //$scope.refresh();
+                            $state.go('home.admin.vacations');
                         },
                         function (err) {
                             toastr.error(err.data, info.error + ' 11445!');

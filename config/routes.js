@@ -340,9 +340,11 @@ module.exports.routes = {
 
 
     'GET /company/vacations': 'PageController.showHomePage',
-    'GET /company/vacations/edit/:id': 'PageController.showHomePage',
+    'GET /company/vacation/create': 'PageController.showHomePage',
+    'GET /company/vacation/:id': 'PageController.showHomePage',
+    //'GET /company/vacations/:id': 'PageController.showHomePage',
     'GET /company/vacations/create/:ownerId/:furloughId': 'PageController.showHomePage',
-    'GET /company/vacations/create': 'PageController.showHomePage',
+
 
 
 

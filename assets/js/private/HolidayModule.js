@@ -20,8 +20,8 @@ angular.module('Holiday', [
         'ngMaterial',
 
 
-
         'UserFModule',
+        'FurloughFModule',
         'VacationFModule',
         'CompanyModule'
     ])

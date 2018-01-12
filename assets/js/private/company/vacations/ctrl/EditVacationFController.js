@@ -38,7 +38,7 @@ angular.module('VacationFModule')
             $scope.loginAdmin = false;
             $scope.flatpicker = {};
             $scope.selectAvatarUrl = $scope.me.avatarUrl;
-            $scope.edit = $state.includes('home.company.vacations.edit');
+            $scope.edit = $state.includes('home.company.vacation');
             $scope.comment = false;
             $scope.toogle = function () {
                 $scope.comment = ($scope.comment) ? false : true;
@@ -107,7 +107,7 @@ angular.module('VacationFModule')
             });
 
             $scope.sendMessage = function () {
-                $scope.vacationId = window.location.pathname.split('/')[4];
+                $scope.vacationId = window.location.pathname.split('/')[3];
                 /**
                  * Отправьте запрос сокета, чтобы присоединиться к комнате чата.
                  */
@@ -570,7 +570,7 @@ angular.module('VacationFModule')
             });
 
             $scope.refresh = function () {
-                let item = $scope.item = VacationsF.get({id: $stateParams.vacationId}, function (vacations) {
+                let item = $scope.item = VacationsF.get({id: $stateParams.vacationId, action:true}, function (vacations) {
                         console.log('VACATION ITEM:', vacations);
                         $scope.vacations = vacations;
                         $scope.tm = vacations.chats;
@@ -620,7 +620,9 @@ angular.module('VacationFModule')
                 if (angular.isDefined(item.id) && angular.isDefined(item.name)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
-                            $scope.refresh();
+                            //$scope.refresh();
+
+                            $state.go('home.company.vacations');
                         },
                         function (err) {
                             toastr.error(err.data, info.error + ' 11445!');
@@ -629,12 +631,12 @@ angular.module('VacationFModule')
                 } else {
                     if (angular.isDefined(item)) {
                         item.daysSelectHoliday = $scope.daysSelectHoliday;
-                        console.log('item:::', item);
-                        console.log('furlough::', $scope.furlough);
                         item.$save(item, function (success) {
+
                                 toastr.success(info.newUserOk);
                                 //$location.path('/profile') ;
-                                $state.go('home.company.vacation', {vacationId: success.id});
+                                $state.reload();
+                                //$state.go('home.company.vacation', {vacationId: success.id});
                             },
                             function (err) {
                                 //toastr.error(err, 'Ошибка 3990');

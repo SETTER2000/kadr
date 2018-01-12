@@ -1,52 +1,11 @@
 <div class="col-sm-11  col-md-12  main">
     <div class="page-header">
-        <h2>{{items[0].scs()}} {{exampleDate | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}<!--({{filtered.length}})-->
-            <a ng-cloak href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">
-                всего за год:
-                <span ng-if="mode">SD{{(items | firedUser | filter:{fired:true}).length}}</span>
-                <!--<span ng-if="!mode">{{(items | filter:{fired:false}).length}}</span>-->
-                <span ng-if="!mode">{{(items | firedUser ).length}}</span>
-            </a>
-            <span ng-if="mode" ng-bind="items[0].deactivation()"></span>
-            <div class="btn-group-xs pull-right">
-            </div>
-        </h2>
+        <h2>{{items[0].scs()}} {{exampleDate | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}</h2>
         <div ui-view></div>
         <div ui-view="settings"></div>
     </div>
     <div class="row">
-        <div class="col-md-10">
-            <div class="btn-toolbar" role="toolbar" aria-label="0">
-                <!--<alfavit-->
-                        <!--object-name="objectName"-->
-                        <!--get-char-text="getCharText(ch)"-->
-                        <!--filed-name="filedName"-->
-                        <!--where="where"-->
-                        <!--interface="interface"-->
-                        <!--select-year="options2"-->
-                        <!--show-interface-year="showInterfaceYear"-->
-                        <!--char-text="charText"-->
-                        <!--count-char="countChar">-->
-                <!--</alfavit>-->
-                <!--<word-part object-name="objectName"-->
-                           <!--filed-name="filedName"-->
-                           <!--where="where"-->
-                           <!--count-char="countChar"-->
-                           <!--char-text="charText"-->
-                           <!--get-char-text="getCharText(ch)">-->
-                <!--</word-part>-->
-                <div ng-if="!searchText" ng-repeat="it in arrButton" class="btn-group btn-group-sm"
-                     role="group" aria-label="4">
-                    <button ng-click="getPage(it.numberPage)" type="button" ng-bind="it.numberPage"
-                            class="btn " ng-class="{'btn-danger':enabledButton, 'btn-default':!enabledButton}"></button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2" >
-            <md-select class="mr0" placeholder="Выбрать" ng-model="modeSelect" md-on-open="loadOptions()" style="min-width: 200px;">
-                <md-option ng-value="item" ng-repeat="item in options">{{item.display}}</md-option>
-            </md-select>
-        </div>
+        <div ui-view="edit"></div>
     </div>
     <div class="row">
         <div class="col-md-12">

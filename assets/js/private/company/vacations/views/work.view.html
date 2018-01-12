@@ -3,7 +3,7 @@
 <pagination
         limit-rows="limitRows"
         default-rows="defaultRows"
-        length-object="countCurrentView=((items | firedUser | filter:{$:searchText, action:true} ).length)?(items | firedUser | filter:{$:searchText, action:true} ).length:1"
+        length-object="countCurrentView=((items | firedUser | filter:{$:searchText, action:true} ).length)?(items | firedUser | filter:{$:searchText, action:true,owner:{id:ownerID}} ).length:1"
         current-page="currentPage"
         added="added"
         show-bt="showBt"
@@ -20,61 +20,29 @@
         <td>
             {{$index+1}}
         </td>
-        <td>
-            <!--<pre>{{item.owner.avatarUrl | json}}</pre>-->
-            <a href="/admin/users/edit/{{item.owner.id}}">
-                <img ng-if="item.owner.avatarUrl" alt="{{ item.owner.getFullName() }}" ng-src="{{ item.owner.avatarUrl }}" class="photo"/>
-                <img ng-if="!item.owner.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет"
-                     class="photo"/>
-            </a>
-        </td>
+        <!--<td>-->
+            <!--&lt;!&ndash;<pre>{{item.owner.avatarUrl | json}}</pre>&ndash;&gt;-->
+            <!--<a ui-sref="home.company.users.edit({userId:item.owner.id})">-->
+                <!--<img ng-if="item.owner.avatarUrl" alt="{{ item.owner.getFullName() }}" ng-src="{{ item.owner.avatarUrl }}" class="photo"/>-->
+                <!--<img ng-if="!item.owner.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет"-->
+                     <!--class="photo"/>-->
+            <!--</a>-->
+        <!--</td>-->
         <td nowrap>
-            <a class="position" href="{{item.getEditUrl(item.id)}}">
+            <a class="position" ui-sref="home.company.vacation({vacationId:item.id})">
                 {{item.name}}
             </a>
-            <!--<div>-->
-            <!--<a class="pull-left" href=""><span class="glyphicon glyphicon-arrow-left"></span></a>-->
-            <!--<a class="pull-right" href=""><span class="glyphicon glyphicon-arrow-right"></span></a>-->
-            <!--</div>-->
-            <!--<div class="fo">-->
-            <!--<div  class="sample tabsdemoDynamicTabs" layout="column" ng-cloak="" >-->
-            <!--<md-content class="md-padding">-->
-            <!--<md-tabs md-selected="selectedIndex" md-border-bottom="" md-autoselect="" md-swipe-content="">-->
-            <!--<md-tab ng-repeat="tab in tabs" ng-disabled="tab.disabled" label="{{tab.title}}">-->
-
-            <!--</md-tab>-->
-            <!--</md-tabs>-->
-            <!--</md-content>-->
-
-            <!--&lt;!&ndash;<form ng-submit="addTab(tTitle,tContent)" layout="column" class="md-padding" style="padding-top: 0;">&ndash;&gt;-->
-            <!--&lt;!&ndash;<div layout="row" layout-sm="column">&ndash;&gt;-->
-            <!--&lt;!&ndash;<div flex="" style="position: relative;">&ndash;&gt;-->
-            <!--&lt;!&ndash;<h2 class="md-subhead" style="position: absolute; bottom: 0; left: 0; margin: 0; font-weight: 500; text-transform: uppercase; line-height: 35px; white-space: nowrap;">Add a new Tab:</h2>&ndash;&gt;-->
-            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-            <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
-            <!--&lt;!&ndash;<label for="label">Label</label>&ndash;&gt;-->
-            <!--&lt;!&ndash;<input id="label" ng-model="tTitle" type="text">&ndash;&gt;-->
-            <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
-            <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
-            <!--&lt;!&ndash;<label for="content">Content</label>&ndash;&gt;-->
-            <!--&lt;!&ndash;<input id="content" ng-model="tContent" type="text">&ndash;&gt;-->
-            <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
-            <!--&lt;!&ndash;<md-button class="add-tab md-primary md-raised" ng-disabled="!tTitle || !tContent" type="submit" style="margin-right: 0;">Add Tab</md-button>&ndash;&gt;-->
-            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-            <!--&lt;!&ndash;</form>&ndash;&gt;-->
-
-            <!--</div>-->
-            <!--</div>-->
         </td>
-        <td nowrap>
-            <span class="position">{{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}</span>
+        <!--<td nowrap>-->
+            <!--<span class="position">{{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}</span>-->
+        <!--</td>-->
+        <td>
+            <span>{{item.furlough.name}}</span>
         </td>
         <td class="text-center">
             {{item.daysSelectHoliday}}
         </td>
-        <td>
-            <span>{{item.furlough.name}}</span>
-        </td>
+
         <td class="text-center">
             <span title="{{item.status | changeName}}" ng-class="item.status | getICO"></span>
         </td>
@@ -91,9 +59,9 @@
                 <!--{{item.getIntersec() | json}}-->
             </div>
         </td>
-        <td class="text-center">
-            {{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}
-        </td>
+        <!--<td class="text-center">-->
+            <!--{{item.createdAt | date:'dd.MM.yyyy H:mm:ss'}}-->
+        <!--</td>-->
         <td ng-if="me.admin" class="text-center">
             {{item.updatedAt |date:'dd.MM.yyyy H:mm:ss'}}
         </td>

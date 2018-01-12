@@ -13,6 +13,7 @@
                 $scope.limitRows = [30, 50, 70, 100];
                 $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
                 $scope.debug = false;
+                //$scope.debug = true;
                 $scope.fioArea = 'Период с .. по ..';
                 $scope.loginArea = 'Логин';
                 $scope.tipArea = 'Тип';
@@ -27,12 +28,12 @@
                 $scope.daysSelectHolidayArea = 'Дней';
                 $scope.added = 'Добавить отпуск';
                 $scope.children = ['Отпуск по беременности и родам', 'Отпуск по уходу за ребенком'];
-                $scope.showBt = 1;
+                $scope.showBt = 0;
                 $scope.countHolidayRF = 28;
                 // показать формочку выбора кол-ва строк на странице
                 $scope.showContIt = ($scope.me.company) ? 1 : 0;
                 $scope.showStr = 1;
-                $scope.urlBt = 'home.company.vacations.create';
+                $scope.urlBt = 'home.company.vacation.create';
                 $scope.showInterfaceYear = true; // показать селектор года
                 $scope.sort = 'updatedAt DESC';
                 $scope.param = 'lastName';

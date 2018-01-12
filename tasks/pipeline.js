@@ -62,6 +62,7 @@ var jsFilesToInject = [
     'js/private/admin/users/UserModule.js',
 
     'js/private/company/users/UserFModule.js',
+    'js/private/company/furloughs/FurloughFModule.js',
     'js/private/company/vacations/VacationFModule.js',
 
 

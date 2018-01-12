@@ -41,7 +41,7 @@ module.exports = {
         }
 
         if (req.param('id')) {
-            Vacation.findOne(req.param('id'))
+            Vacation.findOne(req.params.all())
                 .populate('furlough')
                 .populate('owner')
                 .populate('whomCreated')
@@ -201,7 +201,7 @@ module.exports = {
                                     .toArray(function (err, results) {
                                         if (err) return res.serverError(err);
 
-                                        if (results.length) return res.badRequest('Пересечение отпуска, с уже существующим c ' + results[0].name);
+                                        if (results.length) return res.badRequest('Пересекается с вашим отпуском запланированным с: ' + results[0].name);
                                         /**
                                          * Заполнить поле vacations объектами отпусков с которыми
                                          * пересекается вновь создаваемый отпуск.

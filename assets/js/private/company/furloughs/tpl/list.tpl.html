@@ -1,0 +1,161 @@
+<!--<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
+<div class="col-sm-11  col-md-12  main">
+    <div class="page-header">
+        <h2>{{items[0].scs()}} <span ng-if="mode">не активные</span> ({{filtered.length}})
+            <span class="btn-group-xs pull-right">
+                <small>
+                    <small>
+                        <!--<small>-->
+                        <!--<label class="checkbox-inline">-->
+                        <!--<input type="checkbox" ng-model="debug" value="option1"> отладка-->
+                        <!--</label>-->
+                        <!--<label class="checkbox-inline">-->
+                        <!--<input type="checkbox" ng-model="mode" value="option2"> режимы-->
+                        <!--</label>-->
+                        <label class="checkbox-inline">
+                            <input type="checkbox" ng-model="mode" value="option2"> не активные
+                            <!--<span class="glyphicon  glyphicon-eye-open" ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}" aria-hidden="true"></span>-->
+                        </label>
+                        <!--</small>-->
+                        <!--<button ui-sref="home.admin.furloughs.settings" type="button" class="btn btn-success">-->
+                        <!--<span class="glyphicon glyphicon-cog"></span>-->
+                        <!--</button>-->
+                        <!--<button ui-sref="home.admin.furloughs.create" type="button" class="btn btn-warning">-->
+                        <!--<span class="glyphicon glyphicon-plus"></span>-->
+                        <!--</button>-->
+                    </small>
+                </small>
+                </span>
+        </h2>
+
+        <!--<ul class="breadcrumb">-->
+        <!--<li ng-repeat="breadcrumb in breadcrumbs.getAll()">-->
+        <!--<ng-switch on="$last">-->
+        <!--<span ng-switch-when="true">{{breadcrumb.name}}</span>-->
+        <!--<span ng-switch-default>-->
+        <!--<a href="{{breadcrumb.path}}">{{breadcrumb.name}}</a>-->
+        <!--</span>-->
+        <!--</ng-switch>-->
+        <!--</li>-->
+        <!--</ul>-->
+        <div ui-view></div>
+        <div ui-view="settings"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="searchText" placeholder="Поиск ...">
+                     <span class="input-group-btn">
+                       <button ng-click="searchText=''" class="btn btn-default" type="button">
+                           <span class="glyphicon glyphicon-remove"></span>
+                       </button>
+                     </span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!--<div class="panel panel-info">-->
+            <!--<div class="panel-heading">-->
+            <!--<h3 class="panel-title">-->
+            <!--<button ui-sref="home.admin.furloughs.create" type="button" class="btn btn-default btn-sm">-->
+            <!--<span class="glyphicon glyphicon-plus"></span>-->
+            <!--</button>-->
+            <!--</h3>-->
+            <!--</div>-->
+
+            <p>
+                <button ui-sref="home.admin.furloughs.create" type="button" class="btn btn-default btn-sm">
+                    {{addNameButton}}
+                </button>
+            </p>
+            <!--<div class="panel-body">-->
+            <table class="table table-hover">
+                <tr>
+                    <!--<th>#</th>-->
+                    <th>
+                        <button class="btn btn-default not-border" ng-click="sortBy('name')">Наименование
+                                <span class="sortOrder" ng-show="propertyName === 'name'"
+                                      ng-class="{reverse: reverse}"></span>
+                        </button>
+
+
+                    </th>
+                    <th class="text-center">
+                    <button class="btn btn-default not-border" ng-click="sortBy('fixIntersec')">{{intersecOneArea}}
+                    <span class="sortOrder" ng-show="propertyName === 'fixIntersec'"
+                    ng-class="{reverse: reverse}"></span>
+                    </button>
+
+                    </th>
+
+                    <!--<th>-->
+                    <!--<button class="btn btn-default" ng-click="sortBy('email')">Местоположение-->
+                    <!--<span class="sortOrder" ng-show="propertyName === 'location'"-->
+                    <!--ng-class="{reverse: reverse}"></span>-->
+                    <!--</button>-->
+
+                    <!--</th>-->
+                    <!--<th></th>-->
+                    <!--<th></th>-->
+                </tr>
+                <tr ng-repeat="item in filtered=(items | filter:{$:searchText, action:!mode}| orderBy:propertyName:reverse)">
+                <!--<tr ng-repeat="item in items">-->
+                    <!--<td>{{$index+1}}</td>-->
+                    <td>
+                        <a ng-href="{{item.getEditUrl(item.id)}}">
+                            {{item.name}}
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <span class="glyphicon glyphicon-ok" ng-if="item.fixIntersec">
+                              <md-tooltip  md-direction="top">
+                                  {{intersecNoArea}}
+                              </md-tooltip>
+                            <span>
+
+                    </span>
+                    </span></td>
+                    <!--<td>{{item.type }}</td>-->
+                    <!--<td>{{item.location}}</td>-->
+                    <!--<td class="btn-group-xs">-->
+                    <!--<a ng-href="{{item.getShowUrl(item.id)}}" class="btn"-->
+                    <!--ng-class="{'btn-primary': item.action, ' btn-danger':!item.action}">-->
+                    <!--<span class="glyphicon "-->
+                    <!--ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"-->
+                    <!--aria-hidden="true"></span>-->
+                    <!--</a>-->
+                    <!--&lt;!&ndash;<a ng-href="{{item.getEditUrl(item.id)}}"  class="btn btn-warning">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                    <!--</td>-->
+                    <!--<td class="btn-group-xs">-->
+                    <!--<a ng-if="mode" ng-click="delete(item)" class="btn btn-default">-->
+                    <!--<span class="glyphicon glyphicon-trash"></span>-->
+                    <!--</a>-->
+                    <!--&lt;!&ndash;<form ng-if="mode" action="/furloughs/destroy" method="post">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<input type="hidden" name="_method" value="delete">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<button type="submit" class="btn btn-sm btn-default">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<span class="glyphicon glyphicon-trash"></span>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<input type="hidden" name="_csrf" value="<%= _csrf %>">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<input type="hidden" name="id" value="{{item.id}}">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;</form>&ndash;&gt;-->
+                    <!--</td>-->
+                </tr>
+            </table>
+
+            <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+
+    <pre class="pull-right" ng-if="debug"><h2>{{items| json}}</h2></pre>
+</div>

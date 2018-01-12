@@ -143,7 +143,6 @@ angular.module('ScheduleModule')
             });
             //href="/vacation/delete-all/'+req.param('year')+'"
             $scope.addiction = function() {
-                console.log('EYY********S: ', year );
                 if(!angular.isNumber(year)) return;
                 if (val) {
                     $http.get('/vacation/delete-all/' + year)

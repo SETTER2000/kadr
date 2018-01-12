@@ -1,48 +1,8 @@
-<!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
 
-<div class="col-sm-11  col-md-12  main">
-    <div class="page-header" ng-cloak>
-        <h2>
-            <p ng-class="{'fired':!item.action}">{{item.sc()}} <span ng-show="{{!edit}}">создать</span>: {{item.name}} <span
-                    ng-if="daysSelectHoliday">({{daysSelectHoliday}})</span><span
-                    ng-if="!item.action"
-                    ng-bind="item.deactivation()"></span></p>
-            <a href="#" class="btn btn-info btn-xs " ng-if="item.decree"
-               title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>
-            <a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |
-                date:'dd.MM.yyyy'}}</a>
-            <div class="btn-group-xs pull-right" ng-cloak>
-                <button ng-show="me.admin" ng-if="!item.action && edit" ng-click="delete2(item)" class="btn  btn-danger " ng-cloak>
-                    <span class="glyphicon glyphicon-trash"></span> Удалить
-                </button>
-
-                <button ng-show="edit" ng-click="dub(item)" type="button" ng-disabled="(remains<=0)" class="btn btn-primary">
-                    <!--<button ng-show="edit" ui-sref="home.admin.vacations.create" type="button" class="btn btn-primary">-->
-                    <span class="glyphicon glyphicon-plus"></span> Добавить
-                </button>
-                <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
-                    <span class="glyphicon glyphicon-check"></span> Сохранить
-                </button>
-                <a ng-show="edit" ng-href="{{item.getListUrl()}}" type="button" class="btn btn-warning">
-                    <span class="glyphicon glyphicon-list"></span> Список
-                </a>
-
-                <small ng-if="false">
-                    <md-tooltip md-direction="top">>14 дн.</md-tooltip>
-                    <md-checkbox ng-model="item.maxTwoWeek" class="small" aria-label="Checkbox 1"></md-checkbox>
-                </small>
-            </div>
-        </h2>
-    </div>
-    <div class="row">
-        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
-            <div class="panel" ng-class="{'panel-warning':!item.fired, 'panel-default':item.fired}">
+        <div class="col-md-5">
+            <div class="panel panel-warning" >
                 <div class="panel-heading">
-                    <h3 class="panel-title">Редактировать
-                        <a href="#" ng-click="closed()" class="pull-right">
-                            <span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>
-                        </a>
-                    </h3>
+                    <h3 class="panel-title">Редактировать</h3>
                 </div>
                 <div class="panel-body">
                     <form name="userForm" novalidate ng-submit="saveEdit(item)" enctype="multipart/form-data">
@@ -63,12 +23,6 @@
                             <!--</div>-->
                             <div class="col-md-12">
                                 <div class="panel panel-default new">
-                                    <!-- Default panel contents -->
-                                    <!--<div class="panel-heading">Panel heading</div>-->
-                                    <!--<div class="panel-body">-->
-                                    <!--<p>...</p>-->
-                                    <!--</div>-->
-
                                     <!-- List group -->
                                     <ul class="list-group">
                                         <li class="list-group-item new"><span class="badge new" ng-class="{'text-danger':(remains<0)}">{{remains}}</span>Осталось
@@ -110,59 +64,37 @@
 
                         <div ng-controller="ListFurloughFController" class="form-group ">
                             <label class="control-label" ng-bind="items[0].sc()"></label>
-                            <!--[ <a href="#" ng-click="addFurlough()">добавить</a> ]-->
-
-                            <!--<div class="form-inline" ng-repeat="furlough in item.furloughs">-->
-                            <!--<div class="form-group">-->
                             <select required ng-disabled="edit" class="form-control" ng-model="item.furlough.id">
                                 <option ng-repeat="option in items | filter:{action:true} | orderBy: 'name'" value="{{option.id}}">
                                     {{option.name}}
                                 </option>
                             </select>
-                            <!--</div>-->
-
-                            <!--<button type="button" class="btn btn-default" ng-click="removeFurlough(furlough)">x</button>-->
-                            <!--</div>-->
                         </div>
-
-
-                        <!--  O W N E R  -->
-
-                        <!--<div ng-if="(item.furlough.id !== undefined)" ng-controller="ListFController" class="form-group ">-->
-                            <!--<label class="control-label" ng-bind="items[0].sc()"></label>-->
-                            <!--<span ng-if="me.admin">{{filtered.length}}</span>-->
-                            <!--<select ng-disabled="edit" class="form-control" ng-model="item.owner.id">-->
-                                <!--<option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )"-->
-                                        <!--value="{{option.id}}">-->
-                                    <!--{{option.getFullName()}}-->
-                                <!--</option>-->
-                            <!--</select>-->
-
-                        <!--</div>-->
-
-
                         <div class="form-group">
-                            <!--<div class="form-group" style=" position: fixed;margin-left: 50px; margin-bottom: 70px; bottom:0; left:0;">-->
-                            <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-md btn-success">
+                            <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-sm btn-success">
                                 <span class="glyphicon glyphicon-user"></span>
                                 Сохранить
                             </button>
 
-                            <button ng-show="edit" type="submit" class="btn btn-md btn-success">
+                            <button ng-show="edit" type="submit" class="btn btn-sm btn-success">
                                 <span class="glyphicon glyphicon-check"></span>
                                 Сохранить
                             </button>
+                            <a ng-show="edit" ui-sref="home.company.vacations" class="btn btn-sm btn-primary">
+                                <span class="glyphicon glyphicon-share-alt"></span>
+                                Закрыть
+                            </a>
                             <a ng-if="me.admin" ng-href="{{item.getListUrl()}}" class="btn btn-md btn-warning">
                                 <span class="glyphicon glyphicon-list"> </span>
                                 Список
                             </a>
-                            <button class="btn btn-md btn-primary" type="button" ng-click="clear()">
-                                <span class="glyphicon glyphicon-erase"> </span>
-                                Очистить
-                            </button>
+                            <!--<button class="btn btn-md btn-primary" type="button" ng-click="clear()">-->
+                                <!--<span class="glyphicon glyphicon-erase"> </span>-->
+                                <!--Очистить-->
+                            <!--</button>-->
 
-                            <button title="Комментировать" ng-disabled="(edit && chats.length) || (!edit) || (comment)"
-                                    class="btn btn-md btn-link pull-right" type="button" ng-click="toogle()">
+                            <button ng-if="edit" title="Комментировать" ng-disabled="(edit && chats.length) || (!edit) || (comment)"
+                                    class="btn btn-sm btn-link pull-right" type="button" ng-click="toogle()">
                                 <i class="fa fa-comment-o" aria-hidden="true"></i>
                                 Комментарий
                             </button>
@@ -239,92 +171,53 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6" ng-if="item.id">
-            <div ng-switch on="modeSelect.value">
-                <div ng-switch-when="uploader">
-                    <ng-include src="uploaderView"></ng-include>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6" ng-if="close">
-            <div class="row">
-                <div class="col-md-6">
+        <div class="col-md-3">
 
 
-                    <!-- C A L E N D A R -->
+            <!-- C A L E N D A R -->
 
-                    <div class="form-group">
-                        <label class="sr-only" for="exampleInputPassword33"></label>
-                        <input required class="form-control  flatpickr flatpickr-calendar"
-                               ng-flatpickr
-                               fp-opts="dateOpts"
-                               fp-on-setup="datePostSetup(fpItem)"
-                               ng-model="item.name">
+            <div class="form-group">
+                <label class="sr-only" for="exampleInputPassword33"></label>
+                <input required class="form-control  flatpickr flatpickr-calendar"
+                       ng-flatpickr
+                       fp-opts="dateOpts"
+                       fp-on-setup="datePostSetup(fpItem)"
+                       ng-model="item.name">
                             <span class="input-group-btn">
                               <!--<button class="btn btn-default" type="button" ng-click="clear()"><span class="glyphicon glyphicon-remove"></span></button>-->
                             </span>
-                    </div>
-
-
-                </div>
-                <div class="col-md-6">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            Отпуска из списка пересечений
-                        </h3>
-                    </div>
-                    <div class="panel-body" ng-if="intersection.length">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tr ng-class="{danger:intr.inr}" ng-repeat="intr in  intersection | filter:{from:yearFrom}" ng-cloak>
-                                    <th>{{intr.name}}</th>
-                                    <!--<th>{{intr.from}} * {{moment('2017-08-06')}}</th>-->
-                                    <td>{{intr.owner['lastName']}} {{intr.owner['firstName'].substr(0,1)}}.
-                                        {{intr.owner['patronymicName'].substr(0,1)}}.
-                                    </td>
-                                </tr>
-                            </table>
-                            <!--{{intersection[0] | json}}-->
-                            <!--Год: {{me.interface}}-->
-                            <!--Год: {{yearFrom}}-->
-                            <span ng-if="me.kadr || me.admin"></span> Интерфейс выбран на: <a
-                                href="/admin/vacations">{{me.interfaces[0].year}}</a>
-                            год
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- I N F O R M A T I O N -->
-
-            <div class="panel" ng-if="me.admin"
-                 ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        Информация
-                    </h3>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tr ng-repeat="(key, value) in item">
-                                <th>{{key}}</th>
-                                <td>{{value }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
             </div>
 
 
         </div>
-    </div>
+        <div class="col-md-4">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Отпуска из списка пересечений
+                </h3>
+            </div>
+            <div class="panel-body" ng-if="intersection.length">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr ng-class="{danger:intr.inr}" ng-repeat="intr in  intersection | filter:{from:yearFrom}" ng-cloak>
+                            <th>{{intr.name}}</th>
+                            <!--<th>{{intr.from}} * {{moment('2017-08-06')}}</th>-->
+                            <td>{{intr.owner['lastName']}} {{intr.owner['firstName'].substr(0,1)}}.
+                                {{intr.owner['patronymicName'].substr(0,1)}}.
+                            </td>
+                        </tr>
+                    </table>
+                    <!--{{intersection[0] | json}}-->
+                    <!--Год: {{me.interface}}-->
+                    <!--Год: {{yearFrom}}-->
+                    <!--<span ng-if="me.kadr || me.admin"></span> Интерфейс выбран на: <a-->
+                    <!--href="/admin/vacations">{{me.interfaces[0].year}}</a>-->
+                    <!--год-->
+                </div>
+            </div>
+        </div>
+
+
     <pre ng-if="(debug && me.admin)"><h4>{{item| json}}</h4></pre>
-</div>
 
-
-<!--<div ui-view></div>-->
-<!--<div ui-view="users"></div>-->
 
