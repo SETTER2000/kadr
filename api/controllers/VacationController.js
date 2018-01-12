@@ -944,6 +944,7 @@ module.exports = {
     getDaysToYears: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         // db.vacation.aggregate([{$match:{$and:[{from:{$gte: ISODate("2018-01-01")}},{from:{$lt: ISODate("2019-01-01")}},{action: {$eq: true}}, {owner:ObjectId('58a461e66723246b6c2bc641')}]}}, {$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}}, { $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
+        console.log('ALL ZAPROS: ', req.params.all());
         Vacation.native(function (err, collection) {
             if (err) return res.serverError(err);
             //console.log('BODY', req.param('year'));
@@ -957,6 +958,7 @@ module.exports = {
                 }, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
                 .toArray(function (err, results) {
                     if (err) return res.serverError(err);
+                    console.log('SEND RESULT:', results);
                     res.send(results);
                 });
         });

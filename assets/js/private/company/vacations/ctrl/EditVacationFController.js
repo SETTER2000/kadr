@@ -194,11 +194,12 @@ angular.module('VacationFModule')
 
 
             $scope.$watch('item.furlough.id', function (val) {
-                //console.log(' CHANGE $scope.item.furlough.id',  val);
+                console.log(' CHANGE $scope.item.furlough.id',  val);
                 //console.log(' CHANGE 99 $scope.item.owner.id',  $scope.item.owner.id);
                 if (val) {
-                    $scope.item.furlough.id = val;
-                    if ($scope.item.owner) $scope.getDaysYear($scope.item.owner.id, $scope.yearFrom);
+                    //$scope.item.furlough.id = val;
+                    console.log('GET DAYS YEAR: ' , $scope.getDaysYear());
+                    if ($scope.me) $scope.getDaysYear();
                 }
             });
             //$scope.$watch('remains', function (val) {
@@ -210,11 +211,14 @@ angular.module('VacationFModule')
             //    }
             //});
 
-            $scope.getDaysYear = function (ownerId, year) {
-                $http.get('/vacation/get-days-to-years?owner=' + ownerId + '&year=' + year + '&furlough=' + $scope.item.furlough.id)
+            $scope.getDaysYear = function () {
+                console.log('$scope.yearFrom' , $scope.yearFrom);
+                console.log('$scope.item.furlough.id' , $scope.item.furlough.id);
+                $http.get('/vacation/get-days-to-years?owner=' + $scope.me.id + '&year=' + +$scope.yearFrom + '&furlough=' + $scope.item.furlough.id)
+                //$http.get('/vacation/get-days-to-years?owner=' + $scope.me.id + '&year=' + $scope.yearFrom + '&furlough=' + $scope.item.furlough.id)
                     .then(function onSuccess(sailsResponse) {
                         $scope.remains = $scope.remainsDub = 28;
-                        //console.log('DATTT config', $scope.flatpicker.config);
+                        console.log('DATTT config', sailsResponse.data);
                         //$scope.flatpicker.set('enable',[ {from:$scope.flatpicker.config._minDate, to:$scope.flatpicker.config._maxDate}]);
                         if (sailsResponse.data.length > 0) {
                             if (sailsResponse.data[0].remains <= 0 && !$scope.edit) {
@@ -267,11 +271,11 @@ angular.module('VacationFModule')
             //    });
             //};
             //
-            $scope.allDaysYearHoliday =  calendarService.getAllWorkHolidayDays($scope.me.interfaces[0].year);
-            $scope.getAllWorkDays = calendarService.getAllWorkDays($scope.me.interfaces[0].year);
-            $scope.getHours40Year = calendarService.getHoursYear($scope.me.interfaces[0].year,40);
-            $scope.getHours36Year = calendarService.getHoursYear($scope.me.interfaces[0].year,36);
-            $scope.getHours24Year = calendarService.getHoursYear($scope.me.interfaces[0].year,24);
+            //$scope.allDaysYearHoliday =  calendarService.getAllWorkHolidayDays($scope.me.interfaces[0].year);
+            //$scope.getAllWorkDays = calendarService.getAllWorkDays($scope.me.interfaces[0].year);
+            //$scope.getHours40Year = calendarService.getHoursYear($scope.me.interfaces[0].year,40);
+            //$scope.getHours36Year = calendarService.getHoursYear($scope.me.interfaces[0].year,36);
+            //$scope.getHours24Year = calendarService.getHoursYear($scope.me.interfaces[0].year,24);
 
 
             $scope.dateOpts = {
@@ -296,17 +300,15 @@ angular.module('VacationFModule')
                      * 2 аргумент: строка например "Кол-во праздников и выходных в"
                      * Если данных на запрашиваемый год нет ничего не вернёт.
                      */
-                    $scope.getAllWorkDays = calendarService.getAllWorkDays(instance.currentYear);
-                    $scope.allDaysYearHoliday = calendarService.getAllWorkHolidayDays(instance.currentYear);
-                    $scope.getHours40Year = calendarService.getHoursYear(instance.currentYear,40);
-                    $scope.getHours36Year = calendarService.getHoursYear(instance.currentYear,36);
-                    $scope.getHours24Year = calendarService.getHoursYear(instance.currentYear,24);
+                    //$scope.getAllWorkDays = calendarService.getAllWorkDays(instance.currentYear);
+                    //$scope.allDaysYearHoliday = calendarService.getAllWorkHolidayDays(instance.currentYear);
+                    //$scope.getHours40Year = calendarService.getHoursYear(instance.currentYear,40);
+                    //$scope.getHours36Year = calendarService.getHoursYear(instance.currentYear,36);
+                    //$scope.getHours24Year = calendarService.getHoursYear(instance.currentYear,24);
 
-                    if ($scope.item.owner && instance.currentYear) {
-                        $scope.getDaysYear($scope.item.owner.id, instance.currentYear);
-
-                    }
-                    $scope.$apply();
+                    if (instance.currentYear && $scope.item.furlough)$scope.getDaysYear();
+                    
+                    //$scope.$apply();
                 },
 
                 // onReady запускается после того, как календарь находится в готовом состоянии
