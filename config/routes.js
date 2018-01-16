@@ -65,6 +65,7 @@ module.exports.routes = {
 
     //'PUT /user/update-leader/:id': 'UserController.updateLeader',
     'PUT /user/update-action/:id': 'UserController.updateAction',
+    'PUT /user/update-emergence/:id': 'UserController.updateEmergence',
     'PUT /user/update-deleted/:id': 'UserController.updateDeleted',
     'PUT /user/updateProfile/:id': 'UserController.updateProfile',
     'PUT /user/updateInterface/:id': 'UserController.updateInterface',
@@ -152,6 +153,14 @@ module.exports.routes = {
     'GET /schedule/max-year': 'ScheduleController.maxYear',
     'GET /schedule/min-year': 'ScheduleController.minYear',
     'GET /schedule/to-years': 'ScheduleController.getHolidaysToYears',
+
+    /**
+     * Emergence
+     */
+    'PUT /emergence/update-rows': 'EmergenceController.updateDefaultRows',
+    'GET /emergence/max-year':    'EmergenceController.maxYear',
+    'GET /emergence/min-year':    'EmergenceController.minYear',
+    'GET /emergence/to-years':    'EmergenceController.getHolidaysToYears',
 
     //'POST /schedule/:id/chat':          'ScheduleController.chat',
     //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',
@@ -249,15 +258,20 @@ module.exports.routes = {
     /**
      * Schedule
      */
-    //'POST   /schedules':                'ScheduleController.createUser',
-    //'GET    /schedules':                'ScheduleController.findUsers',
-    //'PUT    /schedules/changePassword': 'ScheduleController.changePassword',
-
     'GET    /schedules': 'ScheduleController.get',
     'GET    /schedules/:id': 'ScheduleController.get',
     'POST   /schedules': 'ScheduleController.create', // создать запись
     'DELETE /schedules/:id': 'ScheduleController.destroy', // удалить
     'PUT    /schedules/:id': 'ScheduleController.update', // обновить
+
+    /**
+     * Emergence
+     */
+    'GET    /emergences':     'EmergenceController.get',
+    'GET    /emergences/:id': 'EmergenceController.get',
+    'POST   /emergences':     'EmergenceController.create', // создать запись
+    'DELETE /emergences/:id': 'EmergenceController.destroy', // удалить
+    'PUT    /emergences/:id': 'EmergenceController.update', // обновить
     /*************************************************************
      * Server-rendered HTML Pages                                *
      *************************************************************/
@@ -281,7 +295,7 @@ module.exports.routes = {
 
 
     'GET /admin/users': 'PageController.getListUserPage',
-    'GET /admin/users/administration': 'PageController.showAdminPage',
+    'GET /admin/users/administration': 'PageController.showHomePage',
     'GET /admin/users/create': 'PageController.showHomePage',
     'GET /admin/users/exit': 'PageController.getExitUserPage',
     'GET /admin/user/:id': 'PageController.showHomePage',
@@ -354,6 +368,14 @@ module.exports.routes = {
     'GET /admin/schedules/show/:id': 'PageController.showHomePage',
     'GET /admin/schedules/edit/:id': 'PageController.showHomePage',
     'GET /admin/schedule/:id': 'PageController.showHomePage',
+
+
+    'GET /admin/emergences/administration': 'PageController.showHomePage',
+    'GET /admin/emergences':          'PageController.showHomePage',
+    'GET /admin/emergences/create':   'PageController.showHomePage',
+    'GET /admin/emergences/show/:id': 'PageController.showHomePage',
+    'GET /admin/emergences/edit/:id': 'PageController.showHomePage',
+    'GET /admin/emergence/:id':       'PageController.showHomePage',
 
 
     //'GET /admin/attendances/calendar': 'PageController.showHomePage',

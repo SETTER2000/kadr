@@ -1123,6 +1123,20 @@ module.exports = {
             if (err) return res.negotiate(err);
             return res.ok();
         });
+    }, /**
+     * Дать/Снять доступ к модулю Emergence (выход нового пользователя)
+     * @param req
+     * @param res
+     */
+    updateEmergence: function (req, res) {
+        console.log('REG ALLL:', req.params.all());
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.update(req.param('id'), {
+            emergence: req.param('emergence')
+        }).exec(function (err, update) {
+            if (err) return res.negotiate(err);
+            return res.ok();
+        });
     },
 
     /**

@@ -1,0 +1,18 @@
+<h5><em>События</em></h5>
+<div class="dialog">
+
+    <div class="list-group" ng-repeat="bg in bdgs">
+        <a type="button" ui-sref="home.admin.schedules.edit({ scheduleId: bg.badges[0].id })" class="list-group-item">
+            <span class="badges pull-right">
+                <span class="glyphicon" aria-hidden="true" title="{{bg.action}}"
+                  ng-class="{'glyphicon-pencil':(bg.action==='обновлён'),'glyphicon-envelope':(bg.action==='рассылка закончена'),'glyphicon-ok':(bg.action==='создан'),'glyphicon-trash':(bg.action==='удалён'),'text-success':(bg.action==='создан | рассылка закончена'),'text-primary':(bg.action==='обновлён')}"></span>
+            </span>
+            <img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp;   {{bg.badges[0].name}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
+        </a>
+    </div>
+    <!--<input type="button" value="OK" ng-click="closeThisDialog('Some value')"/>-->
+    <!--<div class="clearfix">-->
+        <!--<button class="btn btn-link pull-right " ui-sref="home.admin.schedules">Перейти</button>-->
+    <!--</div>-->
+
+</div>

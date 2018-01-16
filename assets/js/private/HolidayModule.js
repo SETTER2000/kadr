@@ -15,6 +15,7 @@ angular.module('Holiday', [
         'UserModule',
         'CalendarModule',
         'AttendanceModule',
+        'EmergenceModule',
         'ScheduleModule',
         'AdminModule',
         'ngMaterial',

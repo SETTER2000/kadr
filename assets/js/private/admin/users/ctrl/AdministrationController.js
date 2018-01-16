@@ -1,6 +1,9 @@
-angular.module('UserModule').controller('AdministrationController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('UserModule').controller('AdministrationController', ['$scope', '$state','$http', 'toastr', function($scope,$state, $http, toastr){
 
     $scope.me = window.SAILS_LOCALS.me;
+    if (!$scope.me.admin) $state.go('home');
+
+
 
     $scope.recordSave = 'Запись успешно сохранена!';
   // set-up loading state
@@ -11,7 +14,7 @@ angular.module('UserModule').controller('AdministrationController', ['$scope', '
   $http.get('/user/adminUsers')
       .then(function onSuccess(sailsResponse){
 
-        //console.log('sailsResponse: ', sailsResponse);
+        console.log('sailsResponse.data: ', sailsResponse.data);
         $scope.userList.contents = sailsResponse.data;
 
       })

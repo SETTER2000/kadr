@@ -1,0 +1,97 @@
+<div class="col-sm-11  col-md-12  main">
+    <div class="page-header">
+        <h2>{{item.getFullName()}}
+            <div class="btn-group-xs pull-right">
+                <a ui-sref="home.admin.schedules" class="btn btn-sm btn-warning">
+                    <span class="glyphicon glyphicon-list"></span>
+                </a>
+                <a ui-sref="home.admin.schedules.edit({ scheduleId: item.id })" class="btn btn-sm btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
+            </div>
+        </h2>
+    </div>
+    <div class="row">
+        <div class=" col-md-12">
+            <table class="table">
+                <tr>
+                    <th>Наименование</th>
+                    <td>{{item.name }}</td>
+                </tr>
+                <tr>
+                    <th>Год</th>
+                    <td>{{item.getYear()}}</td>
+                </tr>
+                <tr>
+                    <th>Статус</th>
+                    <td>{{item.status}}</td>
+                </tr>
+
+                <tr>
+                    <th><span class="pull-left"> С <md-tooltip md-direction="right">Начало запуска графика отпусков</md-tooltip></span></th>
+                    <td>{{item.from | date:'dd.MM.yyyy'}}</td>
+                </tr>
+                <tr>
+                    <th><span class="pull-left"> По <md-tooltip md-direction="right">Конец запуска графика отпусков</md-tooltip></span></th>
+                    <td>{{item.to | date:'dd.MM.yyyy'}}</td>
+                </tr>
+                <!--<tr>-->
+                <!--<th>Должность</th>-->
+                <!--<td>{{item.position | json}}</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                <!--<th>Отдел</th>-->
+                <!--<td>{{item.subdivision | json}}</td>-->
+                <!--</tr>-->
+                <tr ng-if="item.daysSelectHoliday">
+                    <th>Кол-во дней</th>
+                    <td>{{item.daysSelectHoliday}}</td>
+                </tr>
+
+                <tr ng-if="item.whomCreated">
+                    <th>Создал</th>
+                    <td>{{item.whomCreated.lastName}} {{item.whomCreated.firstName}} {{item.whomCreated.patronymicName}} </td>
+                </tr>
+
+                <tr ng-if="item.whomUpdated">
+                    <th>Обновил</th>
+                    <td> {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName}} {{item.whomUpdated.patronymicName}}</td>
+                </tr>
+
+                <tr ng-if="item.createdAt">
+                    <th>Создан</th>
+                    <td>{{item.createdAt | date: "dd.MM.yyyy HH:mm"}}</td>
+                </tr>
+                <tr ng-if="item.updatedAt">
+                    <th>Обновлён</th>
+                    <td>{{item.updatedAt | date: "dd.MM.yyyy HH:mm"}}</td>
+                </tr>
+                <tr ng-if="item.start">
+                    <th>Запустить рассылку</th>
+                    <td>{{item.start | date: "dd.MM.yyyy HH:mm"}}</td>
+                </tr>
+
+                <tr>
+                    <th colspan="20"></th>
+                </tr>
+
+
+                <!--<tr ng-cloak>-->
+                <!--<td>-->
+                <!--<a ui-sref="home.admin.users" class="btn btn-sm btn-warning">-->
+                <!--<span class="glyphicon glyphicon-list"></span>-->
+                <!--</a>-->
+
+                <!--</td>-->
+                <!--<td>-->
+                <!--<a ui-sref="home.admin.users.edit({userId:item.id})" class="btn btn-sm btn-warning">-->
+                <!--<span class="glyphicon glyphicon-pencil"></span>-->
+                <!--</a>-->
+                <!--</td>-->
+                <!--</tr>-->
+
+            </table>
+        </div>
+    </div>
+</div>
+

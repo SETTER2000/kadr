@@ -12,7 +12,7 @@ angular.module('ScheduleModule', ['ui.router', 'toastr', 'ngResource', 'ngMateri
                         templateUrl: '/js/private/admin/schedules/tpl/list.tpl.html',
                         controller: 'ListScheduleController'
                     },
-                    "actionView@home.admin.schedules": {templateUrl: '/js/private/admin/schedules/views/home.schedules.action.html'}
+                    "actionView@home.admin.schedules": {templateUrl: '/js/private/admin/schedules/views/tables.html'}
                 }
             })
             //.state('home.admin.schedules.settings', {

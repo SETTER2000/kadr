@@ -6,7 +6,7 @@
                 {{item.getFullName()}}
                 <span ng-if="!item.action">{{item.deactivation()}}</span>
             </p>
-            <p ng-if="!item.lastName">Права доступа</p>
+            <p ng-if="!item.lastName">Права доступа к модулю</p>
             <!--<a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">работает c {{item.dateInWork |-->
             <!--date:'dd.MM.yyyy' }}</a>-->
             <!--<a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |-->
@@ -43,19 +43,19 @@
             &nbsp;
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-warning">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Обновить руководящий состав</h3>
-                </div>
-                <div class="panel-body">
+    <!--<div class="row">-->
+        <!--<div class="col-md-12">-->
+            <!--<div class="panel panel-warning">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h3 class="panel-title">Обновить руководящий состав</h3>-->
+                <!--</div>-->
+                <!--<div class="panel-body">-->
 
-                </div>
-            </div>
+                <!--</div>-->
+            <!--</div>-->
 
-        </div>
-    </div>
+        <!--</div>-->
+    <!--</div>-->
     <div class="row">
         <div class="col-md-12">
             <!-- USERS PAGE -->
@@ -96,11 +96,11 @@
 
                             <th>login</th>
                             <th>email</th>
-                            <th>action</th>
-                            <th>leader</th>
-                            <th>kadr</th>
-                            <th>admin</th>
-                            <th>deleted</th>
+                            <th class="text-center ">action</th>
+                            <!--<th>leader</th>-->
+                            <!--<th>kadr</th>-->
+                            <!--<th>admin</th>-->
+                            <!--<th>deleted</th>-->
 
                         </tr>
 
@@ -119,11 +119,11 @@ orderBy:propertyName:reverse |  limitTo: 1000)">
 
                             <td> {{user.login}}</td>
                             <td> {{user.email}}</td>
-                            <td><input type="checkbox" ng-model="user.action" ng-click="saveAction(user.id, user.action)"></td>
-                            <td><input type="checkbox" ng-model="user.leader" ng-click="saveLeader(user.id, user.leader)"></td>
-                            <td><input type="checkbox" ng-model="user.kadr" ng-click="saveKadr(user.id, user.kadr)"></td>
-                            <td><input type="checkbox" ng-model="user.admin" ng-click="saveAdmin(user.id, user.admin)"></td>
-                            <td><input type="checkbox" ng-model="user.deleted" ng-click="saveDeleted(user.id, user.deleted)"></td>
+                            <td class="text-center "><input type="checkbox" ng-model="user.emergence" ng-click="saveEmergence(user.id, user.emergence)"></td>
+                            <!--<td><input type="checkbox" ng-model="user.leader" ng-click="saveLeader(user.id, user.leader)"></td>-->
+                            <!--<td><input type="checkbox" ng-model="user.kadr" ng-click="saveKadr(user.id, user.kadr)"></td>-->
+                            <!--<td><input type="checkbox" ng-model="user.admin" ng-click="saveAdmin(user.id, user.admin)"></td>-->
+                            <!--<td><input type="checkbox" ng-model="user.deleted" ng-click="saveDeleted(user.id, user.deleted)"></td>-->
                     </table>
                 </div>
             </div>

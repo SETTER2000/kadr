@@ -69,6 +69,10 @@ module.exports = {
             type: 'boolean'
         },
 
+        emergence: {
+            type: 'boolean'
+        },
+
         leader: {
             type: 'boolean'
         },
@@ -249,6 +253,13 @@ module.exports = {
             via: 'iagree'
         },
 
+
+        /**
+         * Кто инициировал выход сотрудника
+         */
+        emergenceWhomCreated: {
+            collection: 'emergence'
+        },
 
         /**
          * Кто создал график отпусков
