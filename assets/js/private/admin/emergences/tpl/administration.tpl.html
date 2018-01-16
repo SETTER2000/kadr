@@ -2,11 +2,11 @@
 <div class="col-sm-11  col-md-12  main "  ng-cloak>
     <div class="page-header">
         <h2>
-            <p ng-if="item.lastName" ng-class="{'fired':item.fired}">
+            <span ng-if="item.lastName" ng-class="{'fired':item.fired}">
                 {{item.getFullName()}}
                 <span ng-if="!item.action">{{item.deactivation()}}</span>
-            </p>
-            <p ng-if="!item.lastName">Права доступа к модулю</p>
+            </span>
+            <span ng-if="!item.lastName">Права доступа к модулю</span>
             <!--<a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">работает c {{item.dateInWork |-->
             <!--date:'dd.MM.yyyy' }}</a>-->
             <!--<a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |-->
@@ -15,9 +15,25 @@
             <!--<button ng-click="saveEdit(item)" type="button" class="btn btn-success">-->
             <!--<span class="glyphicon glyphicon-check"></span>-->
             <!--</button>-->
-            <!--<a ng-href="{{item.getListUrl()}}" type="button" class="btn btn-warning">-->
-            <!--<span class="glyphicon glyphicon-list"></span>-->
-            <!--</a>-->
+
+            <div class="btn-group-xs pull-right">
+
+                <!--<button type="checkbox" ng-click="debug = debug ? false : true" title="отладка" class="btn btn-default">-->
+                <!--<span class="glyphicon glyphicon-wrench"></span>-->
+                <!--</button>-->
+                <!--<button ui-sref="home.admin.users.list" title="Список" type="button" class="btn btn-default">-->
+                <!--<span class="glyphicon glyphicon-cog"></span>-->
+                <!--</button>-->
+                <!--<button ui-sref="home.admin.users.settings" title="Настройки" type="button" class="btn btn-default">-->
+                <!--<span class="glyphicon glyphicon-cog"></span>-->
+                <!--</button>-->
+                <!--<button type="checkbox" ng-click="getMode(t)" title="Режимы" class="btn btn-danger">-->
+                <!--<span class="glyphicon glyphicon-off"></span>-->
+                <!--</button>-->
+                <button ng-if="me.admin" ui-sref="home.admin.emergences" type="button" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-list"></span>
+                </button>
+            </div>
             <!--</div>-->
         </h2>
     </div>

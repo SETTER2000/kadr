@@ -26,8 +26,8 @@ module.exports.routes = {
      *                 JSON API ENDPOINTS                        *
      *************************************************************/
 
-      'PUT /login': 'UserController.loginLDAP',
-    //'PUT /login': 'UserController.login',
+      // 'PUT /login': 'UserController.loginLDAP',
+    'PUT /login': 'UserController.login',
     'GET /logout': 'PageController.logout',
     'POST /logout': 'UserController.logout',
     // 'GET /mail/send': 'MailController.send',
@@ -157,10 +157,10 @@ module.exports.routes = {
     /**
      * Emergence
      */
-    'PUT /emergence/update-rows': 'EmergenceController.updateDefaultRows',
-    'GET /emergence/max-year':    'EmergenceController.maxYear',
-    'GET /emergence/min-year':    'EmergenceController.minYear',
-    'GET /emergence/to-years':    'EmergenceController.getHolidaysToYears',
+    // 'PUT /emergence/update-rows': 'EmergenceController.updateDefaultRows',
+    // 'GET /emergence/max-year':    'EmergenceController.maxYear',
+    // 'GET /emergence/min-year':    'EmergenceController.minYear',
+    // 'GET /emergence/to-years':    'EmergenceController.getHolidaysToYears',
 
     //'POST /schedule/:id/chat':          'ScheduleController.chat',
     //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',

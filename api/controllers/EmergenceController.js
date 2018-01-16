@@ -56,18 +56,18 @@ module.exports = {
                             if (err) return res.serverError(err);
                             if (!users) return res.notFound();
 
-                          /*  {
-                                where: { /!* ... *!/ },
-                                groupBy: [ /!* ... *!/ ],
-                                    sum: [ /!* ... *!/ ],
-                                average: [ /!* ... *!/ ],
-                                count: true,
-                                min: [ /!* ... *!/ ],
-                                max: [ /!* ... *!/ ],
-                                sort: { /!* ... *!/ },
-                                skip: 2353,
-                                    limit: 25
-                            }*/
+                            /*  {
+                                  where: { /!* ... *!/ },
+                                  groupBy: [ /!* ... *!/ ],
+                                      sum: [ /!* ... *!/ ],
+                                  average: [ /!* ... *!/ ],
+                                  count: true,
+                                  min: [ /!* ... *!/ ],
+                                  max: [ /!* ... *!/ ],
+                                  sort: { /!* ... *!/ },
+                                  skip: 2353,
+                                      limit: 25
+                              }*/
                             Emergence.find()
                                 .exec(function foundEmergence(err, emergences) {
                                     if (err) return res.serverError(err);
@@ -109,7 +109,8 @@ module.exports = {
     // * @returns {*}
     // */
     create: function (req, res) {
-        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        console.log('ALL CREATE RWEQ:', req.params.all());
         //if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
         if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         let obj = {
@@ -119,12 +120,19 @@ module.exports = {
             whomCreated: req.session.me,
             daysSelectHoliday: req.param('daysSelectHoliday'),
             action: req.param('action'),
-            period: req.param('period'),
+            position: req.param('position'),
             status: 'Проект',
             start: new Date(req.param('start')),
-            year: +req.param('year'),
+            patronymicName: req.param('patronymicName'),
             countData: +req.param('countData'),
+            firstName: req.param('firstName'),
+            lastName: req.param('lastName'),
+            boss: req.param('boss'),
+            bussinescard: req.param('bussinescard'),
+            phone: req.param('phone'),
+            mobile: req.param('mobile'),
             htmlData: req.param('htmlData'),
+            htmlData2: req.param('htmlData2'),
             idleStart: '',
             worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X'])),
             from: new Date(req.param('from')),
@@ -141,12 +149,25 @@ module.exports = {
                             if (err) return res.serverError(err);
                             console.log(obj.section + ' создан пользователем:', findUser.getFullName());
                             findUser.emergenceWhomCreated.add(createEmergence.id);
+                            // req.param('htmlData'),
+
+
                             findUser.save(function (err) {
                                 if (err) {
                                     return res.serverError(err);
                                 }
                                 Emergence.find().exec((err, findEmergence) => {
                                     if (err) return res.serverError(err);
+
+                                    // _.forEach(req.param('htmlData'), function (val, key) {
+                                    //     findEmergence.htmlData = val;
+                                    // });
+
+                                    // findEmergence.save(function (err) {
+                                    //     if (err) {
+                                    //         return res.serverError(err);
+                                    //     }
+
                                     sails.sockets.broadcast('emergence', 'hello', {howdy: findEmergence}, req);
                                     sails.sockets.broadcast('emergence', 'badges', {
                                         badges: [createEmergence],
@@ -156,6 +177,11 @@ module.exports = {
                                         avatarUrl: findUser.avatarUrl
                                     }, req);
                                     res.send(createEmergence);
+
+
+                                    // });
+
+
                                 });
                             });
                         });
@@ -171,6 +197,10 @@ module.exports = {
     // */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
+        console.log('ALL  UPDATE RWEQ:', req.params.all());
+
+
         if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         let obj = {
             section: 'Выход нового сотрудника',
@@ -182,6 +212,10 @@ module.exports = {
             period: req.param('period'),
             status: (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Проект',
             htmlData: req.param('htmlData'),
+            htmlData2: req.param('htmlData2'),
+            bussinescard: req.param('bussinescard'),
+            phone: req.param('phone'),
+            mobile: req.param('mobile'),
             start: new Date(req.param('start')),
             year: +req.param('year'),
             from: new Date(req.param('from')),

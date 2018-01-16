@@ -23,8 +23,37 @@ module.exports = {
             defaultsTo: true,
             required: true
         },
+        lastName: {
+            type: 'string'
+        },
+        firstName: {
+            type: 'string'
+        },
+        patronymicName: {
+            type: 'string'
+        },
         name: {
             type: 'string'
+        },
+
+        position: {
+            type: 'string'
+        },
+
+        boss: {
+            type: 'string'
+        },
+        phone: {
+            type: 'boolean',
+            defaultsTo: false,
+        },
+        mobile: {
+            type: 'boolean',
+            defaultsTo: false,
+        },
+        bussinescard: {
+            type: 'boolean',
+            defaultsTo: false,
         },
         //from: {
         //    type: 'date',
@@ -51,12 +80,15 @@ module.exports = {
             defaultsTo: 'Проект',
             enum: ['Проект', 'В работе', 'Утвержден']
         },
-        //htmlData: {
-        //    type: 'array',
-        //    defaultsTo:[],
-        //    required: true
-        //},
-        //
+        htmlData: {
+            type: 'array',
+            defaultsTo: []
+        },
+        htmlData2: {
+            type: 'array',
+            defaultsTo: []
+        },
+
         //year: {
         //    type: 'integer',
         //    maxLength: 4,
@@ -84,8 +116,8 @@ module.exports = {
             defaultsTo: false,
             required: true
         },
-        job:{
-          type:'string'
+        job: {
+            type: 'string'
         },
 
         //
@@ -127,22 +159,22 @@ module.exports = {
         //    collection: 'chat',
         //    via: 'vacation'
         //},
-        //getHoliday: function (id) {
-        //    User.findOne({id: id})
-        //        .populate('positions')
-        //        .exec(function foundUser(err, user) {
-        //            if (err) return res.serverError(err);
-        //            if (!user) return res.notFound();
-        //            res.ok(user);
-        //        });
-        //}
-        //getFullName : function () {
-        //return (!this.name) ? this.name = 'График отпусков на ' : this.name;
-        //
-        //},
-        //getEditUrl:function () {
-        //    return 'schedules/edit/' + this._id;
-        //}
+        getHoliday: function (id) {
+            User.findOne({id: id})
+                .populate('positions')
+                .exec(function foundUser(err, user) {
+                    if (err) return res.serverError(err);
+                    if (!user) return res.notFound();
+                    res.ok(user);
+                });
+        },
+        getFullName: function () {
+            return (!this.name) ? this.name = 'График отпусков на ' : this.name;
+
+        },
+        getEditUrl: function () {
+            return 'schedules/edit/' + this._id;
+        }
 
     }
 };

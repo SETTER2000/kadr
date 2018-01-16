@@ -71,8 +71,8 @@ angular.module('EmergenceModule')
                 }
             ];
             $scope.to = '';
-            $scope.$watch('item.to', function (val, old) {
-                $scope.to = val;
+            $scope.$watch('item.start', function (val, old) {
+                $scope.start = val;
                 if (val) {
                     $scope.examples2[0] = {
                         description: 'Дополнительное уведомление о не заполненной информации.',
@@ -88,7 +88,7 @@ angular.module('EmergenceModule')
                         tmpl: '<h1>Уважаемые коллеги!</h1> ' +
                         '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в ' + ($scope.year + 1) + ' году ' +
                         'Генеральным директором подписан приказ о подготовке графика отпусков на ' + ($scope.year + 1) + ' год.</p> ' +
-                        '<p>Коллеги, прошу  в срок до  <b>' + moment($scope.to).format('DD.MM.YYYY') + ' </b> ' +
+                        '<p>Коллеги, прошу  в срок до  <b>' + moment($scope.start).format('DD.MM.YYYY') + ' </b> ' +
                         'запланировать свои отпуска на ' + ($scope.year + 1) + ' год и внести информацию в единую информационную систему по ' +
                         'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>' +
                         '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
@@ -127,7 +127,7 @@ angular.module('EmergenceModule')
             };
 
 
-            $scope.expr = "start | date:'dd.MM.yyyy HH:mm'";
+            $scope.expr = "start | date:'dd.MM.yyyy'";
             $scope.parseExpression = function () {
                 var fn = $parse($scope.expr);
                 $scope.item.start = $scope.timeDate = fn($scope.item);
@@ -417,56 +417,56 @@ angular.module('EmergenceModule')
 
             $scope.loginAdmin = false;
 
-            $scope.dateOpts = {
-                locale: info.ru, // язык
-                mode: "range", // диапазон дат выбрать
-                dateFormat: info.dateFormat, // формат даты
-                allowInput: false, // ручной ввод даты
-                inline: false, // календарь открыт: true; false закрыт
-                minDate: 'today',
-                // Обработчик события на изменения даты
-                //onChange: function(selectedDates, dateStr, instance) {
-                //    console.log('selectedDates',selectedDates);
-                //},
-                // Обработчик события на изменения года
-                onYearChange: function (selectedDates, dateStr, instance) {
-                    //console.log('CHANGE1', instance);
-                    $scope.yearFrom = instance.currentYear;
-                    //console.log('ESS',  $scope.yearFrom);
-                    $scope.$apply();
-                },
-
-                //onDayCreate: function (dObj, dStr, fp, dayElem) {
-                //    //dayOff.forEach(function (v, k, arr) {
-                //    //    if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-                //    //        dayElem.innerHTML += "<span   class='event busy'></span>";
-                //    //    }
-                //    //});
-                //    celebration.forEach(function (v, k, arr) {
-                //        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-                //            dayElem.innerHTML += "<span title='На час пораньше'  class='event celebration'>*</span>";
-                //        }
-                //    });
-                //    holiday.forEach(function (v, k, arr) {
-                //        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-                //            dayElem.innerHTML += "<span title='Праздник'  class='event busy holiday'></span>";
-                //        }
-                //    });
-                //},
-                //disable: [
-                //    function(date) {
-                //        // отключить каждый  8 ой
-                //        return !(date.getDate() % 2);
-                //    }
-                //]
-
-                //parseDate: function (str) {
-                //    console.log('new Date(str)',new Date(str.selectedDates));
-                //    return new Date(str.selectedDates);
-                //}
-                //maxDate: info.maxDate // максимальная дата
-                //defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
-            };
+            // $scope.dateOpts = {
+            //     locale: info.ru, // язык
+            //     mode: "range", // диапазон дат выбрать
+            //     dateFormat: info.dateFormat, // формат даты
+            //     allowInput: false, // ручной ввод даты
+            //     inline: false, // календарь открыт: true; false закрыт
+            //     minDate: 'today',
+            //     // Обработчик события на изменения даты
+            //     //onChange: function(selectedDates, dateStr, instance) {
+            //     //    console.log('selectedDates',selectedDates);
+            //     //},
+            //     // Обработчик события на изменения года
+            //     onYearChange: function (selectedDates, dateStr, instance) {
+            //         //console.log('CHANGE1', instance);
+            //         $scope.yearFrom = instance.currentYear;
+            //         //console.log('ESS',  $scope.yearFrom);
+            //         $scope.$apply();
+            //     },
+            //
+            //     //onDayCreate: function (dObj, dStr, fp, dayElem) {
+            //     //    //dayOff.forEach(function (v, k, arr) {
+            //     //    //    if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
+            //     //    //        dayElem.innerHTML += "<span   class='event busy'></span>";
+            //     //    //    }
+            //     //    //});
+            //     //    celebration.forEach(function (v, k, arr) {
+            //     //        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
+            //     //            dayElem.innerHTML += "<span title='На час пораньше'  class='event celebration'>*</span>";
+            //     //        }
+            //     //    });
+            //     //    holiday.forEach(function (v, k, arr) {
+            //     //        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
+            //     //            dayElem.innerHTML += "<span title='Праздник'  class='event busy holiday'></span>";
+            //     //        }
+            //     //    });
+            //     //},
+            //     //disable: [
+            //     //    function(date) {
+            //     //        // отключить каждый  8 ой
+            //     //        return !(date.getDate() % 2);
+            //     //    }
+            //     //]
+            //
+            //     //parseDate: function (str) {
+            //     //    console.log('new Date(str)',new Date(str.selectedDates));
+            //     //    return new Date(str.selectedDates);
+            //     //}
+            //     //maxDate: info.maxDate // максимальная дата
+            //     //defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
+            // };
 
             $scope.minYear = function () {
                 let o = moment().add(1, 'year').get('year');
@@ -474,12 +474,13 @@ angular.module('EmergenceModule')
             };
 
             //console.log('YEAAARRRRRRRRR', moment().add(1, 'year').get('year'));
-            $scope.dateOpts2 = {
+            $scope.dateOpts = {
                 locale: info.ru,
                 //mode: "range",
-                time_24hr: true,
-                enableTime: true,
-                dateFormat: info.dateTimeFormat,
+                // time_24hr: false,
+                // enableTime: false,
+                // dateFormat: info.dateTimeFormat,
+                dateFormat: info.dateFormat,
                 //minDate: info.minDate
                 minDate: 'today', // минимальная дата
                 //defaultDate: 'today'
@@ -545,7 +546,7 @@ angular.module('EmergenceModule')
             });
             //$scope.$watch('item.start', function (value) {
             //    if (value) {
-            //        if (($scope.item.status === 'Проект' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
+            //        if (($scope.item.status === 'Проект' && moment(value, ['DD.MM.YYYY']).isBefore(moment()))) {
             //            toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
             //                {
             //                    //"closeButton": true,
@@ -565,7 +566,7 @@ angular.module('EmergenceModule')
             //                });
             //            return;
             //        }
-            //        if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY HH:mm"]).isValid() || !$scope.item.action) return;
+            //        if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
             //        let nm;
             //
             //        console.log('FORMAT', value);
@@ -633,7 +634,7 @@ angular.module('EmergenceModule')
                 var u = item.start;
 
                 //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
+                item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY'])) : null;
                 //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
@@ -644,10 +645,10 @@ angular.module('EmergenceModule')
 
             $scope.saveEdit = function (item) {
                 item = reversValue(item);
-                 console.log('********************************Перед созданием', item);
+                 // console.log('********************************Перед созданием', item);
                 if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
-                if (!item.htmlData[1]) return toastr.error(info.messageErr, info.error(5979));
-                if (!item.to) return toastr.error(info.filedErr('"по"', 'не заполнено'), info.error(5828));
+                if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
+                if (!item.start) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнено'), info.error(5828));
 
 
                 if (angular.isDefined(item.id)) {
@@ -671,11 +672,18 @@ angular.module('EmergenceModule')
                      angular.isDefined(item.email)*/
                     ) {
                         let ar = [];
-                        if (!angular.isArray(item.htmlData)) {
+                        let ar2 = [];
+                        if (angular.isDefined(item.htmlData)) {
                             for(let key in item.htmlData){
                                 ar.push(item.htmlData[key]);
                             }
                             item.htmlData = ar;
+                        }
+                        if (angular.isDefined(item.htmlData2)) {
+                            for(let key in item.htmlData2){
+                                ar2.push(item.htmlData2[key]);
+                            }
+                            item.htmlData2 = ar2;
                         }
                         //toastr.success(info.newOk, info.ok);
                         //$state.go('home.admin.emergences');

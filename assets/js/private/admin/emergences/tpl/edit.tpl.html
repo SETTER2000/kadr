@@ -1,11 +1,8 @@
-<!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
-
 <div class="col-sm-11  col-md-12  main" ng-cloak>
     <div class="page-header">
         <h2>
             <p ng-if="item.name" ng-class="{'fired':item.fired}">{{item.getFullName()}} <span
                     ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
-
             </p>
             <p ng-if="!item.name">Новый график</p>
             <a href="#" class="btn btn-xs disabled"
@@ -19,12 +16,13 @@
 
 
             <!--<a href="#" class="btn btn-info btn-xs " ng-if="item.decree"  title="Отпуск по уходу за ребёнком c {{item.decree|date:'dd.MM.yyyy'}}"> В отпуске </a>-->
-            <a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |
+            <a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен
+                {{item.firedDate |
                 date:'dd.MM.yyyy'}}</a>
 
 
             <div class="btn-group-xs pull-right">
-                <button ng-disabled="!item.to" class="btn btn-primary btn-md " type="button" ng-click="toOpen()">
+                <button ng-disabled="!item.start" class="btn btn-primary btn-md " type="button" ng-click="toOpen()">
                     <span class="glyphicon glyphicon-list-alt"></span> {{item.nameLinkFn()}}
                 </button>
                 <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
@@ -38,8 +36,6 @@
 
         </h2>
     </div>
-
-
     <div class="row">
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}" ng-cloak>
 
@@ -50,17 +46,17 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Редактировать
                         <!--<a href="#" class="pull-right">-->
-                            <!--<span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>-->
+                        <!--<span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>-->
                         <!--</a>-->
                     </h3>
                 </div>
                 <div class="panel-body">
                     <form name="userForm" novalidate ng-submit="saveEdit(item)" enctype="multipart/form-data">
+
+
+                        <!-- A C T I O N -->
+
                         <div class="form-group">
-
-
-                            <!-- A C T I O N -->
-
                             <div ng-if="(me.admin || me.kadr)" class="checkbox">
                                 <label>
                                     <!--<input type="checkbox" ng-if="((item.status ==='Проект') || me.admin)" ng-model="item.action">-->
@@ -80,43 +76,61 @@
                             <!--<label class="control-label" for="inputSuccess1">Год</label>-->
                             <!--&lt;!&ndash;<input  type="text" class="form-control" ng-model="item.lastName">&ndash;&gt;-->
                             <!--<input ng-if="!edit" autofocus required type="number" min="{{minYear()}}" max="2030" ng-change="fixYear()"-->
-                                   <!--class="form-control"-->
-                                   <!--ng-model="item.year">-->
+                            <!--class="form-control"-->
+                            <!--ng-model="item.year">-->
                             <!--<input ng-if="edit" autofocus required min="{{minYear()}}" max="2030" ng-init="getYear()" ng-change="fixYear()"-->
-                                   <!--type="number" class="form-control" ng-model="item.year">-->
+                            <!--type="number" class="form-control" ng-model="item.year">-->
                             <!--&lt;!&ndash;<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>&ndash;&gt;-->
                         </div>
 
 
+                        <!-- N A M E -->
+
                         <div class="form-group">
-                            <label class="control-label" for="inputSuccess3">Наименование</label>
+                            <label class="control-label">Наименование</label>
                             <input type="text" class="form-control" required ng-model="item.name">
                         </div>
 
 
-                        <!-- C A L E N D A R -->
+                        <!-- S T A T U S -->
 
-                        <!--<div class="form-group">-->
-                            <!--<label class="control-label" for="inputSuccess3">-->
-                                <!--Период сбора данных-->
-                            <!--</label>-->
-                            <!--&lt;!&ndash;<input type="text" ng-disabled="true" class="form-control" required ng-model="item.period">&ndash;&gt;-->
-                            <!--<input required class="form-control  flatpickr "-->
-                                   <!--ng-flatpickr-->
-                                   <!--fp-opts="dateOpts"-->
-                                   <!--fp-on-setup="datePostSetup(fpItem)"-->
-                                   <!--ng-model="item.period">-->
-                        <!--</div>-->
+                        <div class="form-group col-md-3">
+                            <label class="control-label" for="inputSuccess3">
+                                Статус
+                            </label>
+                            <input type="text" ng-disabled="true" class="form-control" required ng-model="item.status">
+                        </div>
 
-                        <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
+
+                        <!-- C O L L E C T E D  D A T A -->
+
+                        <div class="form-group" ng-if="checkStatus()" ng-controller="ListController">
+                            <label class="control-label" for="inputSuccess3">
+                                Собрано данных
+                            </label>
+                            <!--<br> 0 из {{(items | filter :{fired:false}).length}}-->
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <span style="margin:0 20px;"> {{sumDays}} </span> из <input type="number"
+                                                                                                ng-disabled="true"
+                                                                                                class="form-control not-border"
+                                                                                                ng-bind="item.countData=(items | filter :{fired:false}).length"
+                                                                                                ng-model="item.countData">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- S T A R T -->
 
                         <div class="form-group">
                             <label class="control-label">
                                 Дата выхода сотрудника
                             </label>
                             <div class="input-group">
-                                <input type="text" required ng-bind="parseExpression()" class="form-control flatpickr" ng-flatpickr
-                                       fp-opts="dateOpts2"
+                                <input ng-disabled="edit"  type="text" required ng-bind="parseExpression()" class="form-control flatpickr"
+                                       ng-flatpickr
+                                       fp-opts="dateOpts"
                                        fp-on-setup="toggleBlur(item)"
                                        ng-model="item.start">
                                 <!--<span class="input-group-btn">-->
@@ -126,26 +140,85 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-md-3">
-                            <label class="control-label" for="inputSuccess3">
-                                Статус
-                            </label>
-                            <input type="text" ng-disabled="true" class="form-control" required ng-model="item.status">
+
+                        <!-- L A S T  N A M E -->
+
+                        <div class="form-group">
+                            <label class="control-label">Фамилия</label>
+                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.lastName">
                         </div>
 
-                        <div class="form-group" ng-if="checkStatus()" ng-controller="ListController">
-                            <label class="control-label" for="inputSuccess3">
-                                Собрано данных
-                            </label>
-                            <!--<br> 0 из {{(items | filter :{fired:false}).length}}-->
-                            <div class="form-inline">
 
-                                <div class="form-group">
-                                    <span style="margin:0 20px;"> {{sumDays}} </span> из <input type="number" ng-disabled="true"
-                                                                                                class="form-control not-border"
-                                                                                                ng-bind="item.countData=(items | filter :{fired:false}).length"
-                                                                                                ng-model="item.countData">
-                                </div>
+                        <!-- F I R S T  N A M E -->
+
+                        <div class="form-group">
+                            <label class="control-label">Имя</label>
+                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.firstName">
+                        </div>
+
+
+                        <!-- P A T R O N Y M I C  N A M E -->
+
+                        <div class="form-group">
+                            <label class="control-label">Отчество</label>
+                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.patronymicName">
+                        </div>
+
+
+                        <!-- P O S I T I O N -->
+
+                        <div class="form-group">
+                            <label class="control-label">Должность</label>
+                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.position">
+                        </div>
+
+
+                        <!-- B O S S -->
+
+                        <div class="form-group">
+                            <label class="control-label">Руководитель</label>
+                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.boss">
+                        </div>
+
+
+                        <!-- P H O N E -->
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <md-switch ng-model="item.phone" aria-label="Switch 1">
+                                        <span ng-if="!item.phone">Телефон не нужен</span>
+                                        <span ng-if="item.phone">Телефон нужен</span>
+                                    </md-switch>
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <!-- M O B I L E -->
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <md-switch ng-model="item.mobile" aria-label="Switch 1">
+                                        <span ng-if="!item.mobile">Мобильный не нужен</span>
+                                        <span ng-if="item.mobile">Мобильный нужен</span>
+                                    </md-switch>
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <!-- B U S S I N E S  C A R D -->
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <md-switch ng-model="item.bussinescard" aria-label="Switch 1">
+                                        <span ng-if="!item.bussinescard">Визитки не нужен</span>
+                                        <span ng-if="item.bussinescard">Визитки нужен</span>
+                                    </md-switch>
+                                </label>
                             </div>
                         </div>
 
@@ -180,16 +253,16 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="form-group">
                             <!--<div class="form-group" style=" position: fixed;margin-left: 50px; margin-bottom: 70px; bottom:0; left:0;">-->
-                            <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-md btn-success">
+                            <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid"
+                                    class="btn btn-md btn-success">
                                 <span class="glyphicon glyphicon-user"></span>
                                 Сохранить
                             </button>
 
-                            <button ng-show="edit" type="submit" ng-disabled="userForm.$invalid" class="btn btn-md btn-success">
+                            <button ng-show="edit" type="submit" ng-disabled="userForm.$invalid"
+                                    class="btn btn-md btn-success">
                                 <span class="glyphicon glyphicon-check"></span>
                                 Сохранить
                             </button>
@@ -216,77 +289,89 @@
                     </button>
                 </div>
             </div>
-
         </div>
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
-            <div class="row" ng-if="item.to">
+            <div class="row" ng-if="item.start">
                 <div class="col-md-12">
-            <!-- У В Е Д О М Л Е Н И Е  О  Н А Ч А Л Е  С Б О Р А  И Н Ф О Р М А Ц И И -->
+                    <!-- У В Е Д О М Л Е Н И Е  О  Н А Ч А Л Е  С Б О Р А  И Н Ф О Р М А Ц И И -->
 
-            <form class="form-horizontal" ng-show="comment">
-                <div class="form-group animate-if">
-                    <label  class="col-sm-6 control-label">Шаблон о начале сбора информации: </label>
-                    <div class="col-sm-2">
-                        <select class="form-control size-xs" ng-model="item.htmlData[0]"
-                                ng-options="option.name for option in examples track by option.tmpl"
-                        ></select>
+                    <form class="form-horizontal" ng-show="comment">
+                        <div class="form-group animate-if">
+                            <label class="col-sm-6 control-label">Шаблон о начале сбора информации: </label>
+                            <div class="col-sm-2">
+                                <select class="form-control size-xs" ng-model="item.htmlData[0]"
+                                        ng-options="option.name for option in examples track by option.tmpl"
+                                ></select>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch
+                         on="item.htmlData[0].name">
+                         <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl"
+                                   style="width: 100%; height: 120px; border: none"
+                                   class="animate-switch" ng-switch-when="№1">    {{item.htmlData[0].tmpl}}</textarea>
+                        <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl"
+                                  style="width: 100%; height: 120px; border: none"
+                                  class="animate-switch" ng-switch-when="№2">{{item.htmlData[0].tmpl}}</textarea>
+                        <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl"
+                                  style="width: 100%; height: 120px; border: none"
+                                  class="animate-switch" ng-switch-when="№3"> {{item.htmlData[0].tmpl}}</textarea>
+                        <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl"
+                                  style="width: 100%; height: 120px; border: none"
+                                  class="animate-switch" ng-switch-when="№4">   {{item.htmlData[0].tmpl}}</textarea>
                     </div>
-                </div>
-            </form>
 
-            <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch on="item.htmlData[0].name">
-                <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№1">    {{item.htmlData[0].tmpl}}</textarea>
-                <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№2">{{item.htmlData[0].tmpl}}</textarea>
-                <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№3"> {{item.htmlData[0].tmpl}}</textarea>
-                <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№4">   {{item.htmlData[0].tmpl}}</textarea>
-            </div>
-
-            <code class="pull-right new" ng-bind-html="item.htmlData[0].description"></code>
-            <div ng-if="item.htmlData[0].tmpl" class="text-left well" ng-bind-html="item.htmlData[0].tmpl"></div>
-            <a href="#" style="text-decoration: none" ng-click="toogle()">
-                <div ng-if="!item.htmlData[0].tmpl" class="text-left well" ng-bind-html="htmlData"></div>
-            </a>
+                    <code class="pull-right new" ng-bind-html="item.htmlData[0].description"></code>
+                    <div ng-if="item.htmlData[0].tmpl" class="text-left well"
+                         ng-bind-html="item.htmlData[0].tmpl"></div>
+                    <a href="#" style="text-decoration: none" ng-click="toogle()">
+                        <div ng-if="!item.htmlData[0].tmpl" class="text-left well" ng-bind-html="htmlData"></div>
+                    </a>
 
                 </div>
             </div>
-            <div class="row" ng-if="item.to">
+            <div class="row" ng-if="item.start">
                 <div class="col-md-12">
- <!-- Д О П О Л Н И Т Е Л Ь Н О Е  У В Е Д О М Л Е Н И Е  О  Н Е  З А П О Л Н Е Н Н О Й  И Н Ф О Р М А Ц И И   -->
+                    <!-- Д О П О Л Н И Т Е Л Ь Н О Е  У В Е Д О М Л Е Н И Е  О  Н Е  З А П О Л Н Е Н Н О Й  И Н Ф О Р М А Ц И И   -->
 
-            <form class="form-horizontal" ng-show="comment2">
-                <div class="form-group animate-if">
-                    <label  class="col-sm-6 control-label">Шаблон о не заполненной информации: </label>
-                    <div class="col-sm-2">
-                        <select class="form-control size-xs" ng-model="item.htmlData[1]"
-                                ng-options="option2.name for option2 in examples2 track by option2.tmpl"
-                        ></select>
+                    <form class="form-horizontal" ng-show="comment2">
+                        <div class="form-group animate-if">
+                            <label class="col-sm-6 control-label">Шаблон о не заполненной информации: </label>
+                            <div class="col-sm-2">
+                                <select class="form-control size-xs" ng-model="item.htmlData2[0]"
+                                        ng-options="option2.name for option2 in examples2 track by option2.tmpl"
+                                ></select>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch
+                         on="item.htmlData2[0].name">
+                        <textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"
+                          style="width: 100%; height: 120px; border: none"
+                          class="animate-switch" ng-switch-when="№1">    {{item.htmlData2[0].tmpl}}</textarea>
+                        <textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"
+                                  style="width: 100%; height: 120px; border: none"
+                                  class="animate-switch" ng-switch-when="№2">{{item.htmlData2[0].tmpl}}</textarea>
+                        <textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"
+                                  style="width: 100%; height: 120px; border: none"
+                                  class="animate-switch" ng-switch-when="№3"> {{item.htmlData2[0].tmpl}}</textarea>
+                        <textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"
+                                  style="width: 100%; height: 120px; border: none"
+                                  class="animate-switch" ng-switch-when="№4">   {{item.htmlData2[0].tmpl}}</textarea>
                     </div>
-                </div>
-            </form>
 
-            <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch on="item.htmlData[1].name">
-                <textarea required ng-trim="true" ng-model="item.htmlData[1].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№1">    {{item.htmlData[0].tmpl}}</textarea>
-                <textarea required ng-trim="true" ng-model="item.htmlData[1].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№2">{{item.htmlData[0].tmpl}}</textarea>
-                <textarea required ng-trim="true" ng-model="item.htmlData[1].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№3"> {{item.htmlData[0].tmpl}}</textarea>
-                <textarea required ng-trim="true" ng-model="item.htmlData[1].tmpl" style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№4">   {{item.htmlData[0].tmpl}}</textarea>
-            </div>
-
-            <code class="pull-right new" ng-bind-html="item.htmlData[1].description"></code>
-            <div ng-if="item.htmlData[1].tmpl" class="text-left well" ng-bind-html="item.htmlData[1].tmpl"></div>
-            <a href="#" style="text-decoration: none" ng-click="toogle2()">
-                <div ng-if="!item.htmlData[1].tmpl" class="text-left well" ng-bind-html="htmlData2"></div>
-            </a>
+                    <code class="pull-right new" ng-bind-html="item.htmlData2[0].description"></code>
+                    <div ng-if="item.htmlData2[0].tmpl" class="text-left well"
+                         ng-bind-html="item.htmlData2[0].tmpl"></div>
+                    <a href="#" style="text-decoration: none" ng-click="toogle2()">
+                        <div ng-if="!item.htmlData2[0].tmpl" class="text-left well" ng-bind-html="htmlData2"></div>
+                    </a>
 
                 </div>
             </div>
+
             <!-- I N F O  P A N E L -->
 
             <div ng-if="me.admin" class="panel"
@@ -307,7 +392,6 @@
             </div>
 
         </div>
-
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -317,6 +401,4 @@
 </div>
 
 
-<!--<div ui-view></div>-->
-<!--<div ui-view="users"></div>-->
 
