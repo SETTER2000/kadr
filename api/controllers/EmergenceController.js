@@ -38,6 +38,8 @@ module.exports = {
         }
         if (req.param('id')) {
             Emergence.findOne(req.param('id'))
+                .populate('positions')
+                .populate('departments')
                 .exec(function foundVacation(err, vacations) {
                     if (err) return res.serverError(err);
                     if (!vacations) return res.notFound();
@@ -57,18 +59,20 @@ module.exports = {
                             if (!users) return res.notFound();
 
                             /*  {
-                                  where: { /!* ... *!/ },
-                                  groupBy: [ /!* ... *!/ ],
-                                      sum: [ /!* ... *!/ ],
-                                  average: [ /!* ... *!/ ],
-                                  count: true,
-                                  min: [ /!* ... *!/ ],
-                                  max: [ /!* ... *!/ ],
-                                  sort: { /!* ... *!/ },
-                                  skip: 2353,
-                                      limit: 25
-                              }*/
+                             where: { /!* ... *!/ },
+                             groupBy: [ /!* ... *!/ ],
+                             sum: [ /!* ... *!/ ],
+                             average: [ /!* ... *!/ ],
+                             count: true,
+                             min: [ /!* ... *!/ ],
+                             max: [ /!* ... *!/ ],
+                             sort: { /!* ... *!/ },
+                             skip: 2353,
+                             limit: 25
+                             }*/
                             Emergence.find()
+                                .populate('positions')
+                                .populate('departments')
                                 .exec(function foundEmergence(err, emergences) {
                                     if (err) return res.serverError(err);
                                     if (!emergences) return res.notFound();
@@ -94,6 +98,7 @@ module.exports = {
                                             //console.log('Все файлы успешно обработаны');
                                         }
                                     });
+
                                     res.send(emergences);
                                 });
                         });
@@ -112,17 +117,25 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         console.log('ALL CREATE RWEQ:', req.params.all());
         //if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
-        if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
+        if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! Дата просрочена.');
         let obj = {
             section: 'Выход нового сотрудника',
             sections: 'Выход новых сотрудников',
             name: req.param('name'),
+            post: req.param('post'),
+            room: req.param('room'),
+            remote: req.param('remote'),
+            dax: req.param('dax'),
+            extra: req.param('extra'),
+            location: req.param('location'),
             whomCreated: req.session.me,
             daysSelectHoliday: req.param('daysSelectHoliday'),
             action: req.param('action'),
-            position: req.param('position'),
+            positions: req.param('positions'),
+            departments: req.param('departments'),
             status: 'Проект',
             start: new Date(req.param('start')),
+            outputEmployee: new Date(req.param('outputEmployee')),
             patronymicName: req.param('patronymicName'),
             countData: +req.param('countData'),
             firstName: req.param('firstName'),
@@ -135,58 +148,61 @@ module.exports = {
             htmlData2: req.param('htmlData2'),
             idleStart: '',
             worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X'])),
-            from: new Date(req.param('from')),
-            to: new Date(req.param('to'))
+            //from: new Date(req.param('from')),
+            //to: new Date(req.param('to'))
         };
 
-        Emergence.find({year: obj.year}).exec((err, findEmergence) => {
-            if (err) return res.serverError(err);
-            if (findEmergence.length > 0) return res.badRequest('На ' + obj.year + ' год уже есть выход нового сотрудника.');
-            User.findOne({id: obj.whomCreated})
-                .exec((err, findUser) => {
-                    Emergence.create(obj)
-                        .exec(function (err, createEmergence) {
-                            if (err) return res.serverError(err);
-                            console.log(obj.section + ' создан пользователем:', findUser.getFullName());
-                            findUser.emergenceWhomCreated.add(createEmergence.id);
-                            // req.param('htmlData'),
 
+        User.findOne({id: obj.whomCreated})
+            .exec((err, findUser) => {
+                Emergence.create(obj)
+                    .exec(function (err, createEmergence) {
+                        if (err) return res.serverError(err);
+                        console.log(obj.section + ' создан пользователем:', findUser.getFullName());
+                        findUser.emergenceWhomCreated.add(createEmergence.id);
 
-                            findUser.save(function (err) {
-                                if (err) {
-                                    return res.serverError(err);
-                                }
-                                Emergence.find().exec((err, findEmergence) => {
+                        findUser.save(function (err) {
+                            if (err) {
+                                return res.serverError(err);
+                            }
+
+                            // Подготовка ответа серверу после создания
+                            Emergence.findOne({id: createEmergence.id})
+                                .populate('positions')
+                                .populate('departments')
+                                .populate('whomCreated')
+                                .populate('whomUpdated')
+                                .exec(function foundVacation(err, findOneEmerg) {
                                     if (err) return res.serverError(err);
+                                    // Обновляем сокеты
+                                    Emergence.find().exec((err, findEmergence) => {
+                                        if (err) return res.serverError(err);
 
-                                    // _.forEach(req.param('htmlData'), function (val, key) {
-                                    //     findEmergence.htmlData = val;
-                                    // });
+                                        // _.forEach(req.param('htmlData'), function (val, key) {
+                                        //     findEmergence.htmlData = val;
+                                        // });
 
-                                    // findEmergence.save(function (err) {
-                                    //     if (err) {
-                                    //         return res.serverError(err);
-                                    //     }
+                                        // findEmergence.save(function (err) {
+                                        //     if (err) {
+                                        //         return res.serverError(err);
+                                        //     }
 
-                                    sails.sockets.broadcast('emergence', 'hello', {howdy: findEmergence}, req);
-                                    sails.sockets.broadcast('emergence', 'badges', {
-                                        badges: [createEmergence],
-                                        action: 'создан',
-                                        shortName: findUser.getShortName(),
-                                        fullName: findUser.getFullName(),
-                                        avatarUrl: findUser.avatarUrl
-                                    }, req);
-                                    res.send(createEmergence);
+                                        sails.sockets.broadcast('emergence', 'hello', {howdy: findEmergence}, req);
+                                        sails.sockets.broadcast('emergence', 'badges', {
+                                            badges: [createEmergence],
+                                            action: 'создан',
+                                            shortName: findUser.getShortName(),
+                                            fullName: findUser.getFullName(),
+                                            avatarUrl: findUser.avatarUrl
+                                        }, req);
 
-
-                                    // });
-
-
+                                        res.send(findOneEmerg);
+                                    });
                                 });
-                            });
                         });
-                });
-        });
+                    });
+            });
+
     },
     //
     //
@@ -198,18 +214,22 @@ module.exports = {
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
-        console.log('ALL  UPDATE RWEQ:', req.params.all());
-
-
+        console.log('ALL REQUEST', req.params.all());
         if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         let obj = {
             section: 'Выход нового сотрудника',
             sections: 'Выход новых сотрудников',
             name: req.param('name'),
+            post: req.param('post'),
+            room: req.param('room'),
+            dax: req.param('dax'),
+            remote: req.param('remote'),
+            extra: req.param('extra'),
+            location: req.param('location'),
             whomUpdated: req.session.me,
             daysSelectHoliday: req.param('daysSelectHoliday'),
             action: req.param('action'),
-            period: req.param('period'),
+            //period: req.param('period'),
             status: (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Проект',
             htmlData: req.param('htmlData'),
             htmlData2: req.param('htmlData2'),
@@ -217,9 +237,12 @@ module.exports = {
             phone: req.param('phone'),
             mobile: req.param('mobile'),
             start: new Date(req.param('start')),
-            year: +req.param('year'),
-            from: new Date(req.param('from')),
-            to: new Date(req.param('to')),
+            outputEmployee: new Date(req.param('outputEmployee')),
+            //year: +req.param('year'),
+            //from: new Date(req.param('from')),
+            //to: new Date(req.param('to')),
+            departments: req.param('departments'),
+            positions: req.param('positions'),
             worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
         };
         ((obj.status === 'Проект') || (obj.status === 'В работе')) ? obj.countData = +req.param('countData') : '';
@@ -228,26 +251,47 @@ module.exports = {
                 "use strict";
                 if (err) return res.serverError(err);
                 if (!findUser) return res.notFound();
+
                 Emergence.update(req.param('id'), obj)
                     .populate('whomCreated')
-                    .populate('whomUpdated').exec((err, objEdit) => {
-                    if (err) return res.negotiate(err);
-                    findUser.save(function (err) {
+                    .populate('whomUpdated')
+                    .populate('positions')
+                    .populate('departments')
+                    .exec((err, objEdit) => {
                         if (err) return res.negotiate(err);
-                        Emergence.find().exec((err, findsEmergence) => {
-                            if (err) return res.serverError(err);
-                            sails.sockets.broadcast('emergence', 'hello', {howdy: findsEmergence}, req);
-                            sails.sockets.broadcast('emergence', 'badges', {
-                                badges: objEdit,
-                                action: 'обновлён',
-                                shortName: findUser.getShortName(),
-                                fullName: findUser.getFullName(),
-                                avatarUrl: findUser.avatarUrl
-                            }, req);
-                            res.ok();
-                        });
+
+
+
+                        Emergence.findOne(req.param('id'))
+                            .populate('positions')
+                            .exec((err, findOneEm) => {
+                                if (req.param('positionRemove')) {
+                                    console.log('PARAM', req.param('positionRemove'));
+                                    findOneEm.positions.remove(req.param('positionRemove'));
+                                    findOneEm.save(function (err) {
+                                        if (err) return res.negotiate(err);
+                                        findUser.save(function (err) {
+                                            if (err) return res.negotiate(err);
+                                          return   res.ok(findOneEm);
+                                            //Emergence.find().exec((err, findsEmergence) => {
+                                            //    if (err) return res.serverError(err);
+                                            //    sails.sockets.broadcast('emergence', 'hello', {howdy: findsEmergence}, req);
+                                            //    sails.sockets.broadcast('emergence', 'badges', {
+                                            //        badges: objEdit,
+                                            //        action: 'обновлён',
+                                            //        shortName: findUser.getShortName(),
+                                            //        fullName: findUser.getFullName(),
+                                            //        avatarUrl: findUser.avatarUrl
+                                            //    }, req);
+                                            //
+                                            //});
+                                        });
+                                    });
+                                }else{
+                                    return   res.ok(findOneEm);
+                                }
+                            });
                     });
-                });
             });
     },
     //
@@ -424,114 +468,114 @@ module.exports = {
     //},
     //
     //
-    ///**
-    // * SOCKET событие hello
-    // * @param req
-    // * @param res
-    // * @returns {*}
-    // */
-    //hello: function (req, res) {
-    //
-    //    /**
-    //     * TODO SOCKET
-    //     * Убедитьсь, что это запрос сокета, а не традиционный HTTP
-    //     */
-    //    if (!req.isSocket) {
-    //        return res.badRequest();
-    //    }
-    //    // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
-    //    sails.sockets.join(req, 'emergence');
-    //
-    //
-    //    // Передавать уведомление всем сокетам, которые присоединились
-    //    // к комнате «list», за исключением нашего нового добавленного сокета:
-    //    //sails.sockets.broadcast('emergence', 'hello', {howdy: 'hi there!'}, req);
-    //
-    //
-    //    /**
-    //     * На данный момент мы отправили сообщение сокета всем сокетам, у которых есть
-    //     * подключение к комнате «list». Но это не обязательно означает, что они
-    //     * are _listening_. Другими словами, чтобы фактически обрабатывать сообщение сокета,
-    //     * подключенные сокеты должны прослушивать это конкретное событие (в этом
-    //     * case, мы передали наше сообщение с именем события «hello»).
-    //     * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
-    //     *
-    //     *  io.socket.on('hello', function (broadcastedData){
-    //     *  console.log(data.howdy);
-    //     *  // => 'hi there!'
-    //     *  }
-    //     */
-    //
-    //    /**
-    //     * Теперь, когда мы транслируем наше сообщение сокету, нам все равно нужно продолжить
-    //     * с любой другой логикой, о которой мы должны заботиться в наших действиях, а затем отправить
-    //     * ответ. В этом случае мы как раз завернуты, поэтому мы продолжим
-    //     * Ответьте на запрос с помощью 200 OK.
-    //     * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
-    //     * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
-    //     */
-    //    return res.json({
-    //        anyData: 'we want to send hello'
-    //    });
-    //
-    //    /**
-    //     * TODO END SOCKET
-    //     */
-    //},
-    //
-    //
-    ///**
-    // * SOCKET событие badges
-    // * @param req
-    // * @param res
-    // * @returns {*}
-    // */
-    //badges: function (req, res) {
-    //    /**
-    //     * TODO SOCKET
-    //     * Убедитьсь, что это запрос сокета, а не традиционный HTTP
-    //     */
-    //    if (!req.isSocket) {
-    //        return res.badRequest();
-    //    }
-    //    // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
-    //    sails.sockets.join(req, 'emergence');
-    //
-    //
-    //    // Передавать уведомление всем сокетам, которые присоединились
-    //    // к комнате «list», за исключением нашего нового добавленного сокета:
-    //    //sails.sockets.broadcast('emergence', 'hello', {howdy: 'hi there!'}, req);
-    //
-    //
-    //    /**
-    //     * На данный момент мы отправили сообщение сокета всем сокетам, у которых есть
-    //     * подключение к комнате «list». Но это не обязательно означает, что они
-    //     * are _listening_. Другими словами, чтобы фактически обрабатывать сообщение сокета,
-    //     * подключенные сокеты должны прослушивать это конкретное событие (в этом
-    //     * case, мы передали наше сообщение с именем события «hello»).
-    //     * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
-    //     *
-    //     *  io.socket.on('hello', function (broadcastedData){
-    //     *  console.log(data.howdy);
-    //     *  // => 'hi there!'
-    //     *  }
-    //     */
-    //
-    //    /**
-    //     * Теперь, когда мы транслируем наше сообщение сокету, нам все равно нужно продолжить
-    //     * с любой другой логикой, о которой мы должны заботиться в наших действиях, а затем отправить
-    //     * ответ. В этом случае мы как раз завернуты, поэтому мы продолжим
-    //     * Ответьте на запрос с помощью 200 OK.
-    //     * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
-    //     * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
-    //     */
-    //    return res.json({
-    //        anyData: 'we want to send badges'
-    //    });
-    //
-    //    /**
-    //     * TODO END SOCKET
-    //     */
-    //}
+    /**
+     * SOCKET событие hello
+     * @param req
+     * @param res
+     * @returns {*}
+     */
+    hello: function (req, res) {
+
+        /**
+         * TODO SOCKET
+         * Убедитьсь, что это запрос сокета, а не традиционный HTTP
+         */
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
+        sails.sockets.join(req, 'emergence');
+
+
+        // Передавать уведомление всем сокетам, которые присоединились
+        // к комнате «list», за исключением нашего нового добавленного сокета:
+        //sails.sockets.broadcast('emergence', 'hello', {howdy: 'hi there!'}, req);
+
+
+        /**
+         * На данный момент мы отправили сообщение сокета всем сокетам, у которых есть
+         * подключение к комнате «list». Но это не обязательно означает, что они
+         * are _listening_. Другими словами, чтобы фактически обрабатывать сообщение сокета,
+         * подключенные сокеты должны прослушивать это конкретное событие (в этом
+         * case, мы передали наше сообщение с именем события «hello»).
+         * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
+         *
+         *  io.socket.on('hello', function (broadcastedData){
+         *  console.log(data.howdy);
+         *  // => 'hi there!'
+         *  }
+         */
+
+        /**
+         * Теперь, когда мы транслируем наше сообщение сокету, нам все равно нужно продолжить
+         * с любой другой логикой, о которой мы должны заботиться в наших действиях, а затем отправить
+         * ответ. В этом случае мы как раз завернуты, поэтому мы продолжим
+         * Ответьте на запрос с помощью 200 OK.
+         * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
+         * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
+         */
+        return res.json({
+            anyData: 'we want to send hello'
+        });
+
+        /**
+         * TODO END SOCKET
+         */
+    },
+
+
+    /**
+     * SOCKET событие badges
+     * @param req
+     * @param res
+     * @returns {*}
+     */
+    badges: function (req, res) {
+        /**
+         * TODO SOCKET
+         * Убедитьсь, что это запрос сокета, а не традиционный HTTP
+         */
+        if (!req.isSocket) {
+            return res.badRequest();
+        }
+        // Попросите сокет, который сделал запрос, присоединиться к комнате «list».
+        sails.sockets.join(req, 'emergence');
+
+
+        // Передавать уведомление всем сокетам, которые присоединились
+        // к комнате «list», за исключением нашего нового добавленного сокета:
+        //sails.sockets.broadcast('emergence', 'hello', {howdy: 'hi there!'}, req);
+
+
+        /**
+         * На данный момент мы отправили сообщение сокета всем сокетам, у которых есть
+         * подключение к комнате «list». Но это не обязательно означает, что они
+         * are _listening_. Другими словами, чтобы фактически обрабатывать сообщение сокета,
+         * подключенные сокеты должны прослушивать это конкретное событие (в этом
+         * case, мы передали наше сообщение с именем события «hello»).
+         * клиентская сторона, которую вам нужно написать, выглядит следующим образом:
+         *
+         *  io.socket.on('hello', function (broadcastedData){
+         *  console.log(data.howdy);
+         *  // => 'hi there!'
+         *  }
+         */
+
+        /**
+         * Теперь, когда мы транслируем наше сообщение сокету, нам все равно нужно продолжить
+         * с любой другой логикой, о которой мы должны заботиться в наших действиях, а затем отправить
+         * ответ. В этом случае мы как раз завернуты, поэтому мы продолжим
+         * Ответьте на запрос с помощью 200 OK.
+         * Возвращенные данные - это то, что мы получили на клиенте как «данные» в:
+         * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
+         */
+        return res.json({
+            anyData: 'we want to send badges'
+        });
+
+        /**
+         * TODO END SOCKET
+         */
+    }
 };
 

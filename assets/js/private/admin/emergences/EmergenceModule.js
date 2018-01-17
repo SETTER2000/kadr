@@ -82,7 +82,24 @@ angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMater
             return yy + '-' + mm + '-' + dd;
         };
         Emergences.prototype.getFullName = function () {
-            return (!this.name) ? this.name = 'Выход нового сотрудника' : this.name;
+            if (this.lastName && this.firstName && this.patronymicName) {
+                return this.lastName + ' ' + this.firstName + ' ' + this.patronymicName;
+            } else {
+                if (this.lastName && this.firstName) {
+                    return this.lastName + ' ' + this.firstName;
+                } else {
+                    if (this.lastName) {
+                        return this.lastName;
+                    } else {
+                        return '';
+                    }
+                }
+            }
+        };
+
+        Emergences.prototype.getNewEmployees = function () {
+            this.name = '';
+            return (this.name === '') ? this.name = 'Выход нового сотрудника' : this.name;
             //return (!this.name) ? this.name = 'График отпусков на ' + this.year : this.name;
         };
         Emergences.prototype.getYear = function () {

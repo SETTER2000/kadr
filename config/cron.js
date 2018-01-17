@@ -29,8 +29,15 @@ module.exports.cron = {
 
             CronService.task0({});
         }
-    }
+    },
+    thirdJob: {
+        schedule: '*/59 * * * * *',
+        onTick: function() {
+            //console.log('Я срабатываю каждые 5 секунд (триггер): ' + new Date());
 
+            CronService.task1({});
+        }
+    }
 
 };
 //// sails.config.cron.myFirstJob

@@ -26,8 +26,8 @@ module.exports.routes = {
      *                 JSON API ENDPOINTS                        *
      *************************************************************/
 
-      // 'PUT /login': 'UserController.loginLDAP',
-    'PUT /login': 'UserController.login',
+    'PUT /login': 'UserController.loginLDAP',
+    //'PUT /login': 'UserController.login',
     'GET /logout': 'PageController.logout',
     'POST /logout': 'UserController.logout',
     // 'GET /mail/send': 'MailController.send',
@@ -398,9 +398,13 @@ module.exports.routes = {
     // Schedule Controller
     'GET /say/schedule/hello': 'ScheduleController.hello',
     'GET /say/schedule/badges': 'ScheduleController.badges',
-  // Schedule Controller
+     // Schedule Controller
     'GET /say/vacation/hello':  'VacationController.hello',
     'GET /say/vacation/badges': 'VacationController.badges',
+
+    // Schedule Controller
+    'GET /say/emergence/hello':  'EmergenceController.hello',
+    'GET /say/emergence/badges': 'EmergenceController.badges',
 
 
     'GET /:login': {

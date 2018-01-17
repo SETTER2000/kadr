@@ -40,6 +40,12 @@ module.exports = {
         users: {
             collection: 'user',
             via: 'positions'
+        } ,
+
+        // Добавить ссылку на пользователя
+        emergences: {
+            collection: 'emergence',
+            via: 'positions'
         }
     }
 };

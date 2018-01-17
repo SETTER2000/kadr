@@ -38,7 +38,7 @@ module.exports = {
          */
         options.from = sails.config.email.from;
         options.to = (sails.config.email.development) ? sails.config.admin.email : options.to;
-        options.bcc = sails.config.email.bcc; // скрытую копию сообщения куда отправлять
+        //options.bcc = sails.config.email.bcc; // скрытую копию сообщения куда отправлять
 
 
         //// send mail with defined transport object

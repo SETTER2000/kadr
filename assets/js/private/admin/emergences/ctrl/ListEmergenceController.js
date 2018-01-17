@@ -107,9 +107,9 @@
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
 
             $scope.nameHeader = {
-                oneArea: 'Наименование',
+                oneArea: 'ФИО',
                 twoArea: 'Год',
-                threeArea: 'Статус',
+                threeArea: 'Состояние заявки',
                 fourArea: 'C',
                 fiveArea: 'До',
                 sixArea: 'Кол-во дней',
@@ -121,7 +121,7 @@
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено',
                 title: 'Рассылка сообщений закончена.',
-                startProject: 'Старт проекта'
+                startProject: 'Дата выхода сотрудника'
             };
 
 

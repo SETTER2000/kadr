@@ -16,7 +16,7 @@ angular.module('EmergenceModule')
                 isSimilar: 'Есть похожий: ',
                 ok: 'OK!',
                 objectDelete: 'Объект удалён.',
-                newOk: 'Новый график создан.',
+                newOk: 'Новая заявка на выход сотрудника создана.',
                 passDefault: '111111',
                 redirectSelf: 'home.admin.emergences',
                 messageErr: 'Сообщение не установлено!',
@@ -28,7 +28,7 @@ angular.module('EmergenceModule')
                 dateFormat: "d.m.Y",
                 dateTimeFormat: "d.m.Y H:i",
                 minDate: "01-01-1950",
-                maxDate: "31-12-2002"
+                maxDate: "31-12-2030"
             };
             $scope.debug = true;
             $scope.comment = false;
@@ -51,7 +51,7 @@ angular.module('EmergenceModule')
             });
 
             //$scope.examples = ['settings', 'home', 'options', 'other'];
-            $scope.year = moment().get('year');
+            //$scope.year = moment().get('year');
 
             $scope.examples = [
                 {
@@ -70,6 +70,7 @@ angular.module('EmergenceModule')
                     tmpl: 'Шаблон №4 - нет вариантов'
                 }
             ];
+
             $scope.to = '';
             $scope.$watch('item.start', function (val, old) {
                 $scope.start = val;
@@ -78,17 +79,17 @@ angular.module('EmergenceModule')
                         description: 'Дополнительное уведомление о не заполненной информации.',
                         name: '№1',
                         tmpl: '<h1>Уважаемый коллега!</h1> ' +
-                        '<p>Вы не заполнили график отпусков на следующий календарный год. Просьба проделать данную работу до <b>' + moment($scope.to).format('DD.MM.YYYY') + '</b></p>' +
-                        '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
+                        '<p>Вы не заполнили график отпусков на следующий календарный год. Просьба проделать данную работу до <b></b></p>'
+
                     };
 
-                    $scope.examples[0]= {
+                    $scope.examples[0] = {
                         description: 'Уведомление о начале сбора информации',
                         name: '№1',
                         tmpl: '<h1>Уважаемые коллеги!</h1> ' +
                         '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в ' + ($scope.year + 1) + ' году ' +
                         'Генеральным директором подписан приказ о подготовке графика отпусков на ' + ($scope.year + 1) + ' год.</p> ' +
-                        '<p>Коллеги, прошу  в срок до  <b>' + moment($scope.start).format('DD.MM.YYYY') + ' </b> ' +
+                        '<p>Коллеги, прошу  в срок до  <b>' + moment($scope.start, ['DD.MM.YYYY']).format('DD.MM.YYYY') + ' </b> ' +
                         'запланировать свои отпуска на ' + ($scope.year + 1) + ' год и внести информацию в единую информационную систему по ' +
                         'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>' +
                         '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
@@ -127,10 +128,16 @@ angular.module('EmergenceModule')
             };
 
 
-            $scope.expr = "start | date:'dd.MM.yyyy'";
+            $scope.expr = "start | date:'dd.MM.yyyy HH:mm'";
             $scope.parseExpression = function () {
                 var fn = $parse($scope.expr);
                 $scope.item.start = $scope.timeDate = fn($scope.item);
+            };
+
+            $scope.expr2 = "outputEmployee | date:'dd.MM.yyyy'";
+            $scope.parseExpression2 = function () {
+                var fn = $parse($scope.expr2);
+                $scope.item.outputEmployee = $scope.timeDate = fn($scope.item);
             };
 
             //$scope.$watch('year', function (val, old) {
@@ -142,15 +149,15 @@ angular.module('EmergenceModule')
             //    }
             //});
             //href="/vacation/delete-all/'+req.param('year')+'"
-            $scope.addiction = function() {
-                if(!angular.isNumber(year)) return;
-                if (val) {
-                    $http.get('/vacation/delete-all/' + year)
-                        .then(function (res) {
-                            console.log('EYYYYYYEEEESS: ', res.data );
-                        });
-                }
-            };
+            //$scope.addiction = function() {
+            //    if(!angular.isNumber(year)) return;
+            //    if (val) {
+            //        $http.get('/vacation/delete-all/' + year)
+            //            .then(function (res) {
+            //                console.log('EYYYYYYEEEESS: ', res.data );
+            //            });
+            //    }
+            //};
 
             //$scope.$watch('emergences', function (val, old) {
             //    if (val) {
@@ -272,12 +279,12 @@ angular.module('EmergenceModule')
             $scope.newState = function (state) {
                 alert("Sorry! You'll need to create a Constitution for " + state + " first!");
             };
-            $scope.fixYear = function () {
-                if (!angular.isNumber($scope.item.year)) {
-                    toastr.error('Год введён не корректно!', info.error(8966));
-                }
-                return;
-            };
+            //$scope.fixYear = function () {
+            //    if (!angular.isNumber($scope.item.year)) {
+            //        toastr.error('Год введён не корректно!', info.error(8966));
+            //    }
+            //    return;
+            //};
             // ******************************
             // Internal methods
             // ******************************
@@ -468,10 +475,10 @@ angular.module('EmergenceModule')
             //     //defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
             // };
 
-            $scope.minYear = function () {
-                let o = moment().add(1, 'year').get('year');
-                return o;
-            };
+            //$scope.minYear = function () {
+            //    let o = moment().add(1, 'year').get('year');
+            //    return o;
+            //};
 
             //console.log('YEAAARRRRRRRRR', moment().add(1, 'year').get('year'));
             $scope.dateOpts = {
@@ -481,6 +488,18 @@ angular.module('EmergenceModule')
                 // enableTime: false,
                 // dateFormat: info.dateTimeFormat,
                 dateFormat: info.dateFormat,
+                //minDate: info.minDate
+                minDate: 'today', // минимальная дата
+                //defaultDate: 'today'
+            };
+
+            $scope.dateOpts2 = {
+                locale: info.ru,
+                //mode: "range",
+                 time_24hr: true,
+                 enableTime: true,
+                 dateFormat: info.dateTimeFormat,
+                //dateFormat: info.dateFormat,
                 //minDate: info.minDate
                 minDate: 'today', // минимальная дата
                 //defaultDate: 'today'
@@ -534,10 +553,24 @@ angular.module('EmergenceModule')
                         item.countData = 0;
                     }
                 );
-                $scope.item.year = item.getYear();
+                //$scope.item.year = item.getYear();
                 $scope.getAllUsers();
                 $scope.item.name = item.getFullName();
             };
+
+            $scope.removePosition = function (obj) {
+                $scope.item.positions = [];
+                $scope.item.positionRemove = [];
+                if (!obj.id) $scope.item.positions = [];
+                for (let i = 0, ii = $scope.item.positions.length; i < ii; i++) {
+                    if ($scope.item.positions[i].id === obj.id) {
+                        $scope.item.positions.splice(i, 1);
+                        $scope.item.positionRemove.push(obj.id);
+                        return;
+                    }
+                }
+            };
+
 
             $scope.$watch('item.action', function (value, old) {
                 if (value !== undefined && !value) {
@@ -606,7 +639,7 @@ angular.module('EmergenceModule')
 
 
             $scope.delete2 = function (item) {
-                item.$delete({id: item.id, year:item.year}, function (success) {
+                item.$delete({id: item.id}, function (success) {
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
                     // $location.path("/table");
@@ -632,9 +665,11 @@ angular.module('EmergenceModule')
 
             var reversValue = function (item) {
                 var u = item.start;
-
+                console.log('DDDDD item.start', item.start);
+                console.log('DDDDD item.outputEmployee', item.outputEmployee);
                 //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY'])) : null;
+                item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
+                item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee,['DD.MM.YYYY'])) : null;
                 //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
@@ -642,12 +677,35 @@ angular.module('EmergenceModule')
 
                 return item;
             };
+            $scope.locations = {
+                model: null,
+                availableOptions: [
+                    {id: 'Основной офис (3-й этаж)', name: 'Основной офис (3-й этаж)'},
+                    {id: 'Основной офис (2-й этаж)', name: 'Основной офис (2-й этаж)'},
+                    {id: 'Склад (Дмитровка)', name: 'Склад (Дмитровка)'}
+                ]
+            };
+
+            $scope.daxs = {
+                model: null,
+                availableOptions: [
+                    {id: 'Нет прав', name: 'Нет прав'},
+                    {id: 'Менеджер', name: 'Менеджер'},
+                    {id: 'Финансовый менеджер', name: 'Финансовый менеджер'},
+                    {id: 'Сотрудник отдела логистики', name: 'Сотрудник отдела логистики'},
+                    {id: 'Сотрудник склада', name: 'Сотрудник склада'},
+                    {id: 'Сотрудник юридического отдела', name: 'Сотрудник юридического отдела'}
+                ]
+            };
+
 
             $scope.saveEdit = function (item) {
                 item = reversValue(item);
-                 // console.log('********************************Перед созданием', item);
-                if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
-                if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
+                console.log('ITEM START', item);
+                // console.log('********************************Перед созданием', item);
+                //if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
+                //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
+                if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
                 if (!item.start) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнено'), info.error(5828));
 
 
@@ -661,8 +719,9 @@ angular.module('EmergenceModule')
                         }
                     );
                 } else {
+
+
                     if (angular.isDefined(item)
-                    //&& angular.isDefined(item.htmlData)
                     // && angular.isDefined(item.lastName)
                     // &&angular.isDefined(item.patronymicName)
                     /*  &&
@@ -673,14 +732,15 @@ angular.module('EmergenceModule')
                     ) {
                         let ar = [];
                         let ar2 = [];
+
                         if (angular.isDefined(item.htmlData)) {
-                            for(let key in item.htmlData){
+                            for (let key in item.htmlData) {
                                 ar.push(item.htmlData[key]);
                             }
                             item.htmlData = ar;
                         }
                         if (angular.isDefined(item.htmlData2)) {
-                            for(let key in item.htmlData2){
+                            for (let key in item.htmlData2) {
                                 ar2.push(item.htmlData2[key]);
                             }
                             item.htmlData2 = ar2;
@@ -693,7 +753,7 @@ angular.module('EmergenceModule')
                                 toastr.success(info.newOk);
                                 // /admin/emergence/
                                 //$location.path('/profile') ;
-                                $state.go('home.admin.emergence', {emergenceId: success.id});
+                                $state.go('home.admin.emergences', {emergenceId: success.id});
                                 //$state.go('home.admin.emergences');
                             },
                             function (err) {
@@ -738,21 +798,41 @@ angular.module('EmergenceModule')
             };
 
             $scope.addSubdivision = function () {
-                if (angular.isArray($scope.item.subdivision)) {
-                    $scope.item.subdivision.push({});
+                if (angular.isArray($scope.item.departments)) {
+                    $scope.item.departments.push({});
                 } else {
-                    $scope.item.subdivision = [{}];
+                    $scope.item.departments = [{}];
                 }
             };
 
             $scope.removeSubdivision = function (department) {
-                for (let i = 0, ii = $scope.item.subdivision.length; i < ii; i++) {
-                    if ($scope.item.subdivision[i].id === department.id) {
-                        $scope.item.subdivision.splice(i, 1);
+                for (let i = 0, ii = $scope.item.departments.length; i < ii; i++) {
+                    if ($scope.item.departments[i].id === department.id) {
+                        $scope.item.departments.splice(i, 1);
                         return;
                     }
                 }
             };
+
+            $scope.addPosition = function () {
+                if (angular.isArray($scope.item.positions)) {
+                    $scope.item.positions.push({});
+                } else {
+                    $scope.item.positions = [{}];
+                }
+            };
+            $scope.removePosition = function (obj) {
+                $scope.item.positionRemove = [];
+                if (!obj.id) $scope.item.positions = [];
+                for (let i = 0, ii = $scope.item.positions.length; i < ii; i++) {
+                    if ($scope.item.positions[i].id === obj.id) {
+                        $scope.item.positions.splice(i, 1);
+                        $scope.item.positionRemove.push(obj.id);
+                        return;
+                    }
+                }
+            };
+
 
             $scope.removeBirthday = function (item) {
                 item.birthday = null;
@@ -828,13 +908,6 @@ angular.module('EmergenceModule')
             };
 
 
-            $scope.addPosition = function () {
-                if (angular.isArray($scope.item.positions)) {
-                    $scope.item.positions.push({});
-                } else {
-                    $scope.item.positions = [{}];
-                }
-            };
             $scope.addFurlough = function () {
                 if (angular.isArray($scope.item.furloughs)) {
                     $scope.item.furloughs.push({});
@@ -843,17 +916,7 @@ angular.module('EmergenceModule')
                 }
             };
 
-            $scope.removePosition = function (obj) {
-                $scope.item.positionRemove = [];
-                if (!obj.id) $scope.item.positions = [];
-                for (let i = 0, ii = $scope.item.positions.length; i < ii; i++) {
-                    if ($scope.item.positions[i].id === obj.id) {
-                        $scope.item.positions.splice(i, 1);
-                        $scope.item.positionRemove.push(obj.id);
-                        return;
-                    }
-                }
-            };
+
             $scope.removeFurlough = function (furlough) {
                 $scope.item.furloughRemove = [];
                 if (!furlough.id) $scope.item.furloughs = [];

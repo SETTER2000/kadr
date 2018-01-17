@@ -67,6 +67,10 @@ module.exports = {
         users: {
             collection: 'user',
             via: 'departments'
+        },
+        emergences: {
+            collection: 'emergence',
+            via: 'departments'
         }
 
     }

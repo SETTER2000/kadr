@@ -271,8 +271,6 @@ module.exports = {
             };
             EmailService.sender(options);
             res.send(createSchedule);
-
-
         });
 
     },

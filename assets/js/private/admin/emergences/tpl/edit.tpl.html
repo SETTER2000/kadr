@@ -1,10 +1,10 @@
 <div class="col-sm-11  col-md-12  main" ng-cloak>
     <div class="page-header">
         <h2>
-            <p ng-if="item.name" ng-class="{'fired':item.fired}">{{item.getFullName()}} <span
+            <p ng-if="item.lastName " ng-class="{'fired':item.fired}">{{item.getFullName()}} <span
                     ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
             </p>
-            <p ng-if="!item.name">Новый график</p>
+            <p ng-if="!item.lastName">{{item.getNewEmployees()}}</p>
             <a href="#" class="btn btn-xs disabled"
                ng-class="{'btn-primary':(item.status==='Проект'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Утвержден')}"
                ng-hide="item.fired" role="button">
@@ -84,53 +84,46 @@
                         </div>
 
 
-                        <!-- N A M E -->
+                        <!-- F I O -->
 
                         <div class="form-group">
-                            <label class="control-label">Наименование</label>
-                            <input type="text" class="form-control" required ng-model="item.name">
+                            <label class="control-label">ФИО</label>
+                            <p> {{item.lastName}} {{item.firstName}} {{item.patronymicName}} </p>
+                            <!--<input type="text"  class="form-control" required ng-model="item.getFullName()">-->
                         </div>
 
 
-                        <!-- S T A T U S -->
 
-                        <div class="form-group col-md-3">
-                            <label class="control-label" for="inputSuccess3">
-                                Статус
-                            </label>
-                            <input type="text" ng-disabled="true" class="form-control" required ng-model="item.status">
-                        </div>
-
-
-                        <!-- C O L L E C T E D  D A T A -->
-
-                        <div class="form-group" ng-if="checkStatus()" ng-controller="ListController">
-                            <label class="control-label" for="inputSuccess3">
-                                Собрано данных
-                            </label>
-                            <!--<br> 0 из {{(items | filter :{fired:false}).length}}-->
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <span style="margin:0 20px;"> {{sumDays}} </span> из <input type="number"
-                                                                                                ng-disabled="true"
-                                                                                                class="form-control not-border"
-                                                                                                ng-bind="item.countData=(items | filter :{fired:false}).length"
-                                                                                                ng-model="item.countData">
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <!-- S T A R T -->
+                        <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
 
                         <div class="form-group">
                             <label class="control-label">
                                 Дата выхода сотрудника
                             </label>
                             <div class="input-group">
-                                <input ng-disabled="edit"  type="text" required ng-bind="parseExpression()" class="form-control flatpickr"
+                                <input ng-disabled="edit" type="text" required ng-bind="parseExpression2()" class="form-control flatpickr"
                                        ng-flatpickr
                                        fp-opts="dateOpts"
+                                       fp-on-setup="toggleBlur(item)"
+                                       ng-model="item.outputEmployee">
+                                <!--<span class="input-group-btn">-->
+                                <!--<button class="btn btn-default" type="button" ng-click="removeBirthday(item)"><span-->
+                                <!--class="glyphicon glyphicon-remove"></span></button>-->
+                                <!--</span>-->
+                            </div>
+                        </div>
+
+
+                        <!-- З А П У С К  П Р О Е К Т А -->
+
+                        <div class="form-group">
+                            <label class="control-label">
+                                Запуск проекта
+                            </label>
+                            <div class="input-group">
+                                <input  type="text" required ng-bind="parseExpression()" class="form-control flatpickr"
+                                       ng-flatpickr
+                                       fp-opts="dateOpts2"
                                        fp-on-setup="toggleBlur(item)"
                                        ng-model="item.start">
                                 <!--<span class="input-group-btn">-->
@@ -165,11 +158,60 @@
                         </div>
 
 
-                        <!-- P O S I T I O N -->
+                        <!--  E D I T   D E P A R T M E N T S  C O N T R O L L E R -->
 
+
+                        <div ng-controller="ListDepartmentController" class="form-group ">
+                            <label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()"></label>
+                            <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ]</span>
+                            <div class="form-inline" ng-repeat="department in item.departments">
+                                <div class="form-group">
+                                    <select class="form-control" ng-disabled="edit"  required ng-model="department.id">
+                                        <option ng-repeat="option in items| filter:{action:true}" value="{{option.id}}">{{option.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-default" ng-click="removeSubdivision(department)">x</button>
+                            </div>
+                            <!--<pre id="default-spacing">{{items | json}}</pre>-->
+                            <!--<pre>D E P A R T M E N T S : {{items | limitTo:5 | json}}</pre>-->
+                        </div>
+
+
+                        <!--< N E W  P O S I T I O N -->
+
+
+                        <!--<div ng-controller="ListPositionController" class="form-group ">-->
+                        <!--<label class="control-label" ng-bind="items[0].sc()"></label>-->
+                        <!--<span ng-if="!item.positions.length>0">[ <a href="#" ng-click="addPosition()">добавить</a> ]</span>-->
+                        <!--<div class="form-inline" ng-repeat="position in item.positions">-->
+                        <!--<div class="form-group">-->
+                        <!--<select class="form-control" ng-model="position.id">-->
+                        <!--<option ng-repeat="option in items | filter:{action:true}" value="{{option.id}}">{{option.name}}-->
+                        <!--</option>-->
+                        <!--</select>-->
+                        <!--</div>-->
+                        <!--<button type="button" class="btn btn-default" ng-click="removePosition(position)">x</button>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash;<pre>P O S I T I O N S : {{items | limitTo:5 | json }}</pre>&ndash;&gt;-->
+                        <!--</div>-->
+
+
+                        <!-- О Т Д Е Л -->
+                        <!--<div class="form-group">-->
+                        <!--<ul class="position" ng-controller="ListDepartmentController"-->
+                        <!--ng-repeat="subdivision in item.subdivision | filter:{$:searchText}">-->
+                        <!--<li style="list-style-type: none; margin: 0; padding: 0"-->
+                        <!--ng-repeat="option in items | filter:{$:searchText,id:subdivision.id}">-->
+                        <!--{{option.name}}-->
+                        <!--</li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+
+                        <!-- Д О Л Ж Н О С Т Ь -->
                         <div class="form-group">
                             <label class="control-label">Должность</label>
-                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.position">
+                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.post">
                         </div>
 
 
@@ -181,12 +223,63 @@
                         </div>
 
 
+                        <!-- L O C A T I O N -->
+
+                        <div class="form-group">
+                            <label class="control-label">Местоположение</label>
+
+                            <select class="form-control" ng-disabled="edit"  name="repeatSelect" ng-model="item.location">
+                                <option ng-repeat="option in locations.availableOptions" value="{{option.id}}">{{option.name}}</option>
+                            </select>
+                        </div>
+
+                        <!-- К О М Н А Т А -->
+
+                        <div class="form-group">
+                            <label class="control-label">Комната</label>
+                            <input ng-disabled="edit" type="text" class="form-control"  ng-model="item.room">
+                        </div>
+
+                        <!-- Д О П О Л Н И Т Е Л Ь Н О -->
+
+                        <div class="form-group">
+                            <label class="control-label">Дополнительное требование к рабочему месту</label>
+                            <textarea class="form-control" ng-disabled="edit" ng-model="item.extra"></textarea>
+                        </div>
+
+
+                        <!-- D A X -->
+
+                        <div class="form-group">
+                            <label class="control-label">Права в DAX</label>
+
+                            <select class="form-control" ng-disabled="edit" name="repeatSelect" ng-model="item.dax">
+                                <option ng-repeat="option in daxs.availableOptions" value="{{option.id}}">{{option.name}}</option>
+                            </select>
+                        </div>
+
+
+
+                        <!-- R E M O T E  A C C E S S -->
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <md-switch ng-disabled="edit"  ng-model="item.remote" aria-label="Switch 1">
+                                        <span ng-if="!item.remote">Доступ к офисной сети из дома не нужен</span>
+                                        <span ng-if="item.remote">Доступ к офисной сети из дома нужен</span>
+                                    </md-switch>
+                                </label>
+                            </div>
+                        </div>
+
+
                         <!-- P H O N E -->
 
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-model="item.phone" aria-label="Switch 1">
+                                    <md-switch ng-disabled="edit"  ng-model="item.phone" aria-label="Switch 1">
                                         <span ng-if="!item.phone">Телефон не нужен</span>
                                         <span ng-if="item.phone">Телефон нужен</span>
                                     </md-switch>
@@ -200,7 +293,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-model="item.mobile" aria-label="Switch 1">
+                                    <md-switch ng-disabled="edit"  ng-model="item.mobile" aria-label="Switch 1">
                                         <span ng-if="!item.mobile">Мобильный не нужен</span>
                                         <span ng-if="item.mobile">Мобильный нужен</span>
                                     </md-switch>
@@ -214,13 +307,44 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-model="item.bussinescard" aria-label="Switch 1">
-                                        <span ng-if="!item.bussinescard">Визитки не нужен</span>
-                                        <span ng-if="item.bussinescard">Визитки нужен</span>
+                                    <md-switch ng-disabled="edit"  ng-model="item.bussinescard" aria-label="Switch 1">
+                                        <span ng-if="!item.bussinescard">Визитки не нужны</span>
+                                        <span ng-if="item.bussinescard">Визитки нужны</span>
                                     </md-switch>
                                 </label>
                             </div>
                         </div>
+
+
+
+                        <!-- S T A T U S -->
+
+                        <div class="form-group col-md-3">
+                            <label class="control-label" for="inputSuccess3">
+                                Статус
+                            </label>
+                            <input type="text" ng-disabled="true" class="form-control" required ng-model="item.status">
+                        </div>
+
+                        <!-- C O L L E C T E D  D A T A -->
+
+                        <div class="form-group" ng-if="checkStatus()" ng-controller="ListController">
+                            <label class="control-label" for="inputSuccess3">
+                                Собрано данных
+                            </label>
+                            <!--<br> 0 из {{(items | filter :{fired:false}).length}}-->
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <span style="margin:0 20px;"> {{sumDays}} </span> из
+                                    <input type="number" ng-disabled="true" class="form-control not-border"
+                                           ng-bind="item.countData=(items | filter :{fired:false}).length"
+                                           ng-model="item.countData">
+                                </div>
+                            </div>
+                        </div>
+
+
+
 
 
                         <div ng-if="(me.admin && item.id)" class="row">
@@ -349,8 +473,8 @@
                     <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch
                          on="item.htmlData2[0].name">
                         <textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"
-                          style="width: 100%; height: 120px; border: none"
-                          class="animate-switch" ng-switch-when="№1">    {{item.htmlData2[0].tmpl}}</textarea>
+                                  style="width: 100%; height: 120px; border: none"
+                                  class="animate-switch" ng-switch-when="№1">    {{item.htmlData2[0].tmpl}}</textarea>
                         <textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"
                                   style="width: 100%; height: 120px; border: none"
                                   class="animate-switch" ng-switch-when="№2">{{item.htmlData2[0].tmpl}}</textarea>

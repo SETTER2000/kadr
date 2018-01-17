@@ -26,6 +26,25 @@ module.exports = {
         lastName: {
             type: 'string'
         },
+        post: {
+            type: 'string'
+        },
+        location: {
+            type: 'string'
+        },
+        remote: {
+            type: 'string'
+        },
+
+        dax: {
+            type: 'string'
+        },
+        extra: {
+            type: 'string'
+        },
+        room: {
+            type: 'string'
+        },
         firstName: {
             type: 'string'
         },
@@ -36,24 +55,39 @@ module.exports = {
             type: 'string'
         },
 
+        subdivision: {
+            type: 'array',
+            defaultsTo: '[]'
+        },
         position: {
-            type: 'string'
+            type: 'array',
+            defaultsTo: '[]'
         },
 
+        departments: {
+            collection: 'department',
+            via: 'emergences',
+            dominant: true
+        },
+        positions: {
+            collection: 'position',
+            via: 'emergences',
+            dominant: true
+        },
         boss: {
             type: 'string'
         },
         phone: {
             type: 'boolean',
-            defaultsTo: false,
+            defaultsTo: false
         },
         mobile: {
             type: 'boolean',
-            defaultsTo: false,
+            defaultsTo: false
         },
         bussinescard: {
             type: 'boolean',
-            defaultsTo: false,
+            defaultsTo: false
         },
         //from: {
         //    type: 'date',
@@ -100,6 +134,10 @@ module.exports = {
             type: 'datetime',
             defaultsTo: null
         },
+        outputEmployee: { //запустить проект расслыки
+            type: 'datetime',
+            defaultsTo: null
+        },
         daysSelectHoliday: {
             type: 'integer'
         },
@@ -119,25 +157,6 @@ module.exports = {
         job: {
             type: 'string'
         },
-
-        //
-        ///**
-        // *
-        // */
-        ////intersec:{
-        ////    collection: 'vacation'
-        ////},
-        ///**
-        // *  Пересекается с какими отпусками
-        // */
-        //intersec:{
-        //    collection: 'vacation',
-        //    via: 'intersecOwner'
-        //},
-        //intersecOwner: {
-        //    collection: 'vacation',
-        //    via: 'intersec'
-        //},
         whomCreated: {
             model: 'user'
         },
