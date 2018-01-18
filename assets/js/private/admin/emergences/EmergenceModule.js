@@ -69,7 +69,8 @@ angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMater
             {
                 update: {
                     method: 'PUT'
-                }
+                },
+                go: false,
             }
         );
         Emergences.prototype.formatDate = function (date) {
@@ -107,6 +108,21 @@ angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMater
                 return this.year = moment().add(1, 'years').get('year');
             }
             return this.year;
+        };
+
+        Emergences.prototype.popupSender = function () {
+            $http.get('/emergence/logSender/' + this.id).then(function (response) {
+                console.log('LOG SENDER', response.data);
+                this.top = response.data;
+            });
+
+        };
+
+        Emergences.prototype.goOpen = function () {
+            return this.go = (this.go) ? false : true;
+        };
+        Emergences.prototype.goClose = function () {
+            return this.go = false;
         };
         Emergences.prototype.getShortName = function () {
             return this.lastName + ' ' + this.firstName.substr(0, 1) + '.' + this.patronymicName.substr(0, 1) + '.';
@@ -260,6 +276,16 @@ angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMater
             } else {
                 return value;
             }
+        }
+    })
+    .filter('deadline', function () {
+        return function (value) {
+            moment.locale('ru');
+            console.log(moment(new Date(value)).fromNow());
+            if (angular.isString(value)) {
+                return moment(new Date(value)).fromNow();
+            }
+            return value;
         }
     })
 

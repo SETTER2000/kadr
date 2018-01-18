@@ -577,52 +577,52 @@ angular.module('EmergenceModule')
                     toastr.warning('Рассылка не будет запущена.<br> Для запуска активируйте проект установив активность.', info.warning);
                 }
             });
-            //$scope.$watch('item.start', function (value) {
-            //    if (value) {
-            //        if (($scope.item.status === 'Проект' && moment(value, ['DD.MM.YYYY']).isBefore(moment()))) {
-            //            toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
-            //                {
-            //                    //"closeButton": true,
-            //                    //"debug": false,
-            //                    //"newestOnTop": false,
-            //                    "progressBar": true
-            //                    //"positionClass": "toast-top-right",
-            //                    //"preventDuplicates": false,
-            //                    //"showDuration": "300",
-            //                    //"hideDuration": "1000",
-            //                    //"timeOut": "5000",
-            //                    //"extendedTimeOut": "1000",
-            //                    //"showEasing": "swing",
-            //                    //"hideEasing": "linear",
-            //                    //"showMethod": "fadeIn",
-            //                    //"hideMethod": "fadeOut"
-            //                });
-            //            return;
-            //        }
-            //        if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
-            //        let nm;
-            //
-            //        console.log('FORMAT', value);
-            //        nm = (moment(value).isSameOrBefore(moment())) ? 'Проект запущен' : 'Запуск проекта';
-            //        toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
-            //            {
-            //                //"closeButton": true,
-            //                //"debug": false,
-            //                //"newestOnTop": false,
-            //                "progressBar": true
-            //                //"positionClass": "toast-top-right",
-            //                //"preventDuplicates": false,
-            //                //"showDuration": "300",
-            //                //"hideDuration": "1000",
-            //                //"timeOut": "5000",
-            //                //"extendedTimeOut": "1000",
-            //                //"showEasing": "swing",
-            //                //"hideEasing": "linear",
-            //                //"showMethod": "fadeIn",
-            //                //"hideMethod": "fadeOut"
-            //            });
-            //    }
-            //});
+            $scope.$watch('item.start', function (value) {
+                if (value) {
+                    if (($scope.item.status === 'Проект' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
+                        toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
+                            {
+                                //"closeButton": true,
+                                //"debug": false,
+                                //"newestOnTop": false,
+                                "progressBar": true
+                                //"positionClass": "toast-top-right",
+                                //"preventDuplicates": false,
+                                //"showDuration": "300",
+                                //"hideDuration": "1000",
+                                //"timeOut": "5000",
+                                //"extendedTimeOut": "1000",
+                                //"showEasing": "swing",
+                                //"hideEasing": "linear",
+                                //"showMethod": "fadeIn",
+                                //"hideMethod": "fadeOut"
+                            });
+                        return;
+                    }
+                    if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
+                    let nm;
+
+                    console.log('FORMAT', value);
+                    nm = (moment(value).isSameOrBefore(moment())) ? 'Проект запущен' : 'Запуск проекта';
+                    toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
+                        {
+                            //"closeButton": true,
+                            //"debug": false,
+                            //"newestOnTop": false,
+                            "progressBar": true
+                            //"positionClass": "toast-top-right",
+                            //"preventDuplicates": false,
+                            //"showDuration": "300",
+                            //"hideDuration": "1000",
+                            //"timeOut": "5000",
+                            //"extendedTimeOut": "1000",
+                            //"showEasing": "swing",
+                            //"hideEasing": "linear",
+                            //"showMethod": "fadeIn",
+                            //"hideMethod": "fadeOut"
+                        });
+                }
+            });
 
 
             $scope.checkStatus = function () {
@@ -703,8 +703,8 @@ angular.module('EmergenceModule')
                 item = reversValue(item);
                 console.log('ITEM START', item);
                 // console.log('********************************Перед созданием', item);
-                //if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
-                //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
+                if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
+                if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
                 if (!item.start) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнено'), info.error(5828));
 

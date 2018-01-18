@@ -13,13 +13,22 @@
         url-bt="urlBt"
         on-select-page="selectCount=selectCount+1">
 </pagination>
+
+<span ng-if="me.admin">WORK VIEW</span>
+
 <table class="table table-hover tus">
     <tr head-table type="vacation"></tr>
     <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true}  |
        orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows) | limitTo: defaultRows)">
+
+
+        <!-- П О Р Я Д К О В Ы Й  Н О М Е Р -->
+
         <td>
             {{$index+1}}
         </td>
+
+        <!-- A V A T A R -->
         <td>
             <!--<pre>{{item.owner.avatarUrl | json}}</pre>-->
             <a ui-sref="home.admin.users.edit({userId:item.owner.id})">
@@ -28,6 +37,8 @@
                      class="photo"/>
             </a>
         </td>
+
+        <!-- П Е Р И О Д  О Т П У С К А  ( N A M E ) -->
         <td nowrap>
             <a class="position" href="{{item.getEditUrl(item.id)}}">
                 {{item.name}}
@@ -66,6 +77,8 @@
             <!--</div>-->
             <!--</div>-->
         </td>
+
+
         <td nowrap>
             <span class="position">{{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}</span>
         </td>

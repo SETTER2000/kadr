@@ -122,6 +122,14 @@ module.exports = {
             type: 'array',
             defaultsTo: []
         },
+        recipient: {
+            type: 'array',
+            defaultsTo: []
+        },
+        logSender: {
+            type: 'array',
+            defaultsTo: []
+        },
 
         //year: {
         //    type: 'integer',

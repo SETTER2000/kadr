@@ -108,7 +108,10 @@ module.exports = {
                 console.log('Cron tasks1: ', finds.length);
                 _.forEach(finds, function (task) {
                     if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
-                        User.find({action: true, fired: false}).exec((err, usersFind) => {
+                        User.find({action: true, fired: false, id:task.recipient})
+                            .populate('positions')
+                            .populate('departments')
+                            .exec((err, usersFind) => {
                             "use strict";
                             if (err) return res.serverError(err);
                             if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
@@ -122,7 +125,7 @@ module.exports = {
                             }
                             sails.log('Email для рассылки: ', strEmail);
                             strEmail = (strEmail) ? strEmail : '';
-                            if(!task.htmlData.length) return console.log('Cron Service:',' Ошибка! Задача не отработала. Нет текста для рассылки писем.');
+                            if(!task.htmlData.length) return sails.log('Cron Service:',' Ошибка! Задача не отработала. Нет текста для рассылки писем.');
                             let options = {
                                 to: strEmail, // Кому: можно несколько получателей указать через запятую
                                 subject: ' ✔ ' + task.name, // Тема письма
@@ -134,7 +137,8 @@ module.exports = {
                                 console.log('Задача выполнена в: ' + new Date());
                                 Emergence.update({id: task.id}, {
                                     worked: true,
-                                    status: 'В работе'
+                                    status: 'В работе',
+                                    logSender: usersFind
                                 }).exec((err, upd) => {
                                     if (err) return res.serverError();
                                     Emergence.find().exec((err, findsSchedule) => {

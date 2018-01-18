@@ -40,6 +40,8 @@ module.exports = {
             Emergence.findOne(req.param('id'))
                 .populate('positions')
                 .populate('departments')
+                .populate('whomCreated')
+                .populate('whomUpdated')
                 .exec(function foundVacation(err, vacations) {
                     if (err) return res.serverError(err);
                     if (!vacations) return res.notFound();
@@ -73,6 +75,8 @@ module.exports = {
                             Emergence.find()
                                 .populate('positions')
                                 .populate('departments')
+                                .populate('whomCreated')
+                                .populate('whomUpdated')
                                 .exec(function foundEmergence(err, emergences) {
                                     if (err) return res.serverError(err);
                                     if (!emergences) return res.notFound();
@@ -126,6 +130,7 @@ module.exports = {
             room: req.param('room'),
             remote: req.param('remote'),
             dax: req.param('dax'),
+            recipient: req.param('recipient'),
             extra: req.param('extra'),
             location: req.param('location'),
             whomCreated: req.session.me,
@@ -223,6 +228,7 @@ module.exports = {
             post: req.param('post'),
             room: req.param('room'),
             dax: req.param('dax'),
+            recipient: req.param('recipient'),
             remote: req.param('remote'),
             extra: req.param('extra'),
             location: req.param('location'),
@@ -261,7 +267,6 @@ module.exports = {
                         if (err) return res.negotiate(err);
 
 
-
                         Emergence.findOne(req.param('id'))
                             .populate('positions')
                             .exec((err, findOneEm) => {
@@ -272,7 +277,7 @@ module.exports = {
                                         if (err) return res.negotiate(err);
                                         findUser.save(function (err) {
                                             if (err) return res.negotiate(err);
-                                          return   res.ok(findOneEm);
+                                            return res.ok(findOneEm);
                                             //Emergence.find().exec((err, findsEmergence) => {
                                             //    if (err) return res.serverError(err);
                                             //    sails.sockets.broadcast('emergence', 'hello', {howdy: findsEmergence}, req);
@@ -287,11 +292,26 @@ module.exports = {
                                             //});
                                         });
                                     });
-                                }else{
-                                    return   res.ok(findOneEm);
+                                } else {
+                                    return res.ok(findOneEm);
                                 }
                             });
                     });
+            });
+    },
+    /**
+     * Возвращает массив logSender, по id
+     * @param req
+     * @param res
+     */
+    getLogSender: function (req, res) {
+        console.log('REG all, ', req.params.all());
+        Emergence.findOne(req.param('id'))
+            .exec((err, findsUser)=> {
+                "use strict";
+                if (err) res.serverError(err);
+
+                res.ok(findsUser.logSender);
             });
     },
     //
@@ -576,6 +596,21 @@ module.exports = {
         /**
          * TODO END SOCKET
          */
-    }
+    },
+
+
+    //test: function (req, res) {
+    //    //Emergence.find({action: true, worked: false})
+    //    //    .exec((err, finds) => {
+    //    //        if (err) return res.serverError(err);
+    //            User.find({action: true, fired: false, id:[ '58a461e66723246b6c2bc61b', '58a461e66723246b6c2bc634']})
+    //                .exec((err, findsUser)=> {
+    //                    "use strict";
+    //                    if (err) res.serverError(err);
+    //
+    //                    res.ok(findsUser);
+    //                });
+    //        //});
+    //}
 };
 

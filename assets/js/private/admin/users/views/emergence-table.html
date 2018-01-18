@@ -21,30 +21,31 @@
 
 
         <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
-        <th>
-            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('start')">
-                {{nameHeader.startProject}}
+        <th class="text-center">
+            <button class="btn btn-sm btn-default not-border" ng-click="sortBy('start')">
+                {{nameHeader.outputEmployee}}
                 <span class="sortOrder" ng-show="propertyName === 'start'"
                       ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
+
         <!--&lt;!&ndash; C O U N T  D A T A S E A R C H  itemsUsers&ndash;&gt;-->
         <!--<th>-->
-            <!--<button class="btn btn-sm btn-default  not-border" ng-click="sortBy('countData')">-->
-                <!--{{nameHeader.nineArea}}-->
-                <!--<span class="sortOrder" ng-show="propertyName === 'countData'"-->
-                      <!--ng-class="{reverse: reverse}"></span>-->
-            <!--</button>-->
+        <!--<button class="btn btn-sm btn-default  not-border" ng-click="sortBy('countData')">-->
+        <!--{{nameHeader.nineArea}}-->
+        <!--<span class="sortOrder" ng-show="propertyName === 'countData'"-->
+        <!--ng-class="{reverse: reverse}"></span>-->
+        <!--</button>-->
         <!--</th>-->
 
         <!--&lt;!&ndash; Y E A R &ndash;&gt;-->
         <!--<th class="text-center">-->
-            <!--<button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('year')">-->
-                <!--{{nameHeader.twoArea}}-->
-                <!--<span class="sortOrder" ng-show="propertyName === 'year'"-->
-                      <!--ng-class="{reverse: reverse}"></span>-->
-            <!--</button>-->
+        <!--<button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('year')">-->
+        <!--{{nameHeader.twoArea}}-->
+        <!--<span class="sortOrder" ng-show="propertyName === 'year'"-->
+        <!--ng-class="{reverse: reverse}"></span>-->
+        <!--</button>-->
         <!--</th>-->
 
 
@@ -57,31 +58,41 @@
         </th>
 
 
+        <!-- Д А Т А  З А П У С К А  П Р О Е К Т А -->
+        <th class="text-center">
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('start')">
+                {{nameHeader.startProject}}
+                <span class="sortOrder" ng-show="propertyName === 'start'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+
         <!--&lt;!&ndash; F R O M  &ndash;&gt;-->
         <!--<th class="text-center">-->
-            <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('from')">-->
-                <!--{{nameHeader.fourArea}}-->
-                <!--<span class="sortOrder" ng-show="propertyName === 'from'"-->
-                      <!--ng-class="{reverse: reverse}"></span>-->
-            <!--</button>-->
+        <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('from')">-->
+        <!--{{nameHeader.fourArea}}-->
+        <!--<span class="sortOrder" ng-show="propertyName === 'from'"-->
+        <!--ng-class="{reverse: reverse}"></span>-->
+        <!--</button>-->
         <!--</th>-->
 
         <!--&lt;!&ndash; T O &ndash;&gt;-->
         <!--<th class="text-center">-->
-            <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('to')">-->
-                <!--{{nameHeader.fiveArea}}-->
-                <!--<span class="sortOrder" ng-show="propertyName === 'to'"-->
-                      <!--ng-class="{reverse: reverse}"></span>-->
-            <!--</button>-->
+        <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('to')">-->
+        <!--{{nameHeader.fiveArea}}-->
+        <!--<span class="sortOrder" ng-show="propertyName === 'to'"-->
+        <!--ng-class="{reverse: reverse}"></span>-->
+        <!--</button>-->
         <!--</th>-->
 
         <!-- К О Л-В О  Д Н Е Й -->
         <!--<th class="text-center">-->
-            <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('daysSelectHoliday')">-->
-                <!--{{nameHeader.sixArea}}-->
-                <!--<span class="sortOrder" ng-show="propertyName === 'daysSelectHoliday'"-->
-                      <!--ng-class="{reverse: reverse}"></span>-->
-            <!--</button>-->
+        <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('daysSelectHoliday')">-->
+        <!--{{nameHeader.sixArea}}-->
+        <!--<span class="sortOrder" ng-show="propertyName === 'daysSelectHoliday'"-->
+        <!--ng-class="{reverse: reverse}"></span>-->
+        <!--</button>-->
         <!--</th>-->
 
         <!-- А К Т И В А Ц И Я -->
@@ -113,7 +124,7 @@
 
 
         <!-- C R E A T E -->
-        <th ng-if="me.admin" class="text-center">
+        <th ng-if="me.admin" class="text-center ">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('createdAt')">
                 {{nameHeader.createdAtArea}}  <span class="sortOrder" ng-show="propertyName === 'createdAt'"
                                                     ng-class="{reverse: reverse}"></span>
@@ -172,48 +183,97 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <!-- F I O -->
         <td>
             <a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.admin.emergences.edit({emergenceId:item.id})">
-            <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.admin.emergences.edit({id:155})">-->
+                <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.admin.emergences.edit({id:155})">-->
                 {{item.getFullName()}}
             </a>
-           <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.name}}</span>
+            <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.name}}</span>
         </td>
 
 
         <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
-        <td>
-            {{item.start | date:"dd.MM.yyyy HH:mm"}}
+        <td class="text-center">
+            {{item.outputEmployee | date:"dd.MM.yyyy HH:mm"}}
         </td>
+
 
         <!-- C O U N T  D A T A S E A R C H -->
         <!--<td class="text-center">-->
-          <!--{{item.vacations | countSelectedDays}} &nbsp; из &nbsp;{{ item.countData }}-->
+        <!--{{item.vacations | countSelectedDays}} &nbsp; из &nbsp;{{ item.countData }}-->
         <!--</td>-->
 
         <!--&lt;!&ndash; Y E A R &ndash;&gt;-->
         <!--<td class="text-center">-->
-            <!--{{item.year}}-->
+        <!--{{item.year}}-->
         <!--</td>-->
 
         <!-- S T A T U S -->
-        <td class="text-center " ng-class="{'text-primary':(item.status==='Проект'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Утвержден'), }">
-            <md-tooltip ng-if="(item.status==='В работе')" md-direction="right">{{nameHeader.title}}</md-tooltip> <strong>{{item.status}}</strong>
+        <td class="text-center ">
+            <strong ng-click="item.goOpen()"
+                    ng-class="{'text-primary':(item.status==='Проект'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Утвержден'), }">
+                {{item.status}}
+                <md-tooltip ng-if="(item.status==='В работе')" md-direction="right">{{nameHeader.title}}</md-tooltip>
+            </strong>
+            <div ng-if="item.logSender && item.go && (item.status==='В работе')" class="animate-if ">
+                <div class="row" style="position: relative">
+                    <div class="col-md-12  text-nowrap" style="position: absolute; top:7px;  z-index: 100; min-width: 600px;">
+                        <div class="panel panel-success">
+                            <div class="panel-heading   text-left">Сообщения отправлены <a href="#" class="pull-right" ng-click="item.goClose()">x</a></div>
+                            <div class="panel-body">
+                                <table class="table table-hover">
+                                    <tr ng-repeat="sender in item.logSender">
+                                        <td class="text-left text-nowrap">
+                                            <small class="text-info">{{sender.lastName}}
+                                                {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.
+                                            </small>
+                                        </td>
+                                        <td class="text-left">
+                                            <small>{{sender.positions[0].name}}</small>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!--<dl ng-repeat="sender in item.logSender">-->
+                                <!--<dt><span class="text-info">{{sender.lastName}} {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.  </span></dt>-->
+                                <!--<dd> <small>{{sender.positions[0].name}}</small> </dd>-->
+                                <!--&lt;!&ndash;<dd>- <span class="glyphicon" ng-class="{'glyphicon-ok':sender.action, 'text-success':sender.action,}"></span></dd>&ndash;&gt;-->
+                                <!--</dl>-->
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--ПРОЕКТ-->
+            <div ng-if="item.logSender && item.go && (item.status==='Проект')" class="animate-if">
+                <h6>Рассылка:{{item.start | deadline}}</h6>
+                <!--<div class="list-group" ng-repeat="sender in item.logSender">-->
+                <!--<p>-->
+                <!--<span class="text-info">{{sender.lastName}} {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.  </span>-->
+                <!--<span class="glyphicon" ng-class="{'glyphicon-ok':sender.action, 'text-success':sender.action,}"></span>-->
+                <!--</p>-->
+                <!--</div>-->
+            </div>
         </td>
 
-
+        <!-- Д А Т А  З  А П У С К А  П Р О Е К Т А -->
+        <td class="text-center">
+            {{item.start | date:"dd.MM.yyyy HH:mm"}}
+        </td>
         <!-- F R O M -->
         <!--<td class="text-center">-->
-            <!--{{item.from | date : "dd.MM.yyyy "}}-->
+        <!--{{item.from | date : "dd.MM.yyyy "}}-->
         <!--</td>-->
 
         <!--&lt;!&ndash; T O &ndash;&gt;-->
         <!--<td class="text-center">-->
-            <!--{{item.to | date : "dd.MM.yyyy "}}-->
+        <!--{{item.to | date : "dd.MM.yyyy "}}-->
         <!--</td>-->
 
 
         <!-- К О Л-В О  Д Н Е Й -->
         <!--<td class="text-center">-->
-            <!--{{item.daysSelectHoliday }}-->
+        <!--{{item.daysSelectHoliday }}-->
         <!--</td>-->
 
         <!-- А К Т И В А Ц И Я -->
@@ -222,7 +282,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         </td>
 
         <!-- С О З Д А Л -->
-        <td class="text-center">
+        <td class="text-center text-nowrap">
             {{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}} {{item.whomCreated.patronymicName[0]}}
         </td>
 

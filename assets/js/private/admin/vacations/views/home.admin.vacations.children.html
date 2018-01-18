@@ -12,6 +12,7 @@
         url-bt="urlBt"
         on-select-page="selectCount=selectCount+1">
 </pagination>
+<span ng-if="me.admin">CHILDREN VIEW</span>
 <table class="table table-hover">
     <tr head-table type="vacation"></tr>
     <tr ng-repeat="item in filtered=(items | firedUser | filter:{$:searchText, action:true } | searchObjectVal:'furlough':'name':children |

@@ -260,18 +260,6 @@
 
 
 
-                        <!-- R E M O T E  A C C E S S -->
-
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-disabled="edit"  ng-model="item.remote" aria-label="Switch 1">
-                                        <span ng-if="!item.remote">Доступ к офисной сети из дома не нужен</span>
-                                        <span ng-if="item.remote">Доступ к офисной сети из дома нужен</span>
-                                    </md-switch>
-                                </label>
-                            </div>
-                        </div>
 
 
                         <!-- P H O N E -->
@@ -288,12 +276,26 @@
                         </div>
 
 
+                        <!-- R E M O T E  A C C E S S -->
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <md-switch ng-model="item.remote" aria-label="Switch 2">
+                                        <span ng-if="!item.remote">Удалённый доступ не нужен</span>
+                                        <span ng-if="item.remote">Удалённый доступ нужен</span>
+                                    </md-switch>
+                                </label>
+                            </div>
+                        </div>
+
+
                         <!-- M O B I L E -->
 
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit"  ng-model="item.mobile" aria-label="Switch 1">
+                                    <md-switch ng-disabled="edit"  ng-model="item.mobile" aria-label="Switch 3">
                                         <span ng-if="!item.mobile">Мобильный не нужен</span>
                                         <span ng-if="item.mobile">Мобильный нужен</span>
                                     </md-switch>
@@ -307,7 +309,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit"  ng-model="item.bussinescard" aria-label="Switch 1">
+                                    <md-switch ng-disabled="edit"  ng-model="item.bussinescard" aria-label="Switch 4">
                                         <span ng-if="!item.bussinescard">Визитки не нужны</span>
                                         <span ng-if="item.bussinescard">Визитки нужны</span>
                                     </md-switch>
@@ -415,6 +417,26 @@
             </div>
         </div>
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+
+            <!-- П О Л У Ч А Т Е Л И  П И С Е М -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 >Адресаты</h4>
+                    <div  ng-controller="ListController" class="form-group ">
+                        <label class="control-label" ng-bind="items[0].sc()"></label>
+                        <span ng-if="me.admin">{{filtered.length}}</span>
+                        <select ng-disabled="edit" class="form-control" ng-model="item.recipient" multiple>
+                            <option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )"
+                                    value="{{option.id}}">
+                                {{option.getFullName()}}
+                            </option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ш А Б Л О Н Ы  П И С Е М -->
             <div class="row" ng-if="item.start">
                 <div class="col-md-12">
                     <!-- У В Е Д О М Л Е Н И Е  О  Н А Ч А Л Е  С Б О Р А  И Н Ф О Р М А Ц И И -->

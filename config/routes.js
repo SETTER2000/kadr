@@ -86,7 +86,7 @@ module.exports.routes = {
     /**
      * Тестовые роуты
      */
-
+    //'GET /test' : 'EmergenceController.test',
 
 
     /**
@@ -125,7 +125,6 @@ module.exports.routes = {
     'POST /vacation/get-intersections-user': 'VacationController.getIntersectionsUser',
 
 
-
     'POST /vacation/:id/chat': 'VacationController.chat',
     'PUT  /vacation/:id/join': 'VacationController.joinChat',
     'PUT  /vacation/:id/typing': 'VacationController.typing',
@@ -161,6 +160,7 @@ module.exports.routes = {
     // 'GET /emergence/max-year':    'EmergenceController.maxYear',
     // 'GET /emergence/min-year':    'EmergenceController.minYear',
     // 'GET /emergence/to-years':    'EmergenceController.getHolidaysToYears',
+     'GET /emergence/logSender/:id':    'EmergenceController.getLogSender',
 
     //'POST /schedule/:id/chat':          'ScheduleController.chat',
     //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',
@@ -267,9 +267,9 @@ module.exports.routes = {
     /**
      * Emergence
      */
-    'GET    /emergences':     'EmergenceController.get',
+    'GET    /emergences': 'EmergenceController.get',
     'GET    /emergences/:id': 'EmergenceController.get',
-    'POST   /emergences':     'EmergenceController.create', // создать запись
+    'POST   /emergences': 'EmergenceController.create', // создать запись
     'DELETE /emergences/:id': 'EmergenceController.destroy', // удалить
     'PUT    /emergences/:id': 'EmergenceController.update', // обновить
     /*************************************************************
@@ -292,8 +292,6 @@ module.exports.routes = {
     'GET /admin': 'PageController.showHomePage',
 
 
-
-
     'GET /admin/users': 'PageController.getListUserPage',
     'GET /admin/users/administration': 'PageController.showHomePage',
     'GET /admin/users/create': 'PageController.showHomePage',
@@ -310,7 +308,6 @@ module.exports.routes = {
     'GET /admin/positions': 'PageController.showHomePage',
     'GET /admin/employees': 'PageController.showHomePage',
     'GET /admin/furloughs': 'PageController.showHomePage',
-
 
 
     //'GET /admin/users/attendance': 'PageController.showHomePage',
@@ -360,9 +357,6 @@ module.exports.routes = {
     'GET /company/vacations/create/:ownerId/:furloughId': 'PageController.showHomePage',
 
 
-
-
-
     'GET /admin/schedules': 'PageController.showHomePage',
     'GET /admin/schedules/create': 'PageController.showHomePage',
     'GET /admin/schedules/show/:id': 'PageController.showHomePage',
@@ -371,11 +365,11 @@ module.exports.routes = {
 
 
     'GET /admin/emergences/administration': 'PageController.showHomePage',
-    'GET /admin/emergences':          'PageController.showHomePage',
-    'GET /admin/emergences/create':   'PageController.showHomePage',
+    'GET /admin/emergences': 'PageController.showHomePage',
+    'GET /admin/emergences/create': 'PageController.showHomePage',
     'GET /admin/emergences/show/:id': 'PageController.showHomePage',
     'GET /admin/emergences/edit/:id': 'PageController.showHomePage',
-    'GET /admin/emergence/:id':       'PageController.showHomePage',
+    'GET /admin/emergence/:id': 'PageController.showHomePage',
 
 
     //'GET /admin/attendances/calendar': 'PageController.showHomePage',
@@ -398,12 +392,12 @@ module.exports.routes = {
     // Schedule Controller
     'GET /say/schedule/hello': 'ScheduleController.hello',
     'GET /say/schedule/badges': 'ScheduleController.badges',
-     // Schedule Controller
-    'GET /say/vacation/hello':  'VacationController.hello',
+    // Schedule Controller
+    'GET /say/vacation/hello': 'VacationController.hello',
     'GET /say/vacation/badges': 'VacationController.badges',
 
     // Schedule Controller
-    'GET /say/emergence/hello':  'EmergenceController.hello',
+    'GET /say/emergence/hello': 'EmergenceController.hello',
     'GET /say/emergence/badges': 'EmergenceController.badges',
 
 

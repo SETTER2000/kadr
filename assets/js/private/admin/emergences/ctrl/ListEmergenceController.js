@@ -9,7 +9,7 @@
                 return $scope.defaultRows = data.defaultRows;
             });
 
-
+$scope.moment = moment();
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события badges
              */
@@ -121,7 +121,8 @@
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено',
                 title: 'Рассылка сообщений закончена.',
-                startProject: 'Дата выхода сотрудника'
+                startProject: 'Дата запуска проекта',
+                outputEmployee: 'Дата выхода сотрудника',
             };
 
 
@@ -290,6 +291,13 @@
             $scope.filedName = 'lastName';
 
 
+            $scope.goDuble= function () {
+              return $scope.go =($scope.go)? false : true;
+            };
+            
+            
+            
+            
             $scope.$watch('where', function (value) {
 
                 $scope.refresh(value);
