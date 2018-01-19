@@ -2,10 +2,10 @@
     <div class="page-header">
         <h2>{{item.getFullName()}}
             <div class="btn-group-xs pull-right">
-                <a ui-sref="home.admin.schedules" class="btn btn-sm btn-warning">
+                <a ui-sref="home.admin.emergences" class="btn btn-sm btn-warning">
                     <span class="glyphicon glyphicon-list"></span>
                 </a>
-                <a ui-sref="home.admin.schedules.edit({ scheduleId: item.id })" class="btn btn-sm btn-warning">
+                <a ui-sref="home.admin.emergences.edit({ emergenceId: item.id })" class="btn btn-sm btn-warning">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
             </div>
@@ -15,26 +15,123 @@
         <div class=" col-md-12">
             <table class="table">
                 <tr>
-                    <th>Наименование</th>
+                    <th>Заявка</th>
                     <td>{{item.name }}</td>
                 </tr>
                 <tr>
-                    <th>Год</th>
-                    <td>{{item.getYear()}}</td>
+                    <th>Дата выхода сотрудника</th>
+                    <td>{{item.outputEmployee | date:"dd.MM.yyyy"}}</td>
                 </tr>
                 <tr>
-                    <th>Статус</th>
-                    <td>{{item.status}}</td>
+                    <th>Должность по штатному расписанию</th>
+                    <td>{{item.post}}</td>
+                </tr>
+                <tr>
+                    <th>Руководитель</th>
+                    <td>{{item.boss}}</td>
+                </tr>
+                <tr>
+                    <th>Права в DAX</th>
+                    <td>{{item.dax}}</td>
+                </tr>
+                <tr>
+                    <th>Местоположение</th>
+                    <td>{{item.location}}</td>
+                </tr>
+                <tr>
+                    <th>Комната</th>
+                    <td>{{item.room}}</td>
+                </tr>
+                <tr>
+                    <th>Телефон</th>
+                    <td>
+                        <div ng-switch on="item.phone">
+                            <div ng-switch-when="true">Нужен</div>
+                            <div ng-switch-default>Не нужен</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Мобильный</th>
+                    <td>
+                        <div ng-switch on="item.mobile">
+                            <div ng-switch-when="true">Нужен</div>
+                            <div ng-switch-default>Не нужен</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Удалённый доступ</th>
+                    <td>
+                        <div ng-switch on="item.remote">
+                            <div ng-switch-when="true">Нужен</div>
+                            <div ng-switch-default>Не нужен</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Визитки</th>
+                    <td>
+                        <div ng-switch on="item.bussinescard">
+                            <div ng-switch-when="true">Нужны</div>
+                            <div ng-switch-default>Не нужны</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Дополнительное требование</th>
+                    <td>{{item.extra}}</td>
+                </tr>
+                <tr>
+                    <th>Кадры. Начать обработку</th>
+                    <td>{{item.location}}</td>
+                </tr>
+                <tr>
+                    <th>Кадры. Отклонить заявку</th>
+                    <td>{{item.location}}</td>
+                </tr>
+                <!--<tr>-->
+                    <!--<th>Кадры. Комментарии</th>-->
+                    <!--<td>{{item.location}}</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<th>Финотдел. Коментарии</th>-->
+                    <!--<td>{{item.location}}</td>-->
+                <!--</tr>-->
+                <tr>
+                    <th>Финотдел. Выполнено</th>
+                    <td>{{item.location}}</td>
+                </tr>
+                <tr>
+                    <th>АХО. Выполнено</th>
+                    <td>{{item.location}}</td>
+                </tr>
+                <tr>
+                    <th>IT отдел. Выполнено</th>
+                    <td>{{item.location}}</td>
+                </tr>
+                <tr>
+                    <th>Help-Desk. Выполнено</th>
+                    <td>{{item.location}}</td>
+                </tr>
+                <tr>
+                    <th>Кадры. Обработка завершена</th>
+                    <td>{{item.location}}</td>
                 </tr>
 
                 <tr>
-                    <th><span class="pull-left"> С <md-tooltip md-direction="right">Начало запуска графика отпусков</md-tooltip></span></th>
-                    <td>{{item.from | date:'dd.MM.yyyy'}}</td>
+                    <th>Статус заявки</th>
+                    <td>{{item.status}}</td>
                 </tr>
-                <tr>
-                    <th><span class="pull-left"> По <md-tooltip md-direction="right">Конец запуска графика отпусков</md-tooltip></span></th>
-                    <td>{{item.to | date:'dd.MM.yyyy'}}</td>
-                </tr>
+
+                <!--<tr>-->
+                <!--<th><span class="pull-left"> С <md-tooltip md-direction="right">Начало запуска графика отпусков</md-tooltip></span></th>-->
+                <!--<td>{{item.from | date:'dd.MM.yyyy'}}</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                <!--<th><span class="pull-left"> По <md-tooltip md-direction="right">Конец запуска графика отпусков</md-tooltip></span></th>-->
+                <!--<td>{{item.to | date:'dd.MM.yyyy'}}</td>-->
+                <!--</tr>-->
                 <!--<tr>-->
                 <!--<th>Должность</th>-->
                 <!--<td>{{item.position | json}}</td>-->
@@ -43,33 +140,37 @@
                 <!--<th>Отдел</th>-->
                 <!--<td>{{item.subdivision | json}}</td>-->
                 <!--</tr>-->
-                <tr ng-if="item.daysSelectHoliday">
-                    <th>Кол-во дней</th>
-                    <td>{{item.daysSelectHoliday}}</td>
-                </tr>
+                <!--<tr ng-if="item.daysSelectHoliday">-->
+                <!--<th>Кол-во дней</th>-->
+                <!--<td>{{item.daysSelectHoliday}}</td>-->
+                <!--</tr>-->
 
                 <tr ng-if="item.whomCreated">
-                    <th>Создал</th>
-                    <td>{{item.whomCreated.lastName}} {{item.whomCreated.firstName}} {{item.whomCreated.patronymicName}} </td>
+                    <th>Создал заявку</th>
+                    <td>{{item.whomCreated.lastName}} {{item.whomCreated.firstName}} {{item.whomCreated.patronymicName}}, {{item.createdAt |
+                        date: "dd.MM.yyyy HH:mm"}}
+                    </td>
                 </tr>
 
                 <tr ng-if="item.whomUpdated">
-                    <th>Обновил</th>
-                    <td> {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName}} {{item.whomUpdated.patronymicName}}</td>
+                    <th>Обновил заявку</th>
+                    <td> {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName}} {{item.whomUpdated.patronymicName}}, {{item.updatedAt
+                        | date: "dd.MM.yyyy HH:mm"}}
+                    </td>
                 </tr>
 
-                <tr ng-if="item.createdAt">
-                    <th>Создан</th>
-                    <td>{{item.createdAt | date: "dd.MM.yyyy HH:mm"}}</td>
-                </tr>
-                <tr ng-if="item.updatedAt">
-                    <th>Обновлён</th>
-                    <td>{{item.updatedAt | date: "dd.MM.yyyy HH:mm"}}</td>
-                </tr>
-                <tr ng-if="item.start">
-                    <th>Запустить рассылку</th>
-                    <td>{{item.start | date: "dd.MM.yyyy HH:mm"}}</td>
-                </tr>
+                <!--<tr ng-if="item.createdAt">-->
+                <!--<th>Создана</th>-->
+                <!--<td>{{item.createdAt | date: "dd.MM.yyyy HH:mm"}}</td>-->
+                <!--</tr>-->
+                <!--<tr ng-if="item.updatedAt">-->
+                <!--<th>Обновлена</th>-->
+                <!--<td>{{item.updatedAt | date: "dd.MM.yyyy HH:mm"}}</td>-->
+                <!--</tr>-->
+                <!--<tr ng-if="item.start">-->
+                <!--<th>Запустить рассылку</th>-->
+                <!--<td>{{item.start | date: "dd.MM.yyyy HH:mm"}}</td>-->
+                <!--</tr>-->
 
                 <tr>
                     <th colspan="20"></th>

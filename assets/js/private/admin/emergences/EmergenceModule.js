@@ -25,15 +25,15 @@ angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMater
                     }
                 }
             })
-            //.state('home.admin.emergence', {
-            //    url: '/emergence/:emergenceId',
-            //    views: {
-            //        '@': {
-            //            templateUrl: '/js/private/admin/emergences/tpl/show.tpl.html',
-            //            controller: 'EmergenceController'
-            //        }
-            //    }
-            //})
+            .state('home.admin.emergence', {
+                url: '/emergence/:emergenceId',
+                views: {
+                    '@': {
+                        templateUrl: '/js/private/admin/emergences/tpl/show.tpl.html',
+                        controller: 'EmergenceController'
+                    }
+                }
+            })
             .state('home.admin.emergences.create', {
                 url: '/create/:emergenceId',
                 views: {

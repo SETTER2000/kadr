@@ -4,6 +4,12 @@ angular.module('EmergenceModule')
         function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Emergences, moment, Positions, Departments, Vacations, Users, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             $scope.edit = $state.includes('home.admin.emergences.edit');
+            $scope.titles = {
+                startKadr: 'Начать обработку - ',
+                kadrValid: 'Отклонить заявку - ',
+                check:'Выполнено - ',
+                //kadr:'Кадры. Начать обработку - ',
+            };
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -496,9 +502,9 @@ angular.module('EmergenceModule')
             $scope.dateOpts2 = {
                 locale: info.ru,
                 //mode: "range",
-                 time_24hr: true,
-                 enableTime: true,
-                 dateFormat: info.dateTimeFormat,
+                time_24hr: true,
+                enableTime: true,
+                dateFormat: info.dateTimeFormat,
                 //dateFormat: info.dateFormat,
                 //minDate: info.minDate
                 minDate: 'today', // минимальная дата
@@ -669,7 +675,7 @@ angular.module('EmergenceModule')
                 console.log('DDDDD item.outputEmployee', item.outputEmployee);
                 //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
-                item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee,['DD.MM.YYYY'])) : null;
+                item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
                 //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;

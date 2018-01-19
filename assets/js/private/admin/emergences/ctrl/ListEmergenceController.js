@@ -116,6 +116,7 @@ $scope.moment = moment();
                 sevenArea: 'Создал',
                 eightArea: 'Обновил',
                 nineArea: 'Собрано данных',
+                departmentArea:'Отдел',
                 tenArea: 'Обновил',
                 actionArea: 'Активность',
                 createdAtArea: 'Создано',

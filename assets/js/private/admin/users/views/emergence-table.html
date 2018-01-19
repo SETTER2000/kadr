@@ -20,6 +20,16 @@
         </th>
 
 
+        <!-- О Т Д Е Л -->
+        <th>
+            <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('departments[0].name')">
+                {{nameHeader.departmentArea}}
+                <span class="sortOrder" ng-show="propertyName === 'departments[0].name'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+
         <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
         <th class="text-center">
             <button class="btn btn-sm btn-default not-border" ng-click="sortBy('start')">
@@ -139,7 +149,7 @@
                                                     ng-class="{reverse: reverse}"></span>
             </button>
         </th>
-
+        <th></th>
         <!--&lt;!&ndash; К О Н Т А К Т Ы &ndash;&gt;-->
         <!--<th class="wdt">-->
         <!--<div class="btn-group pull-right">-->
@@ -182,11 +192,17 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- F I O -->
         <td>
-            <a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.admin.emergences.edit({emergenceId:item.id})">
+            <a ng-if="(item.status==='Проект' || me.admin)"  ui-sref="home.admin.emergences.edit({emergenceId:item.id})">
                 <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.admin.emergences.edit({id:155})">-->
                 {{item.getFullName()}}
             </a>
             <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.name}}</span>
+        </td>
+
+
+        <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
+        <td>
+            {{item.departments[0].name }}
         </td>
 
 
@@ -217,7 +233,8 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                 <div class="row" style="position: relative">
                     <div class="col-md-12  text-nowrap" style="position: absolute; top:7px;  z-index: 100; min-width: 600px;">
                         <div class="panel panel-success">
-                            <div class="panel-heading   text-left">Сообщения отправлены <a href="#" class="pull-right" ng-click="item.goClose()">x</a></div>
+                            <div class="panel-heading   text-left">Сообщения отправлены <a href="#" class="pull-right"
+                                                                                           ng-click="item.goClose()">x</a></div>
                             <div class="panel-body">
                                 <table class="table table-hover">
                                     <tr ng-repeat="sender in item.logSender">
@@ -256,7 +273,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             </div>
         </td>
 
-        <!-- Д А Т А  З  А П У С К А  П Р О Е К Т А -->
+        <!-- Д А Т А  З А П У С К А  П Р О Е К Т А -->
         <td class="text-center">
             {{item.start | date:"dd.MM.yyyy HH:mm"}}
         </td>
@@ -303,6 +320,13 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         </td>
 
 
+        <!-- B U T T O N -->
+        <td class="btn-group-xs">
+            <a ui-sref="home.admin.emergence({emergenceId:item.id})" class="btn" ng-class="{'btn-primary': !item.fired, ' btn-danger':item.fired}">
+                <span class="glyphicon" ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"
+              aria-hidden="true">  </span>
+            </a>
+        </td>
         <!--&lt;!&ndash; К О Н Т А К Т Ы &ndash;&gt;-->
         <!--<td width="250px" class="text-right">-->
         <!--{{item.getContact(fieldName)}}-->

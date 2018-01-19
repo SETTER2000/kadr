@@ -32,9 +32,7 @@ module.exports = {
         location: {
             type: 'string'
         },
-        remote: {
-            type: 'string'
-        },
+
 
         dax: {
             type: 'string'
@@ -86,6 +84,10 @@ module.exports = {
             defaultsTo: false
         },
         bussinescard: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+        remote: {
             type: 'boolean',
             defaultsTo: false
         },

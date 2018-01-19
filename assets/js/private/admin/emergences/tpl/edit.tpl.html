@@ -93,7 +93,6 @@
                         </div>
 
 
-
                         <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
 
                         <div class="form-group">
@@ -121,7 +120,7 @@
                                 Запуск проекта
                             </label>
                             <div class="input-group">
-                                <input  type="text" required ng-bind="parseExpression()" class="form-control flatpickr"
+                                <input type="text" required ng-bind="parseExpression()" class="form-control flatpickr"
                                        ng-flatpickr
                                        fp-opts="dateOpts2"
                                        fp-on-setup="toggleBlur(item)"
@@ -166,7 +165,7 @@
                             <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ]</span>
                             <div class="form-inline" ng-repeat="department in item.departments">
                                 <div class="form-group">
-                                    <select class="form-control" ng-disabled="edit"  required ng-model="department.id">
+                                    <select class="form-control" ng-disabled="edit" required ng-model="department.id">
                                         <option ng-repeat="option in items| filter:{action:true}" value="{{option.id}}">{{option.name}}
                                         </option>
                                     </select>
@@ -228,7 +227,7 @@
                         <div class="form-group">
                             <label class="control-label">Местоположение</label>
 
-                            <select class="form-control" ng-disabled="edit"  name="repeatSelect" ng-model="item.location">
+                            <select class="form-control" ng-disabled="edit" name="repeatSelect" ng-model="item.location">
                                 <option ng-repeat="option in locations.availableOptions" value="{{option.id}}">{{option.name}}</option>
                             </select>
                         </div>
@@ -237,7 +236,7 @@
 
                         <div class="form-group">
                             <label class="control-label">Комната</label>
-                            <input ng-disabled="edit" type="text" class="form-control"  ng-model="item.room">
+                            <input ng-disabled="edit" type="text" class="form-control" ng-model="item.room">
                         </div>
 
                         <!-- Д О П О Л Н И Т Е Л Ь Н О -->
@@ -259,15 +258,12 @@
                         </div>
 
 
-
-
-
                         <!-- P H O N E -->
 
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit"  ng-model="item.phone" aria-label="Switch 1">
+                                    <md-switch ng-disabled="edit" ng-model="item.phone" aria-label="Switch 1">
                                         <span ng-if="!item.phone">Телефон не нужен</span>
                                         <span ng-if="item.phone">Телефон нужен</span>
                                     </md-switch>
@@ -281,7 +277,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-model="item.remote" aria-label="Switch 2">
+                                    <md-switch ng-disabled="edit" ng-model="item.remote" aria-label="Switch 2">
                                         <span ng-if="!item.remote">Удалённый доступ не нужен</span>
                                         <span ng-if="item.remote">Удалённый доступ нужен</span>
                                     </md-switch>
@@ -295,7 +291,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit"  ng-model="item.mobile" aria-label="Switch 3">
+                                    <md-switch ng-disabled="edit" ng-model="item.mobile" aria-label="Switch 3">
                                         <span ng-if="!item.mobile">Мобильный не нужен</span>
                                         <span ng-if="item.mobile">Мобильный нужен</span>
                                     </md-switch>
@@ -309,13 +305,93 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit"  ng-model="item.bussinescard" aria-label="Switch 4">
+                                    <md-switch ng-disabled="edit" ng-model="item.bussinescard" aria-label="Switch 4">
                                         <span ng-if="!item.bussinescard">Визитки не нужны</span>
                                         <span ng-if="item.bussinescard">Визитки нужны</span>
                                     </md-switch>
                                 </label>
                             </div>
                         </div>
+
+
+
+                        <!-- К А Д Р Ы  Н А Ч А Т Ь  О Б Р А Б О Т К У -->
+                        <div class="panel panel-default" ng-class="{'panel-info':item.startKadr, 'panel-danger': item.kadrValid}">
+                            <div class="panel-heading">  Кадры</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="checkbox">
+
+                                        <label>
+                                            <md-switch ng-model="item.startKadr" aria-label="Switch 4">
+                                                <span ng-if="!item.startKadr">{{titles.startKadr}} нет</span>
+                                                <span ng-if="item.startKadr">{{titles.startKadr}} да</span>
+                                            </md-switch>
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- К А Д Р Ы  О Т К Л О Н И Т Ь  З А Я В К У -->
+
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <md-switch ng-model="item.kadrValid" aria-label="Switch 4">
+                                                <span ng-if="!item.kadrValid">{{titles.kadrValid}} нет</span>
+                                                <span ng-if="item.kadrValid">{{titles.kadrValid}} да</span>
+                                            </md-switch>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О   -->
+                        <div class="panel panel-default" ng-class="{'panel-success':item.finCheck}" >
+                            <div class="panel-heading">  Финансовый отдел</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <md-switch ng-disabled="item.kadrValid" ng-model="item.finCheck" aria-label="Switch 4">
+                                                <span ng-if="!item.finCheck">{{titles.check}} нет</span>
+                                                <span ng-if="item.finCheck">{{titles.check}} да</span>
+                                            </md-switch>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- А Х О  В Ы П О Л Н Е Н О   -->
+                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}" >
+                            <div class="panel-heading">АХО</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <md-switch ng-disabled="item.kadrValid" ng-model="item.ahoCheck" aria-label="Switch 4">
+                                                <span ng-if="!item.ahoCheck">{{titles.check}} нет</span>
+                                                <span ng-if="item.ahoCheck">{{titles.check}} да</span>
+                                            </md-switch>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- С О З Д А Н О   -->
+                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}" >
+                            <div class="panel-heading">Созданы ресурсы</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="control-label">Email</label>
+                                    <input ng-disabled="edit" type="text" class="form-control" ng-model="item.email">
+                                </div>
+                            </div>
+                        </div>
+
+
+
 
 
 
@@ -344,9 +420,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
 
 
                         <div ng-if="(me.admin && item.id)" class="row">
@@ -421,8 +494,8 @@
             <!-- П О Л У Ч А Т Е Л И  П И С Е М -->
             <div class="row">
                 <div class="col-md-12">
-                    <h4 >Адресаты</h4>
-                    <div  ng-controller="ListController" class="form-group ">
+                    <h4>Адресаты</h4>
+                    <div ng-controller="ListController" class="form-group ">
                         <label class="control-label" ng-bind="items[0].sc()"></label>
                         <span ng-if="me.admin">{{filtered.length}}</span>
                         <select ng-disabled="edit" class="form-control" ng-model="item.recipient" multiple>

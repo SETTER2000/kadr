@@ -951,6 +951,7 @@ module.exports = {
                         deleted: false
                     }).exec(function (err, updatedUser) {
                         req.session.me = user.id;
+                        console.log(updatedUser);
                         return res.json(updatedUser);
                     });
                 }
