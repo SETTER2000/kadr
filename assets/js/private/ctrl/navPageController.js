@@ -1,5 +1,9 @@
 angular.module('Holiday').controller('navPageController',
-    ['$location', '$scope', '$http', 'toastr', function ($location, $scope, $http, toastr) {
+    ['$location', '$state','$scope', '$http', 'toastr', function ($location, $state, $scope, $http, toastr) {
+
+        $scope.me = window.SAILS_LOCALS.me;
+        $scope.title=  ($scope.me.admin) ? 'Зайти как сотрудник':'Зайти как админ';
+        //$scope.title=  ($scope.me.kadr) ? 'Зайти как кадровик':'Зайти как сотрудник';
 
         $scope.signOut = function () {
             $http.post('/logout')
@@ -16,6 +20,43 @@ angular.module('Holiday').controller('navPageController',
                 });
         };
 
+
+        $scope.goRightSwitch = function () {
+            // /user/right-switch
+
+            if (!$scope.me.admin) $state.go('home');
+            console.log('FFF',$scope.me);
+
+            var theRoute = '/user/right-switch';
+            // Submit PUT request to Sails.
+            $http.put(theRoute, {
+                    id: 1
+                })
+                .then(function onSuccess(sailsResponse) {
+
+                    // Notice that the sailsResponse is an array and not a single object
+                    // The .update() model method returns an array and not a single record.
+                    // window.location = '#/profile/' + sailsResponse.data[0].id;
+
+                    // $scope.editProfile.loading = false;
+                    toastr.success('Ok!');
+                    if (!$scope.me.admin) $state.go('home');
+                    window.location = '/';
+                    //console.log('sailsResponse: ', sailsResponse);
+                })
+                .catch(function onError(sailsResponse) {
+                    // console.log(sailsResponse);
+                    // Otherwise, display generic error if the error is unrecognized.
+                    $scope.editProfile.errorMsg = 'Произошла непредвиденная ошибка: ' + (sailsResponse.data || sailsResponse.status);
+
+                })
+                .finally(function eitherWay() {
+                    $scope.editProfile.loading = false;
+                });
+
+
+
+        };
         $scope.loginForm = {};
 
         $scope.me = window.SAILS_LOCALS.me;

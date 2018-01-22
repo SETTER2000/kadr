@@ -7,7 +7,7 @@ angular.module('EmergenceModule')
             $scope.titles = {
                 startKadr: 'Начать обработку - ',
                 kadrValid: 'Отклонить заявку - ',
-                check:'Выполнено - ',
+                check: 'Выполнено - ',
                 //kadr:'Кадры. Начать обработку - ',
             };
             var info = {
@@ -60,48 +60,114 @@ angular.module('EmergenceModule')
             //$scope.year = moment().get('year');
 
             $scope.examples = [
-                {
-                    description: 'Уведомление о начале сбора информации',
-                    name: '№2',
-                    tmpl: 'Шаблон №2 - нет вариантов'
-                },
-                {
-                    description: 'Уведомление о начале сбора информации',
-                    name: '№3',
-                    tmpl: 'Шаблон №3 - нет вариантов'
-                },
-                {
-                    description: 'Уведомление о начале сбора информации',
-                    name: '№4',
-                    tmpl: 'Шаблон №4 - нет вариантов'
-                }
+                //{
+                //    description: 'Уведомление о начале сбора информации',
+                //    name: '№2',
+                //    tmpl: 'Шаблон №2 - нет вариантов'
+                //},
+                //{
+                //    description: 'Уведомление о начале сбора информации',
+                //    name: '№3',
+                //    tmpl: 'Шаблон №3 - нет вариантов'
+                //},
+                //{
+                //    description: 'Уведомление о начале сбора информации',
+                //    name: '№4',
+                //    tmpl: 'Шаблон №4 - нет вариантов'
+                //}
             ];
 
             $scope.to = '';
-            $scope.$watch('item.start', function (val, old) {
-                $scope.start = val;
+            //$scope.$watch('item.via', function (val, old) {
+            //   if(val) {
+            //       var CurrentTime = new Date();
+            //       CurrentTime.setMinutes(CurrentTime.getMinutes() + +val);
+            //       console.log(CurrentTime.getHours()+":"+CurrentTime.getMinutes());
+            //       console.log(CurrentTime);
+            //       $scope.item.start = CurrentTime;
+            //   }
+            //});
+            //$scope.examples[0] = {
+            //    description: 'Уведомление о выходе нового сотрудника',
+            //    outputEmployee:'',
+            //    name: '№1',
+            //    tmpl: '<h1>Уважаемые, коллеги!</h1>' +
+            //    '<p> Планируется выход нового сотрудника - '+$scope.item.getFullName()+' в '+$scope.otdel+' на должность Инженер по предпродажной подготовке. </p>' +
+            //    '<p>Предполагаемая дата выхода - '+ moment($scope.outputEmployee, ['DD.MM.YYYY']).format('DD.MM.YYYY')+'. </p>' +
+            //    '<p>Ссылка на заявку -  <a href="http://corp/beta/user.php">'+$scope.item.getFullName()+'</a></p>'
+            //};
+            $scope.otdel = ' <mark>Отдел не указан</mark> ';
+            $scope.post = ' <mark>Должность не указана</mark> ';
+            $scope.outputEmployee = ' <mark>Дата выхода не указана</mark> ';
+            $scope.fullName = ' <mark>FIO не указано</mark> ';
+            $scope.setData = function () {
+                $scope.examples[0] = {
+                    description: 'Уведомление о выходе нового сотрудника',
+                    outputEmployee: '',
+                    name: '№1',
+                    tmpl: '<h1>Уважаемые, коллеги!</h1>' +
+                    '<p> Планируется выход нового сотрудника - ' + $scope.fullName + '  в ' + $scope.otdel + ' на должность ' + $scope.post + '. </p>' +
+                    '<p>Предполагаемая дата выхода - ' + moment($scope.outputEmployee, ['DD.MM.YYYY']).format('DD.MM.YYYY') + '. </p>' +
+                    '<p>Ссылка на заявку -  <a href="http://kadr/">' + $scope.fullName + '</a></p>'
+                };
+            };
+
+            $scope.$watch('item.departments[0].id', function (val, old) {
                 if (val) {
-                    $scope.examples2[0] = {
-                        description: 'Дополнительное уведомление о не заполненной информации.',
-                        name: '№1',
-                        tmpl: '<h1>Уважаемый коллега!</h1> ' +
-                        '<p>Вы не заполнили график отпусков на следующий календарный год. Просьба проделать данную работу до <b></b></p>'
+                    Departments.get({id: val},
+                        function (ems) {
+                            console.log('EDIT EMERGENCE *******', ems);
+                            $scope.otdel = ems.name;
+                            $scope.setData();
+                            $scope.apply();
+                        }, function (err) {
+                            console.log('ERRRR PRO:', err);
+                        }
+                    );
 
-                    };
+                    //$scope.examples2[0] = {
+                    //    description: 'Дополнительное уведомление о не заполненной информации.',
+                    //    name: '№1',
+                    //    tmpl: '<h1>Уважаемый коллега!</h1> ' +
+                    //    '<p>Вы не заполнили график отпусков на следующий календарный год. Просьба проделать данную работу до <b></b></p>'
+                    //
+                    //};
 
-                    $scope.examples[0] = {
-                        description: 'Уведомление о начале сбора информации',
-                        name: '№1',
-                        tmpl: '<h1>Уважаемые коллеги!</h1> ' +
-                        '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в ' + ($scope.year + 1) + ' году ' +
-                        'Генеральным директором подписан приказ о подготовке графика отпусков на ' + ($scope.year + 1) + ' год.</p> ' +
-                        '<p>Коллеги, прошу  в срок до  <b>' + moment($scope.start, ['DD.MM.YYYY']).format('DD.MM.YYYY') + ' </b> ' +
-                        'запланировать свои отпуска на ' + ($scope.year + 1) + ' год и внести информацию в единую информационную систему по ' +
-                        'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>' +
-                        '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
-                    };
+
                 }
             });
+            $scope.$watch('item.post', function (val, old) {
+                if (val) {
+                    $scope.post = val;
+                    $scope.setData();
+                }
+            });
+            $scope.$watch('item.outputEmployee', function (val, old) {
+                if (val) {
+                    $scope.outputEmployee = val;
+                    $scope.setData();
+                }
+            });
+            $scope.$watch('item.lastName', function (val, old) {
+                if (val) {
+                    $scope.fullName = $scope.item.getFullName();
+                    $scope.setData();
+                }
+            });
+            $scope.$watch('item.firstName', function (val, old) {
+                if (val) {
+                    $scope.fullName = $scope.item.getFullName();
+                    $scope.setData();
+                }
+            });
+            $scope.$watch('item.patronymicName', function (val, old) {
+                if (val) {
+                    $scope.fullName = $scope.item.getFullName();
+                    $scope.setData();
+                }
+            });
+
+
             $scope.examples2 = [
                 {
                     description: 'Дополнительное уведомление о не заполненной информации.',
@@ -671,8 +737,8 @@ angular.module('EmergenceModule')
 
             var reversValue = function (item) {
                 var u = item.start;
-                console.log('DDDDD item.start', item.start);
-                console.log('DDDDD item.outputEmployee', item.outputEmployee);
+                //console.log('DDDDD item.start', item.start);
+                //console.log('DDDDD item.outputEmployee', item.outputEmployee);
                 //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
                 item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
@@ -708,11 +774,17 @@ angular.module('EmergenceModule')
             $scope.saveEdit = function (item) {
                 item = reversValue(item);
                 console.log('ITEM START', item);
+
                 // console.log('********************************Перед созданием', item);
+                if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска проекта"', 'не заполнено'), info.error(5811));
+                if (!item.recipient) return toastr.error(info.filedErr('"Адресаты"', 'не заполнено'), info.error(4028));
                 if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
-                if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
+                //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
-                if (!item.start) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнено'), info.error(5828));
+                if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
+
+
+                //if (!item.start)
 
 
                 if (angular.isDefined(item.id)) {
@@ -745,6 +817,9 @@ angular.module('EmergenceModule')
                             }
                             item.htmlData = ar;
                         }
+                        if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
+
+
                         if (angular.isDefined(item.htmlData2)) {
                             for (let key in item.htmlData2) {
                                 ar2.push(item.htmlData2[key]);

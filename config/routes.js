@@ -43,6 +43,7 @@ module.exports.routes = {
     'PUT /user/change-password': 'UserController.changePasswordProfile',
     'PUT /user/generate-recovery-email': 'UserController.generateRecoveryEmail',
     'PUT /user/update-admin/:id': 'UserController.updateAdmin',
+    'PUT /user/right-switch': 'UserController.setRightSwitch',
 
     'PUT /user/update-matching/:id': 'UserController.updateMatching',
     'POST /user/add-matching': 'UserController.addMatching',

@@ -1,7 +1,7 @@
 angular.module('DashboardModule')
-//.constant('baseUrl', 'http://localhost:1337')
-    .controller('DashboardController', ['$scope', '$window','$state', '$stateParams', 'Users', 'toastr', '$resource','$rootScope',
-        function ($scope, $window,$state, $stateParams, Users, toastr, $resource,$rootScope) {
+    //.constant('baseUrl', 'http://localhost:1337')
+    .controller('DashboardController', ['$scope', '$window', '$state', '$stateParams', 'Users', 'toastr', '$resource', '$rootScope',
+        function ($scope, $window, $state, $stateParams, Users, toastr, $resource, $rootScope) {
             // $scope.deleteEdit = function () {
             //     // $emit - отправка события от текущего scope к родительским scope
             //     // $scope.$emit("deleteUser", item);
@@ -15,7 +15,7 @@ angular.module('DashboardModule')
             // };
             //$scope.itemsResource = $resource(baseUrl);
 
-            console.log($window.SAILS_LOCALS.me);
+            //console.log($window.SAILS_LOCALS.me);
             $scope.data = $window.SAILS_LOCALS.me;
 
             $scope.sendRequest = function () {
@@ -35,7 +35,7 @@ angular.module('DashboardModule')
                     if (err) console.log(err.message);
                 });
             };
-            
+
             function fullfilled(response) {
                 console.log('Status: ' + response.status);
                 console.log('Type: ' + response.headers('content-type'));

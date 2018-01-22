@@ -492,7 +492,7 @@ module.exports = {
                             brandCar: req.param('brandCar'),
                             dateInWork: req.param('dateInWork'),
                             lastLoggedIn: new Date(),
-                            notice:[
+                            notice: [
                                 {name: 'Уведомление о начале сбора информации.', order: 1, value: true},
                                 {name: 'Дополнительное уведомление о не заполненной информации по отпуску.', oreder: 2, value: false}
                             ]
@@ -835,7 +835,7 @@ module.exports = {
             avatarUrl: req.param('avatarUrl'),
             room: req.param('room'),
             furlough: req.param('furlough'),
-            notice:req.param('notice')
+            notice: req.param('notice')
         };
 
         //console.log('Param ID: ', req.param('id'));
@@ -1072,8 +1072,11 @@ module.exports = {
      */
     updateAdmin: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
+
         User.update(req.param('id'), {
-            admin: req.param('admin')
+            admin: req.param('admin'),
+            rightSwitch: req.param('admin')
         }).exec(function (err, update) {
             if (err) return res.negotiate(err);
             return res.ok();
@@ -1110,6 +1113,33 @@ module.exports = {
     //        return res.ok();
     //    });
     //},
+
+
+    /**
+     * Переключение в режим сотрудника и обратно
+     * @param req
+     * @param res
+     */
+    setRightSwitch: function (req, res) {
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        //console.log('FASSS', req.session.me);
+        User.findOne({id: req.session.me}).exec((err, findOne)=> {
+            if (err) return res.serverError(err);
+            if (!findOne) return res.badRequest();
+
+            //console.log('DASS findOne', findOne);
+            if (!findOne.rightSwitch) return res.badRequest();
+            
+            var admin = (findOne.admin) ? false : true;
+            User.update({id: req.session.me}, {
+                admin: admin
+            }).exec(function (err, update) {
+                if (err) return res.negotiate(err);
+                return res.ok();
+            });
+        });
+    },
+
 
     /**
      * Установка пользователю состояния активации (action)
@@ -1356,7 +1386,6 @@ module.exports = {
     },
 
 
-
     /**
      * Обновить оповещающего пользователю
      * @param req
@@ -1499,14 +1528,14 @@ module.exports = {
             });
     },
 
- /**
+    /**
      * Обновить 'кол-во строк в таблице' пользователю
      * @param req
      * @param res
      */
     updateDefaultRows: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-     //console.log('req in', req.param('defaultRows'));
+        //console.log('req in', req.param('defaultRows'));
         User.update(req.session.me, {
                 defaultRows: req.param('defaultRows')
             })

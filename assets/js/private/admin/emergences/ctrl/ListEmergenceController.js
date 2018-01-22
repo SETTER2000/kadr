@@ -3,7 +3,8 @@
     angular.module('EmergenceModule')
         .controller('ListEmergenceController', ['$scope', '$location', 'ngDialog', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Emergences',  '$window', function ($scope, $location, ngDialog, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, Emergences) {
             $scope.me = window.SAILS_LOCALS.me;
-            if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
+            if (!$scope.me.admin) $state.go('home');
+            //if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             $scope.$on('defaultRowsTable', function (event, data) {
                 console.log('defaultRowsTable', data); // Данные, которые нам прислали
                 return $scope.defaultRows = data.defaultRows;

@@ -46,6 +46,12 @@ module.exports = {
         firstName: {
             type: 'string'
         },
+        phoneNumber: {
+            type: 'string'
+        },
+        email: {
+            type: 'string'
+        },
         patronymicName: {
             type: 'string'
         },

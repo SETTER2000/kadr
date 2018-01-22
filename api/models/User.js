@@ -76,7 +76,10 @@ module.exports = {
         leader: {
             type: 'boolean'
         },
-
+        rightSwitch:{
+            type: 'boolean',
+            defaultsTo: false
+        },
         birthday: {
             type: 'date',
             defaultsTo: null

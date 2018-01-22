@@ -19,8 +19,8 @@
 
                     <li ng-if="(!me.admin && !me.kadr)"><a ui-sref="home.company.vacations">Отпуска</a></li>
 
-                    <li  ng-if="(me.admin)" class="dropdown">
-                        <div  ng-show="bdgs.length" class="badges-position">
+                    <li ng-if="(me.admin)" class="dropdown">
+                        <div ng-show="bdgs.length" class="badges-position">
                             <div class="badge danger" ng-mouseover="clickToOpen()">
                                 {{bdgs.length}}
                             </div>
@@ -28,12 +28,12 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button">
                             Руководство<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a  ui-sref="home.admin.emergences">Выход нового сотрудника</a></li>
+                            <li><a ui-sref="home.admin.emergences">Выход нового сотрудника</a></li>
                             <!--<li><a ng-if="(me.admin)" ui-sref="home.admin.documents">Документы и отчётность</a></li>-->
                         </ul>
                     </li>
-                    <li  ng-if="(!me.admin && !me.kadr && me.emergence)" class="dropdown">
-                        <div  ng-show="bdgs.length" class="badges-position">
+                    <li ng-if="(!me.admin && !me.kadr && me.emergence)" class="dropdown">
+                        <div ng-show="bdgs.length" class="badges-position">
                             <div class="badge danger" ng-mouseover="clickToOpen()">
                                 {{bdgs.length}}
                             </div>
@@ -41,7 +41,7 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button">
                             Руководство<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a  ui-sref="home.admin.emergences">Выход нового сотрудника</a></li>
+                            <li><a ui-sref="home.company.emergences">Выход нового сотрудника</a></li>
                             <!--<li><a ng-if="(me.admin)" ui-sref="home.admin.documents">Документы и отчётность</a></li>-->
                         </ul>
                     </li>
@@ -79,7 +79,12 @@
                             <li><a ng-if="me.admin" ui-sref="home.admin.users.administration">Группы</a></li>
                         </ul>
                     </li>
-                    <li> </li>
+                    <li ng-if="me.rightSwitch">
+                        <a type="button" class="btn btn-link btn-md pull-right" ng-click="goRightSwitch()" title="{{title}}" >
+                            <span class="glyphicon glyphicon-user"></span>
+                        </a>
+                    </li>
+
                 </ul>
                 <ul ng-show="me.id" class="nav navbar-nav navbar-right">
                     <li class="gravatarSm">
@@ -94,6 +99,7 @@
                             <button class="btn btn-success btn-md" ng-click="signOut()">Выход</button>
                         </form>
                     </li>
+
                 </ul>
             </div>
         </div>
