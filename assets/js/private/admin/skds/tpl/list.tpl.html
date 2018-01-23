@@ -30,23 +30,9 @@
         <div ui-view></div>
         <div ui-view="settings"></div>
     </div>
-    <!--charText: {{charText}}-->
-    <!--searchText: {{searchText}}-->
-    <!--LENGTH: {{charText.length}}-{{searchText.length}}-->
     <div class="row">
         <div class="col-md-9">
             <div class="btn-toolbar" role="toolbar" aria-label="0">
-                <!--<div class="btn-group btn-group-sm " role="group" aria-label="1">-->
-                <!--<button ng-repeat="ch in alfavit"-->
-                <!--ng-click="getCharText(ch)" ng-bind="ch" type="button" class="btn btn-default">-->
-                <!--</button>-->
-                <!--<button ng-click="getCharText(0)" class="btn btn-default" type="button">-->
-                <!--<span class="glyphicon glyphicon-remove"></span>-->
-                <!--</button>-->
-                <!--</div>-->
-                <!--
-                                        get-char-text="getCharText(ch)"-->
-                <!--{{objectName[0]}}-->
                 <alfavit2
                         object-name="objectName"
                         get-char-text="getCharText(ch)"
@@ -62,7 +48,6 @@
                            char-text="charText"
                            get-char-text="getCharText(ch)" ng-cloak >
                 </word-part2>
-
                 <div ng-if="!searchText" ng-repeat="it in arrButton" class="btn-group btn-group-sm"
                      role="group" aria-label="4">
                     <button ng-click="getPage(it.numberPage)" type="button" ng-bind="it.numberPage"

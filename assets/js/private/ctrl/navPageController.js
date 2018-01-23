@@ -3,6 +3,7 @@ angular.module('Holiday').controller('navPageController',
 
         $scope.me = window.SAILS_LOCALS.me;
         $scope.title=  ($scope.me.admin) ? 'Зайти как сотрудник':'Зайти как админ';
+        $scope.titleName=  ($scope.me.admin) ? ' Админ':' Сотрудник';
         //$scope.title=  ($scope.me.kadr) ? 'Зайти как кадровик':'Зайти как сотрудник';
 
         $scope.signOut = function () {

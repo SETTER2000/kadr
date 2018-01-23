@@ -46,24 +46,22 @@
 
     window.SAILS_LOCALS = {
         _csrf: '<%= _csrf %>',
-        me: <%- JSON.stringify(me||null) %>
-
+        me: <%- JSON.stringify(me || null) %>
     };
 
 
     window.SAILS_LOCALS.chats = <%-
-        // Note that by putting these comments inside of the EJS tag, we prevent them from
-        // being sent down to client (i.e. they are boiled away on the server along
-        // with the EJS tags)
-        typeof chats !== 'undefined' ? JSON.stringify(chats) : 'null'
-        // Note that we deliberately use 'null' (a string) because EJS converts the
-        // `null` literal  into empty string (''), which is not what we want (that would
-        // be invalid JS and cause a client-side error in the browser)
+    // Note that by putting these comments inside of the EJS tag, we prevent them from
+    // being sent down to client (i.e. they are boiled away on the server along
+    // with the EJS tags)
+    typeof chats !== 'undefined' ? JSON.stringify(chats) : 'null'
+    // Note that we deliberately use 'null' (a string) because EJS converts the
+    // `null` literal  into empty string (''), which is not what we want (that would
+    // be invalid JS and cause a client-side error in the browser)
     %>;
 
 
 </script>
-
 
 <!--SCRIPTS-->
 <script src="/js/dependencies/sails.io.js"></script>
@@ -115,9 +113,11 @@
 <script src="/js/private/admin/vacations/VacationModule.js"></script>
 <script src="/js/public/signup/SignupModule.js"></script>
 <script src="/js/private/admin/users/UserModule.js"></script>
+<script src="/js/private/company/departments/DepartmentFModule.js"></script>
 <script src="/js/private/company/users/UserFModule.js"></script>
 <script src="/js/private/company/furloughs/FurloughFModule.js"></script>
 <script src="/js/private/company/vacations/VacationFModule.js"></script>
+<script src="/js/private/company/emergences/EmergenceFModule.js"></script>
 <script src="/js/private/admin/AdminModule.js"></script>
 <script src="/js/private/company/CompanyModule.js"></script>
 <script src="/js/public/homepage/HomepageModule.js"></script>
@@ -160,10 +160,15 @@
 <script src="/js/private/admin/users/ctrl/ListController.js"></script>
 <script src="/js/private/admin/users/ctrl/UploaderController.js"></script>
 <script src="/js/private/admin/users/ctrl/UserController.js"></script>
+<script src="/js/private/admin/vacations/ctrl/AdministrationVacationController.js"></script>
 <script src="/js/private/admin/vacations/ctrl/EditVacationController.js"></script>
 <script src="/js/private/admin/vacations/ctrl/ListVacationController.js"></script>
 <script src="/js/private/admin/vacations/ctrl/VacationController.js"></script>
 <script src="/js/private/company/ctrl/CompanyController.js"></script>
+<script src="/js/private/company/departments/ctrl/ListDepartmentFController.js"></script>
+<script src="/js/private/company/emergences/ctrl/EditEmergenceFController.js"></script>
+<script src="/js/private/company/emergences/ctrl/EmergenceFController.js"></script>
+<script src="/js/private/company/emergences/ctrl/ListEmergenceFController.js"></script>
 <script src="/js/private/company/furloughs/ctrl/EditFurloughFController.js"></script>
 <script src="/js/private/company/furloughs/ctrl/FurloughFController.js"></script>
 <script src="/js/private/company/furloughs/ctrl/ListFurloughFController.js"></script>
@@ -197,7 +202,6 @@
     $(function () {
         $('[data-toggle="popover"]').popover();
     });
-
 
 
 </script>

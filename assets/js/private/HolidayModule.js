@@ -20,10 +20,11 @@ angular.module('Holiday', [
         'AdminModule',
         'ngMaterial',
 
-
+        'DepartmentFModule',
         'UserFModule',
         'FurloughFModule',
         'VacationFModule',
+        'EmergenceFModule',
         'CompanyModule'
     ])
     // .constant("baseUrl", "http://localhost\\:1337")

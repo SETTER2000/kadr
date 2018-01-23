@@ -192,11 +192,11 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- F I O -->
         <td class="text-nowrap">
-            <a ng-if="(item.status==='Проект' || me.admin)"  ui-sref="home.admin.emergences.edit({emergenceId:item.id})">
-                <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.admin.emergences.edit({id:155})">-->
+            <a ng-if="(item.status==='Проект' || me.admin)"  ui-sref="home.company.emergences.edit({emergenceId:item.id})">
+                <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
                 {{item.getFullName()}}
             </a>
-            <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.name}}</span>
+            <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.getFullName()}}</span>
         </td>
 
 
@@ -322,7 +322,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- B U T T O N -->
         <td class="btn-group-xs">
-            <a ui-sref="home.admin.emergence({emergenceId:item.id})" class="btn" ng-class="{'btn-primary': !item.fired, ' btn-danger':item.fired}">
+            <a ui-sref="home.company.emergence({emergenceId:item.id})" class="btn" ng-class="{'btn-primary': !item.fired, ' btn-danger':item.fired}">
                 <span class="glyphicon" ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"
               aria-hidden="true">  </span>
             </a>

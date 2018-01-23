@@ -26,6 +26,9 @@
                 <!--<button ui-sref="home.admin.users.create" type="button" class="btn btn-warning">-->
                 <!--<span class="glyphicon glyphicon-plus"></span>-->
                 <!--</button>-->
+                <button ng-if="me.admin" ui-sref="home.admin.vacations.administration" type="button" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                </button>
             </div>
         </h2>
 
@@ -75,22 +78,9 @@
         <div ui-view></div>
         <div ui-view="settings"></div>
     </div>
-    <!--charText: {{charText}}-->
-    <!--searchText: {{searchText}}-->
-    <!--LENGTH: {{charText.length}}-{{searchText.length}}-->
     <div class="row">
         <div class="col-md-10">
             <div class="btn-toolbar" role="toolbar" aria-label="0">
-                <!--<div class="btn-group btn-group-sm " role="group" aria-label="1">-->
-                <!--<button ng-repeat="ch in alfavit"-->
-                <!--ng-click="getCharText(ch)" ng-bind="ch" type="button" class="btn btn-default">-->
-                <!--</button>-->
-                <!--<button ng-click="getCharText(0)" class="btn btn-default" type="button">-->
-                <!--<span class="glyphicon glyphicon-remove"></span>-->
-                <!--</button>-->
-                <!--</div>-->
-                <!--
-                                        get-char-text="getCharText(ch)"-->
                 <alfavit
                         object-name="objectName"
                         get-char-text="getCharText(ch)"

@@ -2,8 +2,7 @@
 <div class="col-sm-11  col-md-12  main "  ng-cloak>
     <div class="page-header">
         <h2>
-
-            <span ng-controller="ListEmergenceController">Права доступа к модулю "{{items[0].sc()}}"</span>
+            <span ng-controller="ListVacationController">Права доступа к модулю "{{items[0].scs()}}"</span>
             <!--<a href="#" class="btn btn-success btn-xs disabled" ng-hide="item.fired" role="button">работает c {{item.dateInWork |-->
             <!--date:'dd.MM.yyyy' }}</a>-->
             <!--<a href="#" class="btn btn-danger btn-xs disabled" ng-show="item.fired" role="button">сотрудник уволен {{item.firedDate |-->
@@ -27,7 +26,7 @@
                 <!--<button type="checkbox" ng-click="getMode(t)" title="Режимы" class="btn btn-danger">-->
                 <!--<span class="glyphicon glyphicon-off"></span>-->
                 <!--</button>-->
-                <button ng-if="me.admin" ui-sref="home.admin.emergences" type="button" class="btn btn-warning">
+                <button ng-if="me.admin" ui-sref="home.admin.vacations" type="button" class="btn btn-warning">
                     <span class="glyphicon glyphicon-list"></span>
                 </button>
             </div>
@@ -82,6 +81,7 @@
                     </label>
                 </div>
             </div>
+
             <!-- USERS PAGE -->
             <div class="panel panel-info">
                 <div class="panel-heading">
@@ -143,7 +143,7 @@ orderBy:propertyName:reverse |  limitTo: 1000)">
 
                             <td> {{user.login}}</td>
                             <td> {{user.email}}</td>
-                            <td class="text-center "><input type="checkbox" ng-model="user.emergence" ng-click="saveData(user.id, user.emergence)"></td>
+                            <td class="text-center "><input type="checkbox" ng-model="user.vacation" ng-click="saveData(user.id, user.vacation)"></td>
                             <!--<td><input type="checkbox" ng-model="user.leader" ng-click="saveLeader(user.id, user.leader)"></td>-->
                             <!--<td><input type="checkbox" ng-model="user.kadr" ng-click="saveKadr(user.id, user.kadr)"></td>-->
                             <!--<td><input type="checkbox" ng-model="user.admin" ng-click="saveAdmin(user.id, user.admin)"></td>-->

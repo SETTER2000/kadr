@@ -12,7 +12,7 @@ angular.module('UserFModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial'
                         templateUrl: '/js/private/company/users/tpl/list.tpl.html',
                         controller: 'ListFController'
                     },
-                    "actionView@home.company.users": {templateUrl: '/js/private/company/users/views/home.users.action.html'}
+                    "actionView@home.company.users": {templateUrl: '/js/private/company/users/views/tables.html'}
                 }
             })
             //.state('home.company.users.settings', {

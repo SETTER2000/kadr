@@ -66,7 +66,10 @@ module.exports.routes = {
 
     //'PUT /user/update-leader/:id': 'UserController.updateLeader',
     'PUT /user/update-action/:id': 'UserController.updateAction',
+    'PUT /user/update-emergence-all': 'UserController.updateEmergenceAll',
     'PUT /user/update-emergence/:id': 'UserController.updateEmergence',
+    'PUT /user/update-vacation-all': 'UserController.updateVacationAll',
+    'PUT /user/update-vacation/:id': 'UserController.updateVacation',
     'PUT /user/update-deleted/:id': 'UserController.updateDeleted',
     'PUT /user/updateProfile/:id': 'UserController.updateProfile',
     'PUT /user/updateInterface/:id': 'UserController.updateInterface',
@@ -322,6 +325,13 @@ module.exports.routes = {
     'GET /admin/depart': 'PageController.showHomePage',
     'GET /admin/depart/:id': 'DepartmentController.addDepartment',
 
+    //'GET /company/departments/create': 'PageController.showHomePage',
+    //'GET /company/departments/:id': 'DepartmentController.findOne',
+    ////'GET /company/departments/edit/:id': 'PageController.showHomePage',
+    //'GET /company/department/:id': 'PageController.showHomePage',
+    //'GET /company/depart': 'PageController.showHomePage',
+    //'GET /company/depart/:id': 'DepartmentController.addDepartment',
+
     'GET /admin/positions/:id': 'PositionController.findOne',
     'GET /admin/positions/edit/:id': 'PageController.showHomePage',
     'GET /admin/position/:id': 'PositionController.findOne',
@@ -344,7 +354,7 @@ module.exports.routes = {
     'GET /admin/furloughs/edit/:id': 'PageController.showHomePage',
     'GET /admin/furloughs/create/': 'PageController.showHomePage',
 
-
+    'GET /admin/vacations/administration': 'PageController.showHomePage',
     'GET /admin/vacations': 'PageController.showHomePage',
     'GET /admin/vacations/edit/:id': 'PageController.showHomePage',
     'GET /admin/vacations/create/:ownerId/:furloughId': 'PageController.showHomePage',
@@ -371,6 +381,13 @@ module.exports.routes = {
     'GET /admin/emergences/show/:id': 'PageController.showHomePage',
     'GET /admin/emergences/edit/:id': 'PageController.showHomePage',
     'GET /admin/emergence/:id': 'PageController.showHomePage',
+
+    //'GET /company/emergences/administration': 'PageController.showHomePage',
+    'GET /company/emergences': 'PageController.showHomePage',
+    'GET /company/emergences/create': 'PageController.showHomePage',
+    'GET /company/emergences/show/:id': 'PageController.showHomePage',
+    'GET /company/emergences/edit/:id': 'PageController.showHomePage',
+    'GET /company/emergence/:id': 'PageController.showHomePage',
 
 
     //'GET /admin/attendances/calendar': 'PageController.showHomePage',

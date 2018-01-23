@@ -58,19 +58,29 @@ module.exports = {
         },
 
         deleted: {
-            type: 'boolean'
+            type: 'boolean',
+            defaultsTo: false
         },
 
         admin: {
-            type: 'boolean'
+            type: 'boolean',
+            defaultsTo: false
         },
 
         kadr: {
-            type: 'boolean'
+            type: 'boolean',
+            defaultsTo: false
         },
 
         emergence: {
-            type: 'boolean'
+            type: 'boolean',
+            defaultsTo: false
+        },
+
+        //доступ к модулю отпусков
+        vacation: {
+            type: 'boolean',
+            defaultsTo: false
         },
 
         leader: {

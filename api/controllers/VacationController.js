@@ -29,7 +29,7 @@ module.exports = {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
-
+        console.log('GET ALL PARAMS Vacation:', req.params.all());
         let q = {
             limit: req.param('limit'),
             sort: req.param('sort')

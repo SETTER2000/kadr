@@ -2,6 +2,7 @@ angular.module('DepartmentModule')
     .controller('EditDepartmentController', ['$scope', '$http', 'toastr', '$state', 'Departments', '$stateParams', 'CONF_MODULE_DEPARTMENT',
         function ($scope, $http,toastr, $state, Departments, $stateParams) {
             $scope.me = window.SAILS_LOCALS.me;
+            if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home');
             $scope.edit = $state.includes('home.admin.departments.edit');
             //if (!$scope.me.admin) $location.path('/');
             // $state.transitionTo('admin.users.show.id');

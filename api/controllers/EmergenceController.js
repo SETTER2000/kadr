@@ -26,7 +26,7 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
+        console.log('GET ALL PARAMS Emergence:', req.params.all());
         var q = {
             limit: req.param('limit'),
             sort: req.param('sort')
@@ -54,11 +54,11 @@ module.exports = {
                 .exec(function foundVacation(err, findOneUser) {
                     if (err) return res.serverError(err);
                     if (!findOneUser) return res.notFound();
-                    User.find(q)
-                        .populate('interfaces')
-                        .exec(function foundUser(err, users) {
-                            if (err) return res.serverError(err);
-                            if (!users) return res.notFound();
+                    //User.find(q)
+                    //    .populate('interfaces')
+                    //    .exec(function foundUser(err, users) {
+                    //        if (err) return res.serverError(err);
+                    //        if (!users) return res.notFound();
 
                             /*  {
                              where: { /!* ... *!/ },
@@ -72,7 +72,8 @@ module.exports = {
                              skip: 2353,
                              limit: 25
                              }*/
-                            Emergence.find()
+                    console.log('QQQ:::', q);
+                            Emergence.find(q)
                                 .populate('positions')
                                 .populate('departments')
                                 .populate('whomCreated')
@@ -106,7 +107,7 @@ module.exports = {
                                     res.send(emergences);
                                 });
                         });
-                });
+                //});
         }
     },
     //

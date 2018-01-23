@@ -48,6 +48,15 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
                     }
                 }
             })
+            .state('home.admin.vacations.administration', {
+                url: '/administration',
+                views: {
+                    '@': {
+                        templateUrl: '/js/private/admin/vacations/tpl/administration.tpl.html',
+                        controller: 'AdministrationVacationController'
+                    }
+                }
+            })
         ;
     })
     .constant('CONF_MODULE_VACATION', {baseUrl: '/vacations/:vacationId'})

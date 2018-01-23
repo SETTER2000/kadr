@@ -3,7 +3,7 @@ angular.module('VacationFModule')
     .controller('EditVacationFController', ['$scope', '$http', 'toastr', '$interval', '$state', 'UsersF', 'VacationsF', 'moment', 'Schedules', 'Departments', '$stateParams', 'FileUploader', '$rootScope', 'calendarService',
         function ($scope, $http, toastr, $interval, $state, UsersF, VacationsF, moment, Schedules, Departments, $stateParams, FileUploader, $rootScope, calendarService) {
             $scope.me = window.SAILS_LOCALS.me;
-            if (!$scope.me) $state.go('home');
+            if (!$scope.me || !$scope.me.vacation) return $state.go('home');
             $scope.debug = true;
 
             /**

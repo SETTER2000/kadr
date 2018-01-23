@@ -1,13 +1,14 @@
 'use strict';
-angular.module('EmergenceModule')
-    .controller('EditEmergenceController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'Emergences', 'moment', 'Positions', 'Departments', 'Vacations', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
-        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Emergences, moment, Positions, Departments, Vacations, Users, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
+angular.module('EmergenceFModule')
+    .controller('EditEmergenceFController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'EmergencesF', 'moment',  'Departments','UsersF', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
+        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, EmergencesF, moment,  Departments, UsersF, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
-            if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
-            $scope.edit = $state.includes('home.admin.emergences.edit');
+            if (!$scope.me || !$scope.me.emergence) return $state.go('home');
+            //if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.company.emergences');
+
+            $scope.edit = $state.includes('home.company.emergences.edit');
             $scope.titles = {
                 startKadr: 'Начать обработку - ',
-                endKadr: 'Обработка завершена - ',
                 kadrValid: 'Отклонить заявку - ',
                 check: 'Выполнено - ',
                 //kadr:'Кадры. Начать обработку - ',
@@ -26,7 +27,7 @@ angular.module('EmergenceModule')
                 objectDelete: 'Объект удалён.',
                 newOk: 'Новая заявка на выход сотрудника создана.',
                 passDefault: '111111',
-                redirectSelf: 'home.admin.emergences',
+                redirectSelf: 'home.company.emergences',
                 messageErr: 'Сообщение не установлено!',
                 filedErr: function (nameFiled, text) {
                     if (!angular.isString(text)) return;
@@ -463,7 +464,7 @@ angular.module('EmergenceModule')
              * Запрос кол-ва пользователей в системе
              */
             $scope.getAllUsers = function () {
-                let itemsUsers = $scope.itemsUsers = Users.query({},
+                let itemsUsers = $scope.itemsUsers = UsersF.query({},
                     function (users) {
                         console.log('EDIT USERS EMERGENCE', users);
 
@@ -615,7 +616,7 @@ angular.module('EmergenceModule')
             };
 
             $scope.refresh = function () {
-                let item = $scope.item = Emergences.get({id: $stateParams.emergenceId},
+                let item = $scope.item = EmergencesF.get({id: $stateParams.emergenceId},
                     function (emergences) {
                         console.log('EDIT EMERGENCE *******', emergences);
                         $scope.flatpicker.setDate(emergences.period);
@@ -829,15 +830,15 @@ angular.module('EmergenceModule')
                             item.htmlData2 = ar2;
                         }
                         //toastr.success(info.newOk, info.ok);
-                        //$state.go('home.admin.emergences');
+                        //$state.go('home.company.emergences');
                         item.$save(item, function (success) {
                                 //console.log(success);
                                 //location.reload();
                                 toastr.success(info.newOk);
                                 // /admin/emergence/
                                 //$location.path('/profile') ;
-                                $state.go('home.admin.emergences', {emergenceId: success.id});
-                                //$state.go('home.admin.emergences');
+                                $state.go('home.company.emergences', {emergenceId: success.id});
+                                //$state.go('home.company.emergences');
                             },
                             function (err) {
                                 toastr.error(err.data, info.error(89336));

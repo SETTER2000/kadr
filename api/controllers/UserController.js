@@ -1154,7 +1154,9 @@ module.exports = {
             if (err) return res.negotiate(err);
             return res.ok();
         });
-    }, /**
+    },
+
+    /**
      * Дать/Снять доступ к модулю Emergence (выход нового пользователя)
      * @param req
      * @param res
@@ -1166,6 +1168,55 @@ module.exports = {
             emergence: req.param('emergence')
         }).exec(function (err, update) {
             if (err) return res.negotiate(err);
+            return res.ok();
+        });
+    },
+
+    /**
+     * Дать/Снять доступ к модулю Vacation (отпуска пользователя)
+     * @param req
+     * @param res
+     */
+    updateVacation: function (req, res) {
+        console.log('REG ALLL updateVacation:', req.params.all());
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.update(req.param('id'), {
+            vacation: req.param('vacation')
+        }).exec(function (err, update) {
+            if (err) return res.negotiate(err);
+            return res.ok();
+        });
+    },
+
+    /**
+     * сразу всем Дать/Снять доступ к модулю Vacation  (отпуска пользователя)
+     * @param req
+     * @param res
+     */
+    updateVacationAll: function (req, res) {
+        console.log('REG ALLL updateVacationAll:', req.params.all());
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.update({}, {
+            vacation: req.param('change')
+        }).exec(function (err, update) {
+            if (err) return res.negotiate(err);
+            console.log('update', update.length);
+            return res.ok();
+        });
+    },
+  /**
+     * сразу всем Дать/Снять доступ к модулю Vacation  (отпуска пользователя)
+     * @param req
+     * @param res
+     */
+  updateEmergenceAll: function (req, res) {
+        console.log('REG ALLL updateEmergenceAll:', req.params.all());
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.update({}, {
+            emergence: req.param('change')
+        }).exec(function (err, update) {
+            if (err) return res.negotiate(err);
+            console.log('update', update.length);
             return res.ok();
         });
     },
@@ -1268,7 +1319,11 @@ module.exports = {
     },
 
     adminUsers: function (req, res) {
-        User.find({limit: 1000, sort: 'lastName'}).exec(function (err, users) {
+        User.find({
+            where: { fired: false },
+            limit: 300,
+            sort: 'lastName'
+        }).exec(function (err, users) {
 
             if (err) return res.negotiate(err);
 

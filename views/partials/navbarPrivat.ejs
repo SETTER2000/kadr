@@ -17,7 +17,7 @@
                 <ul class="nav navbar-nav">
 
 
-                    <li ng-if="(!me.admin && !me.kadr)"><a ui-sref="home.company.vacations">Отпуска</a></li>
+                    <li ng-if="(!me.admin && !me.kadr  && me.vacation)"><a ui-sref="home.company.vacations">Отпуска</a></li>
 
                     <li ng-if="(me.admin)" class="dropdown">
                         <div ng-show="bdgs.length" class="badges-position">
@@ -81,7 +81,7 @@
                     </li>
                     <li ng-if="me.rightSwitch">
                         <a type="button" class="btn btn-link btn-md pull-right" ng-click="goRightSwitch()" title="{{title}}" >
-                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="glyphicon glyphicon-user" ng-class="{'glyphicon-king':(titleName===' Админ')}"></span> {{titleName}}
                         </a>
                     </li>
 

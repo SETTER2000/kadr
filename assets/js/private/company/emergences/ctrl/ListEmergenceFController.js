@@ -1,10 +1,10 @@
 (function (angular) {
     'use strict';
-    angular.module('EmergenceModule')
-        .controller('ListEmergenceController', ['$scope', '$location', 'ngDialog', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Emergences', '$window', function ($scope, $location, ngDialog, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, Emergences) {
+    angular.module('EmergenceFModule')
+        .controller('ListEmergenceFController', ['$scope', '$location', 'ngDialog', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'EmergencesF', '$window', function ($scope, $location, ngDialog, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, EmergencesF) {
             $scope.me = window.SAILS_LOCALS.me;
-            if (!$scope.me.admin) return $state.go('home');
-            //if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
+            if (!$scope.me || !$scope.me.emergence) return $state.go('home');
+            //if (!$scope.me.kadr && !$scope.me.company) $state.go('home');
             $scope.$on('defaultRowsTable', function (event, data) {
                 console.log('defaultRowsTable', data); // Данные, которые нам прислали
                 return $scope.defaultRows = data.defaultRows;
@@ -50,7 +50,7 @@
             $scope.clickToOpen = function () {
                 ngDialog.open({
                     showClose: true,
-                    template: '/js/private/admin/emergence/views/popupTmpl.html',
+                    template: '/js/private/company/emergence/views/popupTmpl.html',
                     className: 'ngdialog-theme-default',
                     /**
                      * true - позволяет закрыть модальное окно щёлкнув по оверлейному слою
@@ -86,7 +86,7 @@
                     ariaDescribedById: 'RONA',
                     scope: $scope
                 });
-                //ngDialog.open({ template: '/js/private/admin/emergence/views/popupTmpl.html', className: 'ngdialog-theme-default' });
+                //ngDialog.open({ template: '/js/private/company/emergence/views/popupTmpl.html', className: 'ngdialog-theme-default' });
             };
 
             io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
@@ -131,9 +131,9 @@
             $scope.added = 'Выход нового сотрудника';
             $scope.showBt = 1;
             // показать формочку выбора кол-ва строк на странице
-            $scope.showContIt = ($scope.me.admin) ? 1 : 0;
+            $scope.showContIt = ($scope.me.company) ? 1 : 0;
             $scope.showStr = 0;
-            $scope.urlBt = 'home.admin.emergences.create';
+            $scope.urlBt = 'home.company.emergences.create';
 
             $scope.sort = 'createdAt ASC';// сортировка по умолчанию
             $scope.param = 'lastName';
@@ -197,17 +197,11 @@
 
                 ];
             $scope.modeSelect = $scope.options[0];
-            //$scope.tableView = "/js/private/admin/emergence/views/home.admin.emergence.table.html";
-            //$scope.listView = "/js/private/admin/emergence/views/home.admin.emergence.list.html";
-            //$scope.actionView = "/js/private/admin/emergence/views/home.admin.emergence.action.html";
-            //$scope.workView = "/js/private/admin/emergence/views/home.admin.emergence.work.html";
-            $scope.getLastName = function (item) {
-                $http.post('/att', item)
-                    .then(function (attendance) {
-                        $scope.differ(attendance);
-                        $scope.numPages = Math.floor($scope.items.length / $scope.defaultRows) + 1;
-                    });
-            };
+            //$scope.tableView = "/js/private/company/emergence/views/home.company.emergence.table.html";
+            //$scope.listView = "/js/private/company/emergence/views/home.company.emergence.list.html";
+            //$scope.actionView = "/js/private/company/emergence/views/home.company.emergence.action.html";
+            //$scope.workView = "/js/private/company/emergence/views/home.company.emergence.work.html";
+
 
 
             $scope.loadOptions = function () {
@@ -318,12 +312,13 @@
                     char: $scope.charText + '%'
                 };
 
-                $scope.items = Emergences.query($scope.query, function (emergence) {
+                $scope.items = EmergencesF.query($scope.query, function (emergence) {
                     console.log('EMERGENCE ITEMS:', emergence);
                     $scope.items = emergence;
 
                     $scope.countCurrentView = emergence.length;
                     $scope.objectName = emergence;
+                    //$scope.numPages = Math.floor(emergence.length / $scope.defaultRows) + 1;
                     //$scope.numPages = Math.floor(emergence.length / $scope.defaultRows) + 1;
                 }, function (err) {
                     toastr.error(err.data.details, 'Ошибка77! ' + err.data.message);
@@ -393,8 +388,8 @@
             var breadcrumb = new BreadCrumb();
 
             breadcrumb.set('Home', '/');
-            breadcrumb.set('Admin', '/admin');
-            breadcrumb.set('Emergences', '/admin/' + $state.current.url);
+            breadcrumb.set('Company', '/company');
+            breadcrumb.set('Emergences', '/company/' + $state.current.url);
             $scope.breadcrumbs = breadcrumb;
 
             //$scope.refresh();

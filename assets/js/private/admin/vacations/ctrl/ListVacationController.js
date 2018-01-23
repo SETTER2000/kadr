@@ -455,7 +455,7 @@
                 };
                 //console.log(' MY QUERY:', $scope.query);
                 $scope.items = Vacations.query($scope.query, function (vacations) {
-                    // console.log('Vacations ITEMS22:', vacations);
+                     console.log('Vacations ITEMS:', vacations);
                     $scope.objectName = [];
                     $scope.countCurrentView = vacations.length;
                     //$scope.me.interface = vacations.interfaces[0].year;

@@ -4,7 +4,7 @@
         .controller('ListVacationFController', ['$scope', '$location', 'ngDialog', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'VacationsF', 'logService', 'errorService', 'calendarService',
             function ($scope, $location, ngDialog, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, VacationsF, logService, errorService, calendarService) {
                 $scope.me = window.SAILS_LOCALS.me;
-                //if (!$scope.me.kadr && !$scope.me.company) $state.go('home');
+                if (!$scope.me || !$scope.me.vacation) return $state.go('home');
                 $scope.ownerID = $scope.me.id;
                 /**
                  * PAGINATION
