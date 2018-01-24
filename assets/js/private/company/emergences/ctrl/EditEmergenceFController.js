@@ -9,6 +9,7 @@ angular.module('EmergenceFModule')
             $scope.edit = $state.includes('home.company.emergences.edit');
             $scope.titles = {
                 startKadr: 'Начать обработку - ',
+                endKadr: 'Обработка завершена - ',
                 kadrValid: 'Отклонить заявку - ',
                 check: 'Выполнено - ',
                 //kadr:'Кадры. Начать обработку - ',
@@ -773,15 +774,17 @@ angular.module('EmergenceFModule')
                 ]
             };
 
-
+            var roundingDefault = moment.relativeTimeRounding();
+            moment.relativeTimeThreshold('m', 60);
             $scope.saveEdit = function (item) {
+                item.start = moment().add(2,'minutes');
                 item = reversValue(item);
                 console.log('ITEM START', item);
 
                 // console.log('********************************Перед созданием', item);
                 if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска проекта"', 'не заполнено'), info.error(5811));
-                if (!item.recipient) return toastr.error(info.filedErr('"Адресаты"', 'не заполнено'), info.error(4028));
-                if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
+                //if (!item.recipient) return toastr.error(info.filedErr('"Адресаты"', 'не заполнено'), info.error(4028));
+                //if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
                 //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
@@ -820,7 +823,7 @@ angular.module('EmergenceFModule')
                             }
                             item.htmlData = ar;
                         }
-                        if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
+                        //if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
 
 
                         if (angular.isDefined(item.htmlData2)) {

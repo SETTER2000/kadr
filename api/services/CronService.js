@@ -34,7 +34,7 @@ module.exports = {
                         User.find({action: true, fired: false}).exec((err, usersFind) => {
                             "use strict";
                             if (err) return res.serverError(err);
-                            if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
+                            if (!usersFind) return res.notFound('Schedule. Пользователи для получения рассылки не найдены.');
                             let strEmail = '';
                             if (_.isArray(usersFind) && (usersFind.length > 0)) {
                                 let a = [];
@@ -43,7 +43,7 @@ module.exports = {
                                 });
                                 strEmail = a.join(',');
                             }
-                            sails.log('Email для рассылки: ', strEmail);
+                            sails.log('Schedule. Email для рассылки: ', strEmail);
                             strEmail = (strEmail) ? strEmail : '';
                             let options = {
                                 to: strEmail, // Кому: можно несколько получателей указать через запятую
@@ -53,7 +53,7 @@ module.exports = {
                             };
                             EmailService.sender(options, function (err) {
                                 if (err) return;
-                                console.log('Задача выполнена в: ' + new Date());
+                                console.log('Schedule. Задача выполнена в: ' + new Date());
                                 Schedule.update({id: task.id}, {
                                     worked: true,
                                     status: 'В работе'
@@ -62,7 +62,7 @@ module.exports = {
                                     Schedule.find().exec((err, findsSchedule) => {
                                         if (err) return res.serverError(err);
                                         sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
-                                        sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'рассылка закончена'});
+                                        sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'рассылка закончена'});
                                         console.log('UPDATE OK!');
                                     });
                                 });
@@ -77,7 +77,7 @@ module.exports = {
                                 Schedule.find().exec((err, findsSchedule) => {
                                     if (err) return res.serverError(err);
                                     sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
-                                    sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'повреждён'});
+                                    sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'повреждён'});
                                     return console.log('UPDATE OK+!');
                                 });
                             });
@@ -108,48 +108,43 @@ module.exports = {
                 console.log('Cron tasks1: ', finds.length);
                 _.forEach(finds, function (task) {
                     if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
-                        User.find({action: true, fired: false, id:task.recipient})
-                            .populate('positions')
-                            .populate('departments')
-                            .exec((err, usersFind) => {
-                            "use strict";
-                            if (err) return res.serverError(err);
-                            if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
-                            let strEmail = '';
-                            if (_.isArray(usersFind) && (usersFind.length > 0)) {
-                                let a = [];
-                                _.forEach(usersFind, function (val, key) {
-                                    a.push(val.email);
-                                });
-                                strEmail = a.join(',');
-                            }
-                            sails.log('Email для рассылки: ', strEmail);
-                            strEmail = (strEmail) ? strEmail : '';
-                            if(!task.htmlData.length) return sails.log('Cron Service:',' Ошибка! Задача не отработала. Нет текста для рассылки писем.');
-                            let options = {
-                                to: strEmail, // Кому: можно несколько получателей указать через запятую
-                                subject: ' ✔ ' + task.name, // Тема письма
-                                text: task.htmlData[0].tmpl, // простой текст письма без форматирования
-                                html: task.htmlData[0].tmpl  // html текст письма
-                            };
-                            EmailService.sender(options, function (err) {
-                                if (err) return;
-                                console.log('Задача выполнена в: ' + new Date());
-                                Emergence.update({id: task.id}, {
-                                    worked: true,
-                                    status: 'В работе',
-                                    logSender: usersFind
-                                }).exec((err, upd) => {
-                                    if (err) return res.serverError();
-                                    Emergence.find().exec((err, findsSchedule) => {
-                                        if (err) return res.serverError(err);
-                                        sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
-                                        sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'рассылка закончена'});
-                                        console.log('UPDATE OK!');
-                                    });
+
+                        let strEmail = '';
+                        if (_.isArray(task.recipient) && (task.recipient.length > 0)) {
+                            let a = [];
+                            _.forEach(task.recipient, function (val, key) {
+                                a.push(val.email);
+                            });
+                            strEmail = a.join(',');
+                        }
+
+                        sails.log('Emergence. Email для рассылки: ', strEmail);
+                        strEmail = (strEmail) ? strEmail : '';
+                        if (!task.htmlData.length) return sails.log('Emergence. Cron Service:', ' Ошибка! Задача не отработала. Нет текста для рассылки писем.');
+                        let options = {
+                            to: strEmail, // Кому: можно несколько получателей указать через запятую
+                            subject: ' ✔ ' + task.name, // Тема письма
+                            text: task.htmlData[0].tmpl, // простой текст письма без форматирования
+                            html: task.htmlData[0].tmpl  // html текст письма
+                        };
+                        EmailService.sender(options, function (err) {
+                            if (err) return;
+                            console.log('Emergence. Задача выполнена в: ' + new Date());
+                            Emergence.update({id: task.id}, {
+                                worked: true,
+                                status: 'В работе',
+                                logSender: task.recipient
+                            }).exec((err, upd) => {
+                                if (err) return res.serverError();
+                                Emergence.find().exec((err, findsSchedule) => {
+                                    if (err) return res.serverError(err);
+                                    sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
+                                    sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'рассылка закончена'});
+                                    console.log('UPDATE OK!');
                                 });
                             });
                         });
+
                     } else {
                         if (moment().isAfter(moment(task.start).add(afterMin, 'minutes'))) {
                             Schedule.update({id: task.id}, {
@@ -159,7 +154,7 @@ module.exports = {
                                 Schedule.find().exec((err, findsSchedule) => {
                                     if (err) return res.serverError(err);
                                     sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
-                                    sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'повреждён'});
+                                    sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'повреждён'});
                                     return console.log('UPDATE OK+!');
                                 });
                             });
@@ -221,7 +216,7 @@ module.exports = {
                                     Schedule.find().exec((err, findsSchedule) => {
                                         if (err) return res.serverError(err);
                                         sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
-                                        sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'рассылка закончена'});
+                                        sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'рассылка закончена'});
                                         console.log('UPDATE OK!');
                                     });
                                 });
@@ -236,7 +231,7 @@ module.exports = {
                                 Schedule.find().exec((err, findsSchedule) => {
                                     if (err) return res.serverError(err);
                                     sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
-                                    sails.sockets.broadcast('schedule', 'badges', {badges: upd, action:'повреждён'});
+                                    sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'повреждён'});
                                     return console.log('UPDATE OK+!');
                                 });
                             });

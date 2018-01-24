@@ -22,9 +22,9 @@
 
 
             <div class="btn-group-xs pull-right">
-                <button ng-disabled="!item.start" class="btn btn-primary btn-md " type="button" ng-click="toOpen()">
-                    <span class="glyphicon glyphicon-list-alt"></span> {{item.nameLinkFn()}}
-                </button>
+                <!--<button ng-disabled="!item.start" class="btn btn-primary btn-md " type="button" ng-click="toOpen()">-->
+                    <!--<span class="glyphicon glyphicon-list-alt"></span> {{item.nameLinkFn()}}-->
+                <!--</button>-->
                 <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
                     <span class="glyphicon glyphicon-check"></span> Сохранить
 
@@ -86,7 +86,7 @@
 
                         <!-- F I O -->
 
-                        <div class="form-group">
+                        <div ng-if="!edit" class="form-group">
                             <label class="control-label">ФИО</label>
                             <p> {{item.lastName}} {{item.firstName}} {{item.patronymicName}} </p>
                             <!--<input type="text"  class="form-control" required ng-model="item.getFullName()">-->
@@ -94,32 +94,33 @@
 
                         <!-- L A S T  N A M E -->
 
-                        <div class="form-group">
-                            <label class="control-label">Фамилия</label>
+                        <div ng-if="!edit" class="form-group">
+                            <label class="control-label">Фамилия <span class="text-danger">*</span></label>
                             <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.lastName">
                         </div>
 
 
                         <!-- F I R S T  N A M E -->
 
-                        <div class="form-group">
-                            <label class="control-label">Имя</label>
+                        <div ng-if="!edit" class="form-group">
+                            <label class="control-label">Имя  <span class="text-danger">*</span></label>
                             <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.firstName">
                         </div>
 
 
                         <!-- P A T R O N Y M I C  N A M E -->
 
-                        <div class="form-group">
-                            <label class="control-label">Отчество</label>
+                        <div ng-if="!edit" class="form-group">
+                            <label class="control-label">Отчество  <span class="text-danger">*</span></label>
                             <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.patronymicName">
                         </div>
+
 
                         <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
 
                         <div class="form-group">
                             <label class="control-label">
-                                Дата выхода сотрудника
+                                Дата выхода сотрудника  <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
                                 <input ng-disabled="edit" type="text" required ng-bind="parseExpression2()" class="form-control flatpickr"
@@ -137,33 +138,33 @@
 
                         <!-- ЧЕРЕЗ СКОЛЬКО МИНУТ ПОСЛЕ СОХРАНЕНИЯ ЗАПУСТИТЬ ПРОЕКТ -->
 
-                        <div class="form-group" >
-                            <label class="control-label">
-                                Запуск через (мин)
-                            </label>
-                            <div class="input-group">
-                                <input type="number"   class="form-control"  ng-model="item.via">
-                            </div>
-                        </div>
+                        <!--<div class="form-group" >-->
+                            <!--<label class="control-label">-->
+                                <!--Запуск через (мин)-->
+                            <!--</label>-->
+                            <!--<div class="input-group">-->
+                                <!--<input type="number"   class="form-control"  ng-model="item.via">-->
+                            <!--</div>-->
+                        <!--</div>-->
 
                         <!-- З А П У С К  П Р О Е К Т А -->
 
-                        <div class="form-group" ng-if="!item.via>0">
-                            <label class="control-label">
-                                Запуск проекта
-                            </label>
-                            <div class="input-group">
-                                <input type="text"  ng-bind="parseExpression()" class="form-control flatpickr"
-                                       ng-flatpickr
-                                       fp-opts="dateOpts2"
-                                       fp-on-setup="toggleBlur(item)"
-                                       ng-model="item.start">
-                                <!--<span class="input-group-btn">-->
-                                <!--<button class="btn btn-default" type="button" ng-click="removeBirthday(item)"><span-->
-                                <!--class="glyphicon glyphicon-remove"></span></button>-->
-                                <!--</span>-->
-                            </div>
-                        </div>
+                        <!--<div class="form-group" ng-show="!edit">-->
+                            <!--<label class="control-label">-->
+                                <!--Запуск проекта <small>(когда инициализировать подготовку)</small>  <span class="text-danger">*</span>-->
+                            <!--</label>-->
+                            <!--<div class="input-group">-->
+                                <!--<input type="text"  ng-bind="parseExpression()" class="form-control flatpickr"-->
+                                       <!--ng-flatpickr-->
+                                       <!--fp-opts="dateOpts2"-->
+                                       <!--fp-on-setup="toggleBlur(item)"-->
+                                       <!--ng-model="item.start">-->
+                                <!--&lt;!&ndash;<span class="input-group-btn">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<button class="btn btn-default" type="button" ng-click="removeBirthday(item)"><span&ndash;&gt;-->
+                                <!--&lt;!&ndash;class="glyphicon glyphicon-remove"></span></button>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
 
@@ -172,8 +173,8 @@
 
 
                         <div ng-controller="ListDepartmentFController" class="form-group ">
-                            <label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()"></label>
-                            <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ]</span>
+                            <label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()">  </label>
+                            <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ] <span class="text-danger">*</span></span>
                             <div class="form-inline" ng-repeat="department in item.departments">
                                 <div class="form-group">
                                     <select class="form-control" ng-disabled="edit" required ng-model="department.id">
@@ -221,7 +222,7 @@
 
                         <!-- Д О Л Ж Н О С Т Ь -->
                         <div class="form-group">
-                            <label class="control-label">Должность</label>
+                            <label class="control-label">Должность  <span class="text-danger">*</span></label>
                             <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.post">
                         </div>
 
@@ -229,7 +230,7 @@
                         <!-- B O S S -->
 
                         <div class="form-group">
-                            <label class="control-label">Руководитель</label>
+                            <label class="control-label">Руководитель  <span class="text-danger">*</span></label>
                             <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.boss">
                         </div>
 
@@ -328,8 +329,10 @@
 
 
                         <!-- К А Д Р Ы  Н А Ч А Т Ь  О Б Р А Б О Т К У -->
-                        <div class="panel panel-default" ng-class="{'panel-info':item.startKadr, 'panel-danger': item.kadrValid}">
-                            <div class="panel-heading">  Кадры</div>
+
+                        <div ng-if="edit" class="panel panel-default"
+                             ng-class="{ 'panel-success':item.endKadr,'panel-primary':item.startKadr, 'panel-danger': item.kadrValid }">
+                            <div class="panel-heading"> Кадры</div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <div class="checkbox">
@@ -342,6 +345,8 @@
                                         </label>
                                     </div>
                                 </div>
+
+
                                 <!-- К А Д Р Ы  О Т К Л О Н И Т Ь  З А Я В К У -->
 
                                 <div class="form-group">
@@ -354,12 +359,33 @@
                                         </label>
                                     </div>
                                 </div>
+
+
+                                <!-- К А Д Р Ы  К О М М Е Н Т А Р И И -->
+                                <div class="form-group sdv">
+                                    <label class="control-label">Кадры. Комментарии</label>
+                                    <textarea class="form-control" ng-disabled="!edit" ng-model="item.commentKadr"></textarea>
+                                </div>
+
+                                <!-- К А Д Р Ы  О Б Р А Б О Т К А  З А В Е Р Ш Е Н А  -->
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <md-switch ng-model="item.endKadr" aria-label="Switch 4">
+                                                <span ng-if="!item.endKadr">{{titles.endKadr}} нет</span>
+                                                <span ng-if="item.endKadr">{{titles.endKadr}} да</span>
+                                            </md-switch>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
+
                         <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О   -->
-                        <div class="panel panel-default" ng-class="{'panel-success':item.finCheck}" >
-                            <div class="panel-heading">  Финансовый отдел</div>
+
+                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
+                            <div class="panel-heading"> Финансовый отдел</div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <div class="checkbox">
@@ -374,8 +400,10 @@
                             </div>
                         </div>
 
+
                         <!-- А Х О  В Ы П О Л Н Е Н О   -->
-                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}" >
+
+                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
                             <div class="panel-heading">АХО</div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -391,17 +419,57 @@
                             </div>
                         </div>
 
+
+                        <!-- IT  В Ы П О Л Н Е Н О   -->
+
+                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
+                            <div class="panel-heading">IT</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <md-switch ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Switch 4">
+                                                <span ng-if="!item.itCheck">{{titles.check}} нет</span>
+                                                <span ng-if="item.itCheck">{{titles.check}} да</span>
+                                            </md-switch>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- H E L P - D E S K  В Ы П О Л Н Е Н О   -->
+
+                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.hdCheck}">
+                            <div class="panel-heading">Help-Desk</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <md-switch ng-disabled="item.kadrValid" ng-model="item.hdCheck" aria-label="Switch 4">
+                                                <span ng-if="!item.hdCheck">{{titles.check}} нет</span>
+                                                <span ng-if="item.hdCheck">{{titles.check}} да</span>
+                                            </md-switch>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <!-- С О З Д А Н О   -->
-                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}" >
+
+                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
                             <div class="panel-heading">Созданы ресурсы</div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label class="control-label">Email</label>
-                                    <input ng-disabled="edit" type="text" class="form-control" ng-model="item.email">
+                                    <input ng-disabled="!edit" type="email" class="form-control" ng-model="item.email">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Телефон</label>
-                                    <input ng-disabled="edit" type="text" class="form-control" ng-model="item.phoneNumber">
+                                    <input ng-disabled="!edit" type="text" class="form-control" ng-model="item.phoneNumber">
                                 </div>
                             </div>
                         </div>
@@ -410,10 +478,9 @@
 
 
 
-
                         <!-- S T A T U S -->
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group ">
                             <label class="control-label" for="inputSuccess3">
                                 Статус
                             </label>
@@ -422,20 +489,20 @@
 
                         <!-- C O L L E C T E D  D A T A -->
 
-                        <div class="form-group" ng-if="checkStatus()" ng-controller="ListFController">
-                            <label class="control-label" for="inputSuccess3">
-                                Собрано данных
-                            </label>
-                            <!--<br> 0 из {{(items | filter :{fired:false}).length}}-->
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <span style="margin:0 20px;"> {{sumDays}} </span> из
-                                    <input type="number" ng-disabled="true" class="form-control not-border"
-                                           ng-bind="item.countData=(items | filter :{fired:false}).length"
-                                           ng-model="item.countData">
-                                </div>
-                            </div>
-                        </div>
+                        <!--<div class="form-group" ng-if="checkStatus()" ng-controller="ListFController">-->
+                            <!--<label class="control-label" for="inputSuccess3">-->
+                                <!--Собрано данных-->
+                            <!--</label>-->
+                            <!--&lt;!&ndash;<br> 0 из {{(items | filter :{fired:false}).length}}&ndash;&gt;-->
+                            <!--<div class="form-inline">-->
+                                <!--<div class="form-group">-->
+                                    <!--<span style="margin:0 20px;"> {{sumDays}} </span> из-->
+                                    <!--<input type="number" ng-disabled="true" class="form-control not-border"-->
+                                           <!--ng-bind="item.countData=(items | filter :{fired:false}).length"-->
+                                           <!--ng-model="item.countData">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
                         <div ng-if="(me.admin && item.id)" class="row">
@@ -508,7 +575,7 @@
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
 
             <!-- П О Л У Ч А Т Е Л И  П И С Е М -->
-            <div class="row">
+            <div ng-if="false" class="row">
                 <div class="col-md-12">
                     <h4>Адресаты</h4>
                     <div ng-controller="ListFController" class="form-group ">
@@ -560,9 +627,9 @@
                     <code class="pull-right new" ng-bind-html="item.htmlData[0].description"></code>
                     <div ng-if="item.htmlData[0].tmpl" class="text-left well"
                          ng-bind-html="item.htmlData[0].tmpl"></div>
-                    <a href="#" style="text-decoration: none" ng-click="toogle()">
-                        <div ng-if="!item.htmlData[0].tmpl" class="text-left well" ng-bind-html="htmlData"></div>
-                    </a>
+                    <!--<a href="#" style="text-decoration: none" ng-click="toogle()">-->
+                        <!--<div ng-if="!item.htmlData[0].tmpl" class="text-left well" ng-bind-html="htmlData"></div>-->
+                    <!--</a>-->
 
                 </div>
             </div>

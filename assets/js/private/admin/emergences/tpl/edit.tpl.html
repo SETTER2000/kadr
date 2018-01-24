@@ -137,12 +137,12 @@
 
                         <!-- ЧЕРЕЗ СКОЛЬКО МИНУТ ПОСЛЕ СОХРАНЕНИЯ ЗАПУСТИТЬ ПРОЕКТ -->
 
-                        <div class="form-group" >
+                        <div class="form-group">
                             <label class="control-label">
                                 Запуск через (мин)
                             </label>
                             <div class="input-group">
-                                <input type="number"   class="form-control"  ng-model="item.via">
+                                <input type="number" class="form-control" ng-model="item.via">
                             </div>
                         </div>
 
@@ -153,7 +153,7 @@
                                 Запуск проекта
                             </label>
                             <div class="input-group">
-                                <input type="text"  ng-bind="parseExpression()" class="form-control flatpickr"
+                                <input type="text" ng-bind="parseExpression()" class="form-control flatpickr"
                                        ng-flatpickr
                                        fp-opts="dateOpts2"
                                        fp-on-setup="toggleBlur(item)"
@@ -164,8 +164,6 @@
                                 <!--</span>-->
                             </div>
                         </div>
-
-
 
 
                         <!--  E D I T   D E P A R T M E N T S  C O N T R O L L E R -->
@@ -330,8 +328,9 @@
 
                         <!-- К А Д Р Ы  Н А Ч А Т Ь  О Б Р А Б О Т К У -->
 
-                        <div class="panel panel-default" ng-class="{ 'panel-success':item.endKadr,'panel-primary':item.startKadr, 'panel-danger': item.kadrValid }">
-                            <div class="panel-heading">  Кадры</div>
+                        <div class="panel panel-default"
+                             ng-class="{ 'panel-success':item.endKadr,'panel-primary':item.startKadr, 'panel-danger': item.kadrValid }">
+                            <div class="panel-heading"> Кадры</div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <div class="checkbox">
@@ -359,6 +358,11 @@
                                     </div>
                                 </div>
 
+                                <!-- К А Д Р Ы  К О М М Е Н Т А Р И И -->
+                                <div class="form-group">
+                                    <label class="control-label">Кадры. Комментарии</label>
+                                    <textarea class="form-control sdv"  ng-disabled="!edit" ng-model="item.commentKadr"></textarea>
+                                </div>
 
                                 <!-- К А Д Р Ы  О Б Р А Б О Т К А  З А В Е Р Ш Е Н А  -->
                                 <div class="form-group">
@@ -377,8 +381,8 @@
 
                         <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О   -->
 
-                        <div class="panel panel-default" ng-class="{'panel-success':item.finCheck}" >
-                            <div class="panel-heading">  Финансовый отдел</div>
+                        <div class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
+                            <div class="panel-heading"> Финансовый отдел</div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <div class="checkbox">
@@ -396,7 +400,7 @@
 
                         <!-- А Х О  В Ы П О Л Н Е Н О   -->
 
-                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}" >
+                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
                             <div class="panel-heading">АХО</div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -415,7 +419,7 @@
 
                         <!-- IT  В Ы П О Л Н Е Н О   -->
 
-                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}" >
+                        <div class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
                             <div class="panel-heading">IT</div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -432,10 +436,9 @@
                         </div>
 
 
-
                         <!-- H E L P - D E S K  В Ы П О Л Н Е Н О   -->
 
-                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}" >
+                        <div class="panel panel-default" ng-class="{'panel-success':item.hdCheck}">
                             <div class="panel-heading">Help-Desk</div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -454,16 +457,16 @@
 
                         <!-- С О З Д А Н О   -->
 
-                        <div class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}" >
+                        <div class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
                             <div class="panel-heading">Созданы ресурсы</div>
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label class="control-label">Email</label>
-                                    <input ng-disabled="edit" type="text" class="form-control" ng-model="item.email">
+                                    <input ng-disabled="!edit" type="email" class="form-control" ng-model="item.email">
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">Телефон</label>
-                                    <input ng-disabled="edit" type="text" class="form-control" ng-model="item.phoneNumber">
+                                    <input ng-disabled="!edit" type="text" class="form-control" ng-model="item.phoneNumber">
                                 </div>
                             </div>
                         </div>
@@ -626,44 +629,44 @@
                 </div>
             </div>
             <!--<div class="row" ng-if="item.start">-->
-                <!--<div class="col-md-12">-->
-                    <!--&lt;!&ndash; Д О П О Л Н И Т Е Л Ь Н О Е  У В Е Д О М Л Е Н И Е  О  Н Е  З А П О Л Н Е Н Н О Й  И Н Ф О Р М А Ц И И   &ndash;&gt;-->
+            <!--<div class="col-md-12">-->
+            <!--&lt;!&ndash; Д О П О Л Н И Т Е Л Ь Н О Е  У В Е Д О М Л Е Н И Е  О  Н Е  З А П О Л Н Е Н Н О Й  И Н Ф О Р М А Ц И И   &ndash;&gt;-->
 
-                    <!--<form class="form-horizontal" ng-show="comment2">-->
-                        <!--<div class="form-group animate-if">-->
-                            <!--<label class="col-sm-6 control-label">Шаблон о не заполненной информации: </label>-->
-                            <!--<div class="col-sm-2">-->
-                                <!--<select class="form-control size-xs" ng-model="item.htmlData2[0]"-->
-                                        <!--ng-options="option2.name for option2 in examples2 track by option2.tmpl"-->
-                                <!--&gt;</select>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</form>-->
+            <!--<form class="form-horizontal" ng-show="comment2">-->
+            <!--<div class="form-group animate-if">-->
+            <!--<label class="col-sm-6 control-label">Шаблон о не заполненной информации: </label>-->
+            <!--<div class="col-sm-2">-->
+            <!--<select class="form-control size-xs" ng-model="item.htmlData2[0]"-->
+            <!--ng-options="option2.name for option2 in examples2 track by option2.tmpl"-->
+            <!--&gt;</select>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</form>-->
 
-                    <!--<div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch-->
-                         <!--on="item.htmlData2[0].name">-->
-                        <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-                                  <!--style="width: 100%; height: 120px; border: none"-->
-                                  <!--class="animate-switch" ng-switch-when="№1">    {{item.htmlData2[0].tmpl}}</textarea>-->
-                        <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-                                  <!--style="width: 100%; height: 120px; border: none"-->
-                                  <!--class="animate-switch" ng-switch-when="№2">{{item.htmlData2[0].tmpl}}</textarea>-->
-                        <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-                                  <!--style="width: 100%; height: 120px; border: none"-->
-                                  <!--class="animate-switch" ng-switch-when="№3"> {{item.htmlData2[0].tmpl}}</textarea>-->
-                        <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-                                  <!--style="width: 100%; height: 120px; border: none"-->
-                                  <!--class="animate-switch" ng-switch-when="№4">   {{item.htmlData2[0].tmpl}}</textarea>-->
-                    <!--</div>-->
+            <!--<div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch-->
+            <!--on="item.htmlData2[0].name">-->
+            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
+            <!--style="width: 100%; height: 120px; border: none"-->
+            <!--class="animate-switch" ng-switch-when="№1">    {{item.htmlData2[0].tmpl}}</textarea>-->
+            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
+            <!--style="width: 100%; height: 120px; border: none"-->
+            <!--class="animate-switch" ng-switch-when="№2">{{item.htmlData2[0].tmpl}}</textarea>-->
+            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
+            <!--style="width: 100%; height: 120px; border: none"-->
+            <!--class="animate-switch" ng-switch-when="№3"> {{item.htmlData2[0].tmpl}}</textarea>-->
+            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
+            <!--style="width: 100%; height: 120px; border: none"-->
+            <!--class="animate-switch" ng-switch-when="№4">   {{item.htmlData2[0].tmpl}}</textarea>-->
+            <!--</div>-->
 
-                    <!--<code class="pull-right new" ng-bind-html="item.htmlData2[0].description"></code>-->
-                    <!--<div ng-if="item.htmlData2[0].tmpl" class="text-left well"-->
-                         <!--ng-bind-html="item.htmlData2[0].tmpl"></div>-->
-                    <!--<a href="#" style="text-decoration: none" ng-click="toogle2()">-->
-                        <!--<div ng-if="!item.htmlData2[0].tmpl" class="text-left well" ng-bind-html="htmlData2"></div>-->
-                    <!--</a>-->
+            <!--<code class="pull-right new" ng-bind-html="item.htmlData2[0].description"></code>-->
+            <!--<div ng-if="item.htmlData2[0].tmpl" class="text-left well"-->
+            <!--ng-bind-html="item.htmlData2[0].tmpl"></div>-->
+            <!--<a href="#" style="text-decoration: none" ng-click="toogle2()">-->
+            <!--<div ng-if="!item.htmlData2[0].tmpl" class="text-left well" ng-bind-html="htmlData2"></div>-->
+            <!--</a>-->
 
-                <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
 
             <!-- I N F O  P A N E L -->

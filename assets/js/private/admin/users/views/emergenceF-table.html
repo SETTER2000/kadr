@@ -192,11 +192,15 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- F I O -->
         <td class="text-nowrap">
-            <a ng-if="(item.status==='Проект' || me.admin)"  ui-sref="home.company.emergences.edit({emergenceId:item.id})">
-                <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
-                {{item.getFullName()}}
+            <!--<a ng-if="(item.status==='Проект' || me.admin)"  ui-sref="home.company.emergences.edit({emergenceId:item.id})">-->
+                <!--&lt;!&ndash;<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">&ndash;&gt;-->
+                <!--{{item.getFullName()}}-->
+            <!--</a>-->
+            <!--<span ng-if="(item.status!=='Проект' && !me.admin)">{{item.getFullName()}}</span>-->
+            <a  ui-sref="home.company.emergences.edit({emergenceId:item.id})">
+            <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
+            {{item.getFullName()}}
             </a>
-            <span ng-if="(item.status!=='Проект' && !me.admin)">{{item.getFullName()}}</span>
         </td>
 
 
@@ -239,12 +243,12 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                                 <table class="table table-hover">
                                     <tr ng-repeat="sender in item.logSender">
                                         <td class="text-left text-nowrap">
-                                            <small class="text-info">{{sender.lastName}}
-                                                {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.
+                                            <small class="text-info">{{sender.name}}
+
                                             </small>
                                         </td>
                                         <td class="text-left">
-                                            <small>{{sender.positions[0].name}}</small>
+                                            <small>  {{sender.email}}</small>
                                         </td>
                                     </tr>
                                 </table>

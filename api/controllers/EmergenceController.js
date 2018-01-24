@@ -26,7 +26,7 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('GET ALL PARAMS Emergence:', req.params.all());
+        //console.log('GET ALL PARAMS Emergence:', req.params.all());
         var q = {
             limit: req.param('limit'),
             sort: req.param('sort')
@@ -60,170 +60,212 @@ module.exports = {
                     //        if (err) return res.serverError(err);
                     //        if (!users) return res.notFound();
 
-                            /*  {
-                             where: { /!* ... *!/ },
-                             groupBy: [ /!* ... *!/ ],
-                             sum: [ /!* ... *!/ ],
-                             average: [ /!* ... *!/ ],
-                             count: true,
-                             min: [ /!* ... *!/ ],
-                             max: [ /!* ... *!/ ],
-                             sort: { /!* ... *!/ },
-                             skip: 2353,
-                             limit: 25
-                             }*/
-                    console.log('QQQ:::', q);
-                            Emergence.find(q)
-                                .populate('positions')
-                                .populate('departments')
-                                .populate('whomCreated')
-                                .populate('whomUpdated')
-                                .exec(function foundEmergence(err, emergences) {
-                                    if (err) return res.serverError(err);
-                                    if (!emergences) return res.notFound();
-                                    async.each(emergences, function (file, callback) {
-                                        if (file.length > 32) {
-                                            console.log('Это имя слишком длинное');
-                                            callback('Слишком длинное имя файла');
-                                        } else {
-                                            Vacation.find({
-                                                from: {
-                                                    '>=': new Date(moment(file.year, ["YYYY"])),
-                                                    '<': new Date(moment(file.year, ["YYYY"]).add(1, 'year'))
-                                                }
-                                            }).exec((err, findVacation) => {
-                                                if (err) res.serverError(err);
-                                            });
-                                            callback();
-                                        }
-                                    }, function (err) {
-                                        if (err) {
-                                            console.log('Не удалось обработать файл');
-                                        } else {
-                                            //console.log('Все файлы успешно обработаны');
-                                        }
-                                    });
+                    /*  {
+                     where: { /!* ... *!/ },
+                     groupBy: [ /!* ... *!/ ],
+                     sum: [ /!* ... *!/ ],
+                     average: [ /!* ... *!/ ],
+                     count: true,
+                     min: [ /!* ... *!/ ],
+                     max: [ /!* ... *!/ ],
+                     sort: { /!* ... *!/ },
+                     skip: 2353,
+                     limit: 25
+                     }*/
 
-                                    res.send(emergences);
-                                });
+                    Emergence.find(q)
+                        .populate('positions')
+                        .populate('departments')
+                        .populate('whomCreated')
+                        .populate('whomUpdated')
+                        .exec(function foundEmergence(err, emergences) {
+                            if (err) return res.serverError(err);
+                            if (!emergences) return res.notFound();
+                            async.each(emergences, function (file, callback) {
+                                if (file.length > 32) {
+                                    console.log('Это имя слишком длинное');
+                                    callback('Слишком длинное имя файла');
+                                } else {
+                                    Vacation.find({
+                                        from: {
+                                            '>=': new Date(moment(file.year, ["YYYY"])),
+                                            '<': new Date(moment(file.year, ["YYYY"]).add(1, 'year'))
+                                        }
+                                    }).exec((err, findVacation) => {
+                                        if (err) res.serverError(err);
+                                    });
+                                    callback();
+                                }
+                            }, function (err) {
+                                if (err) {
+                                    console.log('Не удалось обработать файл');
+                                } else {
+                                    //console.log('Все файлы успешно обработаны');
+                                }
+                            });
+
+                            res.send(emergences);
                         });
-                //});
+                });
+            //});
         }
     },
-    //
-    //
-    ///**
-    // * Создать
-    // * @param req
-    // * @param res
-    // * @returns {*}
-    // */
+
+    /**
+     * Создать
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     create: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         console.log('ALL CREATE RWEQ:', req.params.all());
-        //if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
-        if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! Дата просрочена.');
-        let obj = {
-            section: 'Выход нового сотрудника',
-            sections: 'Выход новых сотрудников',
-            name: req.param('name'),
-            post: req.param('post'),
-            room: req.param('room'),
-            remote: req.param('remote'),
-            dax: req.param('dax'),
-            recipient: req.param('recipient'),
-            extra: req.param('extra'),
-            location: req.param('location'),
-            whomCreated: req.session.me,
-            daysSelectHoliday: req.param('daysSelectHoliday'),
-            action: req.param('action'),
-            positions: req.param('positions'),
-            departments: req.param('departments'),
-            status: 'Проект',
-            start: new Date(req.param('start')),
-            outputEmployee: new Date(req.param('outputEmployee')),
-            patronymicName: req.param('patronymicName'),
-            countData: +req.param('countData'),
-            firstName: req.param('firstName'),
-            lastName: req.param('lastName'),
-            boss: req.param('boss'),
-            bussinescard: req.param('bussinescard'),
-            phone: req.param('phone'),
-            //phoneNumber: req.param('phoneNumber'),
-            //email: req.param('email'),
-            mobile: req.param('mobile'),
-            htmlData: req.param('htmlData'),
-            htmlData2: req.param('htmlData2'),
-            idleStart: '',
-            worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X'])),
-            //from: new Date(req.param('from')),
-            //to: new Date(req.param('to'))
-        };
+        let fullName = req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName');
+
+        if (!req.param('departments')) return res.badRequest('Не указан департамент.');
+
+        console.log('DEPAR', req.param('departments'));
+        console.log('START PROJECT', req.param('start'));
+
+        let start = moment(req.param('start')).format('YYYY-MM-DDTHH:mmZ');
+
+        console.log('START ', start);
+        Department.findOne(req.param('departments')[0]).exec((err, findDepart)=> {
+            "use strict";
+            if (err) return res.serverError(err);
+            console.log('findDepart', findDepart);
+
+            let recipient = [
+                {email: 'servicedesk@landata.ru', name: 'ИТ'},
+                {email: 'axd@landata.ru', name: 'АХД'},
+                {email: 'fin_dep@landata.ru', name: 'Финотдел'},
+                {email: 'personnel-group@landata.ru', name: 'Кадры'}
+            ];
+            //servicedesk@landata.ru - ИТ
+            //
+            //axd@landata.ru - АХД
+            //
+            //fin_dep@landata.ru - Финотдел
+            //
+            //personnel-group@landata.ru - Кадры
 
 
-        User.findOne({id: obj.whomCreated})
-            .exec((err, findUser) => {
-                Emergence.create(obj)
-                    .exec(function (err, createEmergence) {
-                        if (err) return res.serverError(err);
-                        console.log(obj.section + ' создан пользователем:', findUser.getFullName());
-                        findUser.emergenceWhomCreated.add(createEmergence.id);
+            let tmp = [{
+                description: 'Уведомление о выходе нового сотрудника',
+                outputEmployee: '',
+                name: '№1',
+                tmpl: '<h1>Уважаемые, коллеги!</h1>' +
+                '<p> Планируется выход нового сотрудника - ' + fullName + '  в ' + findDepart.name + ' на должность ' + req.param('post') + '. </p>' +
+                '<p>Предполагаемая дата выхода - ' + moment(new Date(req.param('outputEmployee')), ['DD.MM.YYYY']).format('DD.MM.YYYY') + '. </p>' +
+                '<p>Ссылка на заявку -  <a href="http://kadr/company/emergences">' + fullName + '</a></p>'
+            }];
 
-                        findUser.save(function (err) {
-                            if (err) {
-                                return res.serverError(err);
-                            }
+            tmp = (req.param('htmlData')) ? req.param('htmlData') : tmp;
 
-                            // Подготовка ответа серверу после создания
-                            Emergence.findOne({id: createEmergence.id})
-                                .populate('positions')
-                                .populate('departments')
-                                .populate('whomCreated')
-                                .populate('whomUpdated')
-                                .exec(function foundVacation(err, findOneEmerg) {
-                                    if (err) return res.serverError(err);
-                                    // Обновляем сокеты
-                                    Emergence.find().exec((err, findEmergence) => {
+
+            //if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
+            if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! Дата просрочена.');
+            let obj = {
+                section: 'Выход нового сотрудника',
+                sections: 'Выход новых сотрудников',
+                name: req.param('name'),
+                post: req.param('post'),
+                room: req.param('room'),
+                remote: req.param('remote'),
+                dax: req.param('dax'),
+                recipient: recipient,
+                extra: req.param('extra'),
+                location: req.param('location'),
+                whomCreated: req.session.me,
+                daysSelectHoliday: req.param('daysSelectHoliday'),
+                action: req.param('action'),
+                positions: req.param('positions'),
+                departments: req.param('departments'),
+                status: 'Проект',
+                start: new Date(start),
+                outputEmployee: new Date(req.param('outputEmployee')),
+                countData: +req.param('countData'),
+                lastName: req.param('lastName'),
+                firstName: req.param('firstName'),
+                patronymicName: req.param('patronymicName'),
+                boss: req.param('boss'),
+                bussinescard: req.param('bussinescard'),
+                phone: req.param('phone'),
+                //phoneNumber: req.param('phoneNumber'),
+                //email: req.param('email'),
+                mobile: req.param('mobile'),
+                htmlData: tmp,
+                htmlData2: req.param('htmlData2'),
+                idleStart: '',
+                worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X'])),
+                //from: new Date(req.param('from')),
+                //to: new Date(req.param('to'))
+            };
+
+            console.log('Object CREATE Emergence:', obj);
+            User.findOne({id: obj.whomCreated})
+                .exec((err, findUser) => {
+                    Emergence.create(obj)
+                        .exec(function (err, createEmergence) {
+                            if (err) return res.serverError(err);
+                            console.log(obj.section + ' создан пользователем:', findUser.getFullName());
+                            findUser.emergenceWhomCreated.add(createEmergence.id);
+
+                            findUser.save(function (err) {
+                                if (err) {
+                                    return res.serverError(err);
+                                }
+
+                                // Подготовка ответа серверу после создания
+                                Emergence.findOne({id: createEmergence.id})
+                                    .populate('positions')
+                                    .populate('departments')
+                                    .populate('whomCreated')
+                                    .populate('whomUpdated')
+                                    .exec(function foundVacation(err, findOneEmerg) {
                                         if (err) return res.serverError(err);
+                                        // Обновляем сокеты
+                                        Emergence.find().exec((err, findEmergence) => {
+                                            if (err) return res.serverError(err);
 
-                                        // _.forEach(req.param('htmlData'), function (val, key) {
-                                        //     findEmergence.htmlData = val;
-                                        // });
+                                            // _.forEach(req.param('htmlData'), function (val, key) {
+                                            //     findEmergence.htmlData = val;
+                                            // });
 
-                                        // findEmergence.save(function (err) {
-                                        //     if (err) {
-                                        //         return res.serverError(err);
-                                        //     }
+                                            // findEmergence.save(function (err) {
+                                            //     if (err) {
+                                            //         return res.serverError(err);
+                                            //     }
 
-                                        sails.sockets.broadcast('emergence', 'hello', {howdy: findEmergence}, req);
-                                        sails.sockets.broadcast('emergence', 'badges', {
-                                            badges: [createEmergence],
-                                            action: 'создан',
-                                            shortName: findUser.getShortName(),
-                                            fullName: findUser.getFullName(),
-                                            avatarUrl: findUser.avatarUrl
-                                        }, req);
+                                            sails.sockets.broadcast('emergence', 'hello', {howdy: findEmergence}, req);
+                                            sails.sockets.broadcast('emergence', 'badges', {
+                                                badges: [createEmergence],
+                                                action: 'создан',
+                                                shortName: findUser.getShortName(),
+                                                fullName: findUser.getFullName(),
+                                                avatarUrl: findUser.avatarUrl
+                                            }, req);
 
-                                        res.send(findOneEmerg);
+                                            res.send(findOneEmerg);
+                                        });
                                     });
-                                });
+                            });
                         });
-                    });
-            });
-
+                });
+        });
     },
-    //
-    //
-    ///**
-    // * Обновить
-    // * @param req
-    // * @param res
-    // */
+
+
+    /**
+     * Обновить
+     * @param req
+     * @param res
+     */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
+        let action = (!(!req.param('action') || req.param('kadrValid')));
         console.log('ALL REQUEST', req.params.all());
-        if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
+        //if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         let obj = {
             section: 'Выход нового сотрудника',
             sections: 'Выход новых сотрудников',
@@ -231,21 +273,29 @@ module.exports = {
             post: req.param('post'),
             room: req.param('room'),
             dax: req.param('dax'),
+            startKadr: req.param('startKadr'),
+            kadrValid: req.param('kadrValid'),
+            endKadr: req.param('endKadr'),
+            finCheck: req.param('finCheck'),
+            ahoCheck: req.param('ahoCheck'),
+            itCheck: req.param('itCheck'),
+            hdCheck: req.param('hdCheck'),
+            commentKadr: req.param('commentKadr'),
             recipient: req.param('recipient'),
             remote: req.param('remote'),
             extra: req.param('extra'),
             location: req.param('location'),
             whomUpdated: req.session.me,
             daysSelectHoliday: req.param('daysSelectHoliday'),
-            action: req.param('action'),
+            action: action,
             //period: req.param('period'),
             status: (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Проект',
-            htmlData: req.param('htmlData'),
-            htmlData2: req.param('htmlData2'),
+            //htmlData: req.param('htmlData'),
+            //htmlData2: req.param('htmlData2'),
             bussinescard: req.param('bussinescard'),
             phone: req.param('phone'),
             mobile: req.param('mobile'),
-            start: new Date(req.param('start')),
+            //start: new Date(req.param('start')),
             outputEmployee: new Date(req.param('outputEmployee')),
             phoneNumber: req.param('phoneNumber'),
             email: req.param('email'),

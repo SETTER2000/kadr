@@ -79,41 +79,91 @@
                     <th>Дополнительное требование</th>
                     <td>{{item.extra}}</td>
                 </tr>
-                <tr>
+                <tr >
                     <th>Кадры. Начать обработку</th>
-                    <td>{{item.location}}</td>
+                    <td>
+                        <div ng-switch on="item.startKadr">
+                            <!--<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>-->
+                            <div ng-switch-when="true">Да</div>
+                            <div ng-switch-default>Нет</div>
+                        </div>
+                    </td>
                 </tr>
-                <tr>
+                <tr ng-class="{'danger':item.kadrValid}">
                     <th>Кадры. Отклонить заявку</th>
-                    <td>{{item.location}}</td>
+                    <td>
+                        <div ng-switch on="item.kadrValid">
+                            <!--<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>-->
+                            <div ng-switch-when="true">Да</div>
+                            <div ng-switch-default>Нет</div>
+                        </div>
+                    </td>
                 </tr>
+
+                <tr ng-if="item.commentKadr">
+                    <th>Кадры. Комментарии</th>
+                    <td>
+                        {{item.commentKadr}}
+                    </td>
+                </tr>
+
                 <!--<tr>-->
-                    <!--<th>Кадры. Комментарии</th>-->
-                    <!--<td>{{item.location}}</td>-->
+                <!--<th>Кадры. Комментарии</th>-->
+                <!--<td>{{item.location}}</td>-->
                 <!--</tr>-->
                 <!--<tr>-->
-                    <!--<th>Финотдел. Коментарии</th>-->
-                    <!--<td>{{item.location}}</td>-->
+                <!--<th>Финотдел. Коментарии</th>-->
+                <!--<td>{{item.location}}</td>-->
                 <!--</tr>-->
                 <tr>
                     <th>Финотдел. Выполнено</th>
-                    <td>{{item.location}}</td>
+                    <td>
+                        <div ng-switch on="item.finCheck">
+                            <!--<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>-->
+                            <div ng-switch-when="true">Да</div>
+                            <div ng-switch-default>Нет</div>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <th>АХО. Выполнено</th>
-                    <td>{{item.location}}</td>
+                    <td>
+                        <div ng-switch on="item.ahoCheck">
+                            <!--<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>-->
+                            <div ng-switch-when="true">Да</div>
+                            <div ng-switch-default>Нет</div>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <th>IT отдел. Выполнено</th>
-                    <td>{{item.location}}</td>
+                    <td>
+                        <div ng-switch on="item.itCheck">
+                            <!--<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>-->
+                            <div ng-switch-when="true">Да</div>
+                            <div ng-switch-default>Нет</div>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <th>Help-Desk. Выполнено</th>
-                    <td>{{item.location}}</td>
+                    <td>
+                        <div ng-switch on="item.hdCheck">
+                            <!--<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>-->
+                            <div ng-switch-when="true">Да</div>
+                            <div ng-switch-default>Нет</div>
+                        </div>
+                    </td>
                 </tr>
-                <tr>
+                <tr ng-class="{'success':item.endKadr}">
                     <th>Кадры. Обработка завершена</th>
-                    <td>{{item.location}}</td>
+                    <td>
+                        <div ng-switch on="item.endKadr">
+                            <!--<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>-->
+                            <div ng-switch-when="true">Да</div>
+                            <div ng-switch-default>Нет</div>
+                        </div>
+                    </td>
                 </tr>
 
                 <tr>
@@ -144,14 +194,14 @@
 
                 <tr ng-if="item.whomCreated">
                     <th>Создал заявку</th>
-                    <td>{{item.whomCreated.lastName}} {{item.whomCreated.firstName}} {{item.whomCreated.patronymicName}}, {{item.createdAt |
+                    <td>{{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}}. {{item.whomCreated.patronymicName[0]}}., {{item.createdAt |
                         date: "dd.MM.yyyy HH:mm"}}
                     </td>
                 </tr>
 
                 <tr ng-if="item.whomUpdated">
                     <th>Обновил заявку</th>
-                    <td> {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName}} {{item.whomUpdated.patronymicName}}, {{item.updatedAt
+                    <td> {{item.whomUpdated.lastName}} {{item.whomUpdated.firstName[0]}}. {{item.whomUpdated.patronymicName[0]}}., {{item.updatedAt
                         | date: "dd.MM.yyyy HH:mm"}}
                     </td>
                 </tr>

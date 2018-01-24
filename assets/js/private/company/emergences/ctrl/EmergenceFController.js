@@ -3,7 +3,8 @@ angular.module('EmergenceFModule')
         function ($scope,$state,toastr, moment, EmergencesF, $stateParams) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me || !$scope.me.emergence) return $state.go('home');
-
+            //$scope.items = ['нет', 'да', 'options', 'other'];
+            //$scope.selection = $scope.items[0];
             //$scope.message = moment({start:'1995-12-25',end:'2000-10-10'}).year(2009).hours(0).minutes(0).seconds(0);
             /**
              * Метод query выполняет запрос на сервер и возвращает коллекцию,

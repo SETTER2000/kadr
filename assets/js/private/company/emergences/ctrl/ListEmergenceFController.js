@@ -102,8 +102,8 @@
 
 
 
-            $scope.defaultRows = ($scope.me.defaultRows) ? $scope.me.defaultRows : 15;
-            //$scope.defaultRows =6;
+            //$scope.defaultRows = ($scope.me.defaultRows) ? $scope.me.defaultRows : 15;
+            $scope.defaultRows =10;
             $scope.limitRows = [2, 3, 5, 7, 10, 15, 30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
 

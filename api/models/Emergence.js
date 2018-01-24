@@ -165,12 +165,45 @@ module.exports = {
             defaultsTo: true,
             required: true
         },
+
+        startKadr: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+        kadrValid: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+        endKadr: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+        finCheck: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+        ahoCheck: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+        itCheck: {
+            type: 'boolean',
+            defaultsTo: false
+        },
+        hdCheck: {
+            type: 'boolean',
+            defaultsTo: false
+        },
         jobRunning: { //задача установлена, по умолчанию нет
             type: 'boolean',
             defaultsTo: false,
             required: true
         },
+
         job: {
+            type: 'string'
+        },
+        commentKadr: {
             type: 'string'
         },
         whomCreated: {
