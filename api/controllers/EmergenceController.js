@@ -135,12 +135,7 @@ module.exports = {
             if (err) return res.serverError(err);
             console.log('findDepart', findDepart);
 
-            let recipient = [
-                {email: 'servicedesk@landata.ru', name: 'ИТ'},
-                {email: 'axd@landata.ru', name: 'АХД'},
-                {email: 'fin_dep@landata.ru', name: 'Финотдел'},
-                {email: 'personnel-group@landata.ru', name: 'Кадры'}
-            ];
+            let recipient = sails.config.recipient.collection;
             //servicedesk@landata.ru - ИТ
             //
             //axd@landata.ru - АХД
