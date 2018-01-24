@@ -474,7 +474,7 @@ angular.module('EmergenceModule')
                         console.log(err, 'ОШибка в USERS objects');
                         // активируем по умолчанию создаваемую запись
                         //item.action = true;
-                        //item.status = 'Проект';
+                        //item.status = 'Новая';
                         //item.sc = function () {
                         //    return 'Отпуск';
                         //};
@@ -623,7 +623,7 @@ angular.module('EmergenceModule')
                     }, function (err) {
                         // активируем по умолчанию создаваемую запись
                         item.action = true;
-                        item.status = 'Проект';
+                        item.status = 'Новая';
                         item.countData = 0;
                     }
                 );
@@ -653,7 +653,7 @@ angular.module('EmergenceModule')
             });
             $scope.$watch('item.start', function (value) {
                 if (value) {
-                    if (($scope.item.status === 'Проект' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
+                    if (($scope.item.status === 'Новая' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
                         toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
                             {
                                 //"closeButton": true,
@@ -673,11 +673,11 @@ angular.module('EmergenceModule')
                             });
                         return;
                     }
-                    if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
+                    if ($scope.item.status !== 'Новая' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
                     let nm;
 
                     console.log('FORMAT', value);
-                    nm = (moment(value).isSameOrBefore(moment())) ? 'Проект запущен' : 'Запуск проекта';
+                    nm = (moment(value).isSameOrBefore(moment())) ? 'Новая запущен' : 'Запуск проекта';
                     toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
                         {
                             //"closeButton": true,

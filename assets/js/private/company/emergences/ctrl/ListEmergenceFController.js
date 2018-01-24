@@ -172,9 +172,9 @@
              */
             $scope.filterTemplate = {
                 all: {}, // все
-                project: {status: 'Проект'}, // проект
+                project: {status: 'Новая'}, // проект
                 inWork: {status: 'В работе'}, // в работе
-                approved: {status: 'Утвержден'} // утверждён
+                approved: {status: 'Завершена'} // утверждён
             };
 
             $scope.$watch('modeSelect.value', function (value, old) {
@@ -191,9 +191,9 @@
             $scope.options =
                 [
                     {display: "Все", value: "all"},
-                    {display: "Проект", value: "project"},
+                    {display: "Новая", value: "project"},
                     {display: "В работе", value: "inWork"},
-                    {display: "Утвержден", value: "approved"}
+                    {display: "Завершена", value: "approved"}
 
                 ];
             $scope.modeSelect = $scope.options[0];

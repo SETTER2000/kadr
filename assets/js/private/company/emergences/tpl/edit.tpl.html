@@ -6,9 +6,9 @@
             </p>
             <p ng-if="!item.lastName">{{item.getNewEmployees()}}</p>
             <a href="#" class="btn btn-xs disabled"
-               ng-class="{'btn-primary':(item.status==='Проект'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Утвержден')}"
+               ng-class="{'btn-primary':(item.status==='Новая'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Утвержден')}"
                ng-hide="item.fired" role="button">
-                {{item.status}}
+                {{item.status}} заявка
             </a>
 
             <!--<a href="#" class="btn btn-primary btn-xs disabled" ng-hide="item.fired" role="button">-->
@@ -59,8 +59,8 @@
                         <div class="form-group">
                             <div ng-if="(me.admin || me.kadr)" class="checkbox">
                                 <label>
-                                    <!--<input type="checkbox" ng-if="((item.status ==='Проект') || me.admin)" ng-model="item.action">-->
-                                    <!--<input type="checkbox" ng-if="(item.status !=='Проект' && !me.admin)" disabled ng-model="item.action">-->
+                                    <!--<input type="checkbox" ng-if="((item.status ==='Новая') || me.admin)" ng-model="item.action">-->
+                                    <!--<input type="checkbox" ng-if="(item.status !=='Новая' && !me.admin)" disabled ng-model="item.action">-->
 
                                     <md-switch ng-model="item.action" aria-label="Switch 1">
                                         <span ng-if="item.action">Активность</span>
@@ -86,17 +86,43 @@
 
                         <!-- F I O -->
 
-                        <div ng-if="!edit" class="form-group">
-                            <label class="control-label">ФИО</label>
-                            <p> {{item.lastName}} {{item.firstName}} {{item.patronymicName}} </p>
-                            <!--<input type="text"  class="form-control" required ng-model="item.getFullName()">-->
+                        <!--<div ng-if="!edit" class="form-group">-->
+                            <!--<label class="control-label">ФИО</label>-->
+                            <!--<p> {{item.lastName}} {{item.firstName}} {{item.patronymicName}} </p>-->
+                            <!--&lt;!&ndash;<input type="text"  class="form-control" required ng-model="item.getFullName()">&ndash;&gt;-->
+                        <!--</div>-->
+
+
+
+
+
+                        <!--  E D I T   D E P A R T M E N T S  C O N T R O L L E R -->
+
+
+                        <div ng-controller="ListDepartmentFController" class="form-group ">
+                            <label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()">   </label> <span class="text-danger">*</span>
+                            <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ] </span>
+                            <div class="form-inline" ng-repeat="department in item.departments">
+                                <div class="form-group">
+                                    <select class="form-control"  required ng-model="department.id">
+                                        <option ng-repeat="option in items| filter:{action:true}" value="{{option.id}}">{{option.name}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <button type="button" class="btn btn-default" ng-click="removeSubdivision(department)">x</button>
+                            </div>
+                            <!--<pre id="default-spacing">{{items | json}}</pre>-->
+                            <!--<pre>D E P A R T M E N T S : {{items | limitTo:5 | json}}</pre>-->
                         </div>
+
+
 
                         <!-- L A S T  N A M E -->
 
                         <div ng-if="!edit" class="form-group">
                             <label class="control-label">Фамилия <span class="text-danger">*</span></label>
-                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.lastName">
+                            <input  type="text" class="form-control" required ng-model="item.lastName">
                         </div>
 
 
@@ -104,7 +130,7 @@
 
                         <div ng-if="!edit" class="form-group">
                             <label class="control-label">Имя  <span class="text-danger">*</span></label>
-                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.firstName">
+                            <input  type="text" class="form-control" required ng-model="item.firstName">
                         </div>
 
 
@@ -112,7 +138,7 @@
 
                         <div ng-if="!edit" class="form-group">
                             <label class="control-label">Отчество  <span class="text-danger">*</span></label>
-                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.patronymicName">
+                            <input  type="text" class="form-control" required ng-model="item.patronymicName">
                         </div>
 
 
@@ -123,7 +149,7 @@
                                 Дата выхода сотрудника  <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
-                                <input ng-disabled="edit" type="text" required ng-bind="parseExpression2()" class="form-control flatpickr"
+                                <input  type="text" required ng-bind="parseExpression2()" class="form-control flatpickr"
                                        ng-flatpickr
                                        fp-opts="dateOpts"
                                        fp-on-setup="toggleBlur(item)"
@@ -169,26 +195,6 @@
 
 
 
-                        <!--  E D I T   D E P A R T M E N T S  C O N T R O L L E R -->
-
-
-                        <div ng-controller="ListDepartmentFController" class="form-group ">
-                            <label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()">  </label>
-                            <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ] <span class="text-danger">*</span></span>
-                            <div class="form-inline" ng-repeat="department in item.departments">
-                                <div class="form-group">
-                                    <select class="form-control" ng-disabled="edit" required ng-model="department.id">
-                                        <option ng-repeat="option in items| filter:{action:true}" value="{{option.id}}">{{option.name}}
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <button type="button" class="btn btn-default" ng-click="removeSubdivision(department)">x</button>
-                            </div>
-                            <!--<pre id="default-spacing">{{items | json}}</pre>-->
-                            <!--<pre>D E P A R T M E N T S : {{items | limitTo:5 | json}}</pre>-->
-                        </div>
-
 
                         <!--< N E W  P O S I T I O N -->
 
@@ -223,7 +229,7 @@
                         <!-- Д О Л Ж Н О С Т Ь -->
                         <div class="form-group">
                             <label class="control-label">Должность  <span class="text-danger">*</span></label>
-                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.post">
+                            <input  type="text" class="form-control" required ng-model="item.post">
                         </div>
 
 
@@ -231,7 +237,7 @@
 
                         <div class="form-group">
                             <label class="control-label">Руководитель  <span class="text-danger">*</span></label>
-                            <input ng-disabled="edit" type="text" class="form-control" required ng-model="item.boss">
+                            <input type="text" class="form-control" required ng-model="item.boss">
                         </div>
 
 
@@ -240,7 +246,7 @@
                         <div class="form-group">
                             <label class="control-label">Местоположение</label>
 
-                            <select class="form-control" ng-disabled="edit" name="repeatSelect" ng-model="item.location">
+                            <select class="form-control"  name="repeatSelect" ng-model="item.location">
                                 <option ng-repeat="option in locations.availableOptions" value="{{option.id}}">{{option.name}}</option>
                             </select>
                         </div>
@@ -249,14 +255,14 @@
 
                         <div class="form-group">
                             <label class="control-label">Комната</label>
-                            <input ng-disabled="edit" type="text" class="form-control" ng-model="item.room">
+                            <input  type="text" class="form-control" ng-model="item.room">
                         </div>
 
                         <!-- Д О П О Л Н И Т Е Л Ь Н О -->
 
                         <div class="form-group">
                             <label class="control-label">Дополнительное требование к рабочему месту</label>
-                            <textarea class="form-control" ng-disabled="edit" ng-model="item.extra"></textarea>
+                            <textarea class="form-control"  ng-model="item.extra"></textarea>
                         </div>
 
 
@@ -265,7 +271,7 @@
                         <div class="form-group">
                             <label class="control-label">Права в DAX</label>
 
-                            <select class="form-control" ng-disabled="edit" name="repeatSelect" ng-model="item.dax">
+                            <select class="form-control"  name="repeatSelect" ng-model="item.dax">
                                 <option ng-repeat="option in daxs.availableOptions" value="{{option.id}}">{{option.name}}</option>
                             </select>
                         </div>
@@ -276,7 +282,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit" ng-model="item.phone" aria-label="Switch 1">
+                                    <md-switch  ng-model="item.phone" aria-label="Switch 1">
                                         <span ng-if="!item.phone">Телефон не нужен</span>
                                         <span ng-if="item.phone">Телефон нужен</span>
                                     </md-switch>
@@ -290,7 +296,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit" ng-model="item.remote" aria-label="Switch 2">
+                                    <md-switch  ng-model="item.remote" aria-label="Switch 2">
                                         <span ng-if="!item.remote">Удалённый доступ не нужен</span>
                                         <span ng-if="item.remote">Удалённый доступ нужен</span>
                                     </md-switch>
@@ -304,7 +310,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit" ng-model="item.mobile" aria-label="Switch 3">
+                                    <md-switch  ng-model="item.mobile" aria-label="Switch 3">
                                         <span ng-if="!item.mobile">Мобильный не нужен</span>
                                         <span ng-if="item.mobile">Мобильный нужен</span>
                                     </md-switch>
@@ -318,7 +324,7 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-disabled="edit" ng-model="item.bussinescard" aria-label="Switch 4">
+                                    <md-switch  ng-model="item.bussinescard" aria-label="Switch 4">
                                         <span ng-if="!item.bussinescard">Визитки не нужны</span>
                                         <span ng-if="item.bussinescard">Визитки нужны</span>
                                     </md-switch>
@@ -384,7 +390,7 @@
 
                         <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О   -->
 
-                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
+                        <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
                             <div class="panel-heading"> Финансовый отдел</div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -403,7 +409,7 @@
 
                         <!-- А Х О  В Ы П О Л Н Е Н О   -->
 
-                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
+                        <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
                             <div class="panel-heading">АХО</div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -422,7 +428,7 @@
 
                         <!-- IT  В Ы П О Л Н Е Н О   -->
 
-                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
+                        <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
                             <div class="panel-heading">IT</div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -441,26 +447,26 @@
 
                         <!-- H E L P - D E S K  В Ы П О Л Н Е Н О   -->
 
-                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.hdCheck}">
-                            <div class="panel-heading">Help-Desk</div>
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <label>
-                                            <md-switch ng-disabled="item.kadrValid" ng-model="item.hdCheck" aria-label="Switch 4">
-                                                <span ng-if="!item.hdCheck">{{titles.check}} нет</span>
-                                                <span ng-if="item.hdCheck">{{titles.check}} да</span>
-                                            </md-switch>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!--<div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.hdCheck}">-->
+                            <!--<div class="panel-heading">Help-Desk</div>-->
+                            <!--<div class="panel-body">-->
+                                <!--<div class="form-group">-->
+                                    <!--<div class="checkbox">-->
+                                        <!--<label>-->
+                                            <!--<md-switch ng-disabled="item.kadrValid" ng-model="item.hdCheck" aria-label="Switch 4">-->
+                                                <!--<span ng-if="!item.hdCheck">{{titles.check}} нет</span>-->
+                                                <!--<span ng-if="item.hdCheck">{{titles.check}} да</span>-->
+                                            <!--</md-switch>-->
+                                        <!--</label>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
                         <!-- С О З Д А Н О   -->
 
-                        <div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
+                        <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
                             <div class="panel-heading">Созданы ресурсы</div>
                             <div class="panel-body">
                                 <div class="form-group">
@@ -480,12 +486,12 @@
 
                         <!-- S T A T U S -->
 
-                        <div class="form-group ">
-                            <label class="control-label" for="inputSuccess3">
-                                Статус
-                            </label>
-                            <input type="text" ng-disabled="true" class="form-control" required ng-model="item.status">
-                        </div>
+                        <!--<div class="form-group ">-->
+                            <!--<label class="control-label" for="inputSuccess3">-->
+                                <!--Статус-->
+                            <!--</label>-->
+                            <!--<input type="text" ng-disabled="true" class="form-control" required ng-model="item.status">-->
+                        <!--</div>-->
 
                         <!-- C O L L E C T E D  D A T A -->
 
@@ -509,6 +515,7 @@
                             <div class="col-md-5">
                                 <div class="form-group ">
                                     <div class="form-group ">
+                                        <label class="control-label" for="inputSuccess18">
                                         <label class="control-label" for="inputSuccess18">
                                             Зарегистрирован в системе
                                         </label>

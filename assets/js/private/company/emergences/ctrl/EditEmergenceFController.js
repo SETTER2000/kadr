@@ -476,7 +476,7 @@ angular.module('EmergenceFModule')
                         console.log(err, 'ОШибка в USERS objects');
                         // активируем по умолчанию создаваемую запись
                         //item.action = true;
-                        //item.status = 'Проект';
+                        //item.status = 'Новая';
                         //item.sc = function () {
                         //    return 'Отпуск';
                         //};
@@ -625,7 +625,7 @@ angular.module('EmergenceFModule')
                     }, function (err) {
                         // активируем по умолчанию создаваемую запись
                         item.action = true;
-                        item.status = 'Проект';
+                        item.status = 'Новая';
                         item.countData = 0;
                     }
                 );
@@ -650,13 +650,13 @@ angular.module('EmergenceFModule')
 
             $scope.$watch('item.action', function (value, old) {
                 if (value !== undefined && !value) {
-                    toastr.warning('Рассылка не будет запущена.<br> Для запуска активируйте проект установив активность.', info.warning);
+                    toastr.warning('Рассылка не будет запущена.<br> Для запуска активируйте заявку установив активность.', info.warning);
                 }
             });
             $scope.$watch('item.start', function (value) {
                 if (value) {
-                    if (($scope.item.status === 'Проект' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
-                        toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
+                    if (($scope.item.status === 'Новая' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
+                        toastr.error('Эта рассылка не отработала, возможно сервер был не доступен в момент запуска рассылки в работу.', info.error(5000),
                             {
                                 //"closeButton": true,
                                 //"debug": false,
@@ -675,11 +675,11 @@ angular.module('EmergenceFModule')
                             });
                         return;
                     }
-                    if ($scope.item.status !== 'Проект' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
+                    if ($scope.item.status !== 'Новая' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
                     let nm;
 
                     console.log('FORMAT', value);
-                    nm = (moment(value).isSameOrBefore(moment())) ? 'Проект запущен' : 'Запуск проекта';
+                    nm = (moment(value).isSameOrBefore(moment())) ? 'Рассылка запущен' : 'Запуск рассылки';
                     toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
                         {
                             //"closeButton": true,
@@ -777,12 +777,12 @@ angular.module('EmergenceFModule')
             var roundingDefault = moment.relativeTimeRounding();
             moment.relativeTimeThreshold('m', 60);
             $scope.saveEdit = function (item) {
-                item.start = moment().add(2,'minutes');
+                if (!angular.isDefined(item.id)) { item.start = moment().add(2,'minutes');}
                 item = reversValue(item);
-                console.log('ITEM START', item);
+
 
                 // console.log('********************************Перед созданием', item);
-                if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска проекта"', 'не заполнено'), info.error(5811));
+                //if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска рассылки"', 'не заполнено'), info.error(5811));
                 //if (!item.recipient) return toastr.error(info.filedErr('"Адресаты"', 'не заполнено'), info.error(4028));
                 //if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
                 //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));

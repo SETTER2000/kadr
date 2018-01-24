@@ -6,7 +6,7 @@
             </p>
             <p ng-if="!item.lastName">{{item.getNewEmployees()}}</p>
             <a href="#" class="btn btn-xs disabled"
-               ng-class="{'btn-primary':(item.status==='Проект'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Утвержден')}"
+               ng-class="{'btn-primary':(item.status==='Новая'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Утвержден')}"
                ng-hide="item.fired" role="button">
                 {{item.status}}
             </a>
@@ -59,8 +59,8 @@
                         <div class="form-group">
                             <div ng-if="(me.admin || me.kadr)" class="checkbox">
                                 <label>
-                                    <!--<input type="checkbox" ng-if="((item.status ==='Проект') || me.admin)" ng-model="item.action">-->
-                                    <!--<input type="checkbox" ng-if="(item.status !=='Проект' && !me.admin)" disabled ng-model="item.action">-->
+                                    <!--<input type="checkbox" ng-if="((item.status ==='Новая') || me.admin)" ng-model="item.action">-->
+                                    <!--<input type="checkbox" ng-if="(item.status !=='Новая' && !me.admin)" disabled ng-model="item.action">-->
 
                                     <md-switch ng-model="item.action" aria-label="Switch 1">
                                         <span ng-if="item.action">Активность</span>

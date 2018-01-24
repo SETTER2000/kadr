@@ -176,7 +176,7 @@ module.exports = {
                 action: req.param('action'),
                 positions: req.param('positions'),
                 departments: req.param('departments'),
-                status: 'Проект',
+                status: 'Новая',
                 start: new Date(start),
                 outputEmployee: new Date(req.param('outputEmployee')),
                 countData: +req.param('countData'),
@@ -258,7 +258,11 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        let action = (!(!req.param('action') || req.param('kadrValid')));
+        let action = (req.param('kadrValid'))? false : true;
+        //let action = (!(!req.param('action') || req.param('kadrValid')));
+
+
+
         console.log('ALL REQUEST', req.params.all());
         if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         let obj = {
@@ -284,7 +288,7 @@ module.exports = {
             daysSelectHoliday: req.param('daysSelectHoliday'),
             action: action,
             //period: req.param('period'),
-            status: (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Проект',
+            status: (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Новая',
             //htmlData: req.param('htmlData'),
             //htmlData2: req.param('htmlData2'),
             bussinescard: req.param('bussinescard'),
@@ -298,7 +302,7 @@ module.exports = {
             positions: req.param('positions'),
             worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
         };
-        ((obj.status === 'Проект') || (obj.status === 'В работе')) ? obj.countData = +req.param('countData') : '';
+        ((obj.status === 'Новая') || (obj.status === 'В работе')) ? obj.countData = +req.param('countData') : '';
         User.findOne({id: obj.whomUpdated})
             .exec((err, findUser) => {
                 "use strict";

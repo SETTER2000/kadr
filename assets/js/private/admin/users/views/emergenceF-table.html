@@ -192,19 +192,19 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- F I O -->
         <td class="text-nowrap">
-            <!--<a ng-if="(item.status==='Проект' || me.admin)"  ui-sref="home.company.emergences.edit({emergenceId:item.id})">-->
-                <!--&lt;!&ndash;<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">&ndash;&gt;-->
+            <!--<a ng-if="(item.status==='Новая' || me.admin)"  ui-sref="home.company.emergences.edit({emergenceId:item.id})">-->
+                <!--&lt;!&ndash;<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">&ndash;&gt;-->
                 <!--{{item.getFullName()}}-->
             <!--</a>-->
-            <!--<span ng-if="(item.status!=='Проект' && !me.admin)">{{item.getFullName()}}</span>-->
+            <!--<span ng-if="(item.status!=='Новая' && !me.admin)">{{item.getFullName()}}</span>-->
             <a  ui-sref="home.company.emergences.edit({emergenceId:item.id})">
-            <!--<a ng-if="(item.status==='Проект' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
+            <!--<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
             {{item.getFullName()}}
             </a>
         </td>
 
 
-        <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
+        <!-- Д Е П А Р Т А М Е Н Т  -->
         <td>
             {{item.departments[0].name }}
         </td>
@@ -212,7 +212,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
         <td class="text-center">
-            {{item.outputEmployee | date:"dd.MM.yyyy HH:mm"}}
+            {{item.outputEmployee | date:"dd.MM.yyyy"}}
         </td>
 
 
@@ -229,7 +229,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <!-- S T A T U S -->
         <td class="text-center ">
             <strong ng-click="item.goOpen()"
-                    ng-class="{'text-primary':(item.status==='Проект'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Утвержден'), }">
+                    ng-class="{'text-primary':(item.status==='Новая'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Утвержден'), }">
                 {{item.status}}
                 <md-tooltip ng-if="(item.status==='В работе')" md-direction="right">{{nameHeader.title}}</md-tooltip>
             </strong>
@@ -266,7 +266,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             </div>
 
             <!--ПРОЕКТ-->
-            <div ng-if="item.logSender && item.go && (item.status==='Проект')" class="animate-if">
+            <div ng-if="item.logSender && item.go && (item.status==='Новая')" class="animate-if">
                 <h6>Рассылка:{{item.start | deadline}}</h6>
                 <!--<div class="list-group" ng-repeat="sender in item.logSender">-->
                 <!--<p>-->

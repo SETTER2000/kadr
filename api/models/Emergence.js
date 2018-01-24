@@ -119,8 +119,8 @@ module.exports = {
         //Ожидание 	    (wait_one)  pending
         status: {
             type: 'string',
-            defaultsTo: 'Проект',
-            enum: ['Проект', 'В работе', 'Утвержден']
+            defaultsTo: 'Новая',
+            enum: ['Новая', 'В работе', 'Завершена']
         },
         htmlData: {
             type: 'array',
