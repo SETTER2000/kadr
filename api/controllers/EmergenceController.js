@@ -260,7 +260,7 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         let action = (!(!req.param('action') || req.param('kadrValid')));
         console.log('ALL REQUEST', req.params.all());
-        //if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
+        if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         let obj = {
             section: 'Выход нового сотрудника',
             sections: 'Выход новых сотрудников',
