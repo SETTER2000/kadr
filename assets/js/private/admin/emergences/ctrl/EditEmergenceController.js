@@ -778,9 +778,9 @@ angular.module('EmergenceModule')
                 console.log('ITEM START', item);
 
                 // console.log('********************************Перед созданием', item);
-                if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска проекта"', 'не заполнено'), info.error(5811));
-                if (!item.recipient) return toastr.error(info.filedErr('"Адресаты"', 'не заполнено'), info.error(4028));
-                if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
+                //if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска проекта"', 'не заполнено'), info.error(5811));
+                //if (!item.recipient) return toastr.error(info.filedErr('"Адресаты"', 'не заполнено'), info.error(4028));
+                //if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
                 //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
@@ -788,38 +788,33 @@ angular.module('EmergenceModule')
 
                 //if (!item.start)
 
-
                 if (angular.isDefined(item.id)) {
+
+                    console.log('UPDATE item:', item);
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $scope.refresh();
                         },
                         function (err) {
+                            console.log('ERR11445', err);
+                            if(err.status == 400)  toastr.error(err.statusText+' '+err.data.details, info.error(err.status));
                             toastr.error(err.data, info.error(11445));
                         }
                     );
                 } else {
-
-
-                    if (angular.isDefined(item)
-                    // && angular.isDefined(item.lastName)
-                    // &&angular.isDefined(item.patronymicName)
-                    /*  &&
-                     angular.isDefined(item.login) &&
-                     angular.isDefined(item.fired) &&
-                     angular.isDefined(item.birthday) &&
-                     angular.isDefined(item.email)*/
-                    ) {
+                    if (angular.isDefined(item)) {
                         let ar = [];
                         let ar2 = [];
-
+                        if (!angular.isDefined(item.id)) {
+                            item.start = moment().add(2, 'minutes');
+                        }
                         if (angular.isDefined(item.htmlData)) {
                             for (let key in item.htmlData) {
                                 ar.push(item.htmlData[key]);
                             }
                             item.htmlData = ar;
                         }
-                        if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
+                        //if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
 
 
                         if (angular.isDefined(item.htmlData2)) {
@@ -829,21 +824,77 @@ angular.module('EmergenceModule')
                             item.htmlData2 = ar2;
                         }
                         //toastr.success(info.newOk, info.ok);
-                        //$state.go('home.admin.emergences');
+                        //$state.go('home.company.emergences');
                         item.$save(item, function (success) {
                                 //console.log(success);
                                 //location.reload();
                                 toastr.success(info.newOk);
                                 // /admin/emergence/
                                 //$location.path('/profile') ;
-                                $state.go('home.admin.emergences', {emergenceId: success.id});
-                                //$state.go('home.admin.emergences');
+                                $state.go('home.company.emergences', {emergenceId: success.id});
+                                //$state.go('home.company.emergences');
                             },
                             function (err) {
                                 toastr.error(err.data, info.error(89336));
                             });
                     }
                 }
+                //if (angular.isDefined(item.id)) {
+                //    item.$update(item, function (success) {
+                //            toastr.success(info.changed);
+                //            $scope.refresh();
+                //        },
+                //        function (err) {
+                //            toastr.error(err.data, info.error(11445));
+                //        }
+                //    );
+                //}
+                //else {
+                //
+                //
+                //    if (angular.isDefined(item)
+                //    // && angular.isDefined(item.lastName)
+                //    // &&angular.isDefined(item.patronymicName)
+                //    /*  &&
+                //     angular.isDefined(item.login) &&
+                //     angular.isDefined(item.fired) &&
+                //     angular.isDefined(item.birthday) &&
+                //     angular.isDefined(item.email)*/
+                //    ) {
+                //        let ar = [];
+                //        let ar2 = [];
+                //
+                //        if (angular.isDefined(item.htmlData)) {
+                //            for (let key in item.htmlData) {
+                //                ar.push(item.htmlData[key]);
+                //            }
+                //            item.htmlData = ar;
+                //        }
+                //        if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
+                //
+                //
+                //        if (angular.isDefined(item.htmlData2)) {
+                //            for (let key in item.htmlData2) {
+                //                ar2.push(item.htmlData2[key]);
+                //            }
+                //            item.htmlData2 = ar2;
+                //        }
+                //        //toastr.success(info.newOk, info.ok);
+                //        //$state.go('home.admin.emergences');
+                //        item.$save(item, function (success) {
+                //                //console.log(success);
+                //                //location.reload();
+                //                toastr.success(info.newOk);
+                //                // /admin/emergence/
+                //                //$location.path('/profile') ;
+                //                $state.go('home.admin.emergences', {emergenceId: success.id});
+                //                //$state.go('home.admin.emergences');
+                //            },
+                //            function (err) {
+                //                toastr.error(err.data, info.error(89336));
+                //            });
+                //    }
+                //}
             };
 
 

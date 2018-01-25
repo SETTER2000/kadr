@@ -1076,7 +1076,7 @@ module.exports = {
 
         User.update(req.param('id'), {
             admin: req.param('admin'),
-            rightSwitch: req.param('admin')
+            switchAdmin: req.param('admin')
         }).exec(function (err, update) {
             if (err) return res.negotiate(err);
             return res.ok();
@@ -1092,7 +1092,8 @@ module.exports = {
     updateKadr: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.update(req.param('id'), {
-            kadr: req.param('kadr')
+            kadr: req.param('kadr'),
+            switchKadr: req.param('kadr')
         }).exec(function (err, update) {
             if (err) return res.negotiate(err);
             return res.ok();
@@ -1120,23 +1121,35 @@ module.exports = {
      * @param req
      * @param res
      */
-    setRightSwitch: function (req, res) {
+    switchPolice: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //console.log('FASSS', req.session.me);
+        console.log('REQ ALL switchPolice:', req.params.all());
         User.findOne({id: req.session.me}).exec((err, findOne)=> {
             if (err) return res.serverError(err);
             if (!findOne) return res.badRequest();
 
-            //console.log('DASS findOne', findOne);
-            if (!findOne.rightSwitch) return res.badRequest();
-            
-            var admin = (findOne.admin) ? false : true;
-            User.update({id: req.session.me}, {
-                admin: admin
-            }).exec(function (err, update) {
-                if (err) return res.negotiate(err);
-                return res.ok();
-            });
+            console.log('DASS findOne', findOne);
+            if (findOne.switchAdmin){
+                console.log('ZZ findOne.switchAdmin', findOne.switchAdmin);
+                let admin = (findOne.admin) ? false : true;
+                User.update({id: req.session.me}, {
+                    admin: admin
+                }).exec(function (err, update) {
+                   if(err) return res.badRequest();
+                    return res.ok();
+                });
+            }
+
+            if (findOne.switchKadr){
+                console.log('ZZ findOne.switchKadr', findOne.switchKadr);
+                let kadr = (findOne.kadr) ? false : true;
+                User.update({id: req.session.me}, {
+                    kadr: kadr
+                }).exec(function (err, update) {
+                   if(err) return res.badRequest();
+                    return res.ok();
+                });
+            }
         });
     },
 

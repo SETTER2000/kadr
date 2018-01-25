@@ -2,8 +2,8 @@
     'use strict';
     angular.module('PositionModule')
         .controller('ListPositionController', ['$scope', 'Positions','toastr', '$state',function ($scope, Positions,toastr, $state) {
-            //$scope.me = window.SAILS_LOCALS.me;
-            //if(!$scope.me.admin) $location.path('/') ;
+            $scope.me = window.SAILS_LOCALS.me;
+            if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home');
                 /**
                  * Поле сортировки объекта по умолчанию.
                  * @type {string}

@@ -19,7 +19,7 @@
 
                     <li ng-if="(!me.admin && !me.kadr  && me.vacation)"><a ui-sref="home.company.vacations">Отпуска</a></li>
 
-                    <li ng-if="(me.admin)" class="dropdown">
+                    <li ng-if="(me.admin || me.kadr)" class="dropdown">
                         <div ng-show="bdgs.length" class="badges-position">
                             <div class="badge danger" ng-mouseover="clickToOpen()">
                                 {{bdgs.length}}
@@ -79,9 +79,9 @@
                             <li><a ng-if="me.admin" ui-sref="home.admin.users.administration">Группы</a></li>
                         </ul>
                     </li>
-                    <li ng-if="me.rightSwitch">
-                        <a type="button" class="btn btn-link btn-md pull-right" ng-click="goRightSwitch()" title="{{title}}" >
-                            <span class="glyphicon glyphicon-user" ng-class="{'glyphicon-king':(titleName===' Админ')}"></span> {{titleName}}
+                    <li ng-if="me.switchAdmin || me.switchKadr">
+                        <a type="button" class="btn btn-link btn-md pull-right" ng-click="goSwitch()" title="{{ins.title}}" >
+                            <span class="glyphicon glyphicon-user" ng-class="{'glyphicon-king':(ins.titleName===' Админ'), 'glyphicon-queen':(ins.titleName===' Кадровик')}"></span> {{ins.titleName}}
                         </a>
                     </li>
 

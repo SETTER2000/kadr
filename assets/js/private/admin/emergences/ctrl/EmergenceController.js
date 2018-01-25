@@ -2,7 +2,7 @@ angular.module('EmergenceModule')
     .controller('EmergenceController', ['$scope', '$state','toastr', 'moment', 'Emergences', '$stateParams',
         function ($scope,$state,toastr, moment, Emergences, $stateParams) {
             $scope.me = window.SAILS_LOCALS.me;
-            if (!$scope.me.admin) return $state.go('home');
+            if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home');
 
             //$scope.message = moment({start:'1995-12-25',end:'2000-10-10'}).year(2009).hours(0).minutes(0).seconds(0);
             /**

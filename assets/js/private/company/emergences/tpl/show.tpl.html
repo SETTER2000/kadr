@@ -16,6 +16,10 @@
                     <td>{{item.name }}</td>
                 </tr>
                 <tr>
+                    <th>Статус заявки</th>
+                    <td>{{item.status}}</td>
+                </tr>
+                <tr>
                     <th>Дата выхода сотрудника</th>
                     <td>{{item.outputEmployee | date:"dd.MM.yyyy"}}</td>
                 </tr>
@@ -145,16 +149,16 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
-                    <th>Help-Desk. Выполнено</th>
-                    <td>
-                        <div ng-switch on="item.hdCheck">
-                            <!--<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>-->
-                            <div ng-switch-when="true">Да</div>
-                            <div ng-switch-default>Нет</div>
-                        </div>
-                    </td>
-                </tr>
+                <!--<tr>-->
+                    <!--<th>Help-Desk. Выполнено</th>-->
+                    <!--<td>-->
+                        <!--<div ng-switch on="item.hdCheck">-->
+                            <!--&lt;!&ndash;<div class="animate-switch" ng-switch-when="settings|options" ng-switch-when-separator="|">Settings Div</div>&ndash;&gt;-->
+                            <!--<div ng-switch-when="true">Да</div>-->
+                            <!--<div ng-switch-default>Нет</div>-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
                 <tr ng-class="{'success':item.endKadr}">
                     <th>Кадры. Обработка завершена</th>
                     <td>
@@ -166,10 +170,7 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <th>Статус заявки</th>
-                    <td>{{item.status}}</td>
-                </tr>
+
 
                 <!--<tr>-->
                 <!--<th><span class="pull-left"> С <md-tooltip md-direction="right">Начало запуска графика отпусков</md-tooltip></span></th>-->

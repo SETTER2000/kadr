@@ -1,7 +1,7 @@
 'use strict';
 angular.module('EmergenceFModule')
-    .controller('EditEmergenceFController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'EmergencesF', 'moment',  'Departments','UsersF', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
-        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, EmergencesF, moment,  Departments, UsersF, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
+    .controller('EditEmergenceFController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'EmergencesF', 'moment', 'Departments', 'UsersF', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
+        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, EmergencesF, moment, Departments, UsersF, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me || !$scope.me.emergence) return $state.go('home');
             //if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.company.emergences');
@@ -494,8 +494,6 @@ angular.module('EmergenceFModule')
             }
 
 
-
-
             $scope.close = 1;
 
             $scope.loginAdmin = false;
@@ -701,9 +699,9 @@ angular.module('EmergenceFModule')
             });
 
 
-            $scope.checkStatus = function () {
-                return ($scope.item.status === 'Утвержден') ? false : true;
-            };
+            //$scope.checkStatus = function () {
+            //    return ($scope.item.status === 'Завершена');
+            //};
 
             //$scope.$watch('item.year', function (val) {
             //    if (val) {
@@ -762,6 +760,31 @@ angular.module('EmergenceFModule')
                 ]
             };
 
+            $scope.checkedValue = function () {
+                $scope.item.endKadr = ($scope.item.startKadr && $scope.item.finCheck && $scope.item.ahoCheck && $scope.item.itCheck);
+                $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
+            };
+
+            $scope.$watch('item.kadrValid', function (val) {
+                $scope.checkedValue();
+            });
+            $scope.$watch('item.startKadr', function (val) {
+                $scope.checkedValue();
+            });
+
+            $scope.$watch('item.finCheck', function (val) {
+                $scope.checkedValue();
+            });
+
+            $scope.$watch('item.ahoCheck', function (val) {
+                $scope.checkedValue();
+            });
+
+            $scope.$watch('item.itCheck', function (val) {
+                $scope.checkedValue();
+            });
+
+
             $scope.daxs = {
                 model: null,
                 availableOptions: [
@@ -777,7 +800,7 @@ angular.module('EmergenceFModule')
             var roundingDefault = moment.relativeTimeRounding();
             moment.relativeTimeThreshold('m', 60);
             $scope.saveEdit = function (item) {
-                if (!angular.isDefined(item.id)) { item.start = moment().add(2,'minutes');}
+
                 item = reversValue(item);
 
 
@@ -794,29 +817,25 @@ angular.module('EmergenceFModule')
 
 
                 if (angular.isDefined(item.id)) {
+
+                    console.log('UPDATE item:', item);
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $scope.refresh();
                         },
                         function (err) {
+                            console.log('ERR11445', err);
+                            if (err.status == 400)  toastr.error(err.statusText + ' ' + err.data.details, info.error(err.status));
                             toastr.error(err.data, info.error(11445));
                         }
                     );
                 } else {
-
-
-                    if (angular.isDefined(item)
-                    // && angular.isDefined(item.lastName)
-                    // &&angular.isDefined(item.patronymicName)
-                    /*  &&
-                     angular.isDefined(item.login) &&
-                     angular.isDefined(item.fired) &&
-                     angular.isDefined(item.birthday) &&
-                     angular.isDefined(item.email)*/
-                    ) {
+                    if (angular.isDefined(item)) {
                         let ar = [];
                         let ar2 = [];
-
+                        if (!angular.isDefined(item.id)) {
+                            item.start = moment().add(2, 'minutes');
+                        }
                         if (angular.isDefined(item.htmlData)) {
                             for (let key in item.htmlData) {
                                 ar.push(item.htmlData[key]);

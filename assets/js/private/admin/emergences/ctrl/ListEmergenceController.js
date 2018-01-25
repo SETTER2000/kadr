@@ -3,7 +3,7 @@
     angular.module('EmergenceModule')
         .controller('ListEmergenceController', ['$scope', '$location', 'ngDialog', '$mdDialog', 'moment', '$http', 'toastr', "$rootScope", '$timeout', '$state', 'Emergences', '$window', function ($scope, $location, ngDialog, $mdDialog, moment, $http, toastr, $rootScope, $timeout, $state, Emergences) {
             $scope.me = window.SAILS_LOCALS.me;
-            if (!$scope.me.admin) return $state.go('home');
+            if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home');
             //if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             $scope.$on('defaultRowsTable', function (event, data) {
                 console.log('defaultRowsTable', data); // Данные, которые нам прислали
@@ -120,11 +120,17 @@
                 departmentArea: 'Отдел',
                 tenArea: 'Обновил',
                 actionArea: 'Активность',
+                startKadrArea: 'Кадры',
+                finCheckArea: 'Финансовый отдел',
+                ahoCheckArea: 'АХО',
+                itCheckArea: 'IT',
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено',
                 title: 'Рассылка сообщений закончена.',
-                startProject: 'Дата запуска проекта',
+                startProject: 'Дата подачи заявки',
                 outputEmployee: 'Дата выхода сотрудника',
+                check:'выполнено',
+                checkKadr:'начать обработку'
             };
 
 
@@ -135,7 +141,7 @@
             $scope.showStr = 0;
             $scope.urlBt = 'home.admin.emergences.create';
 
-            $scope.sort = 'createdAt ASC';// сортировка по умолчанию
+            $scope.sort = 'createdAt DESC';// сортировка по умолчанию
             $scope.param = 'lastName';
             $scope.fieldName = 'Внутренний телефон';
             $scope.charText = '';

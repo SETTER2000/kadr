@@ -2,6 +2,7 @@ angular.module('PositionModule')
     .controller('EditPositionController', ['$scope', '$state','toastr', 'Positions', '$stateParams', '$rootScope',
         function ($scope, $state,toastr, Positions, $stateParams, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
+            if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home');
             $scope.editPosition = $state.includes('home.admin.positions.edit');
             //if(!$scope.me.admin) $location.path('/') ;
             $scope.refresh = function () {

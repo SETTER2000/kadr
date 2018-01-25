@@ -86,7 +86,11 @@ module.exports = {
         leader: {
             type: 'boolean'
         },
-        rightSwitch:{
+        switchAdmin:{
+            type: 'boolean',
+            defaultsTo: false
+        },
+        switchKadr:{
             type: 'boolean',
             defaultsTo: false
         },

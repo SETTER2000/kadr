@@ -43,8 +43,8 @@ angular.module('HomepageModule').controller('RestoreProfileController', ['$scope
           // Otherwise, display generic error if the error is unrecognized.
           // $scope.restoreProfileForm.errorMsg = 'Email/Password combination does not match profile';
           if (sailsResponse.data.status >= 400 < 404) {
-            $scope.restoreProfileForm.errorMsg = 'An unexpected error occurred: ' + (sailsResponse.data || sailsResponse.status);
-            toastr.error('The email/password combination did not match a user profile.','', { timeOut: 1000 });
+            $scope.restoreProfileForm.errorMsg = 'Произошла непредвиденная ошибка: ' + (sailsResponse.data || sailsResponse.status);
+            toastr.error('Комбинация email и пароля не соответствует профилю пользователя.','', { timeOut: 1000 });
             return;
           }
 

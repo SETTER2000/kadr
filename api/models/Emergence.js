@@ -120,7 +120,7 @@ module.exports = {
         status: {
             type: 'string',
             defaultsTo: 'Новая',
-            enum: ['Новая', 'В работе', 'Завершена']
+            enum: ['Новая', 'В работе', 'Завершена','Отклонена']
         },
         htmlData: {
             type: 'array',
@@ -157,9 +157,9 @@ module.exports = {
         daysSelectHoliday: {
             type: 'integer'
         },
-        countData: {
-            type: 'integer'
-        },
+        //countData: {
+        //    type: 'integer'
+        //},
         worked: { // отработала или нет
             type: 'boolean',
             defaultsTo: true,

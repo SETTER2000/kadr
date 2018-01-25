@@ -26,7 +26,7 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //console.log('GET ALL PARAMS Emergence:', req.params.all());
+        console.log('GET ALL PARAMS Emergence:', req.params.all());
         var q = {
             limit: req.param('limit'),
             sort: req.param('sort')
@@ -179,7 +179,7 @@ module.exports = {
                 status: 'Новая',
                 start: new Date(start),
                 outputEmployee: new Date(req.param('outputEmployee')),
-                countData: +req.param('countData'),
+                //countData: +req.param('countData'),
                 lastName: req.param('lastName'),
                 firstName: req.param('firstName'),
                 patronymicName: req.param('patronymicName'),
@@ -258,13 +258,13 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        let action = (req.param('kadrValid'))? false : true;
+        let action = (req.param('kadrValid')) ? false : true;
         //let action = (!(!req.param('action') || req.param('kadrValid')));
 
 
-
         console.log('ALL REQUEST', req.params.all());
-        if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
+        console.log('STATUS REQUEST', req.param('status'));
+        //if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
         let obj = {
             section: 'Выход нового сотрудника',
             sections: 'Выход новых сотрудников',
@@ -272,6 +272,9 @@ module.exports = {
             post: req.param('post'),
             room: req.param('room'),
             dax: req.param('dax'),
+            lastName: req.param('lastName'),
+            firstName: req.param('firstName'),
+            patronymicName: req.param('patronymicName'),
             startKadr: req.param('startKadr'),
             kadrValid: req.param('kadrValid'),
             endKadr: req.param('endKadr'),
@@ -282,13 +285,14 @@ module.exports = {
             commentKadr: req.param('commentKadr'),
             recipient: req.param('recipient'),
             remote: req.param('remote'),
+            boss: req.param('boss'),
             extra: req.param('extra'),
             location: req.param('location'),
             whomUpdated: req.session.me,
             daysSelectHoliday: req.param('daysSelectHoliday'),
             action: action,
             //period: req.param('period'),
-            status: (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Новая',
+            status: (req.param('status') === 'Завершена') ? req.param('status') : (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Новая',
             //htmlData: req.param('htmlData'),
             //htmlData2: req.param('htmlData2'),
             bussinescard: req.param('bussinescard'),
@@ -302,7 +306,7 @@ module.exports = {
             positions: req.param('positions'),
             worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
         };
-        ((obj.status === 'Новая') || (obj.status === 'В работе')) ? obj.countData = +req.param('countData') : '';
+        //((obj.status === 'Новая') || (obj.status === 'В работе')) ? obj.countData = +req.param('countData') : '';
         User.findOne({id: obj.whomUpdated})
             .exec((err, findUser) => {
                 "use strict";

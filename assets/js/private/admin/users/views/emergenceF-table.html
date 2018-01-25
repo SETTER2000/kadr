@@ -106,10 +106,48 @@
         <!--</th>-->
 
         <!-- А К Т И В А Ц И Я -->
+        <!--<th class="text-center">-->
+            <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('action')">-->
+                <!--{{nameHeader.actionArea}}-->
+                <!--<span class="sortOrder" ng-show="propertyName === 'action'"-->
+                      <!--ng-class="{reverse: reverse}"></span>-->
+            <!--</button>-->
+        <!--</th>-->
+
+
+        <!-- К А Д Р Ы  Н А Ч А Т Ь  П Р О Ц Е Д У Р У -->
         <th class="text-center">
-            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('action')">
-                {{nameHeader.actionArea}}
-                <span class="sortOrder" ng-show="propertyName === 'action'"
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('startKadr')">
+                {{nameHeader.startKadrArea}}
+                <span class="sortOrder" ng-show="propertyName === 'startKadr'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+
+        <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('finCheck')">
+                {{nameHeader.finCheckArea}}
+                <span class="sortOrder" ng-show="propertyName === 'finCheck'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!-- А Х О  В Ы П О Л Н Е Н О -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('ahoCheck')">
+                {{nameHeader.ahoCheckArea}}
+                <span class="sortOrder" ng-show="propertyName === 'ahoCheck'"
+                      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
+        <!-- IT  В Ы П О Л Н Е Н О -->
+        <th class="text-center">
+            <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('itCheck')">
+                {{nameHeader.itCheckArea}}
+                <span class="sortOrder" ng-show="propertyName === 'itCheck'"
                       ng-class="{reverse: reverse}"></span>
             </button>
         </th>
@@ -175,7 +213,7 @@
     </tr>
 
     <!-- B O D Y  T A B L E -->
-    <tr ng-repeat="item in filtered=(items | filter:{$:searchText} | filter:filterObject |
+    <tr ng-class="{'success':item.endKadr}" ng-repeat="item in filtered=(items | filter:{$:searchText} | filter:filterObject |
 orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)" ng-cloak>
 
         <!-- I N D E X -->
@@ -197,9 +235,9 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                 <!--{{item.getFullName()}}-->
             <!--</a>-->
             <!--<span ng-if="(item.status!=='Новая' && !me.admin)">{{item.getFullName()}}</span>-->
-            <a  ui-sref="home.company.emergences.edit({emergenceId:item.id})">
+            <a title="{{item.getFullName()}}" ui-sref="home.company.emergences.edit({emergenceId:item.id})">
             <!--<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
-            {{item.getFullName()}}
+            {{item.getShortName()}}
             </a>
         </td>
 
@@ -229,23 +267,25 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <!-- S T A T U S -->
         <td class="text-center ">
             <strong ng-click="item.goOpen()"
-                    ng-class="{'text-primary':(item.status==='Новая'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Утвержден'), }">
+                    ng-class="{'text-primary':(item.status==='Новая'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Завершена'), }">
                 {{item.status}}
                 <md-tooltip ng-if="(item.status==='В работе')" md-direction="right">{{nameHeader.title}}</md-tooltip>
             </strong>
+
+
             <div ng-if="item.logSender && item.go && (item.status==='В работе')" class="animate-if ">
                 <div class="row" style="position: relative">
                     <div class="col-md-12  text-nowrap" style="position: absolute; top:7px;  z-index: 100; min-width: 600px;">
                         <div class="panel panel-success">
-                            <div class="panel-heading   text-left">Сообщения отправлены <a href="#" class="pull-right"
-                                                                                           ng-click="item.goClose()">x</a></div>
+                            <div class="panel-heading   text-left">
+                                Сообщения отправлены
+                                <a href="#" class="pull-right" ng-click="item.goClose()">x</a>
+                            </div>
                             <div class="panel-body">
                                 <table class="table table-hover">
                                     <tr ng-repeat="sender in item.logSender">
                                         <td class="text-left text-nowrap">
-                                            <small class="text-info">{{sender.name}}
-
-                                            </small>
+                                            <small class="text-info">{{sender.name}}</small>
                                         </td>
                                         <td class="text-left">
                                             <small>  {{sender.email}}</small>
@@ -265,7 +305,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                 </div>
             </div>
 
-            <!--ПРОЕКТ-->
+            <!--НОВАЯ-->
             <div ng-if="item.logSender && item.go && (item.status==='Новая')" class="animate-if">
                 <h6>Рассылка:{{item.start | deadline}}</h6>
                 <!--<div class="list-group" ng-repeat="sender in item.logSender">-->
@@ -298,9 +338,32 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <!--</td>-->
 
         <!-- А К Т И В А Ц И Я -->
+        <!--<td class="text-center">-->
+            <!--<span ng-if="item.action" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>-->
+        <!--</td>-->
+
+
+        <!-- К А Д Р Ы  Н А Ч А Т Ь  П Р О Ц Е Д У Р У -->
         <td class="text-center">
-            <span ng-if="item.action" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+            <span ng-if="item.startKadr" title="{{nameHeader.checkKadr}}" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
         </td>
+
+
+        <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О -->
+        <td class="text-center">
+            <span ng-if="item.finCheck" title="{{nameHeader.check}}" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+        </td>
+
+        <!-- А Х О  В Ы П О Л Н Е Н О -->
+        <td class="text-center">
+            <span ng-if="item.ahoCheck" title="{{nameHeader.check}}" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+        </td>
+
+        <!-- IT  В Ы П О Л Н Е Н О -->
+        <td class="text-center">
+            <span ng-if="item.itCheck" title="{{nameHeader.check}}" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+        </td>
+
 
         <!-- С О З Д А Л -->
         <td class="text-center text-nowrap">
