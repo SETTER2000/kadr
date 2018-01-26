@@ -800,9 +800,7 @@ angular.module('EmergenceFModule')
             var roundingDefault = moment.relativeTimeRounding();
             moment.relativeTimeThreshold('m', 60);
             $scope.saveEdit = function (item) {
-
                 item = reversValue(item);
-
 
                 // console.log('********************************Перед созданием', item);
                 //if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска рассылки"', 'не заполнено'), info.error(5811));
@@ -811,13 +809,8 @@ angular.module('EmergenceFModule')
                 //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
-
-
                 //if (!item.start)
-
-
                 if (angular.isDefined(item.id)) {
-
                     console.log('UPDATE item:', item);
                     item.$update(item, function (success) {
                             toastr.success(info.changed);

@@ -135,7 +135,7 @@ module.exports = {
             if (err) return res.serverError(err);
             console.log('findDepart', findDepart);
 
-            let recipient = sails.config.recipient.collection;
+            let recipient = sails.config.recipient.kadr;
             //servicedesk@landata.ru - ИТ
             //
             //axd@landata.ru - АХД
