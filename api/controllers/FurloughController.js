@@ -15,32 +15,14 @@ module.exports = {
             .exec((err, furlough) => {
             if (err) return res.negotiate;
             if (!furlough) return res.notFound();
-
-            // return res.redirect('/admin/users/edit/' + req.param('id'));
-            // return res.backToHomePage();
-            //return res.redirect('/admin/users/edit/' + req.param('id'));
             (req.param('id')) ? res.ok(furlough[0]) : res.ok(furlough);
         });
     },
 
     create: function (req, res) {
-        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //if (!_.isString( req.param('name') ) ) {
-        //    //sails.log(req.param('name'));
-        //    //sails.log('is not string');
-        //    return res.badRequest('Наименование не заполнено.');
-        //}
-        //if (_.isNumber( req.param('name') ) ) {
-        //    //sails.log(req.param('name'));
-        //    //sails.log('is not string');
-        //    return res.badRequest('Наименование не строка!');
-        //}
-
         if (req.param('name').length < 2 || req.param('name').length > 200) {
             return res.badRequest('Наименование должно быть от 2 до 200 знаков!');
         }
-
-        //console.log('Action', req.param('action'));
         var obj = {
             section: 'Тип отпуска',
             sections: 'Типы отпусков',
@@ -56,18 +38,14 @@ module.exports = {
             .exec((err, findParam)=> {
             "use strict";
             if (err)return res.serverError(err);
-
-            console.log('findParam', findParam);
             if(findParam) return res.badRequest(req.param('name')+' - дубликат.');
             Furlough.create(obj).exec(function (err, finn) {
                 if (err) {
                     return res.serverError(err);
                 }
-                //sails.log('Finn\'s id is:', finn.id);
                 return res.send(finn);
             });
         });
-
     },
 
     /**
