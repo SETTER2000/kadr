@@ -126,7 +126,9 @@
                 itCheckArea: 'IT',
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено',
-                title: 'Рассылка сообщений закончена.',
+                title: 'На проверке',
+                titleService: 'Проверено',
+                textHead:'Сообщения отправлены',
                 startProject: 'Дата подачи заявки',
                 outputEmployee: 'Дата выхода сотрудника',
                 check:'выполнено',
@@ -180,7 +182,8 @@
                 all: {}, // все
                 project: {status: 'Новая'}, // проект
                 inWork: {status: 'В работе'}, // в работе
-                approved: {status: 'Завершена'} // утверждён
+                approved: {status: 'Завершена'}, // утверждён
+                notValid: {status: 'Отклонена'} //
             };
 
             $scope.$watch('modeSelect.value', function (value, old) {
@@ -199,7 +202,8 @@
                     {display: "Все", value: "all"},
                     {display: "Новая", value: "project"},
                     {display: "В работе", value: "inWork"},
-                    {display: "Завершена", value: "approved"}
+                    {display: "Завершена", value: "approved"},
+                    {display: "Отклонена", value: "notValid"}
 
                 ];
             $scope.modeSelect = $scope.options[0];

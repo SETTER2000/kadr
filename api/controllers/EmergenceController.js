@@ -26,7 +26,7 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('GET ALL PARAMS Emergence:', req.params.all());
+        //console.log('GET ALL PARAMS Emergence:', req.params.all());
         var q = {
             limit: req.param('limit'),
             sort: req.param('sort')
@@ -124,16 +124,16 @@ module.exports = {
 
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
 
-        console.log('DEPAR', req.param('departments'));
-        console.log('START PROJECT', req.param('start'));
+        //console.log('DEPAR', req.param('departments'));
+        //console.log('START PROJECT', req.param('start'));
 
         let start = moment(req.param('start')).format('YYYY-MM-DDTHH:mmZ');
 
-        console.log('START ', start);
+        //console.log('START ', start);
         Department.findOne(req.param('departments')[0]).exec((err, findDepart)=> {
             "use strict";
             if (err) return res.serverError(err);
-            console.log('findDepart', findDepart);
+            //console.log('findDepart', findDepart);
 
             let recipient = sails.config.recipient.kadr;
             //servicedesk@landata.ru - ИТ
@@ -152,7 +152,7 @@ module.exports = {
                 tmpl: '<h1>Уважаемые, коллеги!</h1>' +
                 '<p> Планируется выход нового сотрудника - ' + fullName + '  в ' + findDepart.name + ' на должность ' + req.param('post') + '. </p>' +
                 '<p>Предполагаемая дата выхода - ' + moment(new Date(req.param('outputEmployee')), ['DD.MM.YYYY']).format('DD.MM.YYYY') + '. </p>' +
-                '<p>Ссылка на заявку -  <a href="http://kadr/company/emergences">' + fullName + '</a></p>'
+                '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/company/emergences">' + fullName + '</a></p>'
             }];
 
             tmp = (req.param('htmlData')) ? req.param('htmlData') : tmp;
@@ -166,6 +166,8 @@ module.exports = {
                 name: req.param('name'),
                 post: req.param('post'),
                 room: req.param('room'),
+                startKadr: false,
+                sendService: false,
                 remote: req.param('remote'),
                 dax: req.param('dax'),
                 recipient: recipient,
@@ -197,7 +199,7 @@ module.exports = {
                 //to: new Date(req.param('to'))
             };
 
-            console.log('Object CREATE Emergence:', obj);
+            //console.log('Object CREATE Emergence:', obj);
             User.findOne({id: obj.whomCreated})
                 .exec((err, findUser) => {
                     Emergence.create(obj)
@@ -220,7 +222,7 @@ module.exports = {
                                     .exec(function foundVacation(err, findOneEmerg) {
                                         if (err) return res.serverError(err);
                                         // Обновляем сокеты
-                                        Emergence.find().exec((err, findEmergence) => {
+                                        Emergence.find({sort: 'lastName'}).exec((err, findEmergence) => {
                                             if (err) return res.serverError(err);
 
                                             // _.forEach(req.param('htmlData'), function (val, key) {
@@ -259,97 +261,110 @@ module.exports = {
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         let action = (req.param('kadrValid')) ? false : true;
-        //let action = (!(!req.param('action') || req.param('kadrValid')));
-
-
-        console.log('ALL REQUEST', req.params.all());
-        console.log('STATUS REQUEST', req.param('status'));
-        //if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! График просрочен.');
-        let obj = {
-            section: 'Выход нового сотрудника',
-            sections: 'Выход новых сотрудников',
-            name: req.param('name'),
-            post: req.param('post'),
-            room: req.param('room'),
-            dax: req.param('dax'),
-            lastName: req.param('lastName'),
-            firstName: req.param('firstName'),
-            patronymicName: req.param('patronymicName'),
-            startKadr: req.param('startKadr'),
-            kadrValid: req.param('kadrValid'),
-            endKadr: req.param('endKadr'),
-            finCheck: req.param('finCheck'),
-            ahoCheck: req.param('ahoCheck'),
-            itCheck: req.param('itCheck'),
-            hdCheck: req.param('hdCheck'),
-            commentKadr: req.param('commentKadr'),
-            recipient: req.param('recipient'),
-            remote: req.param('remote'),
-            boss: req.param('boss'),
-            extra: req.param('extra'),
-            location: req.param('location'),
-            whomUpdated: req.session.me,
-            daysSelectHoliday: req.param('daysSelectHoliday'),
-            action: action,
-            //period: req.param('period'),
-            status: (req.param('status') === 'Завершена') ? req.param('status') : (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Новая',
-            //htmlData: req.param('htmlData'),
-            //htmlData2: req.param('htmlData2'),
-            bussinescard: req.param('bussinescard'),
-            phone: req.param('phone'),
-            mobile: req.param('mobile'),
-            //start: new Date(req.param('start')),
-            outputEmployee: new Date(req.param('outputEmployee')),
-            phoneNumber: req.param('phoneNumber'),
-            email: req.param('email'),
-            departments: req.param('departments'),
-            positions: req.param('positions'),
-            worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
-        };
-        //((obj.status === 'Новая') || (obj.status === 'В работе')) ? obj.countData = +req.param('countData') : '';
-        User.findOne({id: obj.whomUpdated})
-            .exec((err, findUser) => {
+        let fullName = req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName');
+        if (!req.param('departments')) return res.badRequest('Не указан департамент.');
+        console.log('ALL REQQQ', req.params.all());
+        Department.findOne({id: req.param('departments')[0].id})
+            .exec((err, findDepart)=> {
                 "use strict";
                 if (err) return res.serverError(err);
-                if (!findUser) return res.notFound();
+                let tmp = [{
+                    description: 'Уведомление о выходе нового сотрудника',
+                    outputEmployee: '',
+                    name: '№1',
+                    tmpl: '<h1>Уважаемые, коллеги!</h1>' +
+                    '<p> Планируется выход нового сотрудника - ' + fullName + '  в ' + findDepart.name + ' на должность ' + req.param('post') + '. </p>' +
+                    '<p>Предполагаемая дата выхода - ' + moment(new Date(req.param('outputEmployee')), ['DD.MM.YYYY']).format('DD.MM.YYYY') + '. </p>' +
+                    '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/company/emergences/edit/' + req.param('id') + '">' + fullName + '</a></p>'
+                }];
 
-                Emergence.update(req.param('id'), obj)
-                    .populate('whomCreated')
-                    .populate('whomUpdated')
-                    .populate('positions')
-                    .populate('departments')
-                    .exec((err, objEdit) => {
-                        if (err) return res.negotiate(err);
 
+                let obj = {
+                    section: 'Выход нового сотрудника',
+                    sections: 'Выход новых сотрудников',
+                    name: req.param('name'),
+                    post: req.param('post'),
+                    room: req.param('room'),
+                    dax: req.param('dax'),
+                    lastName: req.param('lastName'),
+                    firstName: req.param('firstName'),
+                    patronymicName: req.param('patronymicName'),
+                    startKadr: req.param('startKadr'),
+                    kadrValid: req.param('kadrValid'),
+                    endKadr: req.param('endKadr'),
+                    finCheck: req.param('finCheck'),
+                    ahoCheck: req.param('ahoCheck'),
+                    itCheck: req.param('itCheck'),
+                    hdCheck: req.param('hdCheck'),
+                    commentKadr: req.param('commentKadr'),
+                    recipient: req.param('recipient'),
+                    remote: req.param('remote'),
+                    boss: req.param('boss'),
+                    extra: req.param('extra'),
+                    location: req.param('location'),
+                    whomUpdated: req.session.me,
+                    daysSelectHoliday: req.param('daysSelectHoliday'),
+                    action: action,
+                    status: (req.param('kadrValid')) ? 'Отклонена' : ((req.param('status') === 'Завершена') ? req.param('status') : (moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))) ? 'В работе' : 'Новая'),
+                    htmlData: tmp,
+                    bussinescard: req.param('bussinescard'),
+                    phone: req.param('phone'),
+                    mobile: req.param('mobile'),
+                    outputEmployee: new Date(req.param('outputEmployee')),
+                    phoneNumber: req.param('phoneNumber'),
+                    email: req.param('email'),
+                    departments: req.param('departments'),
+                    positions: req.param('positions'),
+                    worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
+                };
 
-                        Emergence.findOne(req.param('id'))
+                User.findOne({id: obj.whomUpdated})
+                    .exec((err, findUser) => {
+                        "use strict";
+                        if (err) return res.serverError(err);
+                        if (!findUser) return res.notFound();
+
+                        Emergence.update(req.param('id'), obj)
+                            .populate('whomCreated')
+                            .populate('whomUpdated')
                             .populate('positions')
-                            .exec((err, findOneEm) => {
-                                if (req.param('positionRemove')) {
-                                    console.log('PARAM', req.param('positionRemove'));
-                                    findOneEm.positions.remove(req.param('positionRemove'));
-                                    findOneEm.save(function (err) {
-                                        if (err) return res.negotiate(err);
-                                        findUser.save(function (err) {
-                                            if (err) return res.negotiate(err);
+                            .populate('departments')
+                            .exec((err, objEdit) => {
+                                if (err) return res.negotiate(err);
+
+
+                                Emergence.findOne(req.param('id'))
+                                    .populate('positions')
+                                    .exec((err, findOneEm) => {
+                                        if (req.param('positionRemove')) {
+                                            //console.log('PARAM', req.param('positionRemove'));
+                                            findOneEm.positions.remove(req.param('positionRemove'));
+                                            findOneEm.save(function (err) {
+                                                if (err) return res.negotiate(err);
+                                                findUser.save(function (err) {
+                                                    if (err) return res.negotiate(err);
+
+                                                    //console.log('UPDATED:', findOneEm.action+' '+ findOneEm.worked+' '+ findOneEm.sendService+' '+ findOneEm.startKadr);
+                                                    return res.ok(findOneEm);
+                                                    //Emergence.find().exec((err, findsEmergence) => {
+                                                    //    if (err) return res.serverError(err);
+                                                    //    sails.sockets.broadcast('emergence', 'hello', {howdy: findsEmergence}, req);
+                                                    //    sails.sockets.broadcast('emergence', 'badges', {
+                                                    //        badges: objEdit,
+                                                    //        action: 'обновлён',
+                                                    //        shortName: findUser.getShortName(),
+                                                    //        fullName: findUser.getFullName(),
+                                                    //        avatarUrl: findUser.avatarUrl
+                                                    //    }, req);
+                                                    //
+                                                    //});
+                                                });
+                                            });
+                                        } else {
+                                            //console.log('UPDATED2:', findOneEm.action+' '+ findOneEm.worked+' '+ findOneEm.sendService+' '+ findOneEm.startKadr);
                                             return res.ok(findOneEm);
-                                            //Emergence.find().exec((err, findsEmergence) => {
-                                            //    if (err) return res.serverError(err);
-                                            //    sails.sockets.broadcast('emergence', 'hello', {howdy: findsEmergence}, req);
-                                            //    sails.sockets.broadcast('emergence', 'badges', {
-                                            //        badges: objEdit,
-                                            //        action: 'обновлён',
-                                            //        shortName: findUser.getShortName(),
-                                            //        fullName: findUser.getFullName(),
-                                            //        avatarUrl: findUser.avatarUrl
-                                            //    }, req);
-                                            //
-                                            //});
-                                        });
+                                        }
                                     });
-                                } else {
-                                    return res.ok(findOneEm);
-                                }
                             });
                     });
             });
@@ -360,7 +375,7 @@ module.exports = {
      * @param res
      */
     getLogSender: function (req, res) {
-        console.log('REG all, ', req.params.all());
+        //console.log('REG all, ', req.params.all());
         Emergence.findOne(req.param('id'))
             .exec((err, findsUser)=> {
                 "use strict";

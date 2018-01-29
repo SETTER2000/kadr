@@ -213,7 +213,7 @@
     </tr>
 
     <!-- B O D Y  T A B L E -->
-    <tr ng-class="{'success':item.endKadr}" ng-repeat="item in filtered=(items | filter:{$:searchText} | filter:filterObject |
+    <tr ng-class="{'success':item.endKadr, 'danger':item.kadrValid}" ng-repeat="item in filtered=(items | filter:{$:searchText} | filter:filterObject |
 orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)" ng-cloak>
 
         <!-- I N D E X -->
@@ -267,23 +267,33 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <!-- S T A T U S -->
         <td class="text-center ">
             <strong ng-click="item.goOpen()"
-                    ng-class="{'text-primary':(item.status==='Новая'), 'text-danger':(item.status==='В работе'), 'text-success':(item.status==='Завершена'), }">
+                    ng-class="{'text-primary':(item.status==='Новая'), 'text-warning':(item.status==='В работе'), 'text-success':(item.status==='Завершена'), 'text-danger':(item.status==='Отклонена'), }">
                 {{item.status}}
-                <md-tooltip ng-if="(item.status==='В работе')" md-direction="right">{{nameHeader.title}}</md-tooltip>
+                <md-tooltip ng-if="(item.status==='В работе' && !item.sendService)" md-direction="right">{{nameHeader.title}}</md-tooltip>
+                <md-tooltip ng-if="(item.status==='В работе' && item.sendService)" md-direction="right">{{nameHeader.titleService}}</md-tooltip>
             </strong>
 
-
+            <!--В  Р А Б О Т Е-->
             <div ng-if="item.logSender && item.go && (item.status==='В работе')" class="animate-if ">
                 <div class="row" style="position: relative">
-                    <div class="col-md-12  text-nowrap" style="position: absolute; top:7px;  z-index: 100; min-width: 600px;">
+                    <div class="col-md-12  text-nowrap window" >
                         <div class="panel panel-success">
                             <div class="panel-heading   text-left">
-                                Сообщения отправлены
+                               {{nameHeader.textHead}}
                                 <a href="#" class="pull-right" ng-click="item.goClose()">x</a>
                             </div>
                             <div class="panel-body">
                                 <table class="table table-hover">
-                                    <tr ng-repeat="sender in item.logSender">
+                                    <tr ng-if="!item.sendService" ng-repeat="sender in item.logSender">
+                                        <td class="text-left text-nowrap">
+                                            <small class="text-info">{{sender.name}}</small>
+                                        </td>
+                                        <td class="text-left">
+                                            <small>  {{sender.email}}</small>
+                                        </td>
+                                    </tr>
+
+                                    <tr ng-if="item.sendService" ng-repeat="sender in item.recipientService">
                                         <td class="text-left text-nowrap">
                                             <small class="text-info">{{sender.name}}</small>
                                         </td>
@@ -305,6 +315,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                 </div>
             </div>
 
+
             <!--НОВАЯ-->
             <div ng-if="item.logSender && item.go && (item.status==='Новая')" class="animate-if">
                 <h6>Рассылка:{{item.start | deadline}}</h6>
@@ -314,6 +325,40 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                 <!--<span class="glyphicon" ng-class="{'glyphicon-ok':sender.action, 'text-success':sender.action,}"></span>-->
                 <!--</p>-->
                 <!--</div>-->
+            </div>
+
+
+            <!--ОТКЛОНЕНА-->
+            <div ng-if="item.logSender && item.go && (item.status==='Отклонена')" class="animate-if">
+                 <span ng-if="(item.commentKadr.length <= 50)"><strong>Комментарий:</strong> <br>{{item.commentKadr}} </span>
+                <div ng-if="(item.commentKadr.length > 50)" class="row" style="position: relative">
+                    <div class="col-md-12  window" >
+
+                        <div class="panel panel-success">
+                            <div class="panel-heading   text-left">
+                                Комментарий
+                                <a href="#" class="pull-right" ng-click="item.goClose()">x</a>
+                            </div>
+                            <div class="panel-body ">
+                              <span class="pull-left"> {{item.commentKadr}}</span>
+                                <!--<dl ng-repeat="sender in item.logSender">-->
+                                <!--<dt><span class="text-info">{{sender.lastName}} {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.  </span></dt>-->
+                                <!--<dd> <small>{{sender.positions[0].name}}</small> </dd>-->
+                                <!--&lt;!&ndash;<dd>- <span class="glyphicon" ng-class="{'glyphicon-ok':sender.action, 'text-success':sender.action,}"></span></dd>&ndash;&gt;-->
+                                <!--</dl>-->
+
+                            </div>
+
+                        </div>
+
+                <!--<div class="list-group" ng-repeat="sender in item.logSender">-->
+                <!--<p>-->
+                <!--<span class="text-info">{{sender.lastName}} {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.  </span>-->
+                <!--<span class="glyphicon" ng-class="{'glyphicon-ok':sender.action, 'text-success':sender.action,}"></span>-->
+                <!--</p>-->
+                <!--</div>-->
+            </div>
+            </div>
             </div>
         </td>
 

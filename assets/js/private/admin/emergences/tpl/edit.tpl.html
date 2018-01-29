@@ -6,7 +6,7 @@
             </p>
             <p ng-if="!item.lastName">{{item.getNewEmployees()}}</p>
             <a href="#" class="btn btn-xs disabled"
-               ng-class="{'btn-primary':(item.status==='Новая'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Утвержден')}"
+               ng-class="{'btn-primary':(item.status==='Новая'), 'btn-warning':(item.status==='В работе'), 'btn-success':(item.status==='Завершена'), 'btn-danger':(item.status==='Отклонена')}"
                ng-hide="item.fired" role="button">
                 Заявка {{item.status.toLowerCase()}}
             </a>
@@ -431,7 +431,7 @@
 
             <!-- К А Д Р Ы  Н А Ч А Т Ь  О Б Р А Б О Т К У -->
 
-            <div ng-if="edit" class="panel panel-default"
+            <div ng-if="edit && item.worked" class="panel panel-default"
                  ng-class="{ 'panel-success':item.endKadr,'panel-primary':item.startKadr, 'panel-danger': item.kadrValid }">
                 <div class="panel-heading"> Кадры</div>
                 <div class="panel-body">
@@ -439,7 +439,7 @@
                         <div class="checkbox">
 
                             <label>
-                                <md-switch ng-model="item.startKadr" aria-label="Switch 4">
+                                <md-switch ng-disabled="item.startKadr || item.kadrValid" ng-model="item.startKadr" aria-label="Switch 4">
                                     <span ng-if="!item.startKadr">{{titles.startKadr}} нет</span>
                                     <span ng-if="item.startKadr">{{titles.startKadr}} да</span>
                                 </md-switch>
@@ -453,7 +453,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <md-switch ng-disabled="item.endKadr" ng-model="item.kadrValid" aria-label="Switch 4">
+                                <md-switch ng-disabled="(item.endKadr || item.startKadr)" ng-model="item.kadrValid" aria-label="Switch 4">
                                     <span ng-if="!item.kadrValid">{{titles.kadrValid}} нет</span>
                                     <span ng-if="item.kadrValid">{{titles.kadrValid}} да</span>
                                 </md-switch>
@@ -485,7 +485,7 @@
 
             <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
+            <div ng-if="edit && item.startKadr && !me.kadr" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
                 <div class="panel-heading"> Финансовый отдел</div>
                 <div class="panel-body">
                     <div class="form-group">
@@ -504,7 +504,7 @@
 
             <!-- А Х О  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
+            <div ng-if="edit && item.startKadr && !me.kadr" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
                 <div class="panel-heading">АХО</div>
                 <div class="panel-body">
                     <div class="form-group">
@@ -523,7 +523,7 @@
 
             <!-- IT  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
+            <div ng-if="edit && item.startKadr && !me.kadr" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
                 <div class="panel-heading">IT</div>
                 <div class="panel-body">
                     <div class="form-group">
@@ -561,7 +561,7 @@
 
             <!-- С О З Д А Н О   -->
 
-            <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
+            <div ng-if="edit && item.startKadr && !me.kadr" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
                 <div class="panel-heading">Созданы ресурсы</div>
                 <div class="panel-body">
                     <div class="form-group">

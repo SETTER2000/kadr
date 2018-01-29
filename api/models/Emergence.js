@@ -109,14 +109,8 @@ module.exports = {
         //    type: 'integer',
         //    defaultsTo: 10
         //},
-        //period: {
-        //    type: 'string'
-        //},
-        //Одобрено 	    (APPROVE)   approved
-        //Отказано 	    (REJECT)    denied
-        //Подтверждено 	(CONFIRM)   confirmed
-        //Перенесён 	(TRANSFER)  moved
-        //Ожидание 	    (wait_one)  pending
+
+
         status: {
             type: 'string',
             defaultsTo: 'Новая',
@@ -134,11 +128,18 @@ module.exports = {
             type: 'array',
             defaultsTo: []
         },
+        recipientService: {
+            type: 'array',
+            defaultsTo: []
+        },
         logSender: {
             type: 'array',
             defaultsTo: []
         },
-
+        sendService:{
+            type: 'boolean',
+            defaultsTo: false
+        },
         //year: {
         //    type: 'integer',
         //    maxLength: 4,

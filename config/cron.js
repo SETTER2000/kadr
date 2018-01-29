@@ -37,6 +37,14 @@ module.exports.cron = {
 
             CronService.task1({});
         }
+    },
+    fourthJob: {
+        schedule: '*/30 * * * * *',
+        onTick: function() {
+            //console.log('Я срабатываю каждые 5 секунд (триггер): ' + new Date());
+
+            CronService.task2({});
+        }
     }
 
 };
