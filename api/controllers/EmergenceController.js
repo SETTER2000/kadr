@@ -42,6 +42,7 @@ module.exports = {
                 .populate('departments')
                 .populate('whomCreated')
                 .populate('whomUpdated')
+                .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                 .exec(function foundVacation(err, vacations) {
                     if (err) return res.serverError(err);
                     if (!vacations) return res.notFound();
@@ -78,6 +79,7 @@ module.exports = {
                         .populate('departments')
                         .populate('whomCreated')
                         .populate('whomUpdated')
+                        .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                         .exec(function foundEmergence(err, emergences) {
                             if (err) return res.serverError(err);
                             if (!emergences) return res.notFound();
@@ -195,6 +197,7 @@ module.exports = {
                                     .populate('departments')
                                     .populate('whomCreated')
                                     .populate('whomUpdated')
+                                    .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                     .exec(function foundVacation(err, findOneEmerg) {
                                         if (err) return res.serverError(err);
                                         // Обновляем сокеты
@@ -203,6 +206,7 @@ module.exports = {
                                             .populate('departments')
                                             .populate('whomCreated')
                                             .populate('whomUpdated')
+                                            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                             .exec((err, findEmergence) => {
                                                 if (err) return res.serverError(err);
 
@@ -283,6 +287,9 @@ module.exports = {
                     boss: req.param('boss'),
                     extra: req.param('extra'),
                     location: req.param('location'),
+                    ahoUpdate: req.param('ahoUpdate'),
+                    itUpdate: req.param('itUpdate'),
+                    finUpdate: req.param('finUpdate'),
                     whomUpdated: req.session.me,
                     daysSelectHoliday: req.param('daysSelectHoliday'),
                     action: action,
@@ -308,6 +315,7 @@ module.exports = {
                         Emergence.update(req.param('id'), obj)
                             .populate('whomCreated')
                             .populate('whomUpdated')
+                            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                             .populate('positions')
                             .populate('departments')
                             .exec((err, objEdit) => {
@@ -332,6 +340,7 @@ module.exports = {
                                                         .populate('departments')
                                                         .populate('whomCreated')
                                                         .populate('whomUpdated')
+                                                        .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                                         .exec((err, findsEmergence) => {
                                                             if (err) return res.serverError(err);
                                                             sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence}, req);
@@ -353,6 +362,7 @@ module.exports = {
                                                 .populate('departments')
                                                 .populate('whomCreated')
                                                 .populate('whomUpdated')
+                                                .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                                 .exec((err, findsEmergence) => {
                                                     if (err) return res.serverError(err);
                                                     sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence}, req);
@@ -456,6 +466,7 @@ module.exports = {
                 .populate('departments')
                 .populate('whomCreated')
                 .populate('whomUpdated')
+                .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                 .exec((err, finds) => {
                     "use strict";
                     if (err) return res.serverError(err);
@@ -470,6 +481,7 @@ module.exports = {
                             .populate('departments')
                             .populate('whomCreated')
                             .populate('whomUpdated')
+                            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                             .exec((err, findEmergence) => {
                                 if (err) return res.serverError(err);
                                 sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findEmergence}, req);

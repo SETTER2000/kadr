@@ -141,6 +141,7 @@ module.exports = {
                                     .populate('departments')
                                     .populate('whomCreated')
                                     .populate('whomUpdated')
+                                    .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                     .exec((err, findsEmergence) => {
                                     if (err) return res.serverError(err);
                                     sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence});
@@ -156,10 +157,16 @@ module.exports = {
                                 worked: true
                             }).exec((err, upd) => {
                                 if (err) return res.serverError();
-                                Emergence.find().exec((err, findsSchedule) => {
+                                Emergence.find()
+                                    .populate('positions')
+                                    .populate('departments')
+                                    .populate('whomCreated')
+                                    .populate('whomUpdated')
+                                    .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
+                                    .exec((err, findsSchedule) => {
                                     if (err) return res.serverError(err);
-                                    sails.sockets.broadcast('emergence', 'hello', {howdy: findsSchedule});
-                                    sails.sockets.broadcast('emergence', 'badges', {badges: upd, action: 'повреждён'});
+                                    sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsSchedule});
+                                    sails.sockets.broadcast('emergence', 'badges-emergence', {badges: upd, action: 'повреждён'});
                                     return console.log(taskName+' UPDATE OK+!');
                                 });
                             });
@@ -228,6 +235,7 @@ module.exports = {
                                     .populate('departments')
                                     .populate('whomCreated')
                                     .populate('whomUpdated')
+                                    .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                     .exec((err, findsEmergence) => {
                                         if (err) return res.serverError(err);
                                         sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence});

@@ -653,6 +653,7 @@ angular.module('EmergenceModule')
             });
             $scope.$watch('item.start', function (value) {
                 if (value) {
+                    console.log('ПРОЕКТ  НЕ ОТРАБОТАЛ', value);
                     if (($scope.item.status === 'Новая' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
                         toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
                             {

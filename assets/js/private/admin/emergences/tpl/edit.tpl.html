@@ -511,8 +511,8 @@
                         <div class="checkbox">
                             <label>
                                 <md-switch ng-disabled="item.kadrValid" ng-model="item.ahoCheck" aria-label="Switch 4">
-                                    <span ng-if="!item.ahoCheck">{{titles.check}} нет</span>
-                                    <span ng-if="item.ahoCheck">{{titles.check}} да</span>
+                                    <span ng-if="!item.ahoCheck">{{titles.check}} нет   <span ng-if="item.ahoUpdate" class="text-right">{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span></span>
+                                    <span ng-if="item.ahoCheck">{{titles.check}} да   <span ng-if="item.ahoUpdate"   class="text-right">{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span></span>
                                 </md-switch>
                             </label>
                         </div>

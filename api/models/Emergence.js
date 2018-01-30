@@ -114,7 +114,7 @@ module.exports = {
         status: {
             type: 'string',
             defaultsTo: 'Новая',
-            enum: ['Новая', 'В работе', 'Завершена','Отклонена']
+            enum: ['Новая', 'В работе', 'Завершена', 'Отклонена']
         },
         htmlData: {
             type: 'array',
@@ -136,7 +136,7 @@ module.exports = {
             type: 'array',
             defaultsTo: []
         },
-        sendService:{
+        sendService: {
             type: 'boolean',
             defaultsTo: false
         },
@@ -211,6 +211,15 @@ module.exports = {
             model: 'user'
         },
         whomUpdated: {
+            model: 'user'
+        },
+        ahoUpdate: {
+            model: 'user'
+        },
+        finUpdate: {
+            model: 'user'
+        },
+        itUpdate: {
             model: 'user'
         },
 

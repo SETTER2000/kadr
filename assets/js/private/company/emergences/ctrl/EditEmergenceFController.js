@@ -11,7 +11,8 @@ angular.module('EmergenceFModule')
                 startKadr: 'Начать обработку - ',
                 endKadr: 'Обработка завершена - ',
                 kadrValid: 'Отклонить заявку - ',
-                check: 'Выполнено - ',
+                check: 'Выполнено',
+                noCheck: 'Не выполнено',
                 //kadr:'Кадры. Начать обработку - ',
             };
             var info = {
@@ -765,6 +766,24 @@ angular.module('EmergenceFModule')
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
 
+            $scope.userUpdateServiceAho = function () {
+                $scope.item.ahoUpdate  = $scope.me.id;
+                $scope.item.$update();
+                //$state.go('home.company.emergences');
+            };
+
+            $scope.userUpdateServiceIt = function () {
+                $scope.item.itUpdate  = $scope.me.id;
+                $scope.item.$update();
+                //$state.go('home.company.emergences');
+            };
+
+            $scope.userUpdateServiceFin = function () {
+                $scope.item.finUpdate  = $scope.me.id;
+                $scope.item.$update();
+                //$state.go('home.company.emergences');
+            };
+
             $scope.$watch('item.kadrValid', function (val) {
                 $scope.checkedValue();
             });
@@ -778,6 +797,7 @@ angular.module('EmergenceFModule')
 
             $scope.$watch('item.ahoCheck', function (val) {
                 $scope.checkedValue();
+
             });
 
             $scope.$watch('item.itCheck', function (val) {
