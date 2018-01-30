@@ -39,7 +39,7 @@
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
-            io.socket.on('hello', function (data) {
+            io.socket.on('hello-emergence', function (data) {
                 console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
                 $scope.items = data.howdy;
                 console.log('Данные события hello', data);
@@ -50,7 +50,7 @@
             $scope.clickToOpen = function () {
                 ngDialog.open({
                     showClose: true,
-                    template: '/js/private/company/emergence/views/popupTmpl.html',
+                    template: '/js/private/company/emergences/views/popupTmpl.html',
                     className: 'ngdialog-theme-default',
                     /**
                      * true - позволяет закрыть модальное окно щёлкнув по оверлейному слою
@@ -121,16 +121,16 @@
                 tenArea: 'Обновил',
                 actionArea: 'Активность',
                 startKadrArea: 'Кадры',
-                finCheckArea: 'Финансовый отдел',
+                finCheckArea: 'Финотдел',
                 ahoCheckArea: 'АХО',
                 itCheckArea: 'IT',
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено',
                 title: 'На проверке',
                 titleService: 'Проверено',
+                startProject: 'Подача заявки',
                 textHead:'Сообщения отправлены',
-                startProject: 'Дата подачи заявки',
-                outputEmployee: 'Дата выхода сотрудника',
+                outputEmployee: 'Выход сотрудника',
                 check:'выполнено',
                 checkKadr:'начать обработку'
             };

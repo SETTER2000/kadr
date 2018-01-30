@@ -2,17 +2,25 @@
 <div class="dialog">
 
     <div class="list-group" ng-repeat="bg in bdgs">
-        <a type="button" ui-sref="home.admin.schedules.edit({ scheduleId: bg.badges[0].id })" class="list-group-item">
+
+        <a  ng-if="(bg.action !=='удалён')" type="button" ui-sref="home.admin.emergences.edit({ emergenceId: bg.badges[0].id })" class="list-group-item">
             <span class="badges pull-right">
                 <span class="glyphicon" aria-hidden="true" title="{{bg.action}}"
-                  ng-class="{'glyphicon-pencil':(bg.action==='обновлён'),'glyphicon-envelope':(bg.action==='рассылка закончена'),'glyphicon-ok':(bg.action==='создан'),'glyphicon-trash':(bg.action==='удалён'),'text-success':(bg.action==='создан | рассылка закончена'),'text-primary':(bg.action==='обновлён')}"></span>
+                  ng-class="{'glyphicon-pencil':(bg.action==='обновлён'),'glyphicon-envelope':(bg.action==='на проверке'),'glyphicon-ok':(bg.action==='создан'),'glyphicon-trash':(bg.action==='удалён'),'text-success':(bg.action==='создан | на проверке'),'text-primary':(bg.action==='обновлён')}"></span>
+            </span>
+            <img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp;   {{bg.badges[0].name}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
+        </a>
+        <a  ng-if="(bg.action==='удалён')" type="button"  class="list-group-item">
+            <span class="badges pull-right">
+                <span class="glyphicon" aria-hidden="true" title="{{bg.action}}"
+                  ng-class="{'glyphicon-trash':(bg.action==='удалён')}"></span>
             </span>
             <img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp;   {{bg.badges[0].name}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
         </a>
     </div>
     <!--<input type="button" value="OK" ng-click="closeThisDialog('Some value')"/>-->
     <!--<div class="clearfix">-->
-        <!--<button class="btn btn-link pull-right " ui-sref="home.admin.schedules">Перейти</button>-->
+        <!--<button class="btn btn-link pull-right " ui-sref="home.admin.emergences">Перейти</button>-->
     <!--</div>-->
 
 </div>

@@ -229,15 +229,15 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <!--</td>-->
 
         <!-- F I O -->
-        <td>
+        <td class="text-nowrap">
             <!--<a ng-if="(item.status==='Новая' || me.admin)"  ui-sref="home.admin.emergences.edit({emergenceId:item.id})">-->
                 <!--&lt;!&ndash;<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.admin.emergences.edit({id:155})">&ndash;&gt;-->
                 <!--{{item.getFullName()}}-->
             <!--</a>-->
             <!--<span ng-if="(item.status!=='Новая' && !me.admin)">{{item.getFullName()}}</span>-->
-            <a  title="{{item.getFullName()}}" ui-sref="home.admin.emergences.edit({emergenceId:item.id})">
-            <!--<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.admin.emergences.edit({id:155})">-->
-            {{item.getShortName()}}
+            <a title="{{item.lastName}} {{item.firstName}} {{item.patronymicName}}" ui-sref="home.admin.emergences.edit({emergenceId:item.id})">
+                <!--<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
+                {{item.lastName}} {{item.firstName[0]}}. {{item.patronymicName[0]}}.
             </a>
         </td>
 

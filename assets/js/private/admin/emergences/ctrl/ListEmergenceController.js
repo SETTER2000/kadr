@@ -12,7 +12,7 @@
 
             $scope.moment = moment();
             /**
-             * TODO WEBSOCKET: Подключаемся к сокету обработка события badges
+             * TODO WEBSOCKET: Подключаемся к сокету. Обработка события badges
              */
 
             $scope.bdgs = [];
@@ -21,8 +21,8 @@
             //};
 
 
-            io.socket.on('badges', function (data) {
-                console.log('badges', data);
+            io.socket.on('badges-emergence', function (data) {
+                console.log('badges-emergence', data);
                 $scope.bdgs.push(data);
                 $scope.$apply();
             });
@@ -37,12 +37,12 @@
 
 
             /**
-             * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
+             * TODO WEBSOCKET: Подключаемся к сокету. Обработка события hello.
              */
-            io.socket.on('hello', function (data) {
+            io.socket.on('hello-emergence', function (data) {
                 console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
                 $scope.items = data.howdy;
-                console.log('Данные события hello', data);
+                console.log('Данные события hello-emergence', data);
 
                 $scope.$apply();
             });
@@ -50,7 +50,7 @@
             $scope.clickToOpen = function () {
                 ngDialog.open({
                     showClose: true,
-                    template: '/js/private/admin/emergence/views/popupTmpl.html',
+                    template: '/js/private/admin/emergences/views/popupTmpl.html',
                     className: 'ngdialog-theme-default',
                     /**
                      * true - позволяет закрыть модальное окно щёлкнув по оверлейному слою
@@ -90,10 +90,10 @@
             };
 
             io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
-                //console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+                console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
             });
             io.socket.get('/say/emergence/badges', function gotResponse(data, jwRes) {
-                //console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
+                console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
             });
 
             /**
@@ -121,16 +121,16 @@
                 tenArea: 'Обновил',
                 actionArea: 'Активность',
                 startKadrArea: 'Кадры',
-                finCheckArea: 'Финансовый отдел',
+                finCheckArea: 'Финотдел',
                 ahoCheckArea: 'АХО',
                 itCheckArea: 'IT',
                 createdAtArea: 'Создано',
                 updatedAtArea: 'Обновлено',
                 title: 'На проверке',
                 titleService: 'Проверено',
-                startProject: 'Дата подачи заявки',
+                startProject: 'Подача заявки',
                 textHead:'Сообщения отправлены',
-                outputEmployee: 'Дата выхода сотрудника',
+                outputEmployee: 'Выход сотрудника',
                 check:'выполнено',
                 checkKadr:'начать обработку'
             };

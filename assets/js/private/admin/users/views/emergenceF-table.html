@@ -235,9 +235,9 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                 <!--{{item.getFullName()}}-->
             <!--</a>-->
             <!--<span ng-if="(item.status!=='Новая' && !me.admin)">{{item.getFullName()}}</span>-->
-            <a title="{{item.getFullName()}}" ui-sref="home.company.emergences.edit({emergenceId:item.id})">
+            <a title="{{item.lastName}} {{item.firstName}} {{item.patronymicName}}" ui-sref="home.company.emergences.edit({emergenceId:item.id})">
             <!--<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
-            {{item.getShortName()}}
+                {{item.lastName}} {{item.firstName[0]}}. {{item.patronymicName[0]}}.
             </a>
         </td>
 
@@ -276,15 +276,24 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             <!--В  Р А Б О Т Е-->
             <div ng-if="item.logSender && item.go && (item.status==='В работе')" class="animate-if ">
                 <div class="row" style="position: relative">
-                    <div class="col-md-12  text-nowrap" style="position: absolute; top:7px;  z-index: 100; min-width: 600px;">
+                    <div class="col-md-12  text-nowrap window" >
                         <div class="panel panel-success">
                             <div class="panel-heading   text-left">
-                                Сообщения отправлены
+                                {{nameHeader.textHead}}
                                 <a href="#" class="pull-right" ng-click="item.goClose()">x</a>
                             </div>
                             <div class="panel-body">
                                 <table class="table table-hover">
-                                    <tr ng-repeat="sender in item.logSender">
+                                    <tr ng-if="!item.sendService" ng-repeat="sender in item.logSender">
+                                        <td class="text-left text-nowrap">
+                                            <small class="text-info">{{sender.name}}</small>
+                                        </td>
+                                        <td class="text-left">
+                                            <small>  {{sender.email}}</small>
+                                        </td>
+                                    </tr>
+
+                                    <tr ng-if="item.sendService" ng-repeat="sender in item.recipientService">
                                         <td class="text-left text-nowrap">
                                             <small class="text-info">{{sender.name}}</small>
                                         </td>

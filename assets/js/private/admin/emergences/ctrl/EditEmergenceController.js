@@ -831,7 +831,7 @@ angular.module('EmergenceModule')
                                 toastr.success(info.newOk);
                                 // /admin/emergence/
                                 //$location.path('/profile') ;
-                                $state.go('home.company.emergences', {emergenceId: success.id});
+                                $state.go('home.admin.emergences', {emergenceId: success.id});
                                 //$state.go('home.company.emergences');
                             },
                             function (err) {

@@ -254,7 +254,8 @@ angular.module('VacationModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimat
         }
     })
     .filter("changeFoto", function () {
-        return function (value, size='150x150') {
+        return function (value, size) {
+            size = (size) ? size : '150x150';
             if (!angular.isArray(value) || !angular.isString(size)) return value;
             let arr = [];
             value.forEach(function (v, k, a) {

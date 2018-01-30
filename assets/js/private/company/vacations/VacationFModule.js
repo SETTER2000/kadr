@@ -1,15 +1,15 @@
-angular.module('VacationFModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimate', 'angularMoment','ngMaterial'])
+angular.module('VacationFModule', ['ui.router', 'toastr', 'ngResource', 'ngAnimate', 'angularMoment', 'ngMaterial'])
     .config(function ($stateProvider) {
         $stateProvider
-            //.state('home.company.vacation.create', {
-            //    url: '/create',
-            //    views: {
-            //        '@': {
-            //            templateUrl: '/js/private/company/vacations/tpl/edit.tpl.html',
-            //            controller: 'EditVacationFController'
-            //        }
-            //    }
-            //})
+        //.state('home.company.vacation.create', {
+        //    url: '/create',
+        //    views: {
+        //        '@': {
+        //            templateUrl: '/js/private/company/vacations/tpl/edit.tpl.html',
+        //            controller: 'EditVacationFController'
+        //        }
+        //    }
+        //})
             .state('home.company.vacation', {
                 url: '/vacation/:vacationId',
                 views: {
@@ -255,13 +255,14 @@ angular.module('VacationFModule', ['ui.router', 'toastr', 'ngResource', 'ngAnima
         }
     })
     .filter("changeFoto", function () {
-        return function (value, size='150x150') {
+        return function (value, size) {
+            size = (size) ? size : '150x150';
             if (!angular.isArray(value) || !angular.isString(size)) return value;
             let arr = [];
             value.forEach(function (v, k, a) {
 
                 if (!v.avatarUrl) {
-                    v.avatarUrl = 'http://via.placeholder.com/'+size;
+                    v.avatarUrl = 'http://via.placeholder.com/' + size;
                 }
                 arr.push(v);
                 //if (valueArr.indexOf(v[nameProperty][nameColllectionProperty]) !== -1) {

@@ -89,7 +89,7 @@
             };
 
             io.socket.get('/say/schedule/hello', function gotResponse(data, jwRes) {
-                //console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+                console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
             });
             io.socket.get('/say/schedule/badges', function gotResponse(data, jwRes) {
                 //console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);

@@ -237,13 +237,13 @@ module.exports = {
                     res.ok(user);
                 });
         },
-        getFullName: function () {
-            return (!this.name) ? this.name = 'График отпусков на ' : this.name;
-
-        },
-        getEditUrl: function () {
-            return 'schedules/edit/' + this._id;
-        }
+        //getFullName: function () {
+        //    return (!this.name) ? this.name = 'График отпусков на ' : this.name;
+        //
+        //},
+        //getEditUrl: function () {
+        //    return 'schedules/edit/' + this._id;
+        //}
 
     }
 };

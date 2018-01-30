@@ -109,7 +109,6 @@ module.exports = {
                 console.log('Cron tasks1: ', finds.length);
                 _.forEach(finds, function (task) {
                     if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
-
                         let strEmail = '';
                         if (_.isArray(task.recipient) && (task.recipient.length > 0)) {
                             let a = [];
@@ -137,10 +136,15 @@ module.exports = {
                                 logSender: task.recipient
                             }).exec((err, upd) => {
                                 if (err) return res.serverError();
-                                Emergence.find().exec((err, findsSchedule) => {
+                                Emergence.find({sort:'start DESC'})
+                                    .populate('positions')
+                                    .populate('departments')
+                                    .populate('whomCreated')
+                                    .populate('whomUpdated')
+                                    .exec((err, findsEmergence) => {
                                     if (err) return res.serverError(err);
-                                    sails.sockets.broadcast('emergence', 'hello', {howdy: findsSchedule});
-                                    sails.sockets.broadcast('emergence', 'badges', {badges: upd, action: 'рассылка закончена'});
+                                    sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence});
+                                    sails.sockets.broadcast('emergence', 'badges-emergence', {badges: upd, action: 'на проверке'});
                                     console.log(taskName+' UPDATE OK!');
                                 });
                             });
@@ -219,12 +223,17 @@ module.exports = {
                                 recipientService: recipientService
                             }).exec((err, upd) => {
                                 if (err) return res.serverError();
-                                Emergence.find().exec((err, findsSchedule) => {
-                                    if (err) return res.serverError(err);
-                                    sails.sockets.broadcast('emergence', 'hello', {howdy: findsSchedule});
-                                    sails.sockets.broadcast('emergence', 'badges', {badges: upd, action: 'рассылка закончена'});
-                                    console.log(taskName+' UPDATE OK!');
-                                });
+                                Emergence.find({sort:'start DESC'})
+                                    .populate('positions')
+                                    .populate('departments')
+                                    .populate('whomCreated')
+                                    .populate('whomUpdated')
+                                    .exec((err, findsEmergence) => {
+                                        if (err) return res.serverError(err);
+                                        sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence});
+                                        sails.sockets.broadcast('emergence', 'badges-emergence', {badges: upd, action: 'на проверке'});
+                                        console.log(taskName+' UPDATE OK!');
+                                    });
                             });
                         });
 

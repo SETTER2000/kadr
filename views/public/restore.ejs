@@ -12,7 +12,7 @@
                         <!-- E M A I L -->
                         <div class="form-group" ng-class="{'has-error':restoreprofile.email.$invalid &&restoreprofile.email.$dirty}">
                             <!-- Email address or Username -->
-                            <input ng-model="restoreProfileForm.email" class="form-control input-lg" autofocus placeholder="email" name="email" type="email" required>
+                            <input ng-model="restoreProfileForm.email" class="form-control input-lg"  placeholder="email" name="email" type="email" required>
               <span class="help-block has-error" ng-if="restoreprofile.email.$dirty">
                 <span ng-show="restoreprofile.email.$error.required">Email обязателен.</span>
                 <span ng-show="restoreprofile.email.$error.email">Не правильный email.</span>
@@ -26,7 +26,7 @@
               </span>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="submit-btn btn btn-lg btn-block" ng-disabled="restoreprofile.$invalid.$invalid">
+                            <button type="submit" autofocus class="submit-btn btn btn-lg btn-block" ng-disabled="restoreprofile.$invalid.$invalid">
                                 <span ng-show="!restoreProfileForm.loading">Восстановление профиля.</span>
                                 <span ng-show="restoreProfileForm.loading" class="fa fa-spinner"></span>
                                 <span ng-show="restoreProfileForm.loading">Отправка email...</span>

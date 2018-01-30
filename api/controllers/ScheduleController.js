@@ -447,7 +447,7 @@ module.exports = {
          * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
          */
         return res.json({
-            anyData: 'we want to send hello'
+            anyData: 'Вы подключились к комнате schedule и слушаете событие hello'
         });
 
         /**
@@ -502,7 +502,7 @@ module.exports = {
          * `io.socket.get ('/ say / hello', функция gotResponse (data, jwRes) {/ * ... * /});`
          */
         return res.json({
-            anyData: 'we want to send badges'
+            anyData: 'Вы подключились к комнате schedule и слушаете событие badges'
         });
 
         /**
