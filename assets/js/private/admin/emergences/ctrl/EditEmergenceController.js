@@ -856,7 +856,7 @@ angular.module('EmergenceModule')
                     console.log('UPDATE item:', item);
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
-                            $scope.refresh();
+                            $state.go('home.admin.emergences');
                         },
                         function (err) {
                             console.log('ERR11445', err);
