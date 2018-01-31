@@ -622,16 +622,16 @@
 
             <!-- С О З Д А Н О   -->
 
-            <div ng-if="edit && item.startKadr && !me.kadr" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
+            <div ng-if="edit && item.startKadr && (item.email || item.phoneNumber)" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
                 <div class="panel-heading">Созданы ресурсы</div>
                 <div class="panel-body">
                     <div class="form-group">
                         <label class="control-label">Email</label>
-                        <input ng-disabled="!edit" type="email" class="form-control" ng-model="item.email">
+                        <input ng-disabled="(item.kadrValid  || me.kadr)" type="email" class="form-control" ng-model="item.email">
                     </div>
                     <div class="form-group">
                         <label class="control-label">Телефон</label>
-                        <input ng-disabled="!edit" type="text" class="form-control" ng-model="item.phoneNumber">
+                        <input ng-disabled="(item.kadrValid  || me.kadr)" type="text" class="form-control" ng-model="item.phoneNumber">
                     </div>
                 </div>
             </div>
