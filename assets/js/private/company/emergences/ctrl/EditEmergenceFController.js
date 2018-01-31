@@ -861,8 +861,8 @@ angular.module('EmergenceFModule')
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
                 //if (!item.start)
                 if (angular.isDefined(item.id)) {
-                    console.log('UPDATE item:', item);
-                    item.$update(item, function (success) {
+                    console.log('UPDATE item *****:', item);
+                    item.$update({id:item.id},item, function (success) {
                             toastr.success(info.changed);
                         $state.go('home.company.emergences');
                             //$scope.refresh();
