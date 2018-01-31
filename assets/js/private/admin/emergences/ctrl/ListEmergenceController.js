@@ -37,12 +37,12 @@
 
 
             /**
-             * TODO WEBSOCKET: Подключаемся к сокету. Обработка события hello.
+             * TODO WEBSOCKET: Подключаемся к сокету. Обработка события hello-emergence-list
              */
-            io.socket.on('hello-emergence', function (data) {
+            io.socket.on('hello-emergence-list', function (data) {
                 console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
                 $scope.items = data.howdy;
-                console.log('Данные события hello-emergence', data);
+                console.log('Данные события hello', data);
 
                 $scope.$apply();
             });

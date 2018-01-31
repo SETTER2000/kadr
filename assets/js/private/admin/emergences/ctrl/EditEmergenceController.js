@@ -9,7 +9,8 @@ angular.module('EmergenceModule')
                 startKadr: 'Начать обработку - ',
                 endKadr: 'Обработка завершена - ',
                 kadrValid: 'Отклонить заявку - ',
-                check: 'Выполнено - ',
+                check: 'Выполнено',
+                noCheck: 'Не выполнено',
                 //kadr:'Кадры. Начать обработку - ',
             };
             var info = {
@@ -40,6 +41,23 @@ angular.module('EmergenceModule')
             };
             $scope.debug = true;
             $scope.comment = false;
+
+
+            /**
+             * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
+             */
+            io.socket.on('hello-emergence-edit', function (data) {
+                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
+                if(!data.howdy)  $state.go('^');
+                //$scope.item = data.howdy;
+                //$scope.$apply();
+                $scope.refresh();
+            });
+
+            io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
+                //console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+            });
+
 
             angular.extend(toastrConfig, {
                 //"closeButton": true,
@@ -677,8 +695,8 @@ angular.module('EmergenceModule')
                     if ($scope.item.status !== 'Новая' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
                     let nm;
 
-                    console.log('FORMAT', value);
-                    nm = (moment(value).isSameOrBefore(moment())) ? 'Новая запущен' : 'Запуск проекта';
+                    console.log('FORMAT 55', value);
+                    nm = (moment(value).isSameOrBefore(moment())) ? 'Новая запущена' : 'Запуск проекта';
                     toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
                         {
                             //"closeButton": true,
@@ -772,11 +790,55 @@ angular.module('EmergenceModule')
                     {id: 'Сотрудник юридического отдела', name: 'Сотрудник юридического отдела'}
                 ]
             };
+            $scope.checkedValue = function () {
+                $scope.item.endKadr = ($scope.item.startKadr && $scope.item.finCheck && $scope.item.ahoCheck && $scope.item.itCheck);
+                $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
+            };
+
+            $scope.saveEditFin = function (item) {
+                item.finUpdate  = $scope.me.id;
+                $scope.saveEdit(item);
+                //$state.go('home.company.emergences');
+            };
+
+            $scope.saveEditAho = function (item) {
+                item.ahoUpdate  = $scope.me.id;
+                $scope.saveEdit(item);
+                //$state.go('home.company.emergences');
+            };
+
+            $scope.saveEditIt = function (item) {
+                item.itUpdate  = $scope.me.id;
+                $scope.saveEdit(item);
+                //$state.go('home.company.emergences');
+            };
+
+            $scope.$watch('item.kadrValid', function (val) {
+                $scope.checkedValue();
+            });
+            $scope.$watch('item.startKadr', function (val) {
+                $scope.checkedValue();
+            });
+
+            $scope.$watch('item.finCheck', function (val) {
+                $scope.checkedValue();
+                //$scope.userUpdateServiceFin();
+            });
+
+            $scope.$watch('item.ahoCheck', function (val) {
+                $scope.checkedValue();
+
+            });
+
+            $scope.$watch('item.itCheck', function (val) {
+                $scope.checkedValue();
+            });
 
 
             $scope.saveEdit = function (item) {
+                $scope.checkedValue();
                 item = reversValue(item);
-                console.log('ITEM START', item);
+                //console.log('ITEM START', item);
 
                 // console.log('********************************Перед созданием', item);
                 //if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска проекта"', 'не заполнено'), info.error(5811));

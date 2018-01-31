@@ -1,7 +1,7 @@
 <div class="col-sm-11  col-md-12  main" ng-cloak>
     <div class="page-header">
         <h2>
-            <p ng-if="item.lastName " ng-class="{'fired':item.fired}">{{item.getFullName()}} <span
+            <p ng-if="item.lastName " ng-class="{'fired':item.fired}">{{item.lastName}} {{item.firstName}} {{item.patronymicName}} <span
                     ng-if="!item.action && me.admin">{{item.deactivation()}}</span>
             </p>
             <p ng-if="!item.lastName">{{item.getNewEmployees()}}</p>
@@ -44,7 +44,7 @@
 
             <div class="panel" ng-class="{'panel-warning':item.action, 'panel-default':!item.action}">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{item.sc()}}
+                    <h3 class="panel-title" ng-bind="item.section">
                         <!--<a href="#" class="pull-right">-->
                         <!--<span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>-->
                         <!--</a>-->
@@ -491,7 +491,7 @@
                             <table class="table">
                                 <tr>
                                     <td width="10px">
-                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" ng-change="userUpdateServiceFin()"
+                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" ng-change="saveEditFin(item)"
                                                      aria-label="Checkbox 1"
                                                      class="green md-align-top-left" flex> </md-checkbox>
                                     </td>
@@ -537,7 +537,7 @@
                                 <table class="table">
                                     <tr>
                                         <td width="10px">
-                                            <md-checkbox ng-disabled="item.kadrValid" ng-model="item.ahoCheck" ng-change="userUpdateServiceAho()"
+                                            <md-checkbox ng-disabled="item.kadrValid" ng-model="item.ahoCheck" ng-change="saveEditAho(item)"
                                                          aria-label="Checkbox 1"
                                                          class="green md-align-top-left" flex> </md-checkbox>
                                         </td>
@@ -569,7 +569,7 @@
                             <table class="table">
                                 <tr>
                                     <td width="10px">
-                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" ng-change="userUpdateServiceIt()"
+                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" ng-change="saveEditIt(item)"
                                                      aria-label="Checkbox 1"
                                                      class="green md-align-top-left" flex> </md-checkbox>
                                     </td>

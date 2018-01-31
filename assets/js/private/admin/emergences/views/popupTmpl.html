@@ -1,26 +1,50 @@
 <h5><em>События</em></h5>
 <div class="dialog">
+    <!--<div class="list-group" ng-repeat="bg in bdgs">-->
+    <!--<a ng-if="(bg.action !=='удалён')" type="button" ui-sref="home.admin.emergences.edit({ emergenceId: bg.badges[0].id })"-->
+    <!--class="list-group-item">-->
+    <!--<span class="badges pull-right">-->
+    <!--<span class="glyphicon" aria-hidden="true" title="{{bg.action}}"-->
+    <!--ng-class="{'glyphicon-pencil':(bg.action==='обновлён'),'glyphicon-envelope':(bg.action==='на проверке'),'glyphicon-ok':(bg.action==='создан'),'glyphicon-trash':(bg.action==='удалён'),'text-success':(bg.action==='создан | на проверке'),'text-primary':(bg.action==='обновлён')}"></span>-->
+    <!--</span>-->
+    <!--<img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp;   {{bg.badges[0].name}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}-->
+    <!--</a>-->
+    <!--<a  ng-if="(bg.action==='удалён')" type="button"  class="list-group-item">-->
+    <!--<span class="badges pull-right">-->
+    <!--<span class="glyphicon" aria-hidden="true" title="{{bg.action}}"-->
+    <!--ng-class="{'glyphicon-trash':(bg.action==='удалён')}"></span>-->
+    <!--</span>-->
+    <!--<img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp;   -->
+    <!--{{bg.badges[0].name}} <br> {{bg.badges[0].lastName}} {{bg.badges[0].firstName[0]}}. {{bg.badges[0].patronymicName[0]}}. <br> {{bg.action}} в {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}-->
+    <!--</a>-->
+    <!--</div>-->
 
-    <div class="list-group" ng-repeat="bg in bdgs">
 
-        <a  ng-if="(bg.action !=='удалён')" type="button" ui-sref="home.admin.emergences.edit({ emergenceId: bg.badges[0].id })" class="list-group-item">
-            <span class="badges pull-right">
-                <span class="glyphicon" aria-hidden="true" title="{{bg.action}}"
-                  ng-class="{'glyphicon-pencil':(bg.action==='обновлён'),'glyphicon-envelope':(bg.action==='на проверке'),'glyphicon-ok':(bg.action==='создан'),'glyphicon-trash':(bg.action==='удалён'),'text-success':(bg.action==='создан | на проверке'),'text-primary':(bg.action==='обновлён')}"></span>
-            </span>
-            <img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp;   {{bg.badges[0].name}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
-        </a>
-        <a  ng-if="(bg.action==='удалён')" type="button"  class="list-group-item">
-            <span class="badges pull-right">
-                <span class="glyphicon" aria-hidden="true" title="{{bg.action}}"
-                  ng-class="{'glyphicon-trash':(bg.action==='удалён')}"></span>
-            </span>
-            <img  ng-src="{{bg.avatarUrl}}" alt="{{bg.shortName}}" title="{{bg.shortName}}" class="photo"> &nbsp;   {{bg.badges[0].name}} | {{bg.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}
-        </a>
-    </div>
+    <md-list>
+        <md-list-item class="md-3-line" ng-repeat="item in bdgs">
+            <img ng-src="{{item.avatarUrl}}" title="{{item.shortName}}" class="md-avatar" alt="{{item.shortName}}">
+            <div class="md-list-item-text">
+                <h3>{{item.badges[0].name}}</h3>
+                <h4>{{item.badges[0].lastName}} {{item.badges[0].firstName[0]}}. {{item.badges[0].patronymicName[0]}}.</h4>
+                <p>{{item.action}} в {{item.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}</p>
+            </div>
+            <md-button class="md-secondary" ng-disabled="(item.action==='удалён')" md-no-ink ng-href="/admin/emergences/edit/{{item.badges[0].id}}">
+                <i ng-if="(item.action !=='удалён')" class="fa fa-angle-double-right" aria-hidden="true"></i>
+
+                <!--<a ng-if="(item.action !=='удалён')" type="button"-->
+                <!--ui-sref="home.admin.emergences.edit({ emergenceId: item.badges[0].id })" class="list-group-item">-->
+                <!--<span class="glyphicon" aria-hidden="true" title="{{item.action}}"-->
+                <!--ng-class="{'glyphicon-pencil':(item.action==='обновлён'),'glyphicon-envelope':(item.action==='на проверке'),'glyphicon-ok':(item.action==='создан'),'glyphicon-trash':(item.action==='удалён'),'text-success':(item.action==='создан | на проверке'),'text-primary':(item.action==='обновлён')}"></span>-->
+                <!--</a>-->
+            </md-button>
+            <md-divider ng-if="!$last"></md-divider>
+        </md-list-item>
+    </md-list>
+
+
     <!--<input type="button" value="OK" ng-click="closeThisDialog('Some value')"/>-->
     <!--<div class="clearfix">-->
-        <!--<button class="btn btn-link pull-right " ui-sref="home.admin.emergences">Перейти</button>-->
+    <!--<button class="btn btn-link pull-right " ui-sref="home.admin.emergences">Перейти</button>-->
     <!--</div>-->
 
 </div>

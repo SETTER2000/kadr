@@ -219,7 +219,7 @@ module.exports = {
                                                 //         return res.serverError(err);
                                                 //     }
 
-                                                sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findEmergence}, req);
+                                                sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findEmergence}, req);
                                                 sails.sockets.broadcast('emergence', 'badges-emergence', {
                                                     badges: [createEmergence],
                                                     action: 'создан',
@@ -243,12 +243,12 @@ module.exports = {
      * @param res
      */
     update: function (req, res) {
-
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         let action = (req.param('kadrValid')) ? false : true;
         let fullName = req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName');
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
-        console.log('ALL DELETE u', req.params.all());
+        //console.log('ALL REQUEST: ', req.params.all());
+        //console.log('REQUEST PARAM itUpdate: ', req.param('itUpdate'));
         Department.findOne({id: req.param('departments')[0].id})
             .exec((err, findDepart)=> {
                 "use strict";
@@ -262,8 +262,6 @@ module.exports = {
                     '<p>Предполагаемая дата выхода - ' + moment(new Date(req.param('outputEmployee')), ['DD.MM.YYYY']).format('DD.MM.YYYY') + '. </p>' +
                     '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/company/emergences/edit/' + req.param('id') + '">' + fullName + '</a></p>'
                 }];
-
-
                 let obj = {
                     section: 'Выход нового сотрудника',
                     sections: 'Выход новых сотрудников',
@@ -305,13 +303,11 @@ module.exports = {
                     positions: req.param('positions'),
                     worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
                 };
-
                 User.findOne({id: obj.whomUpdated})
                     .exec((err, findUser) => {
                         "use strict";
                         if (err) return res.serverError(err);
                         if (!findUser) return res.notFound();
-
                         Emergence.update(req.param('id'), obj)
                             .populate('whomCreated')
                             .populate('whomUpdated')
@@ -320,41 +316,45 @@ module.exports = {
                             .populate('departments')
                             .exec((err, objEdit) => {
                                 if (err) return res.negotiate(err);
-
-
                                 Emergence.findOne(req.param('id'))
                                     .populate('positions')
+                                    .populate('departments')
+                                    .populate('whomCreated')
+                                    .populate('whomUpdated')
+                                    .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                     .exec((err, findOneEm) => {
                                         if (req.param('positionRemove')) {
                                             //console.log('PARAM', req.param('positionRemove'));
-                                            findOneEm.positions.remove(req.param('positionRemove'));
-                                            findOneEm.save(function (err) {
-                                                if (err) return res.negotiate(err);
-                                                findUser.save(function (err) {
-                                                    if (err) return res.negotiate(err);
-
-                                                    //console.log('UPDATED:', findOneEm.action+' '+ findOneEm.worked+' '+ findOneEm.sendService+' '+ findOneEm.startKadr);
-
-                                                    Emergence.find({sort: 'start DESC'})
-                                                        .populate('positions')
-                                                        .populate('departments')
-                                                        .populate('whomCreated')
-                                                        .populate('whomUpdated')
-                                                        .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
-                                                        .exec((err, findsEmergence) => {
-                                                            if (err) return res.serverError(err);
-                                                            sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence}, req);
-                                                            sails.sockets.broadcast('emergence', 'badges-emergence', {
-                                                                badges: objEdit,
-                                                                action: 'удалён',
-                                                                shortName: findUser.getShortName(),
-                                                                fullName: findUser.getFullName(),
-                                                                avatarUrl: findUser.avatarUrl
-                                                            }, req);
-                                                            res.send(findOneEm);
-                                                        });
-                                                });
-                                            });
+                                            //findOneEm.positions.remove(req.param('positionRemove'));
+                                            //findOneEm.save(function (err) {
+                                            //    if (err) return res.negotiate(err);
+                                            //    findUser.save(function (err) {
+                                            //        if (err) return res.negotiate(err);
+                                            //
+                                            //        //console.log('UPDATED:', findOneEm.action+' '+ findOneEm.worked+' '+ findOneEm.sendService+' '+ findOneEm.startKadr);
+                                            //
+                                            //        Emergence.find({sort: 'start DESC'})
+                                            //            .populate('positions')
+                                            //            .populate('departments')
+                                            //            .populate('whomCreated')
+                                            //            .populate('whomUpdated')
+                                            //            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
+                                            //            .exec((err, findsEmergence) => {
+                                            //                if (err) return res.serverError(err);
+                                            //                sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence}, req);
+                                            //                sails.sockets.broadcast('emergence', 'badges-emergence', {
+                                            //                    badges: objEdit,
+                                            //                    action: 'удалён',
+                                            //                    shortName: findUser.getShortName(),
+                                            //                    fullName: findUser.getFullName(),
+                                            //                    avatarUrl: findUser.avatarUrl
+                                            //                }, req);
+                                            //                findOneEm.start = new Date(findOneEm.start);
+                                            //                console.log('UPDATE OUT', findOneEm);
+                                            //                res.send(findOneEm);
+                                            //            });
+                                            //    });
+                                            //});
                                         } else {
                                             //console.log('UPDATED2:', findOneEm.action+' '+ findOneEm.worked+' '+ findOneEm.sendService+' '+ findOneEm.startKadr);
                                             Emergence.find({sort: 'start DESC'})
@@ -365,7 +365,7 @@ module.exports = {
                                                 .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                                 .exec((err, findsEmergence) => {
                                                     if (err) return res.serverError(err);
-                                                    sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence}, req);
+                                                    sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsEmergence}, req);
                                                     sails.sockets.broadcast('emergence', 'badges-emergence', {
                                                         badges: objEdit,
                                                         action: 'обновлён',
@@ -373,7 +373,8 @@ module.exports = {
                                                         fullName: findUser.getFullName(),
                                                         avatarUrl: findUser.avatarUrl
                                                     }, req);
-                                                    res.send(findOneEm);
+                                                    sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: findOneEm}, req);
+                                                    res.ok();
                                                 });
                                         }
                                     });
@@ -474,8 +475,9 @@ module.exports = {
                     //if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с '+req.param('year')+' годом. <a class="kadr-link"  target="_blank" href="/vacation/delete-all/'+req.param('year')+'"><i class="fa fa-link" aria-hidden="true"></i> Удалить </a>');
                     Emergence.destroy({id: finds.id}, (err) => {
                         if (err) return next(err);
-                        console.log('Отпуск удалил:', req.session.me);
-                        console.log('Отпуск удалён:', finds);
+                        console.log('Выход нового сотрудника - удалил:', req.session.me);
+                        finds.updatedAt= new Date();
+                        console.log('Выход нового сотрудника - удалён:', finds);
                         Emergence.find()
                             .populate('positions')
                             .populate('departments')
@@ -484,7 +486,8 @@ module.exports = {
                             .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                             .exec((err, findEmergence) => {
                                 if (err) return res.serverError(err);
-                                sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findEmergence}, req);
+                                sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: false}, req);
+                                sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: false}, req);
                                 sails.sockets.broadcast('emergence', 'badges-emergence', {
                                     badges: [finds],
                                     action: 'удалён',

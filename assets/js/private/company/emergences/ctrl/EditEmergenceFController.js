@@ -44,6 +44,22 @@ angular.module('EmergenceFModule')
             $scope.debug = true;
             $scope.comment = false;
 
+            /**
+             * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
+             */
+            io.socket.on('hello-emergence-edit', function (data) {
+                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
+                if(!data.howdy)  $state.go('^');
+                //$scope.item = data.howdy;
+                //$scope.$apply();
+                $scope.refresh();
+            });
+
+            io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
+                //console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+            });
+
+
             angular.extend(toastrConfig, {
                 //"closeButton": true,
                 //"debug": false,
@@ -766,23 +782,35 @@ angular.module('EmergenceFModule')
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
 
-            $scope.userUpdateServiceAho = function () {
-                $scope.item.ahoUpdate  = $scope.me.id;
-                $scope.item.$update();
+            //$scope.userUpdateServiceAho = function () {
+            //    $scope.item.ahoUpdate  = $scope.me.id;
+            //    $scope.item.$update();
+            //    //$state.go('home.company.emergences');
+            //};
+            //
+            $scope.saveEditFin = function (item) {
+                item.finUpdate  = $scope.me.id;
+                $scope.saveEdit(item);
                 //$state.go('home.company.emergences');
             };
 
-            $scope.userUpdateServiceIt = function () {
-                $scope.item.itUpdate  = $scope.me.id;
-                $scope.item.$update();
+            $scope.saveEditAho = function (item) {
+                item.ahoUpdate  = $scope.me.id;
+                $scope.saveEdit(item);
                 //$state.go('home.company.emergences');
             };
 
-            $scope.userUpdateServiceFin = function () {
-                $scope.item.finUpdate  = $scope.me.id;
-                $scope.item.$update();
+            $scope.saveEditIt = function (item) {
+                item.itUpdate  = $scope.me.id;
+                $scope.saveEdit(item);
                 //$state.go('home.company.emergences');
             };
+
+            //$scope.userUpdateServiceFin = function () {
+            //    $scope.item.finUpdate  = $scope.me.id;
+            //    $scope.item.$update();
+            //    //$state.go('home.company.emergences');
+            //};
 
             $scope.$watch('item.kadrValid', function (val) {
                 $scope.checkedValue();
@@ -793,6 +821,7 @@ angular.module('EmergenceFModule')
 
             $scope.$watch('item.finCheck', function (val) {
                 $scope.checkedValue();
+                //$scope.userUpdateServiceFin();
             });
 
             $scope.$watch('item.ahoCheck', function (val) {
@@ -820,6 +849,7 @@ angular.module('EmergenceFModule')
             var roundingDefault = moment.relativeTimeRounding();
             moment.relativeTimeThreshold('m', 60);
             $scope.saveEdit = function (item) {
+                $scope.checkedValue();
                 item = reversValue(item);
 
                 // console.log('********************************Перед созданием', item);

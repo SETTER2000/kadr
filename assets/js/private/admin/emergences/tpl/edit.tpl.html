@@ -485,17 +485,39 @@
 
             <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="edit && item.startKadr && !me.kadr" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
+            <div ng-if="edit && item.startKadr && item.finCheck" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
                 <div class="panel-heading"> Финансовый отдел</div>
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="checkbox">
-                            <label>
-                                <md-switch ng-disabled="item.kadrValid" ng-model="item.finCheck" aria-label="Switch 4">
-                                    <span ng-if="!item.finCheck">{{titles.check}} нет</span>
-                                    <span ng-if="item.finCheck">{{titles.check}} да</span>
-                                </md-switch>
-                            </label>
+                            <table class="table">
+                                <tr>
+                                    <td width="10px">
+                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck" ng-change="saveEditFin(item)"
+                                                     aria-label="Checkbox 1"
+                                                     class="green md-align-top-left" flex> </md-checkbox>
+                                    </td>
+                                    <td>
+                                        <span ng-if="!item.finCheck">{{titles.noCheck}}   </span>
+                                        <span ng-if="item.finCheck">{{titles.check}} </span>
+                                    </td>
+                                    <td class="pull-right">
+                                        <span ng-if="item.finUpdate" class="text-right">{{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>
+                                    </td>
+                                </tr>
+
+                            </table>
+                            <!--<label>-->
+                            <!--&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.finCheck" aria-label="Switch 4">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span ng-if="!item.finCheck">{{titles.check}} нет</span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span ng-if="item.finCheck">{{titles.check}} да</span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</md-switch>&ndash;&gt;-->
+                            <!--<md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" aria-label="Checkbox 1"-->
+                            <!--class="green md-align-top-left" flex>-->
+                            <!--<span ng-if="!item.finCheck">{{titles.noCheck}}</span>-->
+                            <!--<span ng-if="item.finCheck">{{titles.check}}</span>-->
+                            <!--</md-checkbox>-->
+                            <!--</label>-->
                         </div>
                     </div>
                 </div>
@@ -504,17 +526,35 @@
 
             <!-- А Х О  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="edit && item.startKadr && !me.kadr" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
+            <div ng-if="edit && item.startKadr && item.ahoCheck" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
                 <div class="panel-heading">АХО</div>
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="checkbox">
-                            <label>
-                                <md-switch ng-disabled="item.kadrValid" ng-model="item.ahoCheck" aria-label="Switch 4">
-                                    <span ng-if="!item.ahoCheck">{{titles.check}} нет   <span ng-if="item.ahoUpdate" class="text-right">{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span></span>
-                                    <span ng-if="item.ahoCheck">{{titles.check}} да   <span ng-if="item.ahoUpdate"   class="text-right">{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span></span>
-                                </md-switch>
-                            </label>
+
+                            <!--<md-switch ng-disabled="item.kadrValid" ng-model="item.ahoCheck" aria-label="Switch 4">-->
+                            <!--<span ng-if="!item.ahoCheck">{{titles.check}} нет</span>-->
+                            <!--<span ng-if="item.ahoCheck">{{titles.check}} да</span>-->
+                            <!--</md-switch>-->
+                            <table class="table">
+                                <tr>
+                                    <td width="10px">
+                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.ahoCheck" ng-change="saveEditAho(item)"
+                                                     aria-label="Checkbox 1"
+                                                     class="green md-align-top-left" flex> </md-checkbox>
+                                    </td>
+                                    <td>
+                                        <span ng-if="!item.ahoCheck">{{titles.noCheck}}   </span>
+                                        <span ng-if="item.ahoCheck">{{titles.check}} </span>
+                                    </td>
+                                    <td class="pull-right">
+                                        <span ng-if="item.ahoUpdate" class="text-right">{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+
                         </div>
                     </div>
                 </div>
@@ -523,17 +563,38 @@
 
             <!-- IT  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="edit && item.startKadr && !me.kadr" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
+            <div ng-if="edit && item.startKadr && item.itCheck " class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
                 <div class="panel-heading">IT</div>
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="checkbox">
-                            <label>
-                                <md-switch ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Switch 4">
-                                    <span ng-if="!item.itCheck">{{titles.check}} нет</span>
-                                    <span ng-if="item.itCheck">{{titles.check}} да</span>
-                                </md-switch>
-                            </label>
+                            <table class="table">
+                                <tr>
+                                    <td width="10px">
+                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck" ng-change="saveEditIt(item)"
+                                                     aria-label="Checkbox 1"
+                                                     class="green md-align-top-left" flex> </md-checkbox>
+                                    </td>
+                                    <td>
+                                        <span ng-if="!item.itCheck">{{titles.noCheck}}   </span>
+                                        <span ng-if="item.itCheck">{{titles.check}} </span>
+                                    </td>
+                                    <td class="pull-right">
+                                        <span ng-if="item.itUpdate" class="text-right">{{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!--<label>-->
+                            <!--&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Switch 4">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.check}} нет</span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}} да</span>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</md-switch>&ndash;&gt;-->
+                            <!--<md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Checkbox 1"-->
+                            <!--class="green md-align-top-left" flex>-->
+                            <!--<span ng-if="!item.itCheck">{{titles.noCheck}}</span>-->
+                            <!--<span ng-if="item.itCheck">{{titles.check}}</span>-->
+                            <!--</md-checkbox>-->
+                            <!--</label>-->
                         </div>
                     </div>
                 </div>
