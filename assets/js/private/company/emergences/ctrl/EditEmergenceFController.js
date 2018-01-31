@@ -49,7 +49,7 @@ angular.module('EmergenceFModule')
              */
             io.socket.on('hello-emergence-edit', function (data) {
                 console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
-                if(!data.howdy)  $state.go('^');
+                if(!data.howdy)  $state.go('home.company.emergences');
                 //$scope.item = data.howdy;
                 //$scope.$apply();
                 $scope.refresh();
@@ -791,19 +791,19 @@ angular.module('EmergenceFModule')
             $scope.saveEditFin = function (item) {
                 item.finUpdate  = $scope.me.id;
                 $scope.saveEdit(item);
-                //$state.go('home.company.emergences');
+                $state.go('home.company.emergences');
             };
 
             $scope.saveEditAho = function (item) {
                 item.ahoUpdate  = $scope.me.id;
                 $scope.saveEdit(item);
-                //$state.go('home.company.emergences');
+                $state.go('home.company.emergences');
             };
 
             $scope.saveEditIt = function (item) {
                 item.itUpdate  = $scope.me.id;
                 $scope.saveEdit(item);
-                //$state.go('home.company.emergences');
+                $state.go('home.company.emergences');
             };
 
             //$scope.userUpdateServiceFin = function () {
