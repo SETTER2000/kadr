@@ -666,7 +666,7 @@ angular.module('EmergenceModule')
 
             $scope.$watch('item.action', function (value, old) {
                 if (value !== undefined && !value) {
-                    toastr.warning('Рассылка не будет запущена.<br> Для запуска активируйте проект установив активность.', info.warning);
+                    toastr.warning('Рассылка не будет запущена.<br> Для запуска активируйте заявку. Установите переключатели: <ol><li>"Отклонить заявку - нет"</li><li>"Начать обработку - да"</li><li>"Сохранить"</li></ol>.', info.warning);
                 }
             });
             $scope.$watch('item.start', function (value) {

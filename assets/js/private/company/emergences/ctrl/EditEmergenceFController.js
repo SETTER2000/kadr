@@ -665,7 +665,7 @@ angular.module('EmergenceFModule')
 
             $scope.$watch('item.action', function (value, old) {
                 if (value !== undefined && !value) {
-                    toastr.warning('Рассылка не будет запущена.<br> Для запуска активируйте заявку установив активность.', info.warning);
+                    toastr.warning('Заявка отклонена.<br> Дальнейшая работа по заявки не актуальна.', info.warning);
                 }
             });
             $scope.$watch('item.start', function (value) {
@@ -791,19 +791,19 @@ angular.module('EmergenceFModule')
             $scope.saveEditFin = function (item) {
                 item.finUpdate  = $scope.me.id;
                 $scope.saveEdit(item);
-                $state.go('home.company.emergences');
+                $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
             $scope.saveEditAho = function (item) {
                 item.ahoUpdate  = $scope.me.id;
                 $scope.saveEdit(item);
-                $state.go('home.company.emergences');
+                $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
             $scope.saveEditIt = function (item) {
                 item.itUpdate  = $scope.me.id;
                 $scope.saveEdit(item);
-                $state.go('home.company.emergences');
+                $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
             //$scope.userUpdateServiceFin = function () {
@@ -863,9 +863,10 @@ angular.module('EmergenceFModule')
                 if (angular.isDefined(item.id)) {
                     //console.log('UPDATE item *****:', item);
                     item.$update({id:item.id},item, function (success) {
-                            toastr.success(info.changed);
+
                         $state.go('home.company.emergences');
                             //$scope.refresh();
+                            toastr.success(info.changed);
                         },
                         function (err) {
                             console.log('ERR11445', err);
@@ -948,13 +949,16 @@ angular.module('EmergenceFModule')
             };
 
             $scope.addSubdivision = function () {
+                if(!$scope.item) return;
                 if (angular.isArray($scope.item.departments)) {
                     $scope.item.departments.push({});
                 } else {
                     $scope.item.departments = [{}];
                 }
             };
-
+          $scope.$watch('item', function (val) {
+            if(val)  $scope.addSubdivision();
+          });
             $scope.removeSubdivision = function (department) {
                 for (let i = 0, ii = $scope.item.departments.length; i < ii; i++) {
                     if ($scope.item.departments[i].id === department.id) {

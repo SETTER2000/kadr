@@ -136,7 +136,7 @@ module.exports = {
                 tmpl: '<h1>Уважаемые, коллеги!</h1>' +
                 '<p> Планируется выход нового сотрудника - ' + fullName + '  в ' + findDepart.name + ' на должность ' + req.param('post') + '. </p>' +
                 '<p>Предполагаемая дата выхода - ' + moment(new Date(req.param('outputEmployee')), ['DD.MM.YYYY']).format('DD.MM.YYYY') + '. </p>' +
-                '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/company/emergences">' + fullName + '</a></p>'
+                '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/admin/emergences">' + fullName + '</a></p>'
             }];
             tmp = (req.param('htmlData')) ? req.param('htmlData') : tmp;
             if (moment().isSameOrAfter(req.param('start'))) return res.badRequest('ВНИМАНИЕ! Дата просрочена.');
@@ -247,7 +247,8 @@ module.exports = {
         let action = (req.param('kadrValid')) ? false : true;
         let fullName = req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName');
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
-        //console.log('ALL REQUEST: ', req.params.all());
+        let sectionUrl = (req.param('worked'))?'company':'admin';
+        console.log('ALL REQUEST worked: ', req.param('worked'));
         //console.log('REQUEST PARAM itUpdate: ', req.param('itUpdate'));
         Department.findOne({id: req.param('departments')[0].id})
             .exec((err, findDepart)=> {
@@ -260,7 +261,7 @@ module.exports = {
                     tmpl: '<h1>Уважаемые, коллеги!</h1>' +
                     '<p> Планируется выход нового сотрудника - ' + fullName + '  в ' + findDepart.name + ' на должность ' + req.param('post') + '. </p>' +
                     '<p>Предполагаемая дата выхода - ' + moment(new Date(req.param('outputEmployee')), ['DD.MM.YYYY']).format('DD.MM.YYYY') + '. </p>' +
-                    '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/company/emergences/edit/' + req.param('id') + '">' + fullName + '</a></p>'
+                    '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/'+sectionUrl+'/emergences/edit/' + req.param('id') + '">' + fullName + '</a></p>'
                 }];
                 let obj = {
                     section: 'Выход нового сотрудника',

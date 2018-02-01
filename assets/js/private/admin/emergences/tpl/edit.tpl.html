@@ -279,9 +279,9 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-model="item.phone" aria-label="Switch 1">
-                                        <span ng-if="!item.phone">Телефон не нужен</span>
-                                        <span ng-if="item.phone">Телефон нужен</span>
+                                    <md-switch ng-model="item.phone" class="green" aria-label="Switch 1">
+                                        <!--<span ng-if="!item.phone">Телефон не нужен</span>-->
+                                        <span class="text-gray" ng-class="{'action':item.phone}">Телефон</span>
                                     </md-switch>
                                 </label>
                             </div>
@@ -293,9 +293,9 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-model="item.remote" aria-label="Switch 2">
-                                        <span ng-if="!item.remote">Удалённый доступ не нужен</span>
-                                        <span ng-if="item.remote">Удалённый доступ нужен</span>
+                                    <md-switch ng-model="item.remote" class="green" aria-label="Switch 2">
+                                        <!--<span ng-if="!item.remote">Удалённый доступ не нужен</span>-->
+                                        <span class="text-gray" ng-class="{'action':item.remote}">Удалённый доступ</span>
                                     </md-switch>
                                 </label>
                             </div>
@@ -307,9 +307,9 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-model="item.mobile" aria-label="Switch 3">
-                                        <span ng-if="!item.mobile">Мобильный не нужен</span>
-                                        <span ng-if="item.mobile">Мобильный нужен</span>
+                                    <md-switch ng-model="item.mobile" class="green" aria-label="Switch 3">
+                                        <!--<span ng-if="!item.mobile">Мобильный не нужен</span>-->
+                                        <span class="text-gray" ng-class="{'action':item.mobile}">Корпоративный мобильный</span>
                                     </md-switch>
                                 </label>
                             </div>
@@ -321,9 +321,9 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
-                                    <md-switch ng-model="item.bussinescard" aria-label="Switch 4">
-                                        <span ng-if="!item.bussinescard">Визитки не нужны</span>
-                                        <span ng-if="item.bussinescard">Визитки нужны</span>
+                                    <md-switch ng-model="item.bussinescard" class="green" aria-label="Switch 4">
+                                        <!--<span ng-if="!item.bussinescard">Визитки не нужны</span>-->
+                                        <span class="text-gray" ng-class="{'action':item.bussinescard}">Визитки</span>
                                     </md-switch>
                                 </label>
                             </div>

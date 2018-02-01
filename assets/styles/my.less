@@ -762,10 +762,18 @@ a.kadr-link {
   margin-left: 24px;
 }
 
-md-checkbox.md-checked.green .md-icon {
+md-checkbox.md-checked.green .md-icon{
   background-color: rgba(39, 146, 27, 0.75);
 }
-
+md-switch.md-default-theme.md-checked.green .md-bar, md-switch.md-checked.green .md-bar {
+  background-color: rgba(92, 184, 91, 0.58);
+}
+//md-switch.md-default-theme.md-checked .md-thumb, md-switch.md-checked .md-thumb {
+//  color: rgba(39, 146, 27, 0.75);
+//}
+md-switch.md-default-theme.md-checked.green .md-thumb, md-switch.md-checked.green .md-thumb {
+  background-color: #5cb85b;
+}
 .window {
   position: absolute;
   top: 7px;
@@ -781,6 +789,16 @@ md-checkbox.md-checked.green .md-icon {
   background-color: rgb(98, 170, 249);
 }
 
+.text-gray{
+  color: #aaaaaa;
+}
+.text-gray.action{
+  color: #333333;
+}
+.ngdialog.ngdialog-theme-default .ngdialog-content{
+  max-height: 600px;
+  overflow-y: auto;
+}
 //.chat-window {
 //  .chat {
 //    list-style: none;
