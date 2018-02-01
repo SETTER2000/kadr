@@ -22,6 +22,8 @@ angular.module('EmergenceFModule')
                     if (!angular.isNumber(num)) return;
                     return 'Ошибка ' + num + '!';
                 },
+                noEmpty: 'Поле не должно быть пустым',
+                noFix: "Введите правильное значение",
                 warning: 'ВНИМАНИЕ!',
                 requiredJpg: 'Расширение файла должно быть jpg.',
                 isSimilar: 'Есть похожий: ',
@@ -44,12 +46,26 @@ angular.module('EmergenceFModule')
             $scope.debug = true;
             $scope.comment = false;
 
+            $scope.requireValue = true;
+            $scope.matchPattern = new RegExp("[а-я]");
+
+            $scope.getError = function (error) {
+                if (angular.isDefined(error)) {
+                    if (error.required) {
+                        return info.noEmpty;
+                    } else if (error.email) {
+                        return info.noFix;
+                    }
+                }
+            };
+
+
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
             io.socket.on('hello-emergence-edit', function (data) {
                 console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
-                if(!data.howdy)  $state.go('home.company.emergences');
+                if (!data.howdy)  $state.go('home.company.emergences');
                 //$scope.item = data.howdy;
                 //$scope.$apply();
                 $scope.refresh();
@@ -789,20 +805,20 @@ angular.module('EmergenceFModule')
             //};
             //
             $scope.saveEditFin = function (item) {
-                item.finUpdate  = $scope.me.id;
-                $scope.saveEdit(item);
+                item.finUpdate = $scope.me.id;
+                $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
             $scope.saveEditAho = function (item) {
-                item.ahoUpdate  = $scope.me.id;
-                $scope.saveEdit(item);
+                item.ahoUpdate = $scope.me.id;
+                $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
             $scope.saveEditIt = function (item) {
-                item.itUpdate  = $scope.me.id;
-                $scope.saveEdit(item);
+                item.itUpdate = $scope.me.id;
+                $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
@@ -848,7 +864,17 @@ angular.module('EmergenceFModule')
 
             var roundingDefault = moment.relativeTimeRounding();
             moment.relativeTimeThreshold('m', 60);
-            $scope.saveEdit = function (item) {
+            $scope.saveEdit = function (item, isValid) {
+                if (isValid) {
+                    $scope.message = item.name + " " + item.email;
+                }
+                else {
+                    $scope.message = "Error";
+                    $scope.showError = true;
+                    return;
+                }
+
+
                 $scope.checkedValue();
                 item = reversValue(item);
 
@@ -862,9 +888,9 @@ angular.module('EmergenceFModule')
                 //if (!item.start)
                 if (angular.isDefined(item.id)) {
                     //console.log('UPDATE item *****:', item);
-                    item.$update({id:item.id},item, function (success) {
+                    item.$update({id: item.id}, item, function (success) {
 
-                        $state.go('home.company.emergences');
+                            $state.go('home.company.emergences');
                             //$scope.refresh();
                             toastr.success(info.changed);
                         },
@@ -949,16 +975,16 @@ angular.module('EmergenceFModule')
             };
 
             $scope.addSubdivision = function () {
-                if(!$scope.item) return;
+                if (!$scope.item) return;
                 if (angular.isArray($scope.item.departments)) {
                     $scope.item.departments.push({});
                 } else {
                     $scope.item.departments = [{}];
                 }
             };
-          $scope.$watch('item', function (val) {
-            if(val)  $scope.addSubdivision();
-          });
+            $scope.$watch('item', function (val) {
+                if (val)  $scope.addSubdivision();
+            });
             $scope.removeSubdivision = function (department) {
                 for (let i = 0, ii = $scope.item.departments.length; i < ii; i++) {
                     if ($scope.item.departments[i].id === department.id) {

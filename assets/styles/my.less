@@ -774,6 +774,9 @@ md-switch.md-default-theme.md-checked.green .md-bar, md-switch.md-checked.green 
 md-switch.md-default-theme.md-checked.green .md-thumb, md-switch.md-checked.green .md-thumb {
   background-color: #5cb85b;
 }
+md-switch.md-default-theme.md-checked.green.ng-dirty , md-switch.md-checked.green.ng-dirty {
+  background-color: transparent;
+}
 .window {
   position: absolute;
   top: 7px;
@@ -799,6 +802,43 @@ md-switch.md-default-theme.md-checked.green .md-thumb, md-switch.md-checked.gree
   max-height: 600px;
   overflow-y: auto;
 }
+
+
+//**************  VALIDATION FORM ****************/
+
+/* Правило для всех элементов, с которыми не взаимодействовал пользователь*/
+//form .ng-pristine {
+//  border: 1px dotted gray;
+//}
+
+/* Данное правило распространяется на все элементы с которыми взаимодействовал прользователь и которые не прошли проверку */
+form .ng-invalid.ng-dirty {
+  background-color: #fdf4f6;
+}
+
+/* Правило для всех элементов, которые прошли проверку после взаимодействия с пользователем */
+form .ng-valid.ng-dirty {
+  background-color: #f5ffef;
+}
+
+/* класс, который присваивает оформление для неправильно заполненных полей для email */
+form .ng-invalid-email {
+  color: #fdf4f6;
+}
+
+/*
+    Валидация происходит после каждого изменения в форме.
+    Два следующих правила используются для элемента span в конце формы.
+*/
+span.summary.ng-invalid {
+  color: #fdf4f6;
+  font-weight: bold;
+}
+
+span.summary.ng-valid {
+  color: #dff5d1;
+}
+
 //.chat-window {
 //  .chat {
 //    list-style: none;
