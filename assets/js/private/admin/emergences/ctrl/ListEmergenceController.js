@@ -41,10 +41,10 @@
              */
             io.socket.on('hello-emergence-list', function (data) {
                 console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
-                $scope.items = data.howdy;
+                //$scope.items = data.howdy;
                 console.log('Данные события hello', data);
-
-                $scope.$apply();
+                $scope.refresh();
+                //$scope.$apply();
             });
 
             $scope.clickToOpen = function () {
@@ -129,10 +129,10 @@
                 title: 'На проверке',
                 titleService: 'Проверено',
                 startProject: 'Подача заявки',
-                textHead:'Сообщения отправлены',
+                textHead: 'Сообщения отправлены',
                 outputEmployee: 'Выход сотрудника',
-                check:'выполнено',
-                checkKadr:'начать обработку'
+                check: 'выполнено',
+                checkKadr: 'начать обработку'
             };
 
 

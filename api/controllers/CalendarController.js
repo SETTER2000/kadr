@@ -71,7 +71,7 @@ module.exports = {
             });
         })
     },
-    //updateCalendars:
+
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         var obj = {
