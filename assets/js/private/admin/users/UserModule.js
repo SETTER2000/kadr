@@ -92,15 +92,6 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
                     }
                 }
             })
-            //.state('home.admin.users.exit', {
-            //    url: '/exit',
-            //    views: {
-            //        '@': {
-            //            templateUrl: '/js/private/admin/users/tpl/exit.html',
-            //            controller: 'EditController'
-            //        }
-            //    }
-            //})
         ;
     })
     .constant('CONF_MODULE_USER', {baseUrl: '/users/:userId'})
