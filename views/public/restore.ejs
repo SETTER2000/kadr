@@ -12,21 +12,21 @@
                         <!-- E M A I L -->
                         <div class="form-group" ng-class="{'has-error':restoreprofile.email.$invalid &&restoreprofile.email.$dirty}">
                             <!-- Email address or Username -->
-                            <input ng-model="restoreProfileForm.email" class="form-control input-lg"  placeholder="email" name="email" type="email" required>
-              <span class="help-block has-error" ng-if="restoreprofile.email.$dirty">
-                <span ng-show="restoreprofile.email.$error.required">Email обязателен.</span>
-                <span ng-show="restoreprofile.email.$error.email">Не правильный email.</span>
-              </span>
+                            <input ng-model="restoreProfileForm.email" class="form-control"  placeholder="email" name="email" type="email" required>
+              <!--<span class="help-block has-error" ng-if="restoreprofile.email.$dirty">-->
+                <!--<span ng-show="restoreprofile.email.$error.required">Email обязателен.</span>-->
+                <!--<span ng-show="restoreprofile.email.$error.email">Не правильный email.</span>-->
+              <!--</span>-->
                         </div>
                         <!-- P A S S W O R D -->
                         <div class="form-group" ng-class="{'has-error':restoreprofile.password.$invalid &&restoreprofile.password.$dirty}">
-                            <input ng-model="restoreProfileForm.password" class="form-control input-lg"  name="password" type="password" id="password" required placeholder="password">
+                            <input ng-model="restoreProfileForm.password" class="form-control "  name="password" type="password" id="password" required placeholder="password">
               <span class="help-block has-error" ng-if="restoreprofile.password.$dirty">
                 <span ng-show="restoreprofile.password.$error.required">Пароль обязателен.</span>
               </span>
                         </div>
                         <div class="form-group">
-                            <button type="submit" autofocus class="submit-btn btn btn-lg btn-block" ng-disabled="restoreprofile.$invalid.$invalid">
+                            <button type="submit" autofocus class="btn submit-btn   btn-block" ng-disabled="restoreprofile.$invalid.$invalid">
                                 <span ng-show="!restoreProfileForm.loading">Восстановление профиля.</span>
                                 <span ng-show="restoreProfileForm.loading" class="fa fa-spinner"></span>
                                 <span ng-show="restoreProfileForm.loading">Отправка email...</span>

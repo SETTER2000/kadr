@@ -25,7 +25,7 @@
                 <!--<button ng-disabled="!item.start" class="btn btn-primary btn-md " type="button" ng-click="toOpen()">-->
                 <!--<span class="glyphicon glyphicon-list-alt"></span> {{item.nameLinkFn()}}-->
                 <!--</button>-->
-                <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
+                <button ng-show="edit" ng-click="saveEdit(item, userForm.$valid)" type="button" class="btn btn-success">
                     <span class="glyphicon glyphicon-check"></span> Сохранить
 
                 </button>
@@ -51,7 +51,8 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <form name="userForm" novalidate ng-submit="saveEdit(item)" enctype="multipart/form-data">
+                    <form name="userForm" novalidate
+                          ng-submit="saveEdit(item, userForm.$valid)" enctype="multipart/form-data">
 
 
                         <!-- A C T I O N -->
@@ -93,33 +94,22 @@
                         <!--</div>-->
 
 
-                        <!--  E D I T   D E P A R T M E N T S  C O N T R O L L E R -->
 
-
-                        <div ng-controller="ListDepartmentFController" class="form-group ">
-                            <label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()"> </label> <span
-                                class="text-danger">*</span>
-                            <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ] </span>
-                            <div class="form-inline" ng-repeat="department in item.departments">
-                                <div class="form-group">
-                                    <select class="form-control" required ng-model="department.id">
-                                        <option ng-repeat="option in items| filter:{action:true}" value="{{option.id}}">{{option.name}}
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <button type="button" class="btn btn-default" ng-click="removeSubdivision(department)">x</button>
-                            </div>
-                            <!--<pre id="default-spacing">{{items | json}}</pre>-->
-                            <!--<pre>D E P A R T M E N T S : {{items | limitTo:5 | json}}</pre>-->
-                        </div>
 
 
                         <!-- L A S T  N A M E -->
 
                         <div class="form-group">
                             <label class="control-label">Фамилия <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" required ng-model="item.lastName">
+                            <input type="text" name="itemLastName" ng-model="item.lastName" class="form-control"
+                                   ng-required="requireValue"
+                                   ng-minlength="minLength"
+                                   ng-maxlength="maxLength"
+                                   ng-pattern="matchPattern">
+
+                            <div class="text-danger" ng-show="showError">
+                                {{getError(userForm.itemLastName.$error)}}
+                            </div>
                         </div>
 
 
@@ -127,7 +117,14 @@
 
                         <div class="form-group">
                             <label class="control-label">Имя <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" required ng-model="item.firstName">
+                            <input type="text" name="itemFirstName" ng-model="item.firstName" class="form-control"
+                                   ng-required="requireValue"
+                                   ng-minlength="minLength"
+                                   ng-maxlength="maxLength"
+                                   ng-pattern="matchPattern">
+                            <div class="text-danger" ng-show="showError">
+                                {{getError(userForm.itemFirstName.$error)}}
+                            </div>
                         </div>
 
 
@@ -135,7 +132,14 @@
 
                         <div class="form-group">
                             <label class="control-label">Отчество <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" required ng-model="item.patronymicName">
+                            <input type="text" name="itemPatronymicName" ng-model="item.patronymicName" class="form-control"
+                                   ng-required="requireValue"
+                                   ng-minlength="minLength"
+                                   ng-maxlength="maxLength"
+                                   ng-pattern="matchPattern">
+                            <div class="text-danger" ng-show="showError">
+                                {{getError(userForm.itemPatronymicName.$error)}}
+                            </div>
                         </div>
 
 
@@ -146,19 +150,38 @@
                                 Дата выхода сотрудника <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
-                                <input type="text" required ng-bind="parseExpression2()" class="form-control flatpickr"
+                                <input type="text" name="itemOutputEmployee" required ng-bind="parseExpression2()" class="form-control flatpickr"
                                        ng-flatpickr
                                        fp-opts="dateOpts"
                                        fp-on-setup="toggleBlur(item)"
                                        ng-model="item.outputEmployee">
-                                <!--<span class="input-group-btn">-->
-                                <!--<button class="btn btn-default" type="button" ng-click="removeBirthday(item)"><span-->
-                                <!--class="glyphicon glyphicon-remove"></span></button>-->
-                                <!--</span>-->
+                                <div class="text-danger" ng-show="showError">
+                                    {{getError(userForm.itemOutputEmployee.$error)}}
+                                </div>
                             </div>
                         </div>
 
+                        <!--  E D I T   D E P A R T M E N T S  C O N T R O L L E R -->
 
+
+                        <div ng-controller="ListDepartmentFController" class="form-group ">
+                            <label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()"> </label> <span
+                                class="text-danger">*</span>
+                            <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ] </span>
+                            <div class="form-inline" ng-repeat="department in item.departments">
+                                <div class="form-group">
+                                    <select class="form-control" name="selectDepartment" required ng-model="department.id">
+                                        <option ng-repeat="option in items| filter:{action:true}" value="{{option.id}}">{{option.name}}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <button type="button" class="btn btn-default" ng-click="removeSubdivision(department)">x</button>
+                            </div>
+                            <div class="text-danger" ng-show="showError">
+                                {{getError(userForm.selectDepartment.$error)}}
+                            </div>
+                        </div>
                         <!-- ЧЕРЕЗ СКОЛЬКО МИНУТ ПОСЛЕ СОХРАНЕНИЯ ЗАПУСТИТЬ ПРОЕКТ -->
 
                         <!--<div class="form-group" >-->
@@ -226,7 +249,10 @@
                         <!-- Д О Л Ж Н О С Т Ь -->
                         <div class="form-group">
                             <label class="control-label">Должность <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" required ng-model="item.post">
+                            <input type="text" name="itemPost" class="form-control" required ng-model="item.post">
+                            <div class="text-danger" ng-show="showError">
+                                {{getError(userForm.itemPost.$error)}}
+                            </div>
                         </div>
 
 
@@ -234,7 +260,10 @@
 
                         <div class="form-group">
                             <label class="control-label">Руководитель <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" required ng-model="item.boss">
+                            <input type="text" class="form-control" name="itemBoss" required ng-model="item.boss">
+                            <div class="text-danger" ng-show="showError">
+                                {{getError(userForm.itemBoss.$error)}}
+                            </div>
                         </div>
 
 
@@ -391,17 +420,18 @@
                         </div>
                         <div class="form-group">
                             <!--<div class="form-group" style=" position: fixed;margin-left: 50px; margin-bottom: 70px; bottom:0; left:0;">-->
-                            <button ng-show="!edit" type="submit" ng-disabled="userForm.$invalid"
-                                    class="btn btn-md btn-success">
-                                <span class="glyphicon glyphicon-user"></span>
-                                Сохранить
-                            </button>
+                            <!--<button ng-show="!edit" type="submit"-->
+                                    <!--class="btn btn-md btn-success">-->
+                                <!--<span class="glyphicon glyphicon-user"></span>-->
+                                <!--Сохранить-->
+                            <!--</button>-->
 
-                            <button ng-show="edit" type="submit" ng-disabled="userForm.$invalid"
+                            <button  type="submit"
                                     class="btn btn-md btn-success">
                                 <span class="glyphicon glyphicon-check"></span>
                                 Сохранить
                             </button>
+
                             <a ng-if="me.admin" ng-href="{{item.getListUrl()}}" class="btn btn-md btn-warning">
                                 <span class="glyphicon glyphicon-list"> </span>
                                 Список
@@ -493,7 +523,7 @@
                             <table class="table">
                                 <tr>
                                     <td width="10px">
-                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck" ng-change="saveEditFin(item)"
+                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck" ng-change="saveEditFin(item, userForm.$valid)"
                                                      aria-label="Checkbox 1"
                                                      class="green md-align-top-left" flex> </md-checkbox>
                                     </td>
@@ -539,7 +569,7 @@
                             <table class="table">
                                 <tr>
                                     <td width="10px">
-                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.ahoCheck" ng-change="saveEditAho(item)"
+                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.ahoCheck" ng-change="saveEditAho(item, userForm.$valid)"
                                                      aria-label="Checkbox 1"
                                                      class="green md-align-top-left" flex> </md-checkbox>
                                     </td>
@@ -571,7 +601,7 @@
                             <table class="table">
                                 <tr>
                                     <td width="10px">
-                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck" ng-change="saveEditIt(item)"
+                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck" ng-change="saveEditIt(item, userForm.$valid)"
                                                      aria-label="Checkbox 1"
                                                      class="green md-align-top-left" flex> </md-checkbox>
                                     </td>

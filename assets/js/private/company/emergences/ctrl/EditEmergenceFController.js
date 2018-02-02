@@ -23,7 +23,10 @@ angular.module('EmergenceFModule')
                     return 'Ошибка ' + num + '!';
                 },
                 noEmpty: 'Поле не должно быть пустым',
+                noPatternW: 'Поле должно содержать только русские буквы',
                 noFix: "Введите правильное значение",
+                minlength: "Минимум знаков ",
+                maxlength: "Максимум знаков ",
                 warning: 'ВНИМАНИЕ!',
                 requiredJpg: 'Расширение файла должно быть jpg.',
                 isSimilar: 'Есть похожий: ',
@@ -43,18 +46,40 @@ angular.module('EmergenceFModule')
                 minDate: "01-01-1950",
                 maxDate: "31-12-2030"
             };
+
+
+
             $scope.debug = true;
             $scope.comment = false;
 
+            $scope.matchPattern = new RegExp('[а-яА-ЯёЁ]+');
             $scope.requireValue = true;
-            $scope.matchPattern = new RegExp("[а-я]");
-
+            $scope.minLength = 3;
+            $scope.maxLength = 20;
             $scope.getError = function (error) {
+                /*
+                 serForm.itemFirstName.$error.required
+                 serForm.itemFirstName.$error.minlength
+                 serForm.itemFirstName.$error.maxlength
+                 serForm.itemFirstName.$error.pattern
+                 serForm.itemFirstName.$valid
+                 */
+
                 if (angular.isDefined(error)) {
                     if (error.required) {
                         return info.noEmpty;
-                    } else if (error.email) {
-                        return info.noFix;
+                    }
+                    if (error.pattern) {
+                        //$scope.showError = true;
+                        return info.noPatternW;
+                    }
+                    if (error.minlength) {
+                        //$scope.showError = true;
+                        return info.minlength + $scope.minLength;
+                    }
+                    if (error.maxlength) {
+                        //$scope.showError = true;
+                        return info.maxlength + $scope.maxLength;
                     }
                 }
             };
@@ -804,19 +829,19 @@ angular.module('EmergenceFModule')
             //    //$state.go('home.company.emergences');
             //};
             //
-            $scope.saveEditFin = function (item) {
+            $scope.saveEditFin = function (item, isValid) {
                 item.finUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
-            $scope.saveEditAho = function (item) {
+            $scope.saveEditAho = function (item, isValid) {
                 item.ahoUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
-            $scope.saveEditIt = function (item) {
+            $scope.saveEditIt = function (item, isValid) {
                 item.itUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
@@ -864,7 +889,11 @@ angular.module('EmergenceFModule')
 
             var roundingDefault = moment.relativeTimeRounding();
             moment.relativeTimeThreshold('m', 60);
+
             $scope.saveEdit = function (item, isValid) {
+                $scope.checkedValue();
+                item = reversValue(item);
+
                 if (isValid) {
                     $scope.message = item.name + " " + item.email;
                 }
@@ -875,8 +904,8 @@ angular.module('EmergenceFModule')
                 }
 
 
-                $scope.checkedValue();
-                item = reversValue(item);
+
+
 
                 // console.log('********************************Перед созданием', item);
                 //if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска рассылки"', 'не заполнено'), info.error(5811));

@@ -20,6 +20,11 @@ angular.module('EmergenceModule')
                     if (!angular.isNumber(num)) return;
                     return 'Ошибка ' + num + '!';
                 },
+                noEmpty: 'Поле не должно быть пустым',
+                noPatternW: 'Поле должно содержать только русские буквы',
+                noFix: "Введите правильное значение",
+                minlength: "Минимум знаков ",
+                maxlength: "Максимум знаков ",
                 warning: 'ВНИМАНИЕ!',
                 requiredJpg: 'Расширение файла должно быть jpg.',
                 isSimilar: 'Есть похожий: ',
@@ -42,6 +47,39 @@ angular.module('EmergenceModule')
             $scope.debug = true;
             $scope.comment = false;
 
+
+
+            $scope.matchPattern = new RegExp('[а-яА-ЯёЁ]+');
+            $scope.requireValue = true;
+            $scope.minLength = 3;
+            $scope.maxLength = 20;
+            $scope.getError = function (error) {
+                /*
+                 serForm.itemFirstName.$error.required
+                 serForm.itemFirstName.$error.minlength
+                 serForm.itemFirstName.$error.maxlength
+                 serForm.itemFirstName.$error.pattern
+                 serForm.itemFirstName.$valid
+                 */
+
+                if (angular.isDefined(error)) {
+                    if (error.required) {
+                        return info.noEmpty;
+                    }
+                    if (error.pattern) {
+                        //$scope.showError = true;
+                        return info.noPatternW;
+                    }
+                    if (error.minlength) {
+                        //$scope.showError = true;
+                        return info.minlength + $scope.minLength;
+                    }
+                    if (error.maxlength) {
+                        //$scope.showError = true;
+                        return info.maxlength + $scope.maxLength;
+                    }
+                }
+            };
 
             /**
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
@@ -293,6 +331,12 @@ angular.module('EmergenceModule')
                 }
             };
 
+
+
+
+
+
+
             /**
              * Это функция срабатывает каждый раз после выбора даты
              * Принимает объект flatpicker c вновь выбранными датами или одной датой
@@ -305,10 +349,6 @@ angular.module('EmergenceModule')
              * @param fpItem
              * @returns {*}
              */
-
-
-
-
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
                 //$scope.to = fpItem.selectedDates[1];
@@ -795,21 +835,21 @@ angular.module('EmergenceModule')
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
 
-            $scope.saveEditFin = function (item) {
+            $scope.saveEditFin = function (item,isValid) {
                 item.finUpdate  = $scope.me.id;
-                $scope.saveEdit(item);
+                $scope.saveEdit(item,isValid);
                 $state.go('home.admin.emergences');
             };
 
-            $scope.saveEditAho = function (item) {
+            $scope.saveEditAho = function (item,isValid) {
                 item.ahoUpdate  = $scope.me.id;
-                $scope.saveEdit(item);
+                $scope.saveEdit(item,isValid);
                 $state.go('home.admin.emergences');
             };
 
-            $scope.saveEditIt = function (item) {
+            $scope.saveEditIt = function (item,isValid) {
                 item.itUpdate  = $scope.me.id;
-                $scope.saveEdit(item);
+                $scope.saveEdit(item,isValid);
                 $state.go('home.admin.emergences');
             };
 
@@ -835,9 +875,21 @@ angular.module('EmergenceModule')
             });
 
 
-            $scope.saveEdit = function (item) {
+            $scope.saveEdit = function (item,isValid) {
                 $scope.checkedValue();
                 item = reversValue(item);
+
+
+                if (isValid) {
+                    $scope.message = item.name + " " + item.email;
+                }
+                else {
+                    $scope.message = "Error";
+                    $scope.showError = true;
+                    return;
+                }
+
+
                 //console.log('ITEM START', item);
 
                 // console.log('********************************Перед созданием', item);
@@ -995,13 +1047,16 @@ angular.module('EmergenceModule')
             };
 
             $scope.addSubdivision = function () {
+                if (!$scope.item) return;
                 if (angular.isArray($scope.item.departments)) {
                     $scope.item.departments.push({});
                 } else {
                     $scope.item.departments = [{}];
                 }
             };
-
+            $scope.$watch('item', function (val) {
+                if (val)  $scope.addSubdivision();
+            });
             $scope.removeSubdivision = function (department) {
                 for (let i = 0, ii = $scope.item.departments.length; i < ii; i++) {
                     if ($scope.item.departments[i].id === department.id) {

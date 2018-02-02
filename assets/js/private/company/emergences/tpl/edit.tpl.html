@@ -25,7 +25,7 @@
                 <!--<button ng-disabled="!item.start" class="btn btn-primary btn-md " type="button" ng-click="toOpen()">-->
                 <!--<span class="glyphicon glyphicon-list-alt"></span> {{item.nameLinkFn()}}-->
                 <!--</button>-->
-                <button ng-show="edit" ng-click="saveEdit(item)" type="button" class="btn btn-success">
+                <button ng-show="edit" ng-click="saveEdit(item, userForm.$valid)" type="button" class="btn btn-success">
                     <span class="glyphicon glyphicon-check"></span> Сохранить
 
                 </button>
@@ -51,7 +51,8 @@
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <form name="userForm" novalidate ng-submit="saveEdit(item, userForm.$valid)" enctype="multipart/form-data">
+                    <form name="userForm" novalidate
+                          ng-submit="saveEdit(item, userForm.$valid)" enctype="multipart/form-data">
 
 
                         <!-- A C T I O N -->
@@ -98,7 +99,11 @@
 
                         <div class="form-group">
                             <label class="control-label">Фамилия <span class="text-danger">*</span></label>
-                            <input type="text" name="itemLastName" class="form-control" required ng-model="item.lastName">
+                            <input type="text" name="itemLastName" ng-model="item.lastName" class="form-control"
+                                   ng-required="requireValue"
+                                   ng-minlength="minLength"
+                                   ng-maxlength="maxLength"
+                                   ng-pattern="matchPattern">
 
                             <div class="text-danger" ng-show="showError">
                                 {{getError(userForm.itemLastName.$error)}}
@@ -110,15 +115,19 @@
 
                         <div class="form-group">
                             <label class="control-label">Имя <span class="text-danger">*</span></label>
-                            <input type="text" name="itemFirstName" class="form-control"  ng-required="requireValue" ng-minlength="3" ng-maxlength="15" ng-pattern="matchPattern"  ng-model="item.firstName">
+                            <input type="text" name="itemFirstName" ng-model="item.firstName" class="form-control"
+                                   ng-required="requireValue"
+                                   ng-minlength="minLength"
+                                   ng-maxlength="maxLength"
+                                   ng-pattern="matchPattern">
                             <div class="text-danger" ng-show="showError">
                                 {{getError(userForm.itemFirstName.$error)}}
                             </div>
-                            <p>Required Error:   {{userForm.itemFirstName.$error.required}}</p>
-                            <p>Min Length Error: {{userForm.itemFirstName.$error.minlength}}</p>
-                            <p>Max Length Error: {{userForm.itemFirstName.$error.maxlength}}</p>
-                            <p>Pattern Error:    {{userForm.itemFirstName.$error.pattern}}</p>
-                            <p>Element Valid:    {{userForm.itemFirstName.$valid}}</p>
+                            <!--<p>Required Error:   {{userForm.itemFirstName.$error.required}}</p>-->
+                            <!--<p>Min Length Error: {{userForm.itemFirstName.$error.minlength}}</p>-->
+                            <!--<p>Max Length Error: {{userForm.itemFirstName.$error.maxlength}}</p>-->
+                            <!--<p>Pattern Error:    {{userForm.itemFirstName.$error.pattern}}</p>-->
+                            <!--<p>Element Valid:    {{userForm.itemFirstName.$valid}}</p>-->
                         </div>
 
 
@@ -126,7 +135,11 @@
 
                         <div class="form-group">
                             <label class="control-label">Отчество <span class="text-danger">*</span></label>
-                            <input type="text" name="itemPatronymicName" class="form-control" required ng-model="item.patronymicName">
+                            <input type="text" name="itemPatronymicName" ng-model="item.patronymicName" class="form-control"
+                                   ng-required="requireValue"
+                                   ng-minlength="minLength"
+                                   ng-maxlength="maxLength"
+                                   ng-pattern="matchPattern">
                             <div class="text-danger" ng-show="showError">
                                 {{getError(userForm.itemPatronymicName.$error)}}
                             </div>
@@ -373,13 +386,13 @@
                         </div>
                         <div class="form-group">
                             <!--<div class="form-group" style=" position: fixed;margin-left: 50px; margin-bottom: 70px; bottom:0; left:0;">-->
-                            <button ng-show="!edit" type="submit"
-                                    class="btn btn-md btn-success">
-                                <span class="glyphicon glyphicon-user"></span>
-                                Сохранить
-                            </button>
+                            <!--<button ng-show="!edit" type="submit"-->
+                                    <!--class="btn btn-md btn-success">-->
+                                <!--<span class="glyphicon glyphicon-user"></span>-->
+                                <!--Сохранить-->
+                            <!--</button>-->
 
-                            <button ng-show="edit" type="submit"
+                            <button  type="submit"
                                     class="btn btn-md btn-success">
                                 <span class="glyphicon glyphicon-check"></span>
                                 Сохранить
@@ -474,7 +487,7 @@
                             <table class="table">
                                 <tr>
                                     <td width="10px">
-                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" ng-change="saveEditFin(item)"
+                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" ng-change="saveEditFin(item, userForm.$valid)"
                                                      aria-label="Checkbox 1"
                                                      class="green md-align-top-left" flex></md-checkbox>
                                     </td>
@@ -520,7 +533,7 @@
                             <table class="table">
                                 <tr>
                                     <td width="10px">
-                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.ahoCheck" ng-change="saveEditAho(item)"
+                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.ahoCheck" ng-change="saveEditAho(item, userForm.$valid)"
                                                      aria-label="Checkbox 1"
                                                      class="green md-align-top-left" flex></md-checkbox>
                                     </td>
@@ -552,7 +565,7 @@
                             <table class="table">
                                 <tr>
                                     <td width="10px">
-                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" ng-change="saveEditIt(item)"
+                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" ng-change="saveEditIt(item, userForm.$valid)"
                                                      aria-label="Checkbox 1"
                                                      class="green md-align-top-left" flex></md-checkbox>
                                     </td>

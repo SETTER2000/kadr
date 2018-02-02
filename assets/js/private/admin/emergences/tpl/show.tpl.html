@@ -5,6 +5,9 @@
                 <a ui-sref="home.admin.emergences" class="btn btn-sm btn-warning">
                     <span class="glyphicon glyphicon-list"></span>
                 </a>
+                <a ng-if="me.admin" ui-sref="home.admin.emergences.edit({emergenceId:item.id})" class="btn btn-sm btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </a>
             </div>
         </h2>
     </div>
