@@ -1,4 +1,5 @@
-angular.module('HomepageModule').controller('RestoreProfileController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
+angular.module('HomepageModule')
+    .controller('RestoreProfileController', ['$scope', '$http', 'toastr', function($scope, $http, toastr){
 
   /*
    ____          _____                _           

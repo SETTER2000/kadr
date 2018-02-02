@@ -71,7 +71,13 @@
                         });
                     })($(".button2"), $(window));
                 </script>
-                <!--<div id="avatar" class="row small sort-my">42355525</div>-->
+               <!--{{data[0] | json}}-->
+                <!--<ul>-->
+                    <!--<li ng-repeat="ks in data">-->
+                        <!--{{ks.fio}}-->
+                    <!--</li>-->
+                <!--</ul>-->
+
                 <table class="table table-hover table-bordered m-left">
                     <thead id="avatar">
                     <tr>
@@ -86,6 +92,7 @@
                                                          class="form-control input-group-sm"></li>
                             </ul>
                         </th>
+
                         <td class="text-center " ng-repeat="op in daysPeriod.data ">
                               <span ng-class="{'red-color':(op.format('dd')==='вс' || op.format('dd')==='сб'),
                               'control-label':(op.format('dd')==='вс' || op.format('dd')==='сб')}"> {{op.format('DD')}}

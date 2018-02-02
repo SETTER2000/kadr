@@ -36,6 +36,7 @@
     "grunt-sync": "0.6.2",
     "include-all": "^4.0.3",
     "jstree": "^3.3.4",
+    "keygenerator": "^1.0.4",
     "ldapjs": "^1.0.1",
     "listener-dir": "^0.2.0",
     "machinepack-datetime": "^1.4.0",

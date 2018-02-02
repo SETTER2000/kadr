@@ -248,7 +248,7 @@ module.exports = {
         let fullName = req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName');
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
         let sectionUrl = (req.param('worked'))?'company':'admin';
-        console.log('ALL REQUEST worked: ', req.param('worked'));
+        //console.log('ALL REQUEST worked: ', req.param('worked'));
         //console.log('REQUEST PARAM itUpdate: ', req.param('itUpdate'));
         Department.findOne({id: req.param('departments')[0].id})
             .exec((err, findDepart)=> {

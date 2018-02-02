@@ -777,11 +777,11 @@ module.exports = {
      */
     daysInYear: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log(req.params.all());
+        //console.log(req.params.all());
 
         if (req.param('owner') === 'undefined') return res.badRequest();
 
-        console.log('REGSSS', req.params.all());
+        //console.log('REGSSS', req.params.all());
         Vacation.native(function (err, collection) {
             if (err) return res.serverError(err);
             //collection.aggregate([{$match:{owner:ObjectId(req.param('owner')),action:true}},{$group:{'_id':'$year',selected:{$sum:'$daysSelectHoliday'}}},{ $project:{selected:1,year:1,remains:{$subtract:[28,"$selected"]}}}])
@@ -802,7 +802,7 @@ module.exports = {
                     if (!results.length) return res.ok({count: 0});
                     let ar = [];
                     _.forEach(results, function (value) {
-                        console.log(value.schedule_docs[0].year);
+                        //console.log(value.schedule_docs[0].year);
 
                         value.year = value.schedule_docs[0].year;
                         value.schedule_docs = '';
@@ -944,7 +944,7 @@ module.exports = {
     getDaysToYears: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         // db.vacation.aggregate([{$match:{$and:[{from:{$gte: ISODate("2018-01-01")}},{from:{$lt: ISODate("2019-01-01")}},{action: {$eq: true}}, {owner:ObjectId('58a461e66723246b6c2bc641')}]}}, {$group:{'_id':'$owner',selected:{$sum:'$daysSelectHoliday'}}}, { $project:{selected:1,remains:{$subtract:[28,"$selected"]}}}])
-        console.log('ALL ZAPROS: ', req.params.all());
+        //console.log('ALL ZAPROS: ', req.params.all());
         Vacation.native(function (err, collection) {
             if (err) return res.serverError(err);
             //console.log('BODY', req.param('year'));
@@ -958,7 +958,7 @@ module.exports = {
                 }, {$project: {selected: 1, remains: {$subtract: [28, "$selected"]}}}])
                 .toArray(function (err, results) {
                     if (err) return res.serverError(err);
-                    console.log('SEND RESULT:', results);
+                    //console.log('SEND RESULT:', results);
                     res.send(results);
                 });
         });

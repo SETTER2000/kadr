@@ -23,6 +23,23 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
+const keygen = require("keygenerator");
+
+/*
+ * Default configuration
+ *
+ * chars: true
+ * sticks: false
+ * numbers: true
+ * specials: false
+ * sticks: false
+ * length: 8
+ * forceUppercase: false
+ * forceLowercase: false
+ * exclude:[ ]
+ *
+ */
+
 moment.locale('ru');
 //var URI = require('urijs');
 //const URITemplate = require('urijs/src/URITemplate');
@@ -124,7 +141,7 @@ module.exports = {
                  */
                 clientLDAP.bind(user.login + '@' + sails.config.admin.company, req.param('password'), function (err) {
                     if (err) {
-                        console.log('LDAP ошибка входа: ', err);
+                        sails.log('LDAP ошибка входа: ', user.login + '@' + sails.config.admin.company + ' ' + req.param('password'));
                         clientLDAP.unbind(function () {
                             clientLDAP.destroy();
                         });
@@ -271,7 +288,7 @@ module.exports = {
      * Поиск руководителя в LDAP
      */
     bossLDAP: function (req, res) {
-        console.log('Поиск руководителя в LDAP: ', req.param('lastName'));
+        sails.log('Поиск руководителя в LDAP: ', req.param('lastName'));
         const clientSearchLDAP = ldap.createClient({
             url: sails.config.ldap.uri
         });
@@ -290,7 +307,7 @@ module.exports = {
          */
         clientSearchLDAP.bind(sails.config.ldap.username, sails.config.ldap.password, function (err) {
             if (err) {
-                console.log('searchLDAP ошибка входа: ', err);
+                sails.log('searchLDAP ошибка входа: ', sails.config.ldap.username + ' ' + sails.config.ldap.password);
                 clientSearchLDAP.unbind(function () {
                     clientSearchLDAP.destroy();
                 });
@@ -951,7 +968,7 @@ module.exports = {
                         deleted: false
                     }).exec(function (err, updatedUser) {
                         req.session.me = user.id;
-                        console.log(updatedUser);
+                        //console.log(updatedUser);
                         return res.json(updatedUser);
                     });
                 }
@@ -1123,30 +1140,28 @@ module.exports = {
      */
     switchPolice: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('REQ ALL switchPolice:', req.params.all());
+
         User.findOne({id: req.session.me}).exec((err, findOne)=> {
             if (err) return res.serverError(err);
             if (!findOne) return res.badRequest();
-
-            console.log('DASS findOne', findOne);
-            if (findOne.switchAdmin){
-                console.log('ZZ findOne.switchAdmin', findOne.switchAdmin);
+            if (findOne.switchAdmin) {
                 let admin = (findOne.admin) ? false : true;
+                sails.log('Переключение режима сотрудник (false)/admin (true): '+ new Date(), admin );
                 User.update({id: req.session.me}, {
                     admin: admin
                 }).exec(function (err, update) {
-                   if(err) return res.badRequest();
+                    if (err) return res.badRequest();
                     return res.ok();
                 });
             }
 
-            if (findOne.switchKadr){
-                console.log('ZZ findOne.switchKadr', findOne.switchKadr);
+            if (findOne.switchKadr) {
                 let kadr = (findOne.kadr) ? false : true;
+                sails.log('Переключение режима сотрудник (false)/kadr (true): '+ new Date(), kadr);
                 User.update({id: req.session.me}, {
                     kadr: kadr
                 }).exec(function (err, update) {
-                   if(err) return res.badRequest();
+                    if (err) return res.badRequest();
                     return res.ok();
                 });
             }
@@ -1175,7 +1190,7 @@ module.exports = {
      * @param res
      */
     updateEmergence: function (req, res) {
-        console.log('REG ALLL:', req.params.all());
+        //console.log('REG ALLL:', req.params.all());
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.update(req.param('id'), {
             emergence: req.param('emergence')
@@ -1191,7 +1206,7 @@ module.exports = {
      * @param res
      */
     updateVacation: function (req, res) {
-        console.log('REG ALLL updateVacation:', req.params.all());
+        //console.log('REG ALLL updateVacation:', req.params.all());
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.update(req.param('id'), {
             vacation: req.param('vacation')
@@ -1207,29 +1222,29 @@ module.exports = {
      * @param res
      */
     updateVacationAll: function (req, res) {
-        console.log('REG ALLL updateVacationAll:', req.params.all());
+        //console.log('REG ALLL updateVacationAll:', req.params.all());
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.update({}, {
             vacation: req.param('change')
         }).exec(function (err, update) {
             if (err) return res.negotiate(err);
-            console.log('update', update.length);
+            //console.log('update', update.length);
             return res.ok();
         });
     },
-  /**
+    /**
      * сразу всем Дать/Снять доступ к модулю Vacation  (отпуска пользователя)
      * @param req
      * @param res
      */
-  updateEmergenceAll: function (req, res) {
-        console.log('REG ALLL updateEmergenceAll:', req.params.all());
+    updateEmergenceAll: function (req, res) {
+        //console.log('REG ALLL updateEmergenceAll:', req.params.all());
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.update({}, {
             emergence: req.param('change')
         }).exec(function (err, update) {
             if (err) return res.negotiate(err);
-            console.log('update', update.length);
+            //console.log('update', update.length);
             return res.ok();
         });
     },
@@ -1333,7 +1348,7 @@ module.exports = {
 
     adminUsers: function (req, res) {
         User.find({
-            where: { fired: false },
+            where: {fired: false},
             limit: 300,
             sort: 'lastName'
         }).exec(function (err, users) {

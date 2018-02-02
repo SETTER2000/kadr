@@ -49,7 +49,7 @@ module.exports.policies = {
         updateMatching:true,
         addMatching:true,
         deleteMatching:true,
-        getAllUsersName:true,
+        getAllUsersName:['isLoggedIn'],
         updateAnnounced:true,
         addAnnounced:true,
         deleteAnnounced:true
