@@ -269,7 +269,8 @@ module.exports = {
                 '<br>Окончание рассылки: ' + moment(foo).format('DD.MM.YYYY HH:mm:ss') + '</p>' +
                 '<p>Рассылка сообщений сотрудникам закончена.</p>'
             };
-            EmailService.sender(options);
+            // !!! Не УДАЛЯТЬ!
+            //EmailService.sender(options);
             res.send(createSchedule);
         });
 

@@ -277,7 +277,8 @@ module.exports = {
                                                                 '<p> C ' + moment(obj.from).format('LLLL') + ' по ' + moment(obj.to).format('LLLL') + '</p>' +
                                                                 '<p> Кол-во дней: ' + obj.daysSelectHoliday + '</p>'
                                                             };
-                                                            if (obj.action) EmailService.sender(options);
+                                                            // !!! Не УДАЛЯТЬ!
+                                                            //if (obj.action) EmailService.sender(options);
                                                             sails.sockets.broadcast('vacation', 'badges-vacation', {
                                                                 badges: [createVacation],
                                                                 action: 'создан',
@@ -1072,7 +1073,8 @@ module.exports = {
                         '<p>' + req.param('message') + '</p>' +
                         '<p><a href="' + sails.config.appUrl.http + '/admin/vacations/edit/' + req.param('id') + '">перейти в чат</a></p>'
                     };
-                    EmailService.sender(options);
+                    // !!! Не УДАЛЯТЬ!
+                    //EmailService.sender(options);
 
                     return res.ok();
 
