@@ -6,7 +6,7 @@
             if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home');
             //if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             $scope.$on('defaultRowsTable', function (event, data) {
-                console.log('defaultRowsTable', data); // Данные, которые нам прислали
+                //console.log('defaultRowsTable', data); // Данные, которые нам прислали
                 return $scope.defaultRows = data.defaultRows;
             });
 
@@ -40,9 +40,9 @@
              * TODO WEBSOCKET: Подключаемся к сокету. Обработка события hello-emergence-list
              */
             io.socket.on('hello-emergence-list', function (data) {
-                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
+                //console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
                 //$scope.items = data.howdy;
-                console.log('Данные события hello', data);
+                //console.log('Данные события hello', data);
                 $scope.refresh();
                 //$scope.$apply();
             });
@@ -90,10 +90,10 @@
             };
 
             io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
-                console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+                //console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
             });
             io.socket.get('/say/emergence/badges', function gotResponse(data, jwRes) {
-                console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
+                //console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
             });
 
             /**
@@ -330,7 +330,7 @@
                 };
 
                 $scope.items = Emergences.query($scope.query, function (emergence) {
-                    console.log('EMERGENCE ITEMS:', emergence);
+                    //console.log('EMERGENCE ITEMS:', emergence);
                     $scope.items = emergence;
 
                     $scope.countCurrentView = emergence.length;

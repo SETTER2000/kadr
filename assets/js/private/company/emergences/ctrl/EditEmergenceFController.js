@@ -48,7 +48,6 @@ angular.module('EmergenceFModule')
             };
 
 
-
             $scope.debug = true;
             $scope.comment = false;
 
@@ -71,7 +70,7 @@ angular.module('EmergenceFModule')
                     }
                     if (error.pattern) {
                         //$scope.showError = true;
-                          toastr.error(info.noPatternW,'Ошибка!');
+                        toastr.error(info.noPatternW, 'Ошибка!');
                         return info.noPatternW;
                     }
                     if (error.minlength) {
@@ -90,7 +89,7 @@ angular.module('EmergenceFModule')
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
             io.socket.on('hello-emergence-edit', function (data) {
-                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
+                //console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
                 if (!data.howdy)  $state.go('home.company.emergences');
                 //$scope.item = data.howdy;
                 //$scope.$apply();
@@ -179,12 +178,12 @@ angular.module('EmergenceFModule')
                 if (val) {
                     Departments.get({id: val},
                         function (ems) {
-                            console.log('EDIT EMERGENCE *******', ems);
+                            //console.log('Watch item.departments[0].id', ems);
                             $scope.otdel = ems.name;
                             $scope.setData();
                             $scope.apply();
                         }, function (err) {
-                            console.log('ERRRR PRO:', err);
+                            console.log('ERRRR PRO 2a:', err);
                         }
                     );
 
@@ -526,7 +525,7 @@ angular.module('EmergenceFModule')
             $scope.getAllUsers = function () {
                 let itemsUsers = $scope.itemsUsers = UsersF.query({},
                     function (users) {
-                        console.log('EDIT USERS EMERGENCE', users);
+                        //console.log('EDIT USERS EMERGENCE', users);
 
 
                         $scope.itemsUsers = users;
@@ -676,7 +675,7 @@ angular.module('EmergenceFModule')
             $scope.refresh = function () {
                 let item = $scope.item = EmergencesF.get({id: $stateParams.emergenceId},
                     function (emergences) {
-                        console.log('EDIT EMERGENCE *******', emergences);
+                        //console.log('EDIT EMERGENCE refresh function company', emergences);
                         $scope.flatpicker.setDate(emergences.period);
                         $scope.emergences = emergences;
                     }, function (err) {
@@ -895,7 +894,11 @@ angular.module('EmergenceFModule')
                 $scope.checkedValue();
                 item = reversValue(item);
 
+                //console.log('isValid object:', isValid);
                 if (isValid) {
+                    $state.go('home.company.emergences');
+                    //        //$scope.refresh();
+                            toastr.success(info.changed);
                     $scope.message = item.name + " " + item.email;
                 }
                 else {
@@ -910,17 +913,20 @@ angular.module('EmergenceFModule')
 
                 if (angular.isDefined(item.id)) {
                     //console.log('UPDATE item *****:', item);
-                    item.$update(item, function (success) {
-                            $state.go('home.company.emergences');
-                            //$scope.refresh();
-                            toastr.success(info.changed);
-                        },
-                        function (err) {
-                            console.log('ERR11445', err);
-                            if (err.status == 400)  toastr.error(err.statusText + ' ' + err.data.details, info.error(err.status));
-                            toastr.error(err.data, info.error(11445));
-                        }
-                    );
+
+               item.$update({id: item.id}, item);
+
+                    //item.$update({id:item.id},item, function (success) {
+                    //        $state.go('home.company.emergences');
+                    //        //$scope.refresh();
+                    //        toastr.success(info.changed);
+                    //    },
+                    //    function (err) {
+                    //        console.log('ERR11445', err);
+                    //        if (err.status == 400)  toastr.error(err.statusText + ' ' + err.data.details, info.error(err.status));
+                    //        toastr.error(err.data, info.error(11445));
+                    //  length exceeds the capacity  }
+                    //);
                 } else {
                     if (angular.isDefined(item)) {
                         let ar = [];

@@ -174,7 +174,7 @@ angular.module('EmergenceModule')
                 if (val) {
                     Departments.get({id: val},
                         function (ems) {
-                            console.log('EDIT EMERGENCE *******', ems);
+                            //console.log('WATCH item.departments', ems);
                             $scope.otdel = ems.name;
                             $scope.setData();
                             $scope.apply();
@@ -675,7 +675,7 @@ angular.module('EmergenceModule')
             $scope.refresh = function () {
                 let item = $scope.item = Emergences.get({id: $stateParams.emergenceId},
                     function (emergences) {
-                        console.log('EDIT EMERGENCE *******', emergences);
+                        console.log('EDIT EMERGENCE refresh function', emergences);
                         $scope.flatpicker.setDate(emergences.period);
                         $scope.emergences = emergences;
                     }, function (err) {

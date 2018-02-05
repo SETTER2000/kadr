@@ -6,7 +6,7 @@
             if (!$scope.me || !$scope.me.emergence) return $state.go('home');
             //if (!$scope.me.kadr && !$scope.me.company) $state.go('home');
             $scope.$on('defaultRowsTable', function (event, data) {
-                console.log('defaultRowsTable', data); // Данные, которые нам прислали
+                //console.log('defaultRowsTable', data); // Данные, которые нам прислали
                 return $scope.defaultRows = data.defaultRows;
             });
 
@@ -40,9 +40,9 @@
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
             io.socket.on('hello-emergence-list', function (data) {
-                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
+                //console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
                 //$scope.items = data.howdy;
-                console.log('Данные события hello', data);
+                //console.log('Данные события hello', data);
                 $scope.refresh();
                 //$scope.$apply();
             });
@@ -323,7 +323,7 @@
                 };
 
                 $scope.items = EmergencesF.query($scope.query, function (emergence) {
-                    console.log('EMERGENCE ITEMS:', emergence);
+                    //console.log('EMERGENCE ITEMS:', emergence);
                     $scope.items = emergence;
 
                     $scope.countCurrentView = emergence.length;

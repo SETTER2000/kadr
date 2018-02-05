@@ -35,7 +35,7 @@ angular.module("directiveModule", ["customServices"])
             replace: true,
             link: function (scope) {
                 scope.$watch('dtItems', function (value) {
-                    console.log('dtItems:', value);
+                    //console.log('dtItems:', value);
                     scope.items = value;
                 });
 

@@ -5,7 +5,7 @@
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
             $scope.$on('defaultRowsTable', function (event, data) {
-                console.log('defaultRowsTable', data); // Данные, которые нам прислали
+                //console.log('defaultRowsTable', data); // Данные, которые нам прислали
                 return $scope.defaultRows = data.defaultRows;
             });
 
@@ -39,9 +39,9 @@
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
             io.socket.on('hello', function (data) {
-                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
+                //console.log('Socket room: ' + data.howdy + ' подключился только что к комнате list!');
                 $scope.items = data.howdy;
-                console.log('Данные события hello', data);
+                //console.log('Данные события hello', data);
                 
                 $scope.$apply();
             });
@@ -89,7 +89,7 @@
             };
 
             io.socket.get('/say/schedule/hello', function gotResponse(data, jwRes) {
-                console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+                //console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
             });
             io.socket.get('/say/schedule/badges', function gotResponse(data, jwRes) {
                 //console.log('Сервер ответил кодом состояния ' + jwRes.statusCode + ' и данными: ', data);
