@@ -71,6 +71,7 @@ angular.module('EmergenceFModule')
                     }
                     if (error.pattern) {
                         //$scope.showError = true;
+                          toastr.error(info.noPatternW,'Ошибка!');
                         return info.noPatternW;
                     }
                     if (error.minlength) {
@@ -903,22 +904,13 @@ angular.module('EmergenceFModule')
                     return;
                 }
 
-
-
-
-
-                // console.log('********************************Перед созданием', item);
-                //if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска рассылки"', 'не заполнено'), info.error(5811));
-                //if (!item.recipient) return toastr.error(info.filedErr('"Адресаты"', 'не заполнено'), info.error(4028));
-                //if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
-                //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
-                //if (!item.start)
+
+
                 if (angular.isDefined(item.id)) {
                     //console.log('UPDATE item *****:', item);
-                    item.$update({id: item.id}, item, function (success) {
-
+                    item.$update(item, function (success) {
                             $state.go('home.company.emergences');
                             //$scope.refresh();
                             toastr.success(info.changed);

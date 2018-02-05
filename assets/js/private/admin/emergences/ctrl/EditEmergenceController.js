@@ -906,7 +906,7 @@ angular.module('EmergenceModule')
                 if (angular.isDefined(item.id)) {
 
                     //console.log('UPDATE item:', item);
-                    item.$update({id:item.id},item, function (success) {
+                    item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $state.go('home.admin.emergences');
                         },

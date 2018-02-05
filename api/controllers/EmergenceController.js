@@ -249,6 +249,7 @@ module.exports = {
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
         let sectionUrl = (req.param('worked'))?'company':'admin';
         //console.log('ALL REQUEST worked: ', req.param('worked'));
+        //console.log('ALL REQQQQ: ', req.params.all());
         //console.log('REQUEST PARAM itUpdate: ', req.param('itUpdate'));
         Department.findOne({id: req.param('departments')[0].id})
             .exec((err, findDepart)=> {
@@ -375,7 +376,8 @@ module.exports = {
                                                         avatarUrl: findUser.avatarUrl
                                                     }, req);
                                                     sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: findOneEm}, req);
-                                                    res.ok();
+                                                    console.log('RESPONSE:', findOneEm);
+                                                    res.ok(findOneEm);
                                                 });
                                         }
                                     });
