@@ -40,6 +40,7 @@
 ################################################
 
 config/local.js
+config/local.js.*
 config/email.js
 
 
