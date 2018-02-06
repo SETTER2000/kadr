@@ -362,7 +362,7 @@ angular.module('EmergenceFModule')
                  * Кол-во выбраных дней
                  */
                 $scope.item.daysSelectHoliday = $scope.getCountDay(fpItem.selectedDates);
-                console.log('DAY COUNT', $scope.daysSelectHoliday);
+                //console.log('DAY COUNT', $scope.daysSelectHoliday);
 
                 if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
                     toastr.warning(info.maxTwoWeek);
@@ -734,7 +734,7 @@ angular.module('EmergenceFModule')
                     if ($scope.item.status !== 'Новая' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
                     let nm;
 
-                    console.log('FORMAT', value);
+                    //console.log('FORMAT', value);
                     nm = (moment(value).isSameOrBefore(moment())) ? 'Рассылка запущен' : 'Запуск рассылки';
                     toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
                         {
@@ -778,7 +778,7 @@ angular.module('EmergenceFModule')
                     // $scope.$apply(function() { $location.path("/admin/emergence"); });
                     // $scope.refresh();
                 }, function (err) {
-                    console.log(err);
+                    //console.log(err);
                     toastr.error(err.data, info.error(733));
                 })
             };
