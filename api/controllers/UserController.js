@@ -943,8 +943,10 @@ module.exports = {
     restoreProfile: function (req, res) {
 
         User.findOne({
-            email: req.param('email')
-        }, function foundUser(err, user) {
+            email: req.param('email'),
+            action: true
+        },
+            function foundUser(err, user) {
             if (err) return res.negotiate(err);
             if (!user) return res.notFound();
 

@@ -166,6 +166,15 @@ module.exports.routes = {
     // 'GET /emergence/to-years':    'EmergenceController.getHolidaysToYears',
      'GET /emergence/logSender/:id':    'EmergenceController.getLogSender',
 
+
+    /**
+     * Setting
+     */
+    'PUT /setting/check-sender': 'SettingController.checkSenderEmergence',
+    'GET /setting/module/:name': 'SettingController.get',
+
+
+
     //'POST /schedule/:id/chat':          'ScheduleController.chat',
     //'PUT  /schedule/:id/join':          'ScheduleController.joinChat',
     //'PUT  /schedule/:id/typing':        'ScheduleController.typing',

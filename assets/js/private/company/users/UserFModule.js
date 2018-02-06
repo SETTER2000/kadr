@@ -38,24 +38,24 @@ angular.module('UserFModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial'
             //        }
             //    }
             //})
-            .state('home.company.users.attendance', {
-                url: '/attendance',
-                views: {
-                    'attendance@home.company.users': {
-                        templateUrl: '/js/private/company/attendances/tpl/list.tpl.html',
-                        controller: 'ListAttendanceController'
-                    }
-                }
-            })
-            .state('home.company.users.edit', {
-                url: '/edit/:userId',
-                views: {
-                    '@': {
-                        templateUrl: '/js/private/company/users/tpl/edit.tpl.html',
-                        controller: 'EditFController'
-                    }
-                }
-            })
+            //.state('home.company.users.attendance', {
+            //    url: '/attendance',
+            //    views: {
+            //        'attendance@home.company.users': {
+            //            templateUrl: '/js/private/company/attendances/tpl/list.tpl.html',
+            //            controller: 'ListAttendanceController'
+            //        }
+            //    }
+            //})
+            //.state('home.company.users.edit', {
+            //    url: '/edit/:userId',
+            //    views: {
+            //        '@': {
+            //            templateUrl: '/js/private/company/users/tpl/edit.tpl.html',
+            //            controller: 'EditFController'
+            //        }
+            //    }
+            //})
             .state('home.company.user', {
                 url: '/user/:userId',
                 views: {
@@ -65,24 +65,24 @@ angular.module('UserFModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial'
                     }
                 }
             })
-            .state('home.company.users.create', {
-                url: '/create/:userId',
-                views: {
-                    '@': {
-                        templateUrl: '/js/private/company/users/tpl/edit.tpl.html',
-                        controller: 'EditFController'
-                    }
-                }
-            })
-            .state('home.company.users.administration', {
-                url: '/administration',
-                views: {
-                    '@': {
-                        templateUrl: '/js/private/company/users/tpl/administration.tpl.html',
-                        controller: 'AdministrationController'
-                    }
-                }
-            })
+            //.state('home.company.users.create', {
+            //    url: '/create/:userId',
+            //    views: {
+            //        '@': {
+            //            templateUrl: '/js/private/company/users/tpl/edit.tpl.html',
+            //            controller: 'EditFController'
+            //        }
+            //    }
+            //})
+            //.state('home.company.users.administration', {
+            //    url: '/administration',
+            //    views: {
+            //        '@': {
+            //            templateUrl: '/js/private/company/users/tpl/administration.tpl.html',
+            //            controller: 'AdministrationController'
+            //        }
+            //    }
+            //})
             .state('home.file.upload', {
                 url: 'upload',
                 views: {

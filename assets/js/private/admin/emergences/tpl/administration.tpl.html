@@ -1,5 +1,5 @@
 <!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
-<div class="col-sm-11  col-md-12  main "  ng-cloak>
+<div class="col-sm-11  col-md-12  main " ng-cloak>
     <div class="page-header">
         <h2>
 
@@ -57,29 +57,40 @@
         </div>
     </div>
     <!--<div class="row">-->
-        <!--<div class="col-md-12">-->
-            <!--<div class="panel panel-warning">-->
-                <!--<div class="panel-heading">-->
-                    <!--<h3 class="panel-title">Обновить руководящий состав</h3>-->
-                <!--</div>-->
-                <!--<div class="panel-body">-->
+    <!--<div class="col-md-12">-->
+    <!--<div class="panel panel-warning">-->
+    <!--<div class="panel-heading">-->
+    <!--<h3 class="panel-title">Обновить руководящий состав</h3>-->
+    <!--</div>-->
+    <!--<div class="panel-body">-->
 
-                <!--</div>-->
-            <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
 
-        <!--</div>-->
+    <!--</div>-->
     <!--</div>-->
     <div class="row">
         <div class="col-md-12">
-
-            <div class="form-group" ng-if="me.admin">
-                <div class="checkbox">
-                    <label>
-                        <md-switch ng-disabled="edit" ng-model="data.check" ng-change="checkAll(data.check)" aria-label="Switch 1">
-                            <span ng-if="!data.check">Выбрать всех</span>
-                            <span ng-if="data.check">Снять выделение</span>
-                        </md-switch>
-                    </label>
+            <div class="form-inline">
+                <div class="form-group pad" ng-if="me.admin">
+                    <div class="checkbox">
+                        <label>
+                            <md-switch ng-disabled="edit" ng-model="data.check" ng-change="checkAll(data.check)" aria-label="Switch 1">
+                                <span ng-if="!data.check">Выбрать всех</span>
+                                <span ng-if="data.check">Снять выделение</span>
+                            </md-switch>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group pad" ng-if="me.admin">
+                    <div class="checkbox">
+                        <label>
+                            <md-switch ng-disabled="edit" ng-model="checkSender" ng-change="checkSend(checkSender)" aria-label="Switch 1">
+                                <span ng-if="!checkSender">Вкл. рассылку</span>
+                                <span ng-if="checkSender">Выкл. рассылку</span>
+                            </md-switch>
+                        </label>
+                    </div>
                 </div>
             </div>
             <!-- USERS PAGE -->
@@ -136,14 +147,16 @@ orderBy:propertyName:reverse |  limitTo: 1000)">
                             <td>
                                 <!--<img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}" alt=""></td>-->
                                 <img ng-if="user.avatarUrl" alt="{{ user.getFullName() }}" ng-src="{{ user.avatarUrl }}" class="photo"/>
-                                <img ng-if="!user.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>
+                                <img ng-if="!user.avatarUrl" title="фото отсутствует"
+                                     src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>
                             </td>
                             <td><a href="/admin/users/edit/{{user.id}}">{{user.lastName}} {{user.firstName.substr(0,1)}}.
                                 {{user.patronymicName.substr(0,1)}}.</a></td>
 
                             <td> {{user.login}}</td>
                             <td> {{user.email}}</td>
-                            <td class="text-center "><input type="checkbox" ng-model="user.emergence" ng-click="saveData(user.id, user.emergence)"></td>
+                            <td class="text-center "><input type="checkbox" ng-model="user.emergence"
+                                                            ng-click="saveData(user.id, user.emergence)"></td>
                             <!--<td><input type="checkbox" ng-model="user.leader" ng-click="saveLeader(user.id, user.leader)"></td>-->
                             <!--<td><input type="checkbox" ng-model="user.kadr" ng-click="saveKadr(user.id, user.kadr)"></td>-->
                             <!--<td><input type="checkbox" ng-model="user.admin" ng-click="saveAdmin(user.id, user.admin)"></td>-->

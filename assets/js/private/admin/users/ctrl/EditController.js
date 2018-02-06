@@ -4,6 +4,8 @@ angular.module('UserModule')
         function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, Vacations, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             $scope.edit = $state.includes('home.admin.users.edit');
+            $scope.debug = true;
+
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -223,7 +225,7 @@ angular.module('UserModule')
             $scope.daysYear = [];
             $scope.owId = window.location.pathname.split('/')[4];
             //console.log('OWNERRRRR', $scope.owId);
-            if($scope.owId){
+            if ($scope.owId) {
                 $http.get('/vacation/daysInYear/owner/' + $scope.owId).then(function (success) {
                     console.log('RESPONM', success.data);
                     if (angular.isArray(success.data)) $scope.daysYear = success.data;

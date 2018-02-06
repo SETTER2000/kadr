@@ -23,11 +23,30 @@ angular.module('EmergenceModule').controller('AdministrationEmergenceController'
     //    .finally(function eitherWay() {
     //        $scope.userList.loading = false;
     //    });
-    $scope.refresh= function () {
+
+
+    $scope.getSetting = function () {
+        $http.get('/setting/module/emergence')
+            .then(function onSuccess(sailsResponse) {
+                console.log('sailsResponse+++: ', sailsResponse);
+                $scope.checkSender = sailsResponse.data.checkSender;
+
+            })
+            .catch(function onError(sailsResponse) {
+                toastr.error(sailsResponse.data,'Ошибка 7010!');
+                console.log(sailsResponse.data);
+            })
+            .finally(function eitherWay() {
+                $scope.userList.loading = false;
+            });
+    };
+
+
+    $scope.refresh = function () {
         $http.get('/user/adminUsers')
             .then(function onSuccess(sailsResponse) {
-
-                console.log('sailsResponse: ', sailsResponse);
+                $scope.getSetting();
+                //console.log('sailsResponse: ', sailsResponse);
                 $scope.userList.contents = sailsResponse.data;
 
             })
@@ -129,9 +148,27 @@ angular.module('EmergenceModule').controller('AdministrationEmergenceController'
 
     $scope.checkAll = function (change) {
         let route = '/user/update-emergence-all';
-        $http.put(route,{change:change})
+        $http.put(route, {change: change})
             .then(function onSuccess(response) {
                 console.log('change222: ', change);
+                $scope.refresh();
+                toastr.success($scope.recordSave, '');
+                $scope.apply();
+
+            })
+            .catch(function onError(sailsResponse) {
+                $scope.editProfile.errorMsg = 'Произошла непредвиденная ошибка: ' + (sailsResponse.data || sailsResponse.status);
+            })
+            .finally(function eitherWay() {
+                $scope.editProfile.loading = false;
+            });
+    };
+
+
+    $scope.checkSend = function (change) {
+        let route = '/setting/check-sender';
+        $http.put(route, {change: change, module:'emergence'})
+            .then(function onSuccess(response) {
                 $scope.refresh();
                 toastr.success($scope.recordSave, '');
                 $scope.apply();

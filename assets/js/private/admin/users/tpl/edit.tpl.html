@@ -37,8 +37,6 @@
 
     <div class="row">
         <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}" ng-cloak>
-
-
             <!-- E D I T / C R E A T E  F O R M -->
 
             <div class="panel" ng-class="{'panel-warning':!item.fired, 'panel-default':item.fired}">
@@ -532,7 +530,11 @@
         </div>
 
     </div>
-
+    <div class="row">
+        <div class="col-md-12">
+            <pre  ng-if="(me.admin && debug)"><h4>{{ item | json}}</h4></pre>
+        </div>
+    </div>
 </div>
 
 

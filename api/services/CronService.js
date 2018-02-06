@@ -101,95 +101,101 @@ module.exports = {
          * @type {number}
          */
         let afterMin = 5;
-
-        Emergence.find({action: true, worked: false})
-            .exec((err, finds) => {
+        Setting.find({checkSender: true})
+            .exec((err, settingFinds)=> {
                 if (err) return res.serverError(err);
-                if (!finds.length) return;
-                console.log('Cron tasks1: ', finds.length);
-                _.forEach(finds, function (task) {
-                    if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
-                        let strEmail = '';
-                        if (_.isArray(task.recipient) && (task.recipient.length > 0)) {
-                            let a = [];
-                            _.forEach(task.recipient, function (val, key) {
-                                a.push(val.email);
-                            });
-                            strEmail = a.join(',');
-                        }
-
-                        sails.log(taskName + ' Emergence. Email для рассылки: ', strEmail);
-                        strEmail = (strEmail) ? strEmail : '';
-                        if (!task.htmlData.length) return sails.log('Emergence. Cron Service:', ' Ошибка! Задача ' + taskName + ' не отработала. Нет текста для рассылки писем.');
-                        let options = {
-                            to: strEmail, // Кому: можно несколько получателей указать через запятую
-                            subject: ' ✔ ' + task.name, // Тема письма
-                            text: task.htmlData[0].tmpl, // простой текст письма без форматирования
-                            html: task.htmlData[0].tmpl  // html текст письма
-                        };
-                        EmailService.sender(options, function (err) {
-                            if (err) return;
-                            console.log(taskName + ' Emergence. Задача выполнена в: ' + new Date());
-                            Emergence.update({id: task.id}, {
-                                worked: true,
-                                status: 'В работе',
-                                logSender: task.recipient
-                            }).exec((err, upd) => {
-                                if (err) return res.serverError();
-                                Emergence.find({sort: 'start DESC'})
-                                    .populate('positions')
-                                    .populate('departments')
-                                    .populate('whomCreated')
-                                    .populate('whomUpdated')
-                                    .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
-                                    .exec((err, findsEmergence) => {
-                                        if (err) return res.serverError(err);
-                                        sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsEmergence});
-                                        sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
-                                        sails.sockets.broadcast('emergence', 'badges-emergence', {
-                                            badges: upd,
-                                            action: 'на проверке',
-                                            avatarUrl: '/images/logo_old.png',
-                                            shortName: 'server',
-                                            fullName:'server'
-                                        });
-                                        console.log(taskName + ' UPDATE OK+1.0!');
+                if (!settingFinds.length) return;
+                //if (!settingFinds.length) return sails.log('Внимание! Отключена рассылка в настройках модуля "Emergence".');
+                Emergence.find({action: true, worked: false})
+                    .exec((err, finds) => {
+                        if (err) return res.serverError(err);
+                        if (!finds.length) return;
+                        console.log('Cron tasks1: ', finds.length);
+                        _.forEach(finds, function (task) {
+                            if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
+                                let strEmail = '';
+                                if (_.isArray(task.recipient) && (task.recipient.length > 0)) {
+                                    let a = [];
+                                    _.forEach(task.recipient, function (val, key) {
+                                        a.push(val.email);
                                     });
-                            });
+                                    strEmail = a.join(',');
+                                }
+
+                                sails.log(taskName + ' Emergence. Email для рассылки: ', strEmail);
+                                strEmail = (strEmail) ? strEmail : '';
+                                if (!task.htmlData.length) return sails.log('Emergence. Cron Service:', ' Ошибка! Задача ' + taskName + ' не отработала. Нет текста для рассылки писем.');
+                                let options = {
+                                    to: strEmail, // Кому: можно несколько получателей указать через запятую
+                                    subject: ' ✔ ' + task.name, // Тема письма
+                                    text: task.htmlData[0].tmpl, // простой текст письма без форматирования
+                                    html: task.htmlData[0].tmpl  // html текст письма
+                                };
+                                EmailService.sender(options, function (err) {
+                                    if (err) return;
+                                    console.log(taskName + ' Emergence. Задача выполнена в: ' + new Date());
+                                    Emergence.update({id: task.id}, {
+                                        worked: true,
+                                        status: 'В работе',
+                                        logSender: task.recipient
+                                    }).exec((err, upd) => {
+                                        if (err) return res.serverError();
+                                        Emergence.find({sort: 'start DESC'})
+                                            .populate('positions')
+                                            .populate('departments')
+                                            .populate('whomCreated')
+                                            .populate('whomUpdated')
+                                            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
+                                            .exec((err, findsEmergence) => {
+                                                if (err) return res.serverError(err);
+                                                sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsEmergence});
+                                                sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
+                                                sails.sockets.broadcast('emergence', 'badges-emergence', {
+                                                    badges: upd,
+                                                    action: 'на проверке',
+                                                    avatarUrl: '/images/logo_old.png',
+                                                    shortName: 'server',
+                                                    fullName: 'server'
+                                                });
+                                                console.log(taskName + ' UPDATE OK+1.0!');
+                                            });
+                                    });
+                                });
+
+                            } else {
+                                if (moment().isAfter(moment(task.start).add(afterMin, 'minutes'))) {
+                                    Emergence.update({id: task.id}, {
+                                        worked: true
+                                    }).exec((err, upd) => {
+                                        if (err) return res.serverError();
+                                        Emergence.find()
+                                            .populate('positions')
+                                            .populate('departments')
+                                            .populate('whomCreated')
+                                            .populate('whomUpdated')
+                                            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
+                                            .exec((err, findsSchedule) => {
+                                                if (err) return res.serverError(err);
+                                                sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsSchedule});
+                                                sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
+                                                sails.sockets.broadcast('emergence', 'badges-emergence', {
+                                                    badges: upd,
+                                                    action: 'на проверке',
+                                                    avatarUrl: '/images/logo_old.png',
+                                                    shortName: 'server',
+                                                    fullName: 'server'
+                                                });
+                                                return console.log(taskName + ' UPDATE OK+1.1!');
+                                            });
+                                    });
+                                } else {
+                                    console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
+                                }
+                            }
                         });
-
-                    } else {
-                        if (moment().isAfter(moment(task.start).add(afterMin, 'minutes'))) {
-                            Emergence.update({id: task.id}, {
-                                worked: true
-                            }).exec((err, upd) => {
-                                if (err) return res.serverError();
-                                Emergence.find()
-                                    .populate('positions')
-                                    .populate('departments')
-                                    .populate('whomCreated')
-                                    .populate('whomUpdated')
-                                    .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
-                                    .exec((err, findsSchedule) => {
-                                        if (err) return res.serverError(err);
-                                        sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsSchedule});
-                                        sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
-                                        sails.sockets.broadcast('emergence', 'badges-emergence', {
-                                            badges: upd,
-                                            action: 'на проверке',
-                                            avatarUrl: '/images/logo_old.png',
-                                            shortName: 'server',
-                                            fullName:'server'
-                                        });
-                                        return console.log(taskName + ' UPDATE OK+1.1!');
-                                    });
-                            });
-                        } else {
-                            console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
-                        }
-                    }
-                });
+                    });
             });
+
     },
 
 
@@ -206,84 +212,90 @@ module.exports = {
          * @type {number}
          */
         let afterMin = 5;
-
-        Emergence.find({action: true, worked: true, sendService: false, startKadr: true})
-            .exec((err, finds) => {
+        Setting.find({checkSender: true})
+            .exec((err, settingFinds)=> {
                 if (err) return res.serverError(err);
-                if (!finds.length) return;
-                console.log('Cron ' + taskName + ': ', finds.length);
-                let start = moment().add(2, 'minutes');
-                let recipientService = sails.config.recipient.services;
-                _.forEach(finds, function (task) {
-                    //if (moment().isBetween(start, moment(start).add(afterMin, 'minutes'))) {
+                if (!settingFinds.length) return;
+                //if (!settingFinds.length) return sails.log('Внимание! Отключена рассылка в настройках модуля "Emergence".');
 
-                    let strEmail = '';
-                    if (_.isArray(task.recipientService) && (recipientService.length > 0)) {
-                        let a = [];
-                        _.forEach(recipientService, function (val, key) {
-                            a.push(val.email);
-                        });
-                        strEmail = a.join(',');
-                    }
+                Emergence.find({action: true, worked: true, sendService: false, startKadr: true})
+                    .exec((err, finds) => {
+                        if (err) return res.serverError(err);
+                        if (!finds.length) return;
+                        console.log('Cron ' + taskName + ': ', finds.length);
+                        let start = moment().add(2, 'minutes');
+                        let recipientService = sails.config.recipient.services;
+                        _.forEach(finds, function (task) {
+                            //if (moment().isBetween(start, moment(start).add(afterMin, 'minutes'))) {
 
-                    sails.log(taskName + ' Emergence. Email для рассылки службам: ', strEmail);
-                    strEmail = (strEmail) ? strEmail : '';
-                    if (!task.htmlData.length) return sails.log('Emergence. Cron Service:', ' Ошибка! Задача ' + taskName + ' не отработала. Нет текста для рассылки писем.');
-                    let options = {
-                        to: strEmail, // Кому: можно несколько получателей указать через запятую
-                        subject: ' ✔ ' + task.name, // Тема письма
-                        text: task.htmlData[0].tmpl, // простой текст письма без форматирования
-                        html: task.htmlData[0].tmpl  // html текст письма
-                    };
-                    EmailService.sender(options, function (err) {
-                        if (err) return;
-                        console.log(taskName + ' Emergence. Задача выполнена в: ' + new Date());
-                        Emergence.update({id: task.id}, {
-                            sendService: true,
-                            status: 'В работе',
-                            recipientService: recipientService
-                        }).exec((err, upd) => {
-                            if (err) return res.serverError();
-                            Emergence.find({sort: 'start DESC'})
-                                .populate('positions')
-                                .populate('departments')
-                                .populate('whomCreated')
-                                .populate('whomUpdated')
-                                .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
-                                .exec((err, findsEmergence) => {
-                                    if (err) return res.serverError(err);
-                                    sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsEmergence});
-                                    sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
-                                    sails.sockets.broadcast('emergence', 'badges-emergence', {
-                                        badges: upd,
-                                        action: 'проверено',
-                                        avatarUrl: '/images/logo_old.png',
-                                        shortName: 'server',
-                                        fullName:'server'
-                                    });
-                                    console.log(taskName + ' UPDATE OK+2!');
+                            let strEmail = '';
+                            if (_.isArray(task.recipientService) && (recipientService.length > 0)) {
+                                let a = [];
+                                _.forEach(recipientService, function (val, key) {
+                                    a.push(val.email);
                                 });
+                                strEmail = a.join(',');
+                            }
+
+                            sails.log(taskName + ' Emergence. Email для рассылки службам: ', strEmail);
+                            strEmail = (strEmail) ? strEmail : '';
+                            if (!task.htmlData.length) return sails.log('Emergence. Cron Service:', ' Ошибка! Задача ' + taskName + ' не отработала. Нет текста для рассылки писем.');
+                            let options = {
+                                to: strEmail, // Кому: можно несколько получателей указать через запятую
+                                subject: ' ✔ ' + task.name, // Тема письма
+                                text: task.htmlData[0].tmpl, // простой текст письма без форматирования
+                                html: task.htmlData[0].tmpl  // html текст письма
+                            };
+                            EmailService.sender(options, function (err) {
+                                if (err) return;
+                                console.log(taskName + ' Emergence. Задача выполнена в: ' + new Date());
+                                Emergence.update({id: task.id}, {
+                                    sendService: true,
+                                    status: 'В работе',
+                                    recipientService: recipientService
+                                }).exec((err, upd) => {
+                                    if (err) return res.serverError();
+                                    Emergence.find({sort: 'start DESC'})
+                                        .populate('positions')
+                                        .populate('departments')
+                                        .populate('whomCreated')
+                                        .populate('whomUpdated')
+                                        .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
+                                        .exec((err, findsEmergence) => {
+                                            if (err) return res.serverError(err);
+                                            sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsEmergence});
+                                            sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
+                                            sails.sockets.broadcast('emergence', 'badges-emergence', {
+                                                badges: upd,
+                                                action: 'проверено',
+                                                avatarUrl: '/images/logo_old.png',
+                                                shortName: 'server',
+                                                fullName: 'server'
+                                            });
+                                            console.log(taskName + ' UPDATE OK+2!');
+                                        });
+                                });
+                            });
+
+                            //} else {
+                            //    if (moment().isAfter(moment(start).add(afterMin, 'minutes'))) {
+                            //        Emergence.update({id: task.id}, {
+                            //            sendService: true
+                            //        }).exec((err, upd) => {
+                            //            if (err) return res.serverError();
+                            //            Emergence.find().exec((err, findsSchedule) => {
+                            //                if (err) return res.serverError(err);
+                            //                sails.sockets.broadcast('emergence', 'hello', {howdy: findsSchedule});
+                            //                sails.sockets.broadcast('emergence', 'badges', {badges: upd, action: 'повреждён'});
+                            //                return console.log('UPDATE OK+!');
+                            //            });
+                            //        });
+                            //    } else {
+                            //        console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(start));
+                            //    }
+                            //}
                         });
                     });
-
-                    //} else {
-                    //    if (moment().isAfter(moment(start).add(afterMin, 'minutes'))) {
-                    //        Emergence.update({id: task.id}, {
-                    //            sendService: true
-                    //        }).exec((err, upd) => {
-                    //            if (err) return res.serverError();
-                    //            Emergence.find().exec((err, findsSchedule) => {
-                    //                if (err) return res.serverError(err);
-                    //                sails.sockets.broadcast('emergence', 'hello', {howdy: findsSchedule});
-                    //                sails.sockets.broadcast('emergence', 'badges', {badges: upd, action: 'повреждён'});
-                    //                return console.log('UPDATE OK+!');
-                    //            });
-                    //        });
-                    //    } else {
-                    //        console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(start));
-                    //    }
-                    //}
-                });
             });
     },
 
