@@ -103,7 +103,17 @@ module.exports.policies = {
         get: true,
         delete: ['isLoggedIn', 'isAdmin'],
         update: ['isLoggedIn', 'isAdminOrKadr'],
+    },
+
+    SettingController: {
+        '*': ['isLoggedIn', 'isAdmin']
+        //create: ['isLoggedIn', 'isAdminOrKadr'],
+        //create: true,
+        //get: true,
+        //delete: ['isLoggedIn', 'isAdmin'],
+        //update: ['isLoggedIn', 'isAdminOrKadr'],
     }
+
     //FurloughController: {
     //    '*': 'isLoggedIn',
     //    //'*': false,
