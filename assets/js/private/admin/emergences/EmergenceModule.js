@@ -1,8 +1,9 @@
-angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
+angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial','ngMessages',
         'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment', 'ngSanitize', 'ngDialog'])
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
     }])
+
     .config(function ($stateProvider) {
         $stateProvider
             .state('home.admin.emergences', {

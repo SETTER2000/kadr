@@ -28,13 +28,13 @@ angular.module('EmergenceModule').controller('AdministrationEmergenceController'
     $scope.getSetting = function () {
         $http.get('/setting/module/emergence')
             .then(function onSuccess(sailsResponse) {
-                console.log('sailsResponse+++: ', sailsResponse);
+                //console.log('sailsResponse+++: ', sailsResponse);
                 $scope.checkSender = sailsResponse.data.checkSender;
 
             })
             .catch(function onError(sailsResponse) {
                 toastr.error(sailsResponse.data,'Ошибка 7010!');
-                console.log(sailsResponse.data);
+                //console.log(sailsResponse.data);
             })
             .finally(function eitherWay() {
                 $scope.userList.loading = false;

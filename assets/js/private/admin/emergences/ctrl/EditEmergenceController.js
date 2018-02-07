@@ -13,6 +13,37 @@ angular.module('EmergenceModule')
                 noCheck: 'Не выполнено',
                 //kadr:'Кадры. Начать обработку - ',
             };
+
+            $scope.loadUsers = function () {
+
+                // Use timeout to simulate a 650ms request.
+                return $timeout(function () {
+
+                    $scope.departments = Departments.query({action: true, limit: 300, sort: 'name'}, function (departments) {
+                        //console.log('DEPARTMENTS:', departments);
+                        $scope.departments = departments;
+                    }, function (err) {
+                        toastr.error(err, 'Ошибка ListDepartmentController!');
+                    });
+                    //$scope.users =  $scope.users  || [
+                    //        { id: 1, name: 'Scooby Doo' },
+                    //        { id: 2, name: 'Shaggy Rodgers' },
+                    //        { id: 3, name: 'Fred Jones' },
+                    //        { id: 4, name: 'Daphne Blake' },
+                    //        { id: 5, name: 'Velma Dinkley' }
+                    //    ];
+
+                }, 900);
+            };
+
+
+            $scope.text = {
+                noEmpty: 'Поле не должно быть пустым.',
+                noPatternW: 'Писать только русские буквы.',
+                minlength: "Не менее 3 букв должно быть.",
+                maxlength: "Много букв!",
+
+            };
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -46,13 +77,18 @@ angular.module('EmergenceModule')
             };
             $scope.debug = true;
             $scope.comment = false;
-
+            $scope.ctrl = {
+                minDate: new Date(),
+                maxDate: new Date(moment().add(2,'months'))
+            };
 
 
             $scope.matchPattern = new RegExp('[а-яА-ЯёЁ]+');
-            $scope.requireValue = true;
             $scope.minLength = 3;
             $scope.maxLength = 20;
+            $scope.maxLengthPost = 40;
+            $scope.maxlengthTextarea = 150;
+
             $scope.getError = function (error) {
                 /*
                  serForm.itemFirstName.$error.required
@@ -86,7 +122,7 @@ angular.module('EmergenceModule')
              */
             io.socket.on('hello-emergence-edit', function (data) {
                 console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
-                if(!data.howdy)  $state.go('home.admin.emergences');
+                if (!data.howdy)  $state.go('home.admin.emergences');
                 //$scope.item = data.howdy;
                 //$scope.$apply();
                 $scope.refresh();
@@ -169,9 +205,17 @@ angular.module('EmergenceModule')
                     '<p>Ссылка на заявку -  <a href="http://kadr/company/emergences">' + $scope.fullName + '</a></p>'
                 };
             };
+            $scope.$watch('item.departments', function (val, old) {
+                if (val) {
+
+                    $scope.departments = val;
+                }
+            });
 
             $scope.$watch('item.departments[0].id', function (val, old) {
                 if (val) {
+
+
                     Departments.get({id: val},
                         function (ems) {
                             //console.log('WATCH item.departments', ems);
@@ -200,7 +244,12 @@ angular.module('EmergenceModule')
                     $scope.setData();
                 }
             });
+
+
+
+
             $scope.$watch('item.outputEmployee', function (val, old) {
+
                 if (val) {
                     $scope.outputEmployee = val;
                     $scope.setData();
@@ -330,11 +379,6 @@ angular.module('EmergenceModule')
                     return count;
                 }
             };
-
-
-
-
-
 
 
             /**
@@ -550,8 +594,6 @@ angular.module('EmergenceModule')
             }
 
 
-
-
             $scope.close = 1;
 
             $scope.loginAdmin = false;
@@ -678,6 +720,7 @@ angular.module('EmergenceModule')
                         console.log('EDIT EMERGENCE refresh function', emergences);
                         $scope.flatpicker.setDate(emergences.period);
                         $scope.emergences = emergences;
+                        //$scope.departments = emergences.departments;
                     }, function (err) {
                         // активируем по умолчанию создаваемую запись
                         item.action = true;
@@ -711,7 +754,7 @@ angular.module('EmergenceModule')
             });
             $scope.$watch('item.start', function (value) {
                 if (value) {
-                    console.log('ПРОЕКТ  НЕ ОТРАБОТАЛ', value);
+                    //console.log('ПРОЕКТ  НЕ ОТРАБОТАЛ', value);
                     if (($scope.item.status === 'Новая' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
                         toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
                             {
@@ -735,7 +778,7 @@ angular.module('EmergenceModule')
                     if ($scope.item.status !== 'Новая' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
                     let nm;
 
-                    console.log('FORMAT 55', value);
+                    //console.log('FORMAT 55', value);
                     nm = (moment(value).isSameOrBefore(moment())) ? 'Новая запущена' : 'Запуск проекта';
                     toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
                         {
@@ -762,24 +805,11 @@ angular.module('EmergenceModule')
                 return ($scope.item.status === 'Утвержден') ? false : true;
             };
 
-            //$scope.$watch('item.year', function (val) {
-            //    if (val) {
-            //        $scope.year = val;
-            //        $scope.item.name = '';
-            //        $scope.item.name = $scope.item.getFullName();
-            //    }
-            //});
-
-
             $scope.delete2 = function (item) {
                 item.$delete({id: item.id}, function (success) {
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
-                    // $location.path("/table");
-                    // $scope.$apply(function() { $location.path("/admin/emergence"); });
-                    // $scope.refresh();
                 }, function (err) {
-                    console.log(err);
                     toastr.error(err.data, info.error(733));
                 })
             };
@@ -797,19 +827,11 @@ angular.module('EmergenceModule')
 
 
             var reversValue = function (item) {
-                var u = item.start;
-                //console.log('DDDDD item.start', item.start);
-                //console.log('DDDDD item.outputEmployee', item.outputEmployee);
-                //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
-                item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
-                //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                var q = item.start;
-
+                //item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
                 return item;
             };
+
             $scope.locations = {
                 model: null,
                 availableOptions: [
@@ -835,21 +857,21 @@ angular.module('EmergenceModule')
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
 
-            $scope.saveEditFin = function (item,isValid) {
-                item.finUpdate  = $scope.me.id;
-                $scope.saveEdit(item,isValid);
+            $scope.saveEditFin = function (item, isValid) {
+                item.finUpdate = $scope.me.id;
+                $scope.saveEdit(item, isValid);
                 $state.go('home.admin.emergences');
             };
 
-            $scope.saveEditAho = function (item,isValid) {
-                item.ahoUpdate  = $scope.me.id;
-                $scope.saveEdit(item,isValid);
+            $scope.saveEditAho = function (item, isValid) {
+                item.ahoUpdate = $scope.me.id;
+                $scope.saveEdit(item, isValid);
                 $state.go('home.admin.emergences');
             };
 
-            $scope.saveEditIt = function (item,isValid) {
-                item.itUpdate  = $scope.me.id;
-                $scope.saveEdit(item,isValid);
+            $scope.saveEditIt = function (item, isValid) {
+                item.itUpdate = $scope.me.id;
+                $scope.saveEdit(item, isValid);
                 $state.go('home.admin.emergences');
             };
 
@@ -875,11 +897,9 @@ angular.module('EmergenceModule')
             });
 
 
-            $scope.saveEdit = function (item,isValid) {
+            $scope.saveEdit = function (item, isValid) {
                 $scope.checkedValue();
                 item = reversValue(item);
-
-
                 if (isValid) {
                     $scope.message = item.name + " " + item.email;
                 }
@@ -889,30 +909,15 @@ angular.module('EmergenceModule')
                     return;
                 }
 
-
-                //console.log('ITEM START', item);
-
-                // console.log('********************************Перед созданием', item);
-                //if (!item.start && !item.via) return toastr.error(info.filedErr('"Дата запуска проекта"', 'не заполнено'), info.error(5811));
-                //if (!item.recipient) return toastr.error(info.filedErr('"Адресаты"', 'не заполнено'), info.error(4028));
-                //if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
-                //if (!item.htmlData2) return toastr.error(info.messageErr, info.error(5979));
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
-
-
-                //if (!item.start)
-
                 if (angular.isDefined(item.id)) {
-
-                    //console.log('UPDATE item:', item);
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $state.go('home.admin.emergences');
                         },
                         function (err) {
-                            console.log('ERR11445', err);
-                            if(err.status == 400)  toastr.error(err.statusText+' '+err.data.details, info.error(err.status));
+                            if (err.status == 400)  toastr.error(err.statusText + ' ' + err.data.details, info.error(err.status));
                             toastr.error(err.data, info.error(11445));
                         }
                     );

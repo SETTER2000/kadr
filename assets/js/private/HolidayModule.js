@@ -19,6 +19,8 @@ angular.module('Holiday', [
         'ScheduleModule',
         'AdminModule',
         'ngMaterial',
+        'ngMessages',
+
 
         'DepartmentFModule',
         'UserFModule',
@@ -119,6 +121,11 @@ angular.module('Holiday', [
 //                //     }
 //                // })
 //            })
+    })
+    .config(function($mdDateLocaleProvider) {
+        $mdDateLocaleProvider.formatDate = function(date) {
+            return moment(date).format('DD.MM.YYYY');
+        };
     })
     .controller('HolidayController', ['$scope', '$window', function ($scope) {
         //$scope.logout = function () {

@@ -64,7 +64,20 @@ module.exports = {
                     res.ok(department);
                 });
         } else {
-            Department.find({sort:'name'})
+            //console.log('ALL dssss: ' , req.params.all());
+            //let q = {
+            //    //where:req.param('where'),
+            //    action:req.param('action'),
+            //    limit: req.param('limit'),
+            //    sort: req.param('sort')
+            //};
+            //if (!_.isUndefined(req.param('where'))) {
+            //    var y = {};
+            //    //y[req.param('property')] = {'like': req.param('char')};
+            //    q.where = req.param('where');
+            //}
+            //console.log('QQ::', q);
+            Department.find(req.params.all())
                 //.populate('subdivision')
                 .exec(function foundUser(err, departments) {
                     if (err) return res.serverError(err);

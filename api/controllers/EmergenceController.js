@@ -119,13 +119,15 @@ module.exports = {
      * @returns {*}
      */
     create: function (req, res) {
-
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         //console.log('ALL CREATE RWEQ:', req.params.all());
         let fullName = req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName');
-        if (!req.param('departments')) return res.badRequest('Не указан департамент.');
+        if (_.isUndefined(req.param('departments')[0].id)) return res.badRequest('Не указан департамент.');
         let start = moment(req.param('start')).format('YYYY-MM-DDTHH:mmZ');
-        Department.findOne(req.param('departments')[0]).exec((err, findDepart)=> {
+
+        console.log('Create  req.param', req.param('departments'));
+        
+        Department.findOne({id:req.param('departments')[0].id}).exec((err, findDepart)=> {
             "use strict";
             if (err) return res.serverError(err);
             let recipient = sails.config.recipient.kadr;
