@@ -123,6 +123,20 @@ angular.module('Holiday', [
 //            })
     })
     .config(function($mdDateLocaleProvider) {
+
+
+        // Массив названий месяцев (в порядке убывания).
+        $mdDateLocaleProvider.months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+        // Массив сокращенных названий месяцев.
+        $mdDateLocaleProvider.shortMonths = ['янв', 'фев', 'мрт', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'нбр', 'дек'];
+        // Массив дни недели (в порядке убывания)
+        $mdDateLocaleProvider.days = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресение'];
+        // Массив сокращенных дней недели.
+        $mdDateLocaleProvider.shortDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+
+
+
+
         $mdDateLocaleProvider.formatDate = function(date) {
             return moment(date).format('DD.MM.YYYY');
         };

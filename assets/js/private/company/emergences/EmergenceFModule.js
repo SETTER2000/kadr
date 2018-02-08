@@ -1,4 +1,4 @@
-angular.module('EmergenceFModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
+angular.module('EmergenceFModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial','ngMessages',
         'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment', 'ngSanitize', 'ngDialog'])
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);

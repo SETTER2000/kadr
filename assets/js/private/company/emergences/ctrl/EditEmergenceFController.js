@@ -15,6 +15,66 @@ angular.module('EmergenceFModule')
                 noCheck: 'Не выполнено',
                 //kadr:'Кадры. Начать обработку - ',
             };
+
+            /**
+             *
+             * @returns {*}
+             */
+            //08.02.2018 16:21
+            $scope.determinateValue = 30;
+            $interval(function() {
+                $scope.determinateValue += 1;
+                if ($scope.determinateValue > 100) $scope.determinateValue = 30;
+            }, 100, 0, true);
+
+            /**
+             *
+             * @returns {*}
+             */
+
+
+
+
+
+
+
+
+
+
+            $scope.loadUsers = function () {
+
+                // Use timeout to simulate a 650ms request.
+                return $timeout(function () {
+
+                    $scope.departments = Departments.query({action: true, limit: 300, sort: 'name'}, function (departments) {
+                        //console.log('DEPARTMENTS:', departments);
+                        $scope.departments = departments;
+                    }, function (err) {
+                        toastr.error(err, 'Ошибка ListDepartmentController!');
+                    });
+                    //$scope.users =  $scope.users  || [
+                    //        { id: 1, name: 'Scooby Doo' },
+                    //        { id: 2, name: 'Shaggy Rodgers' },
+                    //        { id: 3, name: 'Fred Jones' },
+                    //        { id: 4, name: 'Daphne Blake' },
+                    //        { id: 5, name: 'Velma Dinkley' }
+                    //    ];
+
+                }, 900);
+            };
+
+
+            $scope.text = {
+                noEmpty: 'Поле не должно быть пустым.',
+                noPatternW: 'Писать только русские буквы.',
+                emailPattern: 'Не корректный email.',
+                minlengthServer: 'Странное имя для руководителя!?',
+                minlength: "Не менее 3 букв должно быть.",
+                noEmail: "Не корректный email.",
+                maxlength: "Много букв!",
+                textPhone: '- Пожалуйста, введите корректно номер телефона.',
+                templatePhone:'(###)####'
+            };
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -47,14 +107,25 @@ angular.module('EmergenceFModule')
                 maxDate: "31-12-2030"
             };
 
-
             $scope.debug = true;
             $scope.comment = false;
 
+            $scope.ctrl = {
+                minDate: new Date(),
+                maxDate: new Date(moment().add(2,'months'))
+            };
+
+
+            $scope.showHints = true;
             $scope.matchPattern = new RegExp('[а-яА-ЯёЁ]+');
-            $scope.requireValue = true;
+            $scope.patternPhone = new RegExp('/^[(][0-9]{3}[)] [0-9]{3}-[0-9]{4}$/');
+            //var pattern = '/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/';
+            //$scope.emailPattern = new RegExp(pattern);
             $scope.minLength = 3;
             $scope.maxLength = 20;
+            $scope.maxLengthPost = 40;
+            $scope.maxlengthTextarea = 150;
+
             $scope.getError = function (error) {
                 /*
                  serForm.itemFirstName.$error.required
@@ -173,7 +244,12 @@ angular.module('EmergenceFModule')
                     '<p>Ссылка на заявку -  <a href="http://kadr/company/emergences">' + $scope.fullName + '</a></p>'
                 };
             };
+            $scope.$watch('item.departments', function (val, old) {
+                if (val) {
 
+                    $scope.departments = val;
+                }
+            });
             $scope.$watch('item.departments[0].id', function (val, old) {
                 if (val) {
                     Departments.get({id: val},
@@ -522,26 +598,26 @@ angular.module('EmergenceFModule')
             /**
              * Запрос кол-ва пользователей в системе
              */
-            $scope.getAllUsers = function () {
-                let itemsUsers = $scope.itemsUsers = UsersF.query({},
-                    function (users) {
-                        //console.log('EDIT USERS EMERGENCE', users);
-
-
-                        $scope.itemsUsers = users;
-                        //$scope.getBoss();
-                    }, function (err) {
-                        console.log(err, 'ОШибка в USERS objects');
-                        // активируем по умолчанию создаваемую запись
-                        //item.action = true;
-                        //item.status = 'Новая';
-                        //item.sc = function () {
-                        //    return 'Отпуск';
-                        //};
-
-                    }
-                );
-            };
+            //$scope.getAllUsers = function () {
+            //    let itemsUsers = $scope.itemsUsers = UsersF.query({},
+            //        function (users) {
+            //            //console.log('EDIT USERS EMERGENCE', users);
+            //
+            //
+            //            $scope.itemsUsers = users;
+            //            //$scope.getBoss();
+            //        }, function (err) {
+            //            console.log(err, 'ОШибка в USERS objects');
+            //            // активируем по умолчанию создаваемую запись
+            //            //item.action = true;
+            //            //item.status = 'Новая';
+            //            //item.sc = function () {
+            //            //    return 'Отпуск';
+            //            //};
+            //
+            //        }
+            //    );
+            //};
 
 
             function createFilterFor(query) {
@@ -686,7 +762,7 @@ angular.module('EmergenceFModule')
                     }
                 );
                 //$scope.item.year = item.getYear();
-                $scope.getAllUsers();
+                //$scope.getAllUsers();
                 $scope.item.name = item.getFullName();
             };
 
@@ -795,18 +871,23 @@ angular.module('EmergenceFModule')
             $scope.htmlData2 = '<h4 class="text-danger" ng-cloak>Пожалуйста, вставьте шаблон дополнительного уведомления!</h4>';
 
 
+            //var reversValue = function (item) {
+            //    var u = item.start;
+            //    //console.log('DDDDD item.start', item.start);
+            //    //console.log('DDDDD item.outputEmployee', item.outputEmployee);
+            //    //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+            //    item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
+            //    item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
+            //    //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+            //    //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+            //    //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+            //    var q = item.start;
+            //
+            //    return item;
+            //};
             var reversValue = function (item) {
-                var u = item.start;
-                //console.log('DDDDD item.start', item.start);
-                //console.log('DDDDD item.outputEmployee', item.outputEmployee);
-                //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
-                item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
-                //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                var q = item.start;
-
+                //item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
                 return item;
             };
             $scope.locations = {

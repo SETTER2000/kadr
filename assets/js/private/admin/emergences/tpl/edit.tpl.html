@@ -37,7 +37,7 @@
         </h2>
     </div>
     <div class="row">
-        <div ng-class="{'col-md-7':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}" ng-cloak>
+        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}" ng-cloak>
 
 
             <!-- E D I T / C R E A T E  F O R M -->
@@ -82,6 +82,27 @@
                             <!--<input ng-if="edit" autofocus required min="{{minYear()}}" max="2030" ng-init="getYear()" ng-change="fixYear()"-->
                             <!--type="number" class="form-control" ng-model="item.year">-->
                             <!--&lt;!&ndash;<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>&ndash;&gt;-->
+                        </div>
+
+
+                        <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
+
+                        <div layout="column" layout-align="center center" style="padding:0 0 80px" ng-cloak>
+                            <div flex-gt-xs>
+                                <h4>Дата выхода сотрудника <span class="text-danger">*</span></h4>
+                                <md-datepicker ng-model="item.outputEmployee" ng-required md-placeholder="Enter date"
+                                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"
+                                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
+                            </div>
+
+                            <!--<div flex-gt-xs>-->
+                            <!--<h4>Only weekends are selectable</h4>-->
+                            <!--<md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"-->
+                            <!--md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>-->
+                            <!--</div>-->
+                            <div class="text-danger" ng-show="showError">
+                                {{getError(userForm.itemOutputEmployee.$error)}}
+                            </div>
                         </div>
 
 
@@ -157,27 +178,6 @@
                             <!--<small>  {{getError(userForm.itemPatronymicName.$error)}}</small>-->
                             <!--</div>-->
                         </md-input-container>
-
-
-                        <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
-
-                        <div layout-gt-xs="row">
-                            <div flex-gt-xs>
-                                <label>Дата выхода сотрудника <span class="text-danger">*</span></label><br>
-                                <md-datepicker ng-model="item.outputEmployee" ng-required md-placeholder="Enter date"
-                                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"
-                                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
-                            </div>
-
-                            <!--<div flex-gt-xs>-->
-                            <!--<h4>Only weekends are selectable</h4>-->
-                            <!--<md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"-->
-                            <!--md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>-->
-                            <!--</div>-->
-                            <div class="text-danger" ng-show="showError">
-                                {{getError(userForm.itemOutputEmployee.$error)}}
-                            </div>
-                        </div>
 
 
                         <!--<div class="form-group">-->
@@ -327,7 +327,7 @@
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
-                                    <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
+                                    <div ng-message="minlength" class="my-message"> {{text.minlengthServer}} <i class="far fa-smile"></i> </div>
                                 </div>
                             </md-input-container>
                         </div>
@@ -344,17 +344,17 @@
 
                         <!-- L O C A T I O N -->
 
-                        <md-input-container>
-                            <label>Местоположение</label>
-                            <md-select name="repeatSelect" ng-model="item.location">
-                                <md-option><em>None</em></md-option>
-                                <md-option ng-repeat="option in locations.availableOptions" ng-value="option.id">
-                                    {{option.name}}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-
-
+                        <div class="md-input-has-value">
+                            <md-input-container flex-gt-sm="">
+                                <label>Местоположение</label>
+                                <md-select name="repeatSelect" ng-model="item.location">
+                                    <md-option><em>--</em></md-option>
+                                    <md-option ng-repeat="option in locations.availableOptions" ng-value="option.id">
+                                        {{option.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
                         <!--<div class="form-group">-->
                         <!--<label class="control-label">Местоположение</label>-->
 
@@ -366,51 +366,70 @@
 
                         <!-- К О М Н А Т А -->
                         <br>
-                        <div layout-gt-sm="row">
+                        <div class="md-input-has-value">
                             <md-input-container flex-gt-sm="">
 
                                 <label>Комната</label>
                                 <input name="itemRoom" ng-model="item.room">
                             </md-input-container>
                         </div>
-                        </div>
+                        <!--<md-button-->
+                                <!--class="md-fab md-primary"-->
+                                <!--aria-label="Menu with Tooltip Delay"-->
+                               <!--&gt;-->
+                            <!--<md-tooltip md-delay="demo.delayTooltip">-->
+                                <!--Menu with Tooltip Delay  msecs-->
+                            <!--</md-tooltip>-->
+                            <!--<md-icon  md-svg-src="/images/icons/plus_24_opacity.svg"></md-icon>-->
+                        <!--</md-button>-->
+
+                        <!-- Д О П О Л Н И Т Е Л Ь Н О -->
+                        <md-input-container class="md-block">
+                            <label>Дополнительное требование к рабочему месту</label>
+                            <textarea name="itemExtra" ng-model="item.extra"
+                                      ng-maxlength="maxlengthText"
+                                      md-maxlength="maxlengthText"
+                                      rows="1" md-select-on-focus></textarea>
+                            <div ng-messages="userForm.itemExtra.$error" role="alert" ng-messages-multiple>
+                                <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
+                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                            </div>
+                        </md-input-container>
+
+
                         <!--<div class="form-group">-->
                         <!--<label class="control-label">Комната</label>-->
                         <!--<input type="text" class="form-control" ng-model="item.room">-->
                         <!--</div>-->
 
-                        <!-- Д О П О Л Н И Т Е Л Ь Н О -->
-
-                        <md-input-container class="md-block">
-                            <label>Дополнительное требование к рабочему месту</label>
-                            <textarea name="itemExtra" ng-model="item.extra"
-                                      md-maxlength="maxlengthTextarea"
-                                      rows="2" md-select-on-focus></textarea>
-                            <div ng-messages="userForm.itemExtra.$error" role="alert" ng-messages-multiple>
-                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
-                                <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
-                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
-                                <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
-                            </div>
-                        </md-input-container>
 
                         <!--<div class="form-group">-->
-                            <!--<label class="control-label">Дополнительное требование к рабочему месту</label>-->
-                            <!--<textarea class="form-control" ng-model="item.extra"></textarea>-->
+                        <!--<label class="control-label">Дополнительное требование к рабочему месту</label>-->
+                        <!--<textarea class="form-control" ng-model="item.extra"></textarea>-->
                         <!--</div>-->
 
 
                         <!-- D A X -->
 
-                        <div class="form-group">
-                            <label class="control-label">Права в DAX</label>
+                        <md-input-container>
+                            <label>Права в DAX</label>
+                            <md-select name="itemDax" ng-model="item.dax">
+                                <md-option><em>--</em></md-option>
+                                <md-option ng-repeat="option in daxs.availableOptions" ng-value="option.id">
+                                    {{option.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
 
-                            <select class="form-control" name="repeatSelect" ng-model="item.dax">
-                                <option ng-repeat="option in daxs.availableOptions" value="{{option.id}}">{{option.name}}</option>
-                            </select>
-                        </div>
+                        <!--<div class="form-group">-->
+                        <!--<label class="control-label">Права в DAX</label>-->
 
+                        <!--<select class="form-control" name="repeatSelect" ng-model="item.dax">-->
+                        <!--<option ng-repeat="option in daxs.availableOptions" value="{{option.id}}">{{option.name}}</option>-->
+                        <!--</select>-->
+                        <!--</div>-->
 
+                        <div class="well" style="margin: 30px 0">
                         <!-- P H O N E -->
 
                         <div class="form-group">
@@ -466,7 +485,7 @@
                             </div>
                         </div>
 
-
+                        </div>
                         <!-- S T A T U S -->
 
                         <!--<div class="form-group ">-->
@@ -563,7 +582,7 @@
                 </div>
             </div>
         </div>
-        <div ng-class="{'col-md-5':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
+        <div ng-class="{'col-md-6':close, 'col-md-12':!close, 'fx-fade-left':!close, 'fx-fade-right':close}">
 
 
             <!-- К А Д Р Ы  Н А Ч А Т Ь  О Б Р А Б О Т К У -->
@@ -600,10 +619,23 @@
 
 
                     <!-- К А Д Р Ы  К О М М Е Н Т А Р И И -->
-                    <div class="form-group sdv">
-                        <label class="control-label">Кадры. Комментарии</label>
-                        <textarea class="form-control" ng-disabled="!edit" ng-model="item.commentKadr"></textarea>
-                    </div>
+
+                    <md-input-container class="md-block" style="margin: 35px 20px 0">
+                        <label>Кадры. Комментарий</label>
+                            <textarea ng-disabled="!edit" name="itemCommentKadr" ng-model="item.commentKadr"
+                                      ng-maxlength="maxlengthText"
+                                      md-maxlength="maxlengthText"
+                                      rows="1" md-select-on-focus></textarea>
+                        <div ng-messages="userForm.itemCommentKadr.$error" role="alert" ng-messages-multiple>
+                            <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
+                            <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                        </div>
+                    </md-input-container>
+
+                    <!--<div class="form-group sdv">-->
+                    <!--<label class="control-label">Кадры. Комментарии</label>-->
+                    <!--<textarea class="form-control" ng-disabled="!edit" ng-model="item.commentKadr"></textarea>-->
+                    <!--</div>-->
 
                     <!--К А Д Р Ы  О Б Р А Б О Т К А  З А В Е Р Ш Е Н А  -->
                     <!--<div class="form-group">-->

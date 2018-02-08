@@ -40,9 +40,10 @@ angular.module('EmergenceModule')
             $scope.text = {
                 noEmpty: 'Поле не должно быть пустым.',
                 noPatternW: 'Писать только русские буквы.',
+                minlengthServer: 'Странное имя для руководителя!?',
                 minlength: "Не менее 3 букв должно быть.",
+                noEmail: "Не корректный email.",
                 maxlength: "Много букв!",
-
             };
             var info = {
                 changed: 'Изменения сохранены!',
@@ -86,8 +87,8 @@ angular.module('EmergenceModule')
             $scope.matchPattern = new RegExp('[а-яА-ЯёЁ]+');
             $scope.minLength = 3;
             $scope.maxLength = 20;
-            $scope.maxLengthPost = 40;
-            $scope.maxlengthTextarea = 150;
+            $scope.maxLengthPost = 70;
+            $scope.maxlengthText = 150;
 
             $scope.getError = function (error) {
                 /*
@@ -564,26 +565,24 @@ angular.module('EmergenceModule')
             /**
              * Запрос кол-ва пользователей в системе
              */
-            $scope.getAllUsers = function () {
-                let itemsUsers = $scope.itemsUsers = Users.query({},
-                    function (users) {
-                        console.log('EDIT USERS EMERGENCE', users);
-
-
-                        $scope.itemsUsers = users;
-                        //$scope.getBoss();
-                    }, function (err) {
-                        console.log(err, 'ОШибка в USERS objects');
-                        // активируем по умолчанию создаваемую запись
-                        //item.action = true;
-                        //item.status = 'Новая';
-                        //item.sc = function () {
-                        //    return 'Отпуск';
-                        //};
-
-                    }
-                );
-            };
+            //$scope.getAllUsers = function () {
+            //    let itemsUsers = $scope.itemsUsers = Users.query({},
+            //        function (users) {
+            //            //console.log('EDIT USERS EMERGENCE', users);
+            //            $scope.itemsUsers = users;
+            //            //$scope.getBoss();
+            //        }, function (err) {
+            //            console.log(err, 'ОШибка в USERS objects');
+            //            // активируем по умолчанию создаваемую запись
+            //            //item.action = true;
+            //            //item.status = 'Новая';
+            //            //item.sc = function () {
+            //            //    return 'Отпуск';
+            //            //};
+            //
+            //        }
+            //    );
+            //};
 
 
             function createFilterFor(query) {
@@ -729,7 +728,7 @@ angular.module('EmergenceModule')
                     }
                 );
                 //$scope.item.year = item.getYear();
-                $scope.getAllUsers();
+                //$scope.getAllUsers();
                 $scope.item.name = item.getFullName();
             };
 

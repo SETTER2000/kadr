@@ -1,4 +1,5 @@
-<div class="col-sm-11  col-md-12  main" ng-cloak>
+<div class="col-sm-11  col-md-12  main progressLineardemoBasicUsage" ng-cloak>
+    <md-progress-linear md-mode="determinate" value="{{determinateValue}}"></md-progress-linear>
     <div class="page-header">
         <h2>
             <p ng-if="item.lastName " ng-class="{'fired':item.fired}">{{item.lastName}} {{item.firstName}} {{item.patronymicName}} <span
@@ -43,13 +44,13 @@
             <!-- E D I T / C R E A T E  F O R M -->
 
             <div class="panel" ng-class="{'panel-warning':item.action, 'panel-default':!item.action}">
-                <div class="panel-heading">
-                    <h3 class="panel-title" ng-bind="item.section">
-                        <!--<a href="#" class="pull-right">-->
-                        <!--<span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>-->
-                        <!--</a>-->
-                    </h3>
-                </div>
+                <!--<div class="panel-heading">-->
+                    <!--<h3 class="panel-title" ng-bind="item.section">-->
+                        <!--&lt;!&ndash;<a href="#" class="pull-right">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                    <!--</h3>-->
+                <!--</div>-->
                 <div class="panel-body">
                     <form name="userForm" novalidate
                           ng-submit="saveEdit(item, userForm.$valid)" enctype="multipart/form-data">
@@ -63,7 +64,7 @@
                                     <!--<input type="checkbox" ng-if="((item.status ==='Новая') || me.admin)" ng-model="item.action">-->
                                     <!--<input type="checkbox" ng-if="(item.status !=='Новая' && !me.admin)" disabled ng-model="item.action">-->
 
-                                    <md-switch ng-model="item.action" aria-label="Switch 1">
+                                    <md-switch ng-model="item.action" class="green" aria-label="Switch 1">
                                         <span ng-if="item.action">Активность</span>
                                         <span ng-if="!item.action">Не активен</span>
                                     </md-switch>
@@ -84,6 +85,26 @@
                             <!--&lt;!&ndash;<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>&ndash;&gt;-->
                         </div>
 
+                        <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
+
+                        <div layout="column" layout-align="center center" style="padding:0 0 80px" ng-cloak>
+                            <div flex-gt-xs>
+                                <h4>Дата выхода сотрудника <span class="text-danger">*</span></h4>
+                                <md-datepicker ng-model="item.outputEmployee" ng-required md-placeholder="Enter date"
+                                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"
+                                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
+                            </div>
+
+                            <!--<div flex-gt-xs>-->
+                            <!--<h4>Only weekends are selectable</h4>-->
+                            <!--<md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"-->
+                            <!--md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>-->
+                            <!--</div>-->
+                            <div class="text-danger" ng-show="showError">
+                                {{getError(userForm.itemOutputEmployee.$error)}}
+                            </div>
+                        </div>
+
 
                         <!-- F I O -->
 
@@ -97,99 +118,177 @@
 
                         <!-- L A S T  N A M E -->
 
-                        <div class="form-group">
-                            <label class="control-label">Фамилия <span class="text-danger">*</span></label>
-                            <input type="text" name="itemLastName" ng-model="item.lastName" class="form-control"
-                                   ng-required="requireValue"
+                        <!--<div class="form-group">-->
+                        <md-input-container flex>
+                            <label>Фамилия </label>
+                            <input name="itemLastName" ng-model="item.lastName"
+                                   required
                                    ng-minlength="minLength"
                                    ng-maxlength="maxLength"
+                                   md-maxlength="maxLength"
+                                   placeholder="Иванов"
                                    ng-pattern="matchPattern">
 
-                            <div class="text-danger" ng-show="showError">
-                                {{getError(userForm.itemLastName.$error)}}
+                            <div ng-messages="userForm.itemLastName.$error" role="alert" ng-messages-multiple>
+                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
+                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
                             </div>
-                        </div>
+                            <!--</div>-->
+                        </md-input-container>
+
 
 
                         <!-- F I R S T  N A M E -->
 
-                        <div class="form-group">
-                            <label class="control-label">Имя <span class="text-danger">*</span></label>
-                            <input type="text" name="itemFirstName" ng-model="item.firstName" class="form-control"
-                                   ng-required="requireValue"
+                        <md-input-container flex>
+                            <label>Имя</label>
+                            <input name="itemFirstName" ng-model="item.firstName"
+                                   required
                                    ng-minlength="minLength"
                                    ng-maxlength="maxLength"
+                                   md-maxlength="maxLength"
+                                   placeholder="Иван"
                                    ng-pattern="matchPattern">
-                            <div class="text-danger" ng-show="showError">
-                                {{getError(userForm.itemFirstName.$error)}}
+                            <div ng-messages="userForm.itemFirstName.$error" role="alert" ng-messages-multiple>
+                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
+                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
                             </div>
-                            <!--<p>Required Error:   {{userForm.itemFirstName.$error.required}}</p>-->
-                            <!--<p>Min Length Error: {{userForm.itemFirstName.$error.minlength}}</p>-->
-                            <!--<p>Max Length Error: {{userForm.itemFirstName.$error.maxlength}}</p>-->
-                            <!--<p>Pattern Error:    {{userForm.itemFirstName.$error.pattern}}</p>-->
-                            <!--<p>Element Valid:    {{userForm.itemFirstName.$valid}}</p>-->
-                        </div>
+                        </md-input-container>
 
 
                         <!-- P A T R O N Y M I C  N A M E -->
 
-                        <div class="form-group">
-                            <label class="control-label">Отчество <span class="text-danger">*</span></label>
-                            <input type="text" name="itemPatronymicName" ng-model="item.patronymicName" class="form-control"
-                                   ng-required="requireValue"
+                        <md-input-container flex>
+                            <label>Отчество</label>
+                            <input name="itemPatronymicName" ng-model="item.patronymicName"
+                                   required
                                    ng-minlength="minLength"
                                    ng-maxlength="maxLength"
+                                   md-maxlength="maxLength"
+                                   placeholder="Иванович"
                                    ng-pattern="matchPattern">
-                            <div class="text-danger" ng-show="showError">
-                                {{getError(userForm.itemPatronymicName.$error)}}
+                            <div ng-messages="userForm.itemPatronymicName.$error" role="alert" ng-messages-multiple>
+                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
+                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
                             </div>
-                        </div>
+                            <!--<div class="text-danger" ng-show="showError">-->
+                            <!--<small>  {{getError(userForm.itemPatronymicName.$error)}}</small>-->
+                            <!--</div>-->
+                        </md-input-container>
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Фамилия <span class="text-danger">*</span></label>-->
+                            <!--<input type="text" name="itemLastName" ng-model="item.lastName" class="form-control"-->
+                                   <!--ng-required="requireValue"-->
+                                   <!--ng-minlength="minLength"-->
+                                   <!--ng-maxlength="maxLength"-->
+                                   <!--ng-pattern="matchPattern">-->
+
+                            <!--<div class="text-danger" ng-show="showError">-->
+                                <!--{{getError(userForm.itemLastName.$error)}}-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!-- F I R S T  N A M E -->
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Имя <span class="text-danger">*</span></label>-->
+                            <!--<input type="text" name="itemFirstName" ng-model="item.firstName" class="form-control"-->
+                                   <!--ng-required="requireValue"-->
+                                   <!--ng-minlength="minLength"-->
+                                   <!--ng-maxlength="maxLength"-->
+                                   <!--ng-pattern="matchPattern">-->
+                            <!--<div class="text-danger" ng-show="showError">-->
+                                <!--{{getError(userForm.itemFirstName.$error)}}-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<p>Required Error:   {{userForm.itemFirstName.$error.required}}</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>Min Length Error: {{userForm.itemFirstName.$error.minlength}}</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>Max Length Error: {{userForm.itemFirstName.$error.maxlength}}</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>Pattern Error:    {{userForm.itemFirstName.$error.pattern}}</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>Element Valid:    {{userForm.itemFirstName.$valid}}</p>&ndash;&gt;-->
+                        <!--</div>-->
+
+
+                        <!-- P A T R O N Y M I C  N A M E -->
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Отчество <span class="text-danger">*</span></label>-->
+                            <!--<input type="text" name="itemPatronymicName" ng-model="item.patronymicName" class="form-control"-->
+                                   <!--ng-required="requireValue"-->
+                                   <!--ng-minlength="minLength"-->
+                                   <!--ng-maxlength="maxLength"-->
+                                   <!--ng-pattern="matchPattern">-->
+                            <!--<div class="text-danger" ng-show="showError">-->
+                                <!--{{getError(userForm.itemPatronymicName.$error)}}-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
                         <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
 
-                        <div class="form-group">
-                            <label class="control-label">
-                                Дата выхода сотрудника <span class="text-danger">*</span>
-                            </label>
-                            <div class="input-group">
-                                <input type="text"  name="itemOutputEmployee" required ng-bind="parseExpression2()" class="form-control flatpickr"
-                                       ng-flatpickr
-                                       fp-opts="dateOpts"
-                                       fp-on-setup="toggleBlur(item)"
-                                       ng-model="item.outputEmployee">
-                                <div class="text-danger" ng-show="showError">
-                                    {{getError(userForm.itemOutputEmployee.$error)}}
-                                </div>
-                                <!--<span class="input-group-btn">-->
-                                <!--<button class="btn btn-default" type="button" ng-click="removeBirthday(item)"><span-->
-                                <!--class="glyphicon glyphicon-remove"></span></button>-->
-                                <!--</span>-->
-                            </div>
-                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">-->
+                                <!--Дата выхода сотрудника <span class="text-danger">*</span>-->
+                            <!--</label>-->
+                            <!--<div class="input-group">-->
+                                <!--<input type="text"  name="itemOutputEmployee" required ng-bind="parseExpression2()" class="form-control flatpickr"-->
+                                       <!--ng-flatpickr-->
+                                       <!--fp-opts="dateOpts"-->
+                                       <!--fp-on-setup="toggleBlur(item)"-->
+                                       <!--ng-model="item.outputEmployee">-->
+                                <!--<div class="text-danger" ng-show="showError">-->
+                                    <!--{{getError(userForm.itemOutputEmployee.$error)}}-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash;<span class="input-group-btn">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<button class="btn btn-default" type="button" ng-click="removeBirthday(item)"><span&ndash;&gt;-->
+                                <!--&lt;!&ndash;class="glyphicon glyphicon-remove"></span></button>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
                         <!--  E D I T   D E P A R T M E N T S  C O N T R O L L E R -->
+                        <br>
+                        <div layout-gt-sm="row">
+                            <md-input-container class="md-block" flex-gt-sm="">
 
+                                <label>Подразделение <span class="text-danger">*</span></label>
+                                <md-select name="itemDepartments" placeholder="Выбрать подразделение" ng-model="item.departments[0]"
+                                           md-on-open="loadUsers()" style="min-width: 200px; padding-top: 0; margin-top: 0" require>
+                                    <md-option ng-value="department" ng-repeat="department in departments">{{department.name}}</md-option>
+                                </md-select>
 
-                        <div ng-controller="ListDepartmentFController" class="form-group ">
-                            <label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()"> </label> <span
-                                class="text-danger">*</span>
-                            <span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ] </span>
-                            <div class="form-inline" ng-repeat="department in item.departments">
-                                <div class="form-group">
-                                    <select class="form-control" name="selectDepartment" required ng-model="department.id">
-                                        <option ng-repeat="option in items| filter:{action:true}" value="{{option.id}}">{{option.name}}
-                                        </option>
-                                    </select>
+                                <div ng-messages="userForm.itemDepartments.$error" role="alert" ng-messages-multiple>
+                                    <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                 </div>
-
-                                <button type="button" class="btn btn-default" ng-click="removeSubdivision(department)">x</button>
-                            </div>
-                            <div class="text-danger" ng-show="showError">
-                                {{getError(userForm.selectDepartment.$error)}}
-                            </div>
+                            </md-input-container>
                         </div>
+
+
+                        <!--<div ng-controller="ListDepartmentFController" class="form-group ">-->
+                            <!--<label class="control-label" for="inputSuccess8" ng-bind="items[0].sc()"> </label> <span-->
+                                <!--class="text-danger">*</span>-->
+                            <!--<span ng-if="!item.departments.length>0">[ <a href="#" ng-click="addSubdivision()">добавить</a> ] </span>-->
+                            <!--<div class="form-inline" ng-repeat="department in item.departments">-->
+                                <!--<div class="form-group">-->
+                                    <!--<select class="form-control" name="selectDepartment" required ng-model="department.id">-->
+                                        <!--<option ng-repeat="option in items| filter:{action:true}" value="{{option.id}}">{{option.name}}-->
+                                        <!--</option>-->
+                                    <!--</select>-->
+                                <!--</div>-->
+
+                                <!--<button type="button" class="btn btn-default" ng-click="removeSubdivision(department)">x</button>-->
+                            <!--</div>-->
+                            <!--<div class="text-danger" ng-show="showError">-->
+                                <!--{{getError(userForm.selectDepartment.$error)}}-->
+                            <!--</div>-->
+                        <!--</div>-->
 
                         <!-- З А П У С К  П Р О Е К Т А -->
 
@@ -214,116 +313,244 @@
 
 
                         <!-- Д О Л Ж Н О С Т Ь -->
-                        <div class="form-group">
-                            <label class="control-label">Должность <span class="text-danger">*</span></label>
-                            <input type="text" name="itemPost" class="form-control" required ng-model="item.post">
-                            <div class="text-danger" ng-show="showError">
-                                {{getError(userForm.itemPost.$error)}}
-                            </div>
+                        <br>
+                        <div layout-gt-sm="row">
+                            <md-input-container flex-gt-sm="">
+                                <label>Должность</label>
+                                <input name="itemPost" ng-model="item.post"
+                                       required
+                                       ng-minlength="minLength"
+                                       ng-maxlength="maxLengthPost"
+                                       md-maxlength="maxLengthPost">
+                                <div ng-messages="userForm.itemPost.$error" role="alert" ng-messages-multiple>
+                                    <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                    <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                    <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
+                                </div>
+                            </md-input-container>
                         </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Должность <span class="text-danger">*</span></label>-->
+                            <!--<input type="text" name="itemPost" class="form-control" required ng-model="item.post">-->
+                            <!--<div class="text-danger" ng-show="showError">-->
+                                <!--{{getError(userForm.itemPost.$error)}}-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
                         <!-- B O S S -->
 
-                        <div class="form-group">
-                            <label class="control-label">Руководитель <span class="text-danger">*</span></label>
-                            <input type="text" name="itemBoss" class="form-control" required ng-model="item.boss">
-                            <div class="text-danger" ng-show="showError">
-                                {{getError(userForm.itemBoss.$error)}}
-                            </div>
+                        <div layout-gt-sm="row">
+                            <md-input-container flex-gt-sm="">
+                                <label>Руководитель</label>
+                                <input name="itemBoss" ng-model="item.boss"
+                                       required
+                                       ng-minlength="minLength"
+                                       ng-maxlength="maxLengthPost"
+                                       md-maxlength="maxLengthPost"
+                                       ng-pattern="matchPattern">
+                                <div ng-messages="userForm.itemBoss.$error" role="alert" ng-messages-multiple>
+                                    <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                    <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
+                                    <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                    <div ng-message="minlength" class="my-message"> {{text.minlengthServer}} <i class="far fa-smile"></i> </div>
+                                </div>
+                            </md-input-container>
                         </div>
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Руководитель <span class="text-danger">*</span></label>-->
+                            <!--<input type="text" name="itemBoss" class="form-control" required ng-model="item.boss">-->
+                            <!--<div class="text-danger" ng-show="showError">-->
+                                <!--{{getError(userForm.itemBoss.$error)}}-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
                         <!-- L O C A T I O N -->
 
-                        <div class="form-group">
-                            <label class="control-label">Местоположение</label>
-
-                            <select class="form-control" name="repeatSelect" ng-model="item.location">
-                                <option ng-repeat="option in locations.availableOptions" value="{{option.id}}">{{option.name}}</option>
-                            </select>
+                        <div class="md-input-has-value">
+                            <md-input-container flex-gt-sm="">
+                                <label>Местоположение</label>
+                                <md-select name="repeatSelect" ng-model="item.location">
+                                    <md-option><em>--</em></md-option>
+                                    <md-option ng-repeat="option in locations.availableOptions" ng-value="option.id">
+                                        {{option.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
                         </div>
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Местоположение</label>-->
+
+                            <!--<select class="form-control" name="repeatSelect" ng-model="item.location">-->
+                                <!--<option ng-repeat="option in locations.availableOptions" value="{{option.id}}">{{option.name}}</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
 
                         <!-- К О М Н А Т А -->
+                        <br>
+                        <div class="md-input-has-value">
+                            <md-input-container flex-gt-sm="">
 
-                        <div class="form-group">
-                            <label class="control-label">Комната</label>
-                            <input type="text" class="form-control" ng-model="item.room">
+                                <label>Комната</label>
+                                <input name="itemRoom" ng-model="item.room">
+                            </md-input-container>
                         </div>
+
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Комната</label>-->
+                            <!--<input type="text" class="form-control" ng-model="item.room">-->
+                        <!--</div>-->
 
                         <!-- Д О П О Л Н И Т Е Л Ь Н О -->
+                        <md-input-container class="md-block">
+                            <label>Дополнительное требование к рабочему месту</label>
+                            <textarea name="itemExtra" ng-model="item.extra"
+                                      ng-maxlength="maxlengthText"
+                                      md-maxlength="maxlengthText"
+                                      rows="1" md-select-on-focus></textarea>
+                            <div ng-messages="userForm.itemExtra.$error" role="alert" ng-messages-multiple>
+                                <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
+                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                            </div>
+                        </md-input-container>
 
-                        <div class="form-group">
-                            <label class="control-label">Дополнительное требование к рабочему месту</label>
-                            <textarea class="form-control" ng-model="item.extra"></textarea>
-                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Дополнительное требование к рабочему месту</label>-->
+                            <!--<textarea class="form-control" ng-model="item.extra"></textarea>-->
+                        <!--</div>-->
+
 
 
                         <!-- D A X -->
 
-                        <div class="form-group">
-                            <label class="control-label">Права в DAX</label>
+                        <md-input-container>
+                            <label>Права в DAX</label>
+                            <md-select name="itemDax" ng-model="item.dax">
+                                <md-option><em>--</em></md-option>
+                                <md-option ng-repeat="option in daxs.availableOptions" ng-value="option.id">
+                                    {{option.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        <!--<div class="form-group">-->
+                            <!--<label class="control-label">Права в DAX</label>-->
 
-                            <select class="form-control" name="repeatSelect" ng-model="item.dax">
-                                <option ng-repeat="option in daxs.availableOptions" value="{{option.id}}">{{option.name}}</option>
-                            </select>
-                        </div>
+                            <!--<select class="form-control" name="repeatSelect" ng-model="item.dax">-->
+                                <!--<option ng-repeat="option in daxs.availableOptions" value="{{option.id}}">{{option.name}}</option>-->
+                            <!--</select>-->
+                        <!--</div>-->
 
-
+                        <div class="well" style="margin: 30px 0">
                         <!-- P H O N E -->
-
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-model="item.phone" class="green" aria-label="Switch 5">
-                                        <!--<span ng-if="!item.phone">Телефон не нужен</span>-->
-                                        <span class="text-gray" ng-class="{'action':item.phone}">Телефон</span>
-                                    </md-switch>
-                                </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <md-switch ng-model="item.phone" class="green" aria-label="Switch 1">
+                                            <!--<span ng-if="!item.phone">Телефон не нужен</span>-->
+                                            <span class="text-gray" ng-class="{'action':item.phone}">Телефон</span>
+                                        </md-switch>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
 
-                        <!-- R E M O T E  A C C E S S -->
+                            <!-- R E M O T E  A C C E S S -->
 
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-model="item.remote" class="green" aria-label="Switch 2">
-                                        <!--<span ng-if="!item.remote">Удалённый доступ не нужен</span>-->
-                                        <span class="text-gray" ng-class="{'action':item.remote}">Удалённый доступ</span>
-                                    </md-switch>
-                                </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <md-switch ng-model="item.remote" class="green" aria-label="Switch 2">
+                                            <!--<span ng-if="!item.remote">Удалённый доступ не нужен</span>-->
+                                            <span class="text-gray" ng-class="{'action':item.remote}">Удалённый доступ</span>
+                                        </md-switch>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
 
-                        <!-- M O B I L E -->
+                            <!-- M O B I L E -->
 
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-model="item.mobile" class="green" aria-label="Switch 3">
-                                        <!--<span ng-if="!item.mobile">Мобильный не нужен</span>-->
-                                        <span class="text-gray" ng-class="{'action':item.mobile}">Корпоративный мобильный</span>
-                                    </md-switch>
-                                </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <md-switch ng-model="item.mobile" class="green" aria-label="Switch 3">
+                                            <!--<span ng-if="!item.mobile">Мобильный не нужен</span>-->
+                                            <span class="text-gray" ng-class="{'action':item.mobile}">Корпоративный мобильный</span>
+                                        </md-switch>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
 
-                        <!-- B U S S I N E S  C A R D -->
+                            <!-- B U S S I N E S  C A R D -->
 
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-model="item.bussinescard" class="green" aria-label="Switch 4">
-                                        <!--<span ng-if="!item.bussinescard">Визитки не нужны</span>-->
-                                        <span class="text-gray" ng-class="{'action':item.bussinescard}">Визитки</span>
-                                    </md-switch>
-                                </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <md-switch ng-model="item.bussinescard" class="green" aria-label="Switch 4">
+                                            <!--<span ng-if="!item.bussinescard">Визитки не нужны</span>-->
+                                            <span class="text-gray" ng-class="{'action':item.bussinescard}">Визитки</span>
+                                        </md-switch>
+                                    </label>
+                                </div>
                             </div>
+
                         </div>
+                        <!--<div class="form-group">-->
+                            <!--<div class="checkbox">-->
+                                <!--<label>-->
+                                    <!--<md-switch ng-model="item.phone" class="green" aria-label="Switch 5">-->
+                                        <!--&lt;!&ndash;<span ng-if="!item.phone">Телефон не нужен</span>&ndash;&gt;-->
+                                        <!--<span class="text-gray" ng-class="{'action':item.phone}">Телефон</span>-->
+                                    <!--</md-switch>-->
+                                <!--</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--&lt;!&ndash; R E M O T E  A C C E S S &ndash;&gt;-->
+
+                        <!--<div class="form-group">-->
+                            <!--<div class="checkbox">-->
+                                <!--<label>-->
+                                    <!--<md-switch ng-model="item.remote" class="green" aria-label="Switch 2">-->
+                                        <!--&lt;!&ndash;<span ng-if="!item.remote">Удалённый доступ не нужен</span>&ndash;&gt;-->
+                                        <!--<span class="text-gray" ng-class="{'action':item.remote}">Удалённый доступ</span>-->
+                                    <!--</md-switch>-->
+                                <!--</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--&lt;!&ndash; M O B I L E &ndash;&gt;-->
+
+                        <!--<div class="form-group">-->
+                            <!--<div class="checkbox">-->
+                                <!--<label>-->
+                                    <!--<md-switch ng-model="item.mobile" class="green" aria-label="Switch 3">-->
+                                        <!--&lt;!&ndash;<span ng-if="!item.mobile">Мобильный не нужен</span>&ndash;&gt;-->
+                                        <!--<span class="text-gray" ng-class="{'action':item.mobile}">Корпоративный мобильный</span>-->
+                                    <!--</md-switch>-->
+                                <!--</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+
+                        <!--&lt;!&ndash; B U S S I N E S  C A R D &ndash;&gt;-->
+
+                        <!--<div class="form-group">-->
+                            <!--<div class="checkbox">-->
+                                <!--<label>-->
+                                    <!--<md-switch ng-model="item.bussinescard" class="green" aria-label="Switch 4">-->
+                                        <!--&lt;!&ndash;<span ng-if="!item.bussinescard">Визитки не нужны</span>&ndash;&gt;-->
+                                        <!--<span class="text-gray" ng-class="{'action':item.bussinescard}">Визитки</span>-->
+                                    <!--</md-switch>-->
+                                <!--</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
                         <!-- S T A T U S -->
@@ -616,21 +843,57 @@
 
             <!-- С О З Д А Н О   -->
 
+
+
+
+
             <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
+
                 <div class="panel-heading">Созданы ресурсы</div>
+                <form name="createForm" novalidate enctype="multipart/form-data">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <label class="control-label">Email</label>
-                        <input name="itemEmail" ng-disabled="!edit" type="email" class="form-control" ng-model="item.email">
-                        <div class="text-danger" ng-show="userForm.itemEmail.$invalid && userForm.itemEmail.$dirty">
-                            {{getError(userForm.itemEmail.$error)}}
+
+                    <md-input-container flex>
+                        <label>Email</label>
+                        <input name="itemEmail" ng-disabled="!edit"  type="email" ng-model="item.email" >
+                        <div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>
+                            <!--<div ng-message="required" class="my-message">{{text.noEmpty}}</div>-->
+                            <!--<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>-->
+                            <div ng-message="email" class="my-message">{{text.noEmail}}</div>
+                            <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
+                            <!--<div ng-message="minlength" class="my-message">{{text.minlength}}</div>-->
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Телефон</label>
-                        <input ng-disabled="!edit" type="text" class="form-control" ng-model="item.phoneNumber">
-                    </div>
+                    </md-input-container>
+
+
+
+                    <!--<div class="form-group">-->
+                        <!--<label class="control-label">Email</label>-->
+                        <!--<input name="itemEmail" ng-disabled="!edit" type="email" class="form-control" ng-model="item.email">-->
+                        <!--<div class="text-danger" ng-show="userForm.itemEmail.$invalid && userForm.itemEmail.$dirty">-->
+                            <!--{{getError(userForm.itemEmail.$error)}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Телефон <small>(внутренний)</small></label>
+                        <input name="itemPhoneNumber" ng-disabled="!edit"  ng-model="item.phoneNumber" ng-pattern="/^[(][0-9]{3}[)][0-9]{4}$/" />
+
+                        <div class="hint" ng-show="showHints">{{text.templatePhone}}</div>
+
+                        <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert" ng-messages-multiple>
+                          asdasd  <div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>
+                        </div>
+                    </md-input-container>
+
+
+                    <!--<div class="form-group">-->
+                        <!--<label class="control-label">Телефон</label>-->
+                        <!--<input ng-disabled="!edit" type="text" class="form-control" ng-model="item.phoneNumber">-->
+                    <!--</div>-->
                 </div>
+                </form>
             </div>
 
             <!-- П О Л У Ч А Т Е Л И  П И С Е М -->

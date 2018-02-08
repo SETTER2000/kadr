@@ -42,7 +42,8 @@
     "moment-precise-range": "^1.0.1",
     "angular-sanitize": "bower-angular-sanitize#^1.6.7",
     "ng-dialog": "^1.4.0",
-    "angular-messages": "^1.6.9"
+    "angular-messages": "^1.6.9",
+    "fontawesome": "^5.0.6"
   },
   "devDependencies": {
     "angular-translate": "^2.15.0",
