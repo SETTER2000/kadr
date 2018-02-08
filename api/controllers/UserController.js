@@ -716,7 +716,7 @@ module.exports = {
      */
     findUsers: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //console.log('REG',req.param('id'));
+        console.log('REG all User',req.params.all());
         if (req.param('id')) {
             User.findOne(req.param('id'))
                 .populate('positions')

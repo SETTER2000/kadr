@@ -972,6 +972,8 @@ angular.module('EmergenceFModule')
             moment.relativeTimeThreshold('m', 60);
 
             $scope.saveEdit = function (item, isValid) {
+                console.log('item.outputEmployee:' ,item.outputEmployee);
+                if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
                 $scope.checkedValue();
                 item = reversValue(item);
 
@@ -989,8 +991,7 @@ angular.module('EmergenceFModule')
                 }
 
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
-                if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
-
+                
 
                 if (angular.isDefined(item.id)) {
                     //console.log('UPDATE item *****:', item);
