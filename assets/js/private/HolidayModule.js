@@ -134,7 +134,7 @@ angular.module('Holiday', [
         // Массив сокращенных дней недели.
         $mdDateLocaleProvider.shortDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
-
+        $mdDateLocaleProvider.firstDayOfWeek = 1;
 
 
         $mdDateLocaleProvider.formatDate = function(date) {

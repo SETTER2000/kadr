@@ -21,11 +21,11 @@ angular.module('EmergenceFModule')
              * @returns {*}
              */
             //08.02.2018 16:21
-            $scope.determinateValue = 30;
-            $interval(function() {
-                $scope.determinateValue += 1;
-                if ($scope.determinateValue > 100) $scope.determinateValue = 30;
-            }, 100, 0, true);
+            //$scope.determinateValue = 30;
+            //$interval(function() {
+            //    $scope.determinateValue += 1;
+            //    if ($scope.determinateValue > 100) $scope.determinateValue = 30;
+            //}, 100, 0, true);
 
             /**
              *
