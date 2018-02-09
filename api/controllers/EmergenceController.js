@@ -126,8 +126,8 @@ module.exports = {
         let start = moment(req.param('start')).format('YYYY-MM-DDTHH:mmZ');
 
         console.log('Create  req.param', req.param('departments'));
-        
-        Department.findOne({id:req.param('departments')[0].id}).exec((err, findDepart)=> {
+
+        Department.findOne({id: req.param('departments')[0].id}).exec((err, findDepart)=> {
             "use strict";
             if (err) return res.serverError(err);
             let recipient = sails.config.recipient.kadr;
@@ -249,7 +249,7 @@ module.exports = {
         let action = (req.param('kadrValid')) ? false : true;
         let fullName = req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName');
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
-        let sectionUrl = (req.param('worked'))?'company':'admin';
+        let sectionUrl = (req.param('worked')) ? 'company' : 'admin';
         //console.log('ALL REQUEST worked: ', req.param('worked'));
         //console.log('ALL REQQQQ: ', req.params.all());
         //console.log('REQUEST PARAM itUpdate: ', req.param('itUpdate'));
@@ -264,11 +264,12 @@ module.exports = {
                     tmpl: '<h1>Уважаемые, коллеги!</h1>' +
                     '<p> Планируется выход нового сотрудника - ' + fullName + '  в ' + findDepart.name + ' на должность ' + req.param('post') + '. </p>' +
                     '<p>Предполагаемая дата выхода - ' + moment(new Date(req.param('outputEmployee')), ['DD.MM.YYYY']).format('DD.MM.YYYY') + '. </p>' +
-                    '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/'+sectionUrl+'/emergences/edit/' + req.param('id') + '">' + fullName + '</a></p>'
+                    '<p>Ссылка на заявку -  <a href="' + sails.config.appUrl.http + '/' + sectionUrl + '/emergences/edit/' + req.param('id') + '">' + fullName + '</a></p>'
                 }];
                 let obj = {
                     section: 'Выход нового сотрудника',
                     sections: 'Выход новых сотрудников',
+                    commentFin: req.param('commentFin'),
                     name: req.param('name'),
                     post: req.param('post'),
                     room: req.param('room'),
@@ -307,6 +308,8 @@ module.exports = {
                     positions: req.param('positions'),
                     worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
                 };
+                console.log('AHO', obj.finCheck);
+
                 User.findOne({id: obj.whomUpdated})
                     .exec((err, findUser) => {
                         "use strict";
@@ -315,7 +318,9 @@ module.exports = {
                         Emergence.update(req.param('id'), obj)
                             .populate('whomCreated')
                             .populate('whomUpdated')
-                            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
+                            .populate('ahoUpdate')
+                            .populate('finUpdate')
+                            .populate('itUpdate')
                             .populate('positions')
                             .populate('departments')
                             .exec((err, objEdit) => {
@@ -378,7 +383,6 @@ module.exports = {
                                                         avatarUrl: findUser.avatarUrl
                                                     }, req);
                                                     sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: findOneEm}, req);
-                                                    console.log('RESPONSE:', findOneEm);
                                                     res.ok(findOneEm);
                                                 });
                                         }
@@ -465,52 +469,47 @@ module.exports = {
             .populate('positions')
             .populate('departments')
             .exec((err, finOneUser) => {
-            "use strict";
-            if (err) return res.serverError(err);
-            Emergence.findOne(req.param('id'))
-                .populate('positions')
-                .populate('departments')
-                .populate('whomCreated')
-                .populate('whomUpdated')
-                .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
-                .exec((err, finds) => {
-                    "use strict";
-                    if (err) return res.serverError(err);
-                    if (!finds) return res.notFound();
-                    //if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с '+req.param('year')+' годом. <a class="kadr-link"  target="_blank" href="/vacation/delete-all/'+req.param('year')+'"><i class="fa fa-link" aria-hidden="true"></i> Удалить </a>');
-                    Emergence.destroy({id: finds.id}, (err) => {
-                        if (err) return next(err);
-                        console.log('Выход нового сотрудника - удалил:', req.session.me);
-                        finds.updatedAt= new Date();
-                        console.log('Выход нового сотрудника - удалён:', finds);
-                        Emergence.find()
-                            .populate('positions')
-                            .populate('departments')
-                            .populate('whomCreated')
-                            .populate('whomUpdated')
-                            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
-                            .exec((err, findEmergence) => {
-                                if (err) return res.serverError(err);
-                                sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: false}, req);
-                                sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: false}, req);
-                                sails.sockets.broadcast('emergence', 'badges-emergence', {
-                                    badges: [finds],
-                                    action: 'удалён',
-                                    shortName: finOneUser.getShortName(),
-                                    fullName: finOneUser.getFullName(),
-                                    avatarUrl: finOneUser.avatarUrl
-                                }, req);
-                                res.ok();
-                            });
+                "use strict";
+                if (err) return res.serverError(err);
+                Emergence.findOne(req.param('id'))
+                    .populate('positions')
+                    .populate('departments')
+                    .populate('whomCreated')
+                    .populate('whomUpdated')
+                    .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
+                    .exec((err, finds) => {
+                        "use strict";
+                        if (err) return res.serverError(err);
+                        if (!finds) return res.notFound();
+                        //if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с '+req.param('year')+' годом. <a class="kadr-link"  target="_blank" href="/vacation/delete-all/'+req.param('year')+'"><i class="fa fa-link" aria-hidden="true"></i> Удалить </a>');
+                        Emergence.destroy({id: finds.id}, (err) => {
+                            if (err) return next(err);
+                            console.log('Выход нового сотрудника - удалил:', req.session.me);
+                            finds.updatedAt = new Date();
+                            console.log('Выход нового сотрудника - удалён:', finds);
+                            Emergence.find()
+                                .populate('positions')
+                                .populate('departments')
+                                .populate('whomCreated')
+                                .populate('whomUpdated')
+                                .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
+                                .exec((err, findEmergence) => {
+                                    if (err) return res.serverError(err);
+                                    sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: false}, req);
+                                    sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: false}, req);
+                                    sails.sockets.broadcast('emergence', 'badges-emergence', {
+                                        badges: [finds],
+                                        action: 'удалён',
+                                        shortName: finOneUser.getShortName(),
+                                        fullName: finOneUser.getFullName(),
+                                        avatarUrl: finOneUser.avatarUrl
+                                    }, req);
+                                    res.ok();
+                                });
+                        });
                     });
-                });
-        });
+            });
     },
-
-
-
-
-
 
 
     //

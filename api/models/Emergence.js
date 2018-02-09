@@ -18,6 +18,9 @@ module.exports = {
             defaultsTo: 'Выход новых сотрудников',
             required: true
         },
+        commentFin: {
+            type: 'string'
+        },
         action: {
             type: 'boolean',
             defaultsTo: true,

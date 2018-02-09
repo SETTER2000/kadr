@@ -28,7 +28,7 @@ module.exports = {
             .exec((err, finds) => {
                 if (err) return res.serverError(err);
                 if (!finds.length) return;
-                console.log('Cron tasks0: ', finds.length);
+                sails.log.info('Cron tasks0: ', finds.length);
                 _.forEach(finds, function (task) {
                     if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
                         User.find({action: true, fired: false}).exec((err, usersFind) => {
@@ -43,7 +43,7 @@ module.exports = {
                                 });
                                 strEmail = a.join(',');
                             }
-                            sails.log('Schedule. Email для рассылки: ', strEmail);
+                            sails.log.info('Schedule. Email для рассылки: ', strEmail);
                             strEmail = (strEmail) ? strEmail : '';
                             let options = {
                                 to: strEmail, // Кому: можно несколько получателей указать через запятую
@@ -53,7 +53,7 @@ module.exports = {
                             };
                             EmailService.sender(options, function (err) {
                                 if (err) return;
-                                console.log('Schedule. Задача выполнена в: ' + new Date());
+                                sails.log.info('Schedule. Задача выполнена в: ' + new Date());
                                 Schedule.update({id: task.id}, {
                                     worked: true,
                                     status: 'В работе'
@@ -63,7 +63,7 @@ module.exports = {
                                         if (err) return res.serverError(err);
                                         sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
                                         sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'рассылка закончена'});
-                                        console.log('UPDATE OK!');
+                                        sails.log.info('UPDATE OK!');
                                     });
                                 });
                             });
@@ -78,11 +78,11 @@ module.exports = {
                                     if (err) return res.serverError(err);
                                     sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
                                     sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'повреждён'});
-                                    return console.log('UPDATE OK+0!');
+                                    return sails.log.info('UPDATE OK+0!');
                                 });
                             });
                         } else {
-                            console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
+                            sails.log.info('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
                         }
                     }
                 });
@@ -110,7 +110,7 @@ module.exports = {
                     .exec((err, finds) => {
                         if (err) return res.serverError(err);
                         if (!finds.length) return;
-                        console.log('Cron tasks1: ', finds.length);
+                        sails.log.info('Cron tasks1: ', finds.length);
                         _.forEach(finds, function (task) {
                             if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
                                 let strEmail = '';
@@ -133,7 +133,7 @@ module.exports = {
                                 };
                                 EmailService.sender(options, function (err) {
                                     if (err) return;
-                                    console.log(taskName + ' Emergence. Задача выполнена в: ' + new Date());
+                                    sails.log.info(taskName + ' Emergence. Задача выполнена в: ' + new Date());
                                     Emergence.update({id: task.id}, {
                                         worked: true,
                                         status: 'В работе',
@@ -157,7 +157,7 @@ module.exports = {
                                                     shortName: 'server',
                                                     fullName: 'server'
                                                 });
-                                                console.log(taskName + ' UPDATE OK+1.0!');
+                                                sails.log.info(taskName + ' UPDATE OK+1.0!');
                                             });
                                     });
                                 });
@@ -185,11 +185,11 @@ module.exports = {
                                                     shortName: 'server',
                                                     fullName: 'server'
                                                 });
-                                                return console.log(taskName + ' UPDATE OK+1.1!');
+                                                return sails.log.info(taskName + ' UPDATE OK+1.1!');
                                             });
                                     });
                                 } else {
-                                    console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
+                                    sails.log.info('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(task.start));
                                 }
                             }
                         });
@@ -222,7 +222,7 @@ module.exports = {
                     .exec((err, finds) => {
                         if (err) return res.serverError(err);
                         if (!finds.length) return;
-                        console.log('Cron ' + taskName + ': ', finds.length);
+                        sails.log.info('Cron ' + taskName + ' ' + finds[0].section + ': ', finds.length);
                         let start = moment().add(2, 'minutes');
                         let recipientService = sails.config.recipient.services;
                         _.forEach(finds, function (task) {
@@ -237,9 +237,9 @@ module.exports = {
                                 strEmail = a.join(',');
                             }
 
-                            sails.log(taskName + ' Emergence. Email для рассылки службам: ', strEmail);
+                            sails.log.info(taskName + ' Emergence. Email для рассылки службам: ', strEmail);
                             strEmail = (strEmail) ? strEmail : '';
-                            if (!task.htmlData.length) return sails.log('Emergence. Cron Service:', ' Ошибка! Задача ' + taskName + ' не отработала. Нет текста для рассылки писем.');
+                            if (!task.htmlData.length) return sails.log.info('Emergence. Cron Service:', ' Ошибка! Задача ' + taskName + ' не отработала. Нет текста для рассылки писем.');
                             let options = {
                                 to: strEmail, // Кому: можно несколько получателей указать через запятую
                                 subject: ' ✔ ' + task.name, // Тема письма
@@ -248,7 +248,7 @@ module.exports = {
                             };
                             EmailService.sender(options, function (err) {
                                 if (err) return;
-                                console.log(taskName + ' Emergence. Задача выполнена в: ' + new Date());
+                                sails.log.info(taskName + ' Emergence. Задача выполнена в: ' + new Date());
                                 Emergence.update({id: task.id}, {
                                     sendService: true,
                                     status: 'В работе',
@@ -272,7 +272,7 @@ module.exports = {
                                                 shortName: 'server',
                                                 fullName: 'server'
                                             });
-                                            console.log(taskName + ' UPDATE OK+2!');
+                                            sails.log.info(taskName + ' UPDATE OK+2!');
                                         });
                                 });
                             });
@@ -287,11 +287,11 @@ module.exports = {
                             //                if (err) return res.serverError(err);
                             //                sails.sockets.broadcast('emergence', 'hello', {howdy: findsSchedule});
                             //                sails.sockets.broadcast('emergence', 'badges', {badges: upd, action: 'повреждён'});
-                            //                return console.log('UPDATE OK+!');
+                            //                return sails.log.info('UPDATE OK+!');
                             //            });
                             //        });
                             //    } else {
-                            //        console.log('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(start));
+                            //        sails.log.info('Задача: ' + task.name + '; осталось до запуска: ', moment().preciseDiff(start));
                             //    }
                             //}
                         });
@@ -307,13 +307,13 @@ module.exports = {
     //         let job = new CronJob({
     //             cronTime: task,
     //             onTick: function () {
-    //                 console.log('Задача: ' + options.name);
-    //                 console.log('Задача запущена в: ' + tsk.format("LLLL"));
-    //                 console.log('Время для Cron: ' + task);
+    //                 sails.log.info('Задача: ' + options.name);
+    //                 sails.log.info('Задача запущена в: ' + tsk.format("LLLL"));
+    //                 sails.log.info('Время для Cron: ' + task);
     //                 this.stop();
     //             },
     //             onComplete: function () {
-    //                 console.log('Задача выполнена в: ' + new Date());
+    //                 sails.log.info('Задача выполнена в: ' + new Date());
     //                 return done(null, job);
     //             },
     //             start: true,

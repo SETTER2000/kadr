@@ -101,7 +101,7 @@
 
             $scope.sort = 'lastName';
             $scope.param = 'lastName';
-            $scope.fieldName = 'Внутренний телефон';
+            $scope.fieldName = 'Внутренний телефон'; // Какой тип контакта показывать по умолчанию
             $scope.charText = '';
             $scope.searchText = '';
             $scope.page_number = 0;

@@ -1,4 +1,4 @@
-angular.module('EmergenceFModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial','ngMessages',
+angular.module('EmergenceFModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial', 'ngMessages',
         'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment', 'ngSanitize', 'ngDialog'])
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
@@ -280,5 +280,33 @@ angular.module('EmergenceFModule', ['ui.router', 'toastr', 'ngResource', 'ngMate
             return value;
         }
     })
+    .directive('xlsHtml', function () {
+        return {
+            link: function (scope, element, attributes) {
+                var data = element;
 
+                console.log('DDDCCC',element.attr("list-source"));
+
+                //          function generateTable() {
+//        var data = $('textarea[name=excel_data]').val();
+//        console.log(data);
+//        var rows = data.split("\n");
+//
+//        var table = $('<table />');
+//
+//        for(var y in rows) {
+//            var cells = rows[y].split("\t");
+//            var row = $('<tr />');
+//            for(var x in cells) {
+//                row.append('<td>'+cells[x]+'</td>');
+//            }
+//            table.append(row);
+//        }
+//
+//// Insert into DOM
+//        $('#excel_table').html(table);
+//    }
+            }
+        }
+    })
 ;

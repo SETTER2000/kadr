@@ -19,10 +19,10 @@ module.exports = {
         // Проверка подключения
         transporter.verify(function (error, success) {
             if (error) {
-                sails.log('Ошибка! Не могу подключиться к почтовому серверу.', error);
+                sails.log.warn('Ошибка! Не могу подключиться к почтовому серверу.', error);
                 return false;
             } else {
-                console.log('Подключение к почтовому серверу: Ok!');
+                sails.log.info('Подключение к почтовому серверу: Ok!');
             }
         });
 
@@ -38,42 +38,42 @@ module.exports = {
          */
         options.from = sails.config.email.from;
         options.to = (sails.config.email.development) ? sails.config.admin.email : options.to;
-        //options.bcc = sails.config.email.bcc; // скрытую копию сообщения куда отправлять
+        options.bcc = sails.config.email.bcc; // скрытую копию сообщения куда отправлять
 
 
         //// send mail with defined transport object
         transporter.sendMail(options, (error, info) => {
             if (error) {
-                console.log('ERR EMAIL SERVICE', error);
+                sails.log.warn('ERROR EMAIL SERVICE: ', error);
                 return false;
             }
 
-            //console.log('Message sent: %s', info.messageId);
+            //sails.log('Message sent: %s', info.messageId);
 
             return done();
 
             // Preview only available when sending through an Ethereal account
-            //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+            //sails.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
             // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
             // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
         });
 
         //function myFunc(arg) {
-        //    console.log(`arg was => ${arg}`);
+        //    sails.log(`arg was => ${arg}`);
         //    // send mail with defined transport object
         //    transporter.sendMail(options, (error, info) => {
         //        if (error) {
-        //            console.log('ERR EMAIL SERVICE', error);
+        //            sails.log('ERR EMAIL SERVICE', error);
         //            return done(error);
         //        }
         //
-        //        console.log('Message sent: %s', info.messageId);
+        //        sails.log('Message sent: %s', info.messageId);
         //
         //        return done();
         //
         //        // Preview only available when sending through an Ethereal account
-        //        //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        //        //sails.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
         //
         //        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
         //        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...

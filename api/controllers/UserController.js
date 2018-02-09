@@ -46,6 +46,102 @@ moment.locale('ru');
 var count = 5;
 
 module.exports = {
+
+    /**
+     * Получить всех пользователей системы
+     * @param req
+     * @param res
+     */
+    get: function (req, res) {
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
+        if (req.param('id')) {
+            User.findOne(req.param('id'))
+                .populate('positions')
+                .populate('vacations')
+                .populate('interfaces')
+                .populate('matchings')
+                .populate('announced')
+                .populate('intersections')
+                .populate('iagree')
+                .exec(function foundUser(err, user) {
+                    if (err) return res.serverError(err);
+                    if (!user) return res.notFound();
+                    //console.log('REG USER',user);
+                    res.ok(user);
+
+                });
+        }
+        else {
+            if (!_.isUndefined(req.param('where')) && req.param('char').length > 0) {
+                var q = {
+                    limit: req.param('limit'),
+                    sort: req.param('sort')
+                };
+                var y = {};
+                y[req.param('property')] = {'like': req.param('char')};
+                q.where = y;
+                //
+                //console.log('REG all+ User',req.params.all());
+                //console.log('QUERY', q);
+                //
+                User.find(q)
+                    .populate('positions')
+                    .populate('vacations')
+                    .populate('interfaces')
+                    .populate('matchings')
+                    .populate('announced')
+                    .populate('intersections')
+                    .populate('iagree')
+                    .exec(function foundUser(err, users) {
+                        if (err) return res.serverError(err);
+                        if (!users) return res.notFound();
+
+                        //console.log('OK 0', users[0]);
+                        //console.log('OK length', users.length);
+                        return res.ok(users);
+                    });
+            } else {
+                
+                User.find()
+                    .populate('positions')
+                    .populate('vacations')
+                    .populate('interfaces')
+                    .populate('matchings')
+                    .populate('announced')
+                    .populate('intersections')
+                    .populate('iagree')
+                    .exec(function foundUser(err, users) {
+                        if (err) return res.serverError(err);
+                        if (!users) return res.notFound();
+                        res.ok(users);
+                    });
+            }
+        }
+    },
+
+
+    /**
+     * Получить конкретного пользователя
+     * @param req
+     * @param res
+     */
+    findOne: function (req, res) {
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.findOne(req.param('id'))
+            .populate('positions')
+            .populate('interfaces')
+            .populate('matchings')
+            .populate('announced')
+            .populate('iagree')
+            .exec(function foundUser(err, user) {
+                if (err) return res.serverError(err);
+                if (!user) return res.notFound();
+                res.ok(user);
+            });
+    },
+
+
     /**
      * Авторизация. Проверка логина и пароля.
      *
@@ -141,7 +237,7 @@ module.exports = {
                  */
                 clientLDAP.bind(user.login + '@' + sails.config.admin.company, req.param('password'), function (err) {
                     if (err) {
-                        sails.log('LDAP ошибка входа: ', user.login + '@' + sails.config.admin.company + ' ' + req.param('password'));
+                        sails.log.warn('LDAP ошибка входа: ', user.login + '@' + sails.config.admin.company + ' ' + req.param('password'));
                         clientLDAP.unbind(function () {
                             clientLDAP.destroy();
                         });
@@ -166,7 +262,7 @@ module.exports = {
                         }
 
                         ldapUser.on('searchEntry', function (entry) {
-                            console.log('Вход в систему: ' + new Date() + ', ' +
+                            sails.log.info('Вход в систему: ' + new Date() + ', ' +
                                 JSON.stringify(entry.object.displayName + ', ' +
                                     entry.object.department + ', ' + entry.object.title + ', ' +
                                     entry.object.telephoneNumber + ', ' + entry.object.mail + ', ' +
@@ -288,7 +384,7 @@ module.exports = {
      * Поиск руководителя в LDAP
      */
     bossLDAP: function (req, res) {
-        sails.log('Поиск руководителя в LDAP: ', req.param('lastName'));
+        sails.log.info('Поиск руководителя в LDAP для сотрудника: ', req.param('lastName') +' '+ req.param('firstName') +' '+ req.param('patronymicName'));
         const clientSearchLDAP = ldap.createClient({
             url: sails.config.ldap.uri
         });
@@ -307,7 +403,7 @@ module.exports = {
          */
         clientSearchLDAP.bind(sails.config.ldap.username, sails.config.ldap.password, function (err) {
             if (err) {
-                sails.log('searchLDAP ошибка входа: ', sails.config.ldap.username + ' ' + sails.config.ldap.password);
+                sails.log.warn('searchLDAP ошибка входа: ', sails.config.ldap.username + ' ' + sails.config.ldap.password);
                 clientSearchLDAP.unbind(function () {
                     clientSearchLDAP.destroy();
                 });
@@ -333,11 +429,11 @@ module.exports = {
              */
             clientSearchLDAP.search(sails.config.ldap.dn, opts, function (err, ldapUser) {
                 if (err) {
-                    console.log('searchLDAP ошибка поиска: ', err);
+                    sails.log.warn('searchLDAP ошибка поиска: ', err);
                     return res.negotiate(err);
                 }
                 ldapUser.on('searchEntry', function (entry) {
-                    console.log('entry: ' + JSON.stringify(entry.object.manager));
+                    sails.log.info('Найден руководитель в LDAP: ' + JSON.stringify(entry.object.manager));
                     empl = entry.object;
                 });
 
@@ -516,7 +612,7 @@ module.exports = {
                             //gravatarUrl: gravatarUrl
                         }, function (err, newUser) {
                             if (err) return res.negotiate(err);
-                            sails.log('Создан новый пользователь с логином:' + newUser.login);
+                            sails.log.info('Создан новый пользователь с логином:' + newUser.login);
 
                             newUser.interfaces.add(createInterface.id);
                             newUser.save(function (err) {
@@ -543,11 +639,11 @@ module.exports = {
             //if (err) return res.view('public/header', {layout: 'homepage'});
             if (err) return res.negotiate(err);
             if (!user) {
-                sails.log.verbose('Сессия относится к пользователю, который больше не существует/');
+                sails.log.warn('Сессия относится к пользователю, который больше не существует/');
                 return res.backToHomePage();
             }
             req.session.me = null;
-            console.log('Выход из системы: ', new Date() + ', ' + user.lastName + ' ' + user.firstName + ' ' + user.patronymicName + ', ' + user.email);
+            sails.log.info('Выход из системы: ', new Date() + ', ' + user.lastName + ' ' + user.firstName + ' ' + user.patronymicName + ', ' + user.email);
             return res.backToHomePage();
         });
     },
@@ -689,90 +785,7 @@ module.exports = {
         });
     },
 
-    /**
-     * Получить конкретного пользователя
-     * @param req
-     * @param res
-     */
-    findOne: function (req, res) {
-        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        User.findOne(req.param('id'))
-            .populate('positions')
-            .populate('interfaces')
-            .populate('matchings')
-            .populate('announced')
-            .populate('iagree')
-            .exec(function foundUser(err, user) {
-                if (err) return res.serverError(err);
-                if (!user) return res.notFound();
-                res.ok(user);
-            });
-    },
 
-    /**
-     * Получить всех пользователей системы
-     * @param req
-     * @param res
-     */
-    findUsers: function (req, res) {
-        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('REG all User',req.params.all());
-        if (req.param('id')) {
-            User.findOne(req.param('id'))
-                .populate('positions')
-                .populate('vacations')
-                .populate('interfaces')
-                .populate('matchings')
-                .populate('announced')
-                .populate('intersections')
-                .populate('iagree')
-                .exec(function foundUser(err, user) {
-                    if (err) return res.serverError(err);
-                    if (!user) return res.notFound();
-                    //console.log('REG USER',user);
-                    res.ok(user);
-
-                });
-        }
-        else {
-            if (!_.isUndefined(req.param('where')) && req.param('char').length > 0) {
-                var q = {
-                    limit: req.params.limit,
-                    sort: req.params.sort
-                };
-                var y = {};
-                y[req.param('property')] = {'like': req.param('char')};
-                q.where = y;
-                User.find(q)
-                    .populate('positions')
-                    .populate('vacations')
-                    .populate('interfaces')
-                    .populate('matchings')
-                    .populate('announced')
-                    .populate('intersections')
-                    .populate('iagree')
-                    .exec(function foundUser(err, users) {
-                        if (err) return res.serverError(err);
-                        if (!users) return res.notFound();
-                        return res.ok(users);
-                    });
-            } else {
-                User.find()
-                    .populate('positions')
-                    .populate('vacations')
-                    .populate('interfaces')
-                    .populate('matchings')
-                    .populate('announced')
-                    .populate('intersections')
-                    .populate('iagree')
-                    .exec(function foundUser(err, users) {
-                        if (err) return res.serverError(err);
-                        if (!users) return res.notFound();
-                        res.ok(users);
-                    });
-            }
-        }
-    },
 
     /**
      * Показать пользователя
@@ -1148,7 +1161,7 @@ module.exports = {
             if (!findOne) return res.badRequest();
             if (findOne.switchAdmin) {
                 let admin = (findOne.admin) ? false : true;
-                sails.log('Переключение режима сотрудник (false)/admin (true): '+ new Date(), admin );
+                sails.log.info('Переключение режима сотрудник (false)/admin (true): '+ new Date(), admin );
                 User.update({id: req.session.me}, {
                     admin: admin
                 }).exec(function (err, update) {
@@ -1159,7 +1172,7 @@ module.exports = {
 
             if (findOne.switchKadr) {
                 let kadr = (findOne.kadr) ? false : true;
-                sails.log('Переключение режима сотрудник (false)/kadr (true): '+ new Date(), kadr);
+                sails.log.info('Переключение режима сотрудник (false)/kadr (true): '+ new Date(), kadr);
                 User.update({id: req.session.me}, {
                     kadr: kadr
                 }).exec(function (err, update) {
@@ -1498,7 +1511,7 @@ module.exports = {
     addAnnounced: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         //console.log('req.param(matching add):', req.param('matching'));
-        console.log('ОПОВЕЩВАЕМЫЙ', req.param('value'));
+        sails.log.info('Добавлен оповещаемый: ', req.param('value'));
         User.findOne(req.param('id'))
             .populate('announced')
             .exec(function (err, findOneUser) {

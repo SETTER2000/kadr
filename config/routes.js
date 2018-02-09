@@ -192,10 +192,10 @@ module.exports.routes = {
      * User
      */
     'POST /users': 'UserController.createUser',
-    'GET /users': 'UserController.findUsers',
+    'GET /users': 'UserController.get',
     'PUT /users/changePassword': 'UserController.changePassword',
 
-    'GET /users/:id': 'UserController.findUsers',
+    'GET /users/:id': 'UserController.get',
     'DELETE /users/:id': 'UserController.destroy',
     'PUT /users/:id': 'UserController.update',
 

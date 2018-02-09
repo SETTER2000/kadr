@@ -660,6 +660,23 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <table class="table">
+                                <tr >
+                                    <td colspan="3">
+                                        <md-input-container class="md-block">
+                                            <label>Информация по предоставленному оборудованию</label>
+                            <textarea ng-disabled="(item.kadrValid || me.kadr)" name="itemCommentFin" required  ng-model="item.commentFin"
+                                      ng-maxlength="maxLengthFin"
+                                      md-maxlength="maxLengthFin"
+                                      ng-minlength="minLength"
+                                      rows="1" md-select-on-focus></textarea>
+                                            <div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>
+                                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                                <div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>
+                                            </div>
+                                        </md-input-container>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td width="10px">
                                         <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck"

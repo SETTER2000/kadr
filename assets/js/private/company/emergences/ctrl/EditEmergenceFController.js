@@ -70,10 +70,11 @@ angular.module('EmergenceFModule')
                 emailPattern: 'Не корректный email.',
                 minlengthServer: 'Странное имя для руководителя!?',
                 minlength: "Не менее 3 букв должно быть.",
+                minlengthFin: "Не менее 10 букв должно быть.",
                 noEmail: "Не корректный email.",
                 maxlength: "Много букв!",
                 textPhone: '- Пожалуйста, введите корректно номер телефона.',
-                templatePhone:'(###)####'
+                templatePhone: '(###)####'
             };
             var info = {
                 changed: 'Изменения сохранены!',
@@ -112,7 +113,7 @@ angular.module('EmergenceFModule')
 
             $scope.ctrl = {
                 minDate: new Date(),
-                maxDate: new Date(moment().add(2,'months'))
+                maxDate: new Date(moment().add(2, 'months'))
             };
 
 
@@ -123,6 +124,7 @@ angular.module('EmergenceFModule')
             //$scope.emailPattern = new RegExp(pattern);
             $scope.minLength = 3;
             $scope.maxLength = 20;
+            $scope.maxLengthFin = 1000;
             $scope.maxLengthPost = 40;
             $scope.maxlengthTextarea = 150;
 
@@ -904,6 +906,31 @@ angular.module('EmergenceFModule')
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
 
+            $scope.excelData='';
+//            $scope.generateTable = function (excelData) {
+//                //var data = $('textarea[name=excel_data]').val();
+//
+//
+//                console.log(excelData);
+//                var rows = excelData.split("\n");
+//
+//                $scope.bindHtml = '<table />';
+//                //var table = $('<table />');
+//
+//                for (var y in rows) {
+//                    var cells = rows[y].split("\t");
+//                    var row = '<tr />';
+//                    for (var x in cells) {
+//                        row.append('<td>' + cells[x] + '</td>');
+//                    }
+//                    $scope.bindHtml.append(row);
+//                }
+//
+//// Insert into DOM
+////                $('#excel_table').html(table);
+//            };
+
+
             //$scope.userUpdateServiceAho = function () {
             //    $scope.item.ahoUpdate  = $scope.me.id;
             //    $scope.item.$update();
@@ -911,9 +938,15 @@ angular.module('EmergenceFModule')
             //};
             //
             $scope.saveEditFin = function (item, isValid) {
+                if (!isValid) {
+                    $scope.item.finCheck = false;
+                    return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
+                }
                 item.finUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
-                $state.go('home.company.emergences', toastr.success(info.changed));
+                //$state.apply();
+                //toastr.success(info.changed);
+                //$state.go('home.company.emergences', toastr.success(info.changed));
             };
 
             $scope.saveEditAho = function (item, isValid) {
@@ -972,31 +1005,40 @@ angular.module('EmergenceFModule')
             moment.relativeTimeThreshold('m', 60);
 
             $scope.saveEdit = function (item, isValid) {
-                console.log('item.outputEmployee:' ,item.outputEmployee);
+                console.log('item.outputEmployee:', item.outputEmployee);
+
+                console.log('isValid:', isValid);
+
+                if (!item.finCheck || !angular.isDefined(item.commentFin)) {
+                    item.commentFin = '';
+                    item.finCheck = false;
+                }
+
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
                 $scope.checkedValue();
                 item = reversValue(item);
 
                 //console.log('isValid object:', isValid);
                 if (isValid) {
-                    $state.go('home.company.emergences');
+                    //$state.go('home.company.emergences');
                     //        //$scope.refresh();
-                            toastr.success(info.changed);
+                    toastr.success(info.changed);
                     $scope.message = item.name + " " + item.email;
                 }
                 else {
                     $scope.message = "Error";
                     $scope.showError = true;
-                    return;
+                    console.log('cddd');
+                    return false;
                 }
 
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
-                
+
 
                 if (angular.isDefined(item.id)) {
                     //console.log('UPDATE item *****:', item);
 
-               item.$update({id: item.id}, item);
+                    item.$update({id: item.id}, item);
 
                     //item.$update({id:item.id},item, function (success) {
                     //        $state.go('home.company.emergences');
