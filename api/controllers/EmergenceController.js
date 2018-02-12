@@ -251,7 +251,7 @@ module.exports = {
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
         let sectionUrl = (req.param('worked')) ? 'company' : 'admin';
         //console.log('ALL REQUEST worked: ', req.param('worked'));
-        //console.log('ALL REQQQQ: ', req.params.all());
+        console.log('ALL REQQQQ: ', req.params.all());
         //console.log('REQUEST PARAM itUpdate: ', req.param('itUpdate'));
         Department.findOne({id: req.param('departments')[0].id})
             .exec((err, findDepart)=> {
@@ -280,6 +280,7 @@ module.exports = {
                     startKadr: req.param('startKadr'),
                     kadrValid: req.param('kadrValid'),
                     endKadr: req.param('endKadr'),
+                    //commentItArr:[], // очистить массив сообщений
                     finCheck: req.param('finCheck'),
                     ahoCheck: req.param('ahoCheck'),
                     itCheck: req.param('itCheck'),
@@ -308,7 +309,8 @@ module.exports = {
                     positions: req.param('positions'),
                     worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
                 };
-                console.log('AHO', obj.finCheck);
+
+                if (req.param('commentIt')) {obj.commentItArr = req.param('commentItArr');}
 
                 User.findOne({id: obj.whomUpdated})
                     .exec((err, findUser) => {

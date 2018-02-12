@@ -706,18 +706,39 @@
             <form name="finForm" novalidate
                   ng-submit="saveEdit(item, finForm.$valid)" enctype="multipart/form-data">
                 <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
-                    <div class="panel-heading"> Финансовый отдел</div>
-                    <div class="panel-body">
+                    <div class="panel-heading">
+                        Финансовый отдел
+                        <span ng-click="shoFin()" ng-if="item.commentFin" style="padding-top: 3px" class="pull-right glyphicon"
+                              ng-class="{'glyphicon-menu-down':hideFin, 'glyphicon-menu-up':!hideFin}"></span>
+                    </div>
+
+                    <div class="panel-body drop-length">
                         <div class="form-group">
                             <div class="checkbox">
                                 <table class="table">
-
                                     <tr>
+                                        <td width="10px">
+                                            <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" title="{{titleFinCheck}}"
+                                                         ng-change="saveEditFin(item, finForm.$valid)"
+                                                         aria-label="Checkbox 1"
+                                                         class="green md-align-top-left" flex></md-checkbox>
+                                        </td>
+                                        <td>
+                                            <span ng-if="!item.finCheck">{{titles.noCheck}}   </span>
+                                            <span ng-if="item.finCheck">{{titles.check}} </span>
+                                        </td>
+                                        <td class="pull-right">
+                                            <span ng-if="item.finUpdate" class="text-right">
+                                                <md-tooltip md-direction="top">{{amended}}</md-tooltip>
+                                                {{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>
+                                        </td>
+                                    </tr>
+                                    <tr ng-hide="(item.commentFin && hideFin)">
                                         <td colspan="3">
                                             <md-input-container class="md-block">
                                                 <label>Информация по предоставленному оборудованию </label>
                             <textarea name="itemCommentFin" required ng-model="item.commentFin"
-                                      placeholder="вставьте сюда скопированную таблицу Excl"
+                                      placeholder="вставьте сюда скопированную таблицу Excl и поставьте отметку о выполнение"
                                       ng-maxlength="maxLengthFin"
                                       md-maxlength="maxLengthFin"
                                       ng-minlength="minLength"
@@ -730,45 +751,35 @@
                                             </md-input-container>
                                         </td>
                                     </tr>
-                                    <tr>
+                                </table>
+
+                                <table class="table">
+
+                                    <tr ng-if="item.commentFin">
                                         <td colspan="5">
 
 
-                                            <h4>Вставьте скопированную таблицу Excl:</h4>
-                                            <textarea  ng-model="item.commentFin" ></textarea><br>
+                                            <!--<h4>Вставьте скопированную таблицу Excl:</h4>-->
+                                            <!--<textarea  ng-model="item.commentFin" ></textarea><br>-->
 
-                                         <xls-html list-source="pbdpfgdf"></xls-html>
+                                            <!--<div xls-html="item" property="commentFin"></div>-->
+                                            <xls-html-table dt-item="item.commentFin" header-tab="text.headerTab"></xls-html-table>
                                             <!--<button type="button" ng-click="generateTable(excelData)" class="btn btn-default">XLS to HTML</button>-->
                                             <!--<input type="button" onclick="javascript:generateTable()" value="Genereate Table"/>-->
-                                            <br><br>
 
-                                            <hr>
-                                            <p ng-bind-html="bindHtml"></p>
+                                            <!--<hr>-->
+                                            <!--<p ng-bind-html="bindHtml"></p>-->
                                             <!--<div id="excel_table"></div>-->
 
                                         </td>
                                     </tr>
                                     <!--<tr>-->
-                                        <!--<td colspan="3">-->
-                                            <!--<pre>{{item.commentFin}}</pre>-->
-                                            <!--<p ng-bind-html="item.commentFin"></p>-->
-                                        <!--</td>-->
+                                    <!--<td colspan="3">-->
+                                    <!--<pre>{{item.commentFin}}</pre>-->
+                                    <!--<p ng-bind-html="item.commentFin"></p>-->
+                                    <!--</td>-->
                                     <!--</tr>-->
-                                    <tr>
-                                        <td width="10px">
-                                            <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck"
-                                                         ng-change="saveEditFin(item, finForm.$valid)"
-                                                         aria-label="Checkbox 1"
-                                                         class="green md-align-top-left" flex></md-checkbox>
-                                        </td>
-                                        <td>
-                                            <span ng-if="!item.finCheck">{{titles.noCheck}}   </span>
-                                            <span ng-if="item.finCheck">{{titles.check}} </span>
-                                        </td>
-                                        <td class="pull-right">
-                                            <span ng-if="item.finUpdate" class="text-right">{{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>
-                                        </td>
-                                    </tr>
+
                                 </table>
                                 <!--<label>-->
                                 <!--&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.finCheck" aria-label="Switch 4">&ndash;&gt;-->
@@ -812,7 +823,8 @@
                                         <span ng-if="item.ahoCheck">{{titles.check}} </span>
                                     </td>
                                     <td class="pull-right">
-                                        <span ng-if="item.ahoUpdate" class="text-right">{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span>
+                                        <span ng-if="item.ahoUpdate" class="text-right"><md-tooltip md-direction="top">{{amended}}
+                                        </md-tooltip>{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span>
                                     </td>
                                 </tr>
 
@@ -826,156 +838,242 @@
 
 
             <!-- IT  В Ы П О Л Н Е Н О   -->
+            <form name="itForm" novalidate
+                  ng-submit="saveEdit(item, itForm.$valid)" enctype="multipart/form-data">
+                <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
+                    <div class="panel-heading">IT</div>
+                    <div class="panel-body ">
+                        <form name="createForm" novalidate enctype="multipart/form-data">
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <table class="table">
+                                        <tr>
+                                            <td width="10px">
+                                                <md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck"
+                                                             ng-change="saveEditIt(item, userForm.$valid)"
+                                                             aria-label="Checkbox 3"
+                                                             class="green md-align-top-left" flex></md-checkbox>
+                                            </td>
+                                            <td>
+                                                <span ng-if="!item.itCheck">{{titles.noCheck}}   </span>
+                                                <span ng-if="item.itCheck">{{titles.check}} </span>
+                                            </td>
+                                            <td class="pull-right">
+                                        <span ng-if="item.itUpdate" class="text-right"><md-tooltip md-direction="top">{{amended}}
+                                        </md-tooltip>{{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <md-input-container flex>
+                                                    <label>Email</label>
+                                                    <input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">
+                                                    <div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>
+                                                        <!--<div ng-message="required" class="my-message">{{text.noEmpty}}</div>-->
+                                                        <!--<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>-->
+                                                        <div ng-message="email" class="my-message">{{text.noEmail}}</div>
+                                                        <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
+                                                        <!--<div ng-message="minlength" class="my-message">{{text.minlength}}</div>-->
+                                                    </div>
+                                                </md-input-container>
+                                            </td>
+                                            <td>
+                                                <md-input-container flex>
+                                                    <label>Внутренний телефон
 
-            <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
-                <div class="panel-heading">IT</div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <table class="table">
-                                <tr>
-                                    <td width="10px">
-                                        <md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck"
-                                                     ng-change="saveEditIt(item, userForm.$valid)"
-                                                     aria-label="Checkbox 3"
-                                                     class="green md-align-top-left" flex></md-checkbox>
-                                    </td>
-                                    <td>
-                                        <span ng-if="!item.itCheck">{{titles.noCheck}}   </span>
-                                        <span ng-if="item.itCheck">{{titles.check}} </span>
-                                    </td>
-                                    <td class="pull-right">
-                                        <span ng-if="item.itUpdate" class="text-right">{{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>
-                                    </td>
-                                </tr>
-                            </table>
-                            <!--<label>-->
-                            <!--&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Switch 4">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.check}} нет</span>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}} да</span>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</md-switch>&ndash;&gt;-->
-                            <!--<md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Checkbox 1"-->
-                            <!--class="green md-align-top-left" flex>-->
-                            <!--<span ng-if="!item.itCheck">{{titles.noCheck}}</span>-->
-                            <!--<span ng-if="item.itCheck">{{titles.check}}</span>-->
-                            <!--</md-checkbox>-->
-                            <!--</label>-->
+                                                    </label>
+                                                    <input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"
+                                                           ng-pattern="/^[0-9]{4}$/"/>
+
+                                                    <!--<div class="hint" style="color: #9a9a9a" ng-show="showHints">{{text.templatePhone}}</div>-->
+
+                                                    <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert"
+                                                         ng-messages-multiple>
+                                                        <div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>
+                                                    </div>
+                                                </md-input-container>
+                                            </td>
+                                        </tr>
+                                        <!--<tr>-->
+                                            <!--<td colspan="10">-->
+                                                <!--<md-input-container flex>-->
+                                                    <!--<label>Телефон-->
+                                                        <!--<small>(внутренний)</small>-->
+                                                    <!--</label>-->
+                                                    <!--<input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"-->
+                                                           <!--ng-pattern="/^[0-9]{4}$/"/>-->
+
+                                                    <!--<div class="hint" ng-show="showHints">{{text.templatePhone}}</div>-->
+
+                                                    <!--<div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert"-->
+                                                         <!--ng-messages-multiple>-->
+                                                        <!--<div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>-->
+                                                    <!--</div>-->
+                                                <!--</md-input-container>-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+                                        <tr>
+                                            <td colspan="10">
+                                                <md-input-container class="md-block">
+                                                    <label>Комментарий </label>
+                            <textarea name="itemCommentIt" ng-model="item.commentIt"
+                                      placeholder="Добавьте свой комментарий"
+                                      ng-maxlength="maxLengthIt"
+                                      md-maxlength="maxLengthIt"
+                                      ng-minlength="minLength"
+                                      rows="1" md-select-on-focus></textarea>
+                                                    <div ng-messages="itForm.itemCommentIt.$error" role="alert" ng-messages-multiple>
+                                                        <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                                        <div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>
+                                                    </div>
+                                                </md-input-container>
+                                                <!--<ul class="list-group" ng-repeat="itm in item.commentItArr ">-->
+                                                <!--<li class="list-group-item"  track by $index>-->
+                                                <!--{{itm}}-->
+                                                <!--</li>-->
+                                                <!--</ul>-->
+
+                                                <md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">
+                                                    <img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}" title="{{itm.fio}}"/>
+                                                    <div class="md-list-item-text" layout="column">
+                                                        <!--<h3>{{ item.who }}</h3>-->
+                                                        <p>{{ itm.comment}} </p>
+                                                        <small> <em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>
+                                                    </div>
+                                                </md-list-item>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <!--<label>-->
+                                    <!--&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Switch 4">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.check}} нет</span>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}} да</span>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</md-switch>&ndash;&gt;-->
+                                    <!--<md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Checkbox 1"-->
+                                    <!--class="green md-align-top-left" flex>-->
+                                    <!--<span ng-if="!item.itCheck">{{titles.noCheck}}</span>-->
+                                    <!--<span ng-if="item.itCheck">{{titles.check}}</span>-->
+                                    <!--</md-checkbox>-->
+                                    <!--</label>-->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <!-- H E L P - D E S K  В Ы П О Л Н Е Н О   -->
+
+                <!--<div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.hdCheck}">-->
+                <!--<div class="panel-heading">Help-Desk</div>-->
+                <!--<div class="panel-body">-->
+                <!--<div class="form-group">-->
+                <!--<div class="checkbox">-->
+                <!--<label>-->
+                <!--<md-switch ng-disabled="item.kadrValid" ng-model="item.hdCheck" aria-label="Switch 4">-->
+                <!--<span ng-if="!item.hdCheck">{{titles.check}} нет</span>-->
+                <!--<span ng-if="item.hdCheck">{{titles.check}} да</span>-->
+                <!--</md-switch>-->
+                <!--</label>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</div>-->
+
+
+                <!-- С О З Д А Н О   -->
+
+
+                <!--<div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">-->
+
+                <!--<div class="panel-heading">Созданы ресурсы</div>-->
+                <!--<form name="createForm" novalidate enctype="multipart/form-data">-->
+                <!--<div class="panel-body">-->
+
+                <!--<md-input-container flex>-->
+                <!--<label>Email</label>-->
+                <!--<input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">-->
+                <!--<div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>-->
+                <!--&lt;!&ndash;<div ng-message="required" class="my-message">{{text.noEmpty}}</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>&ndash;&gt;-->
+                <!--<div ng-message="email" class="my-message">{{text.noEmail}}</div>-->
+                <!--&lt;!&ndash;<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;<div ng-message="minlength" class="my-message">{{text.minlength}}</div>&ndash;&gt;-->
+                <!--</div>-->
+                <!--</md-input-container>-->
+
+
+                <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+                <!--&lt;!&ndash;<label class="control-label">Email</label>&ndash;&gt;-->
+                <!--&lt;!&ndash;<input name="itemEmail" ng-disabled="!edit" type="email" class="form-control" ng-model="item.email">&ndash;&gt;-->
+                <!--&lt;!&ndash;<div class="text-danger" ng-show="userForm.itemEmail.$invalid && userForm.itemEmail.$dirty">&ndash;&gt;-->
+                <!--&lt;!&ndash;{{getError(userForm.itemEmail.$error)}}&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+
+                <!--<md-input-container class="md-block" flex-gt-sm>-->
+                <!--<label>Телефон-->
+                <!--<small>(внутренний)</small>-->
+                <!--</label>-->
+                <!--<input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"-->
+                <!--ng-pattern="/^[(][0-9]{3}[)][0-9]{4}$/"/>-->
+
+                <!--<div class="hint" ng-show="showHints">{{text.templatePhone}}</div>-->
+
+                <!--<div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert" ng-messages-multiple>-->
+                <!--asdasd-->
+                <!--<div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>-->
+                <!--</div>-->
+                <!--</md-input-container>-->
+
+
+                <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+                <!--&lt;!&ndash;<label class="control-label">Телефон</label>&ndash;&gt;-->
+                <!--&lt;!&ndash;<input ng-disabled="!edit" type="text" class="form-control" ng-model="item.phoneNumber">&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                <!--</div>-->
+                <!--</form>-->
+                <!--</div>-->
+
+                <!-- П О Л У Ч А Т Е Л И  П И С Е М -->
+                <div ng-if="false" class="row">
+                    <div class="col-md-12">
+                        <h4>Адресаты</h4>
+                        <div ng-controller="ListFController" class="form-group ">
+                            <label class="control-label" ng-bind="items[0].sc()"></label>
+                            <span ng-if="me.admin">{{filtered.length}}</span>
+                            <select ng-disabled="edit" class="form-control" ng-model="item.recipient" multiple>
+                                <option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )"
+                                        value="{{option.id}}">
+                                    {{option.getFullName()}}
+                                </option>
+                            </select>
+
                         </div>
                     </div>
                 </div>
-            </div>
 
+                <!-- Ш А Б Л О Н Ы  П И С Е М -->
+                <div class="row" ng-if="(item.start && !edit)">
+                    <div class="col-md-12">
+                        <!-- У В Е Д О М Л Е Н И Е  О  Н А Ч А Л Е  С Б О Р А  И Н Ф О Р М А Ц И И -->
 
-            <!-- H E L P - D E S K  В Ы П О Л Н Е Н О   -->
-
-            <!--<div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.hdCheck}">-->
-            <!--<div class="panel-heading">Help-Desk</div>-->
-            <!--<div class="panel-body">-->
-            <!--<div class="form-group">-->
-            <!--<div class="checkbox">-->
-            <!--<label>-->
-            <!--<md-switch ng-disabled="item.kadrValid" ng-model="item.hdCheck" aria-label="Switch 4">-->
-            <!--<span ng-if="!item.hdCheck">{{titles.check}} нет</span>-->
-            <!--<span ng-if="item.hdCheck">{{titles.check}} да</span>-->
-            <!--</md-switch>-->
-            <!--</label>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-
-
-            <!-- С О З Д А Н О   -->
-
-
-            <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':(item.email && item.phoneNumber)}">
-
-                <div class="panel-heading">Созданы ресурсы</div>
-                <form name="createForm" novalidate enctype="multipart/form-data">
-                    <div class="panel-body">
-
-                        <md-input-container flex>
-                            <label>Email</label>
-                            <input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">
-                            <div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>
-                                <!--<div ng-message="required" class="my-message">{{text.noEmpty}}</div>-->
-                                <!--<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>-->
-                                <div ng-message="email" class="my-message">{{text.noEmail}}</div>
-                                <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
-                                <!--<div ng-message="minlength" class="my-message">{{text.minlength}}</div>-->
+                        <form class="form-horizontal" ng-show="comment">
+                            <div class="form-group animate-if">
+                                <label class="col-sm-6 control-label">Шаблон письма о начале сбора информации выхода нового
+                                    сотрудника: </label>
+                                <div class="col-sm-2">
+                                    <select class="form-control size-xs" ng-model="item.htmlData[0]"
+                                            ng-options="option.name for option in examples track by option.tmpl"
+                                    ></select>
+                                </div>
                             </div>
-                        </md-input-container>
+                        </form>
 
-
-                        <!--<div class="form-group">-->
-                        <!--<label class="control-label">Email</label>-->
-                        <!--<input name="itemEmail" ng-disabled="!edit" type="email" class="form-control" ng-model="item.email">-->
-                        <!--<div class="text-danger" ng-show="userForm.itemEmail.$invalid && userForm.itemEmail.$dirty">-->
-                        <!--{{getError(userForm.itemEmail.$error)}}-->
-                        <!--</div>-->
-                        <!--</div>-->
-
-
-                        <md-input-container class="md-block" flex-gt-sm>
-                            <label>Телефон
-                                <small>(внутренний)</small>
-                            </label>
-                            <input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"
-                                   ng-pattern="/^[(][0-9]{3}[)][0-9]{4}$/"/>
-
-                            <div class="hint" ng-show="showHints">{{text.templatePhone}}</div>
-
-                            <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert" ng-messages-multiple>
-                                asdasd
-                                <div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>
-                            </div>
-                        </md-input-container>
-
-
-                        <!--<div class="form-group">-->
-                        <!--<label class="control-label">Телефон</label>-->
-                        <!--<input ng-disabled="!edit" type="text" class="form-control" ng-model="item.phoneNumber">-->
-                        <!--</div>-->
-                    </div>
-                </form>
-            </div>
-
-            <!-- П О Л У Ч А Т Е Л И  П И С Е М -->
-            <div ng-if="false" class="row">
-                <div class="col-md-12">
-                    <h4>Адресаты</h4>
-                    <div ng-controller="ListFController" class="form-group ">
-                        <label class="control-label" ng-bind="items[0].sc()"></label>
-                        <span ng-if="me.admin">{{filtered.length}}</span>
-                        <select ng-disabled="edit" class="form-control" ng-model="item.recipient" multiple>
-                            <option ng-repeat="option in filtered=(items | filter:{fired:false} | orderBy: 'lastName' )"
-                                    value="{{option.id}}">
-                                {{option.getFullName()}}
-                            </option>
-                        </select>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ш А Б Л О Н Ы  П И С Е М -->
-            <div class="row" ng-if="(item.start && !edit)">
-                <div class="col-md-12">
-                    <!-- У В Е Д О М Л Е Н И Е  О  Н А Ч А Л Е  С Б О Р А  И Н Ф О Р М А Ц И И -->
-
-                    <form class="form-horizontal" ng-show="comment">
-                        <div class="form-group animate-if">
-                            <label class="col-sm-6 control-label">Шаблон письма о начале сбора информации выхода нового сотрудника: </label>
-                            <div class="col-sm-2">
-                                <select class="form-control size-xs" ng-model="item.htmlData[0]"
-                                        ng-options="option.name for option in examples track by option.tmpl"
-                                ></select>
-                            </div>
-                        </div>
-                    </form>
-
-                    <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch
-                         on="item.htmlData[0].name">
+                        <div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch
+                             on="item.htmlData[0].name">
                          <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl"
                                    style="width: 100%; height: 120px; border: none"
                                    class="animate-switch" ng-switch-when="№1">    {{item.htmlData[0].tmpl}}</textarea>
@@ -988,76 +1086,76 @@
                         <textarea required ng-trim="true" ng-model="item.htmlData[0].tmpl"
                                   style="width: 100%; height: 120px; border: none"
                                   class="animate-switch" ng-switch-when="№4">   {{item.htmlData[0].tmpl}}</textarea>
-                    </div>
+                        </div>
 
-                    <code class="pull-right new" ng-bind-html="item.htmlData[0].description"></code>
-                    <div ng-if="item.htmlData[0].tmpl" class="text-left well"
-                         ng-bind-html="item.htmlData[0].tmpl"></div>
-                    <!--<a href="#" style="text-decoration: none" ng-click="toogle()">-->
-                    <!--<div ng-if="!item.htmlData[0].tmpl" class="text-left well" ng-bind-html="htmlData"></div>-->
-                    <!--</a>-->
+                        <code class="pull-right new" ng-bind-html="item.htmlData[0].description"></code>
+                        <div ng-if="item.htmlData[0].tmpl" class="text-left well"
+                             ng-bind-html="item.htmlData[0].tmpl"></div>
+                        <!--<a href="#" style="text-decoration: none" ng-click="toogle()">-->
+                        <!--<div ng-if="!item.htmlData[0].tmpl" class="text-left well" ng-bind-html="htmlData"></div>-->
+                        <!--</a>-->
 
-                </div>
-            </div>
-            <!--<div class="row" ng-if="item.start">-->
-            <!--<div class="col-md-12">-->
-            <!--&lt;!&ndash; Д О П О Л Н И Т Е Л Ь Н О Е  У В Е Д О М Л Е Н И Е  О  Н Е  З А П О Л Н Е Н Н О Й  И Н Ф О Р М А Ц И И   &ndash;&gt;-->
-
-            <!--<form class="form-horizontal" ng-show="comment2">-->
-            <!--<div class="form-group animate-if">-->
-            <!--<label class="col-sm-6 control-label">Шаблон о не заполненной информации: </label>-->
-            <!--<div class="col-sm-2">-->
-            <!--<select class="form-control size-xs" ng-model="item.htmlData2[0]"-->
-            <!--ng-options="option2.name for option2 in examples2 track by option2.tmpl"-->
-            <!--&gt;</select>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</form>-->
-
-            <!--<div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch-->
-            <!--on="item.htmlData2[0].name">-->
-            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-            <!--style="width: 100%; height: 120px; border: none"-->
-            <!--class="animate-switch" ng-switch-when="№1">    {{item.htmlData2[0].tmpl}}</textarea>-->
-            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-            <!--style="width: 100%; height: 120px; border: none"-->
-            <!--class="animate-switch" ng-switch-when="№2">{{item.htmlData2[0].tmpl}}</textarea>-->
-            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-            <!--style="width: 100%; height: 120px; border: none"-->
-            <!--class="animate-switch" ng-switch-when="№3"> {{item.htmlData2[0].tmpl}}</textarea>-->
-            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-            <!--style="width: 100%; height: 120px; border: none"-->
-            <!--class="animate-switch" ng-switch-when="№4">   {{item.htmlData2[0].tmpl}}</textarea>-->
-            <!--</div>-->
-
-            <!--<code class="pull-right new" ng-bind-html="item.htmlData2[0].description"></code>-->
-            <!--<div ng-if="item.htmlData2[0].tmpl" class="text-left well"-->
-            <!--ng-bind-html="item.htmlData2[0].tmpl"></div>-->
-            <!--<a href="#" style="text-decoration: none" ng-click="toogle2()">-->
-            <!--<div ng-if="!item.htmlData2[0].tmpl" class="text-left well" ng-bind-html="htmlData2"></div>-->
-            <!--</a>-->
-
-            <!--</div>-->
-            <!--</div>-->
-
-            <!-- I N F O  P A N E L -->
-
-            <div ng-if="me.admin" class="panel"
-                 ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Информация</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tr ng-repeat="(key, value) in item" ng-cloak>
-                                <th>{{key}}</th>
-                                <td>{{value | date:'dd.MM.yyyy' }}</td>
-                            </tr>
-                        </table>
                     </div>
                 </div>
-            </div>
+                <!--<div class="row" ng-if="item.start">-->
+                <!--<div class="col-md-12">-->
+                <!--&lt;!&ndash; Д О П О Л Н И Т Е Л Ь Н О Е  У В Е Д О М Л Е Н И Е  О  Н Е  З А П О Л Н Е Н Н О Й  И Н Ф О Р М А Ц И И   &ndash;&gt;-->
+
+                <!--<form class="form-horizontal" ng-show="comment2">-->
+                <!--<div class="form-group animate-if">-->
+                <!--<label class="col-sm-6 control-label">Шаблон о не заполненной информации: </label>-->
+                <!--<div class="col-sm-2">-->
+                <!--<select class="form-control size-xs" ng-model="item.htmlData2[0]"-->
+                <!--ng-options="option2.name for option2 in examples2 track by option2.tmpl"-->
+                <!--&gt;</select>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--</form>-->
+
+                <!--<div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch-->
+                <!--on="item.htmlData2[0].name">-->
+                <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
+                <!--style="width: 100%; height: 120px; border: none"-->
+                <!--class="animate-switch" ng-switch-when="№1">    {{item.htmlData2[0].tmpl}}</textarea>-->
+                <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
+                <!--style="width: 100%; height: 120px; border: none"-->
+                <!--class="animate-switch" ng-switch-when="№2">{{item.htmlData2[0].tmpl}}</textarea>-->
+                <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
+                <!--style="width: 100%; height: 120px; border: none"-->
+                <!--class="animate-switch" ng-switch-when="№3"> {{item.htmlData2[0].tmpl}}</textarea>-->
+                <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
+                <!--style="width: 100%; height: 120px; border: none"-->
+                <!--class="animate-switch" ng-switch-when="№4">   {{item.htmlData2[0].tmpl}}</textarea>-->
+                <!--</div>-->
+
+                <!--<code class="pull-right new" ng-bind-html="item.htmlData2[0].description"></code>-->
+                <!--<div ng-if="item.htmlData2[0].tmpl" class="text-left well"-->
+                <!--ng-bind-html="item.htmlData2[0].tmpl"></div>-->
+                <!--<a href="#" style="text-decoration: none" ng-click="toogle2()">-->
+                <!--<div ng-if="!item.htmlData2[0].tmpl" class="text-left well" ng-bind-html="htmlData2"></div>-->
+                <!--</a>-->
+
+                <!--</div>-->
+                <!--</div>-->
+
+                <!-- I N F O  P A N E L -->
+
+                <div ng-if="me.admin" class="panel"
+                     ng-class="{'panel-success':!item.fired, 'panel-default':item.fired,'fx-fade-right':close, 'fx-fade-left':!close}">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Информация</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr ng-repeat="(key, value) in item" ng-cloak>
+                                    <th>{{key}}</th>
+                                    <td>{{value | date:'dd.MM.yyyy' }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
         </div>
     </div>

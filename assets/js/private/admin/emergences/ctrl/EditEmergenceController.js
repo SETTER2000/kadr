@@ -44,6 +44,7 @@ angular.module('EmergenceModule')
                 minlength: "Не менее 3 букв должно быть.",
                 noEmail: "Не корректный email.",
                 maxlength: "Много букв!",
+                headerTab: 'Предоставленное оборудование',
             };
             var info = {
                 changed: 'Изменения сохранены!',
@@ -89,7 +90,8 @@ angular.module('EmergenceModule')
             $scope.maxLength = 20;
             $scope.maxLengthPost = 70;
             $scope.maxlengthText = 150;
-
+            $scope.maxLengthFin = 6000;
+            $scope.maxLengthIt = 100;
             $scope.getError = function (error) {
                 /*
                  serForm.itemFirstName.$error.required

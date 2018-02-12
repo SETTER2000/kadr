@@ -18,8 +18,12 @@ module.exports = {
             defaultsTo: 'Выход новых сотрудников',
             required: true
         },
-        commentFin: {
-            type: 'string'
+        commentItArr: {
+            type: 'array',
+            defaultsTo:[]
+        },
+        commentIt:{
+          type:'strung'
         },
         action: {
             type: 'boolean',
@@ -35,8 +39,6 @@ module.exports = {
         location: {
             type: 'string'
         },
-
-
         dax: {
             type: 'string'
         },
@@ -61,7 +63,6 @@ module.exports = {
         name: {
             type: 'string'
         },
-
         subdivision: {
             type: 'array',
             defaultsTo: '[]'

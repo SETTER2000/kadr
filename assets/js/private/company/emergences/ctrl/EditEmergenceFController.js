@@ -74,8 +74,12 @@ angular.module('EmergenceFModule')
                 noEmail: "Не корректный email.",
                 maxlength: "Много букв!",
                 textPhone: '- Пожалуйста, введите корректно номер телефона.',
-                templatePhone: '(###)####'
+                templatePhone: '####',
+                headerTab: 'Предоставленное оборудование',
+
             };
+            $scope.titleFinCheck = 'При снятии отметки о выполнении задачи, данные из поля "' + $scope.text.headerTab + '", будут удалены.';
+            $scope.amended = 'Вснёс изменения';
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -110,6 +114,15 @@ angular.module('EmergenceFModule')
 
             $scope.debug = true;
             $scope.comment = false;
+            $scope.hideFin = true;
+
+            $scope.$watch('commentFin', function (val) {
+                //$scope.hideFin = angular.isUndefined(val);
+            });
+            $scope.shoFin = function () {
+                return $scope.hideFin = !$scope.hideFin;
+            };
+
 
             $scope.ctrl = {
                 minDate: new Date(),
@@ -124,7 +137,8 @@ angular.module('EmergenceFModule')
             //$scope.emailPattern = new RegExp(pattern);
             $scope.minLength = 3;
             $scope.maxLength = 20;
-            $scope.maxLengthFin = 1000;
+            $scope.maxLengthFin = 6000;
+            $scope.maxLengthIt = 100;
             $scope.maxLengthPost = 40;
             $scope.maxlengthTextarea = 150;
 
@@ -906,7 +920,7 @@ angular.module('EmergenceFModule')
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
 
-            $scope.excelData='';
+            $scope.excelData = '';
 //            $scope.generateTable = function (excelData) {
 //                //var data = $('textarea[name=excel_data]').val();
 //
@@ -1005,10 +1019,17 @@ angular.module('EmergenceFModule')
             moment.relativeTimeThreshold('m', 60);
 
             $scope.saveEdit = function (item, isValid) {
-                console.log('item.outputEmployee:', item.outputEmployee);
 
-                console.log('isValid:', isValid);
-
+                console.log('item.commentIt:', item.commentIt);
+                if (item.commentIt) {
+                    item.commentItArr.push({
+                        comment: item.commentIt.trim(),
+                        img: $scope.me.avatarUrl,
+                        date:new Date(),
+                        fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
+                    });
+                }
+                console.log('item.commentIt:', item.commentIt);
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
                     item.finCheck = false;
