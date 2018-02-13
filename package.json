@@ -1,7 +1,7 @@
 {
   "name": "kadr",
   "private": false,
-  "version": "0.6.9",
+  "version": "0.6.10",
   "description": "The system of personnel management and holidays.",
   "keywords": [],
   "dependencies": {
