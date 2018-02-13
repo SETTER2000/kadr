@@ -904,8 +904,26 @@ angular.module('EmergenceModule')
 
 
             $scope.saveEdit = function (item, isValid) {
+
+                if (item.commentIt) {
+                    item.commentItArr.push({
+                        comment: item.commentIt.trim(),
+                        img: $scope.me.avatarUrl,
+                        date: new Date(),
+                        fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
+                    });
+                }
+
+                if (!item.finCheck || !angular.isDefined(item.commentFin)) {
+                    item.commentFin = '';
+                    item.finCheck = false;
+                }
+
+                if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
                 $scope.checkedValue();
                 item = reversValue(item);
+
+
                 if (isValid) {
                     $scope.message = item.name + " " + item.email;
                 }
@@ -916,17 +934,18 @@ angular.module('EmergenceModule')
                 }
 
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
-                if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
+
                 if (angular.isDefined(item.id)) {
-                    item.$update(item, function (success) {
-                            toastr.success(info.changed);
-                            $state.go('home.admin.emergences');
-                        },
-                        function (err) {
-                            if (err.status == 400)  toastr.error(err.statusText + ' ' + err.data.details, info.error(err.status));
-                            toastr.error(err.data, info.error(11445));
-                        }
-                    );
+                    item.$update({id: item.id}, item);
+                    //item.$update(item, function (success) {
+                    //        toastr.success(info.changed);
+                    //        $state.go('home.admin.emergences');
+                    //    },
+                    //    function (err) {
+                    //        if (err.status == 400)  toastr.error(err.statusText + ' ' + err.data.details, info.error(err.status));
+                    //        toastr.error(err.data, info.error(11445));
+                    //    }
+                    //);
                 } else {
                     if (angular.isDefined(item)) {
                         let ar = [];

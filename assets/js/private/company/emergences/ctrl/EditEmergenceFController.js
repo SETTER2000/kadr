@@ -1040,7 +1040,6 @@ angular.module('EmergenceFModule')
 
             $scope.saveEdit = function (item, isValid) {
 
-                console.log('item.commentIt:', item.commentIt);
                 if (item.commentIt) {
                     item.commentItArr.push({
                         comment: item.commentIt.trim(),
@@ -1049,7 +1048,7 @@ angular.module('EmergenceFModule')
                         fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
                     });
                 }
-                console.log('item.commentFin:', item.commentFin);
+
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
                     item.finCheck = false;
@@ -1061,15 +1060,12 @@ angular.module('EmergenceFModule')
 
                 //console.log('isValid object:', isValid);
                 if (isValid) {
-                    //$state.go('home.company.emergences');
-                    //        //$scope.refresh();
                     toastr.success(info.changed);
                     $scope.message = item.name + " " + item.email;
                 }
                 else {
                     $scope.message = "Error";
                     $scope.showError = true;
-                    console.log('cddd');
                     return false;
                 }
 
