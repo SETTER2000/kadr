@@ -280,7 +280,8 @@ module.exports = {
                     startKadr: req.param('startKadr'),
                     kadrValid: req.param('kadrValid'),
                     endKadr: req.param('endKadr'),
-                    //commentItArr:[], // очистить массив сообщений
+                    //commentItArr:[], // очистить массив
+                    //itUpdateData:[], // очистить массив
                     finCheck: req.param('finCheck'),
                     ahoCheck: req.param('ahoCheck'),
                     itCheck: req.param('itCheck'),
@@ -311,6 +312,7 @@ module.exports = {
                 };
 
                 if (req.param('commentIt')) {obj.commentItArr = req.param('commentItArr');}
+                if (req.param('itUpdateData')) {obj.itUpdateData = req.param('itUpdateData');}
 
                 User.findOne({id: obj.whomUpdated})
                     .exec((err, findUser) => {

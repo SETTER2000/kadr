@@ -63,23 +63,27 @@ angular.module('EmergenceFModule')
                 }, 900);
             };
 
-
+            $scope.close = $scope.edit;
+            $scope.onPanel = function () {
+                $scope.close = !$scope.close;
+            };
             $scope.text = {
                 noEmpty: 'Поле не должно быть пустым.',
                 noPatternW: 'Писать только русские буквы.',
                 emailPattern: 'Не корректный email.',
                 minlengthServer: 'Странное имя для руководителя!?',
-                minlength: "Не менее 3 букв должно быть.",
-                minlengthFin: "Не менее 10 букв должно быть.",
+                minlength: "Не менее 3 знаков должно быть.",
+                minlengthFin: "Не менее 10 знаков должно быть.",
                 noEmail: "Не корректный email.",
                 maxlength: "Много букв!",
                 textPhone: '- Пожалуйста, введите корректно номер телефона.',
                 templatePhone: '####',
                 headerTab: 'Предоставленное оборудование',
+                logChange: 'Лог изменений',
 
             };
             $scope.titleFinCheck = 'При снятии отметки о выполнении задачи, данные из поля "' + $scope.text.headerTab + '", будут удалены.';
-            $scope.amended = 'Вснёс изменения';
+            $scope.amended = 'Внёс изменения';
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -644,7 +648,7 @@ angular.module('EmergenceFModule')
             }
 
 
-            $scope.close = 1;
+            //$scope.close = 1;
 
             $scope.loginAdmin = false;
 
@@ -962,7 +966,10 @@ angular.module('EmergenceFModule')
                 //toastr.success(info.changed);
                 //$state.go('home.company.emergences', toastr.success(info.changed));
             };
-
+            $scope.showLogs = false;
+            $scope.showLog = function () {
+                $scope.showLogs = !$scope.showLogs;
+            };
             $scope.saveEditAho = function (item, isValid) {
                 item.ahoUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
@@ -971,6 +978,19 @@ angular.module('EmergenceFModule')
 
             $scope.saveEditIt = function (item, isValid) {
                 item.itUpdate = $scope.me.id;
+                if (!angular.isArray(item.itUpdateData))  item.itUpdateData = [];
+
+                item.itUpdateData.push({
+                    action: item.itCheck,
+                    img: $scope.me.avatarUrl,
+                    lastName: $scope.me.lastName,
+                    firstName: $scope.me.firstName,
+                    patronymicName: $scope.me.patronymicName,
+                    fullName: $scope.me.lastName + ' ' + $scope.me.firstName + ' ' + $scope.me.patronymicName,
+                    shortName: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '.' + $scope.me.patronymicName[0] + '.',
+                    date: new Date()
+                });
+
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
@@ -1025,11 +1045,11 @@ angular.module('EmergenceFModule')
                     item.commentItArr.push({
                         comment: item.commentIt.trim(),
                         img: $scope.me.avatarUrl,
-                        date:new Date(),
+                        date: new Date(),
                         fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
                     });
                 }
-                console.log('item.commentIt:', item.commentIt);
+                console.log('item.commentFin:', item.commentFin);
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
                     item.finCheck = false;

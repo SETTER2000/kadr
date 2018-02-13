@@ -35,16 +35,21 @@ angular.module('EmergenceModule')
 
                 }, 900);
             };
-
+            $scope.close = $scope.edit;
+            $scope.onPanel = function () {
+                $scope.close = !$scope.close;
+            };
 
             $scope.text = {
                 noEmpty: 'Поле не должно быть пустым.',
                 noPatternW: 'Писать только русские буквы.',
                 minlengthServer: 'Странное имя для руководителя!?',
-                minlength: "Не менее 3 букв должно быть.",
+                minlength: "Не менее 3 знаков должно быть.",
+                minlengthFin: "Не менее 10 знаков должно быть.",
                 noEmail: "Не корректный email.",
                 maxlength: "Много букв!",
                 headerTab: 'Предоставленное оборудование',
+                logChange:'Лог изменений',
             };
             var info = {
                 changed: 'Изменения сохранены!',
@@ -595,7 +600,7 @@ angular.module('EmergenceModule')
             }
 
 
-            $scope.close = 1;
+            //$scope.close = 1;
 
             $scope.loginAdmin = false;
 
@@ -935,90 +940,27 @@ angular.module('EmergenceModule')
                             }
                             item.htmlData = ar;
                         }
-                        //if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
-
-
                         if (angular.isDefined(item.htmlData2)) {
                             for (let key in item.htmlData2) {
                                 ar2.push(item.htmlData2[key]);
                             }
                             item.htmlData2 = ar2;
                         }
-                        //toastr.success(info.newOk, info.ok);
-                        //$state.go('home.company.emergences');
                         item.$save(item, function (success) {
-                                //console.log(success);
-                                //location.reload();
                                 toastr.success(info.newOk);
-                                // /admin/emergence/
-                                //$location.path('/profile') ;
                                 $state.go('home.admin.emergences', {emergenceId: success.id});
-                                //$state.go('home.company.emergences');
                             },
                             function (err) {
                                 toastr.error(err.data, info.error(89336));
                             });
                     }
                 }
-                //if (angular.isDefined(item.id)) {
-                //    item.$update(item, function (success) {
-                //            toastr.success(info.changed);
-                //            $scope.refresh();
-                //        },
-                //        function (err) {
-                //            toastr.error(err.data, info.error(11445));
-                //        }
-                //    );
-                //}
-                //else {
-                //
-                //
-                //    if (angular.isDefined(item)
-                //    // && angular.isDefined(item.lastName)
-                //    // &&angular.isDefined(item.patronymicName)
-                //    /*  &&
-                //     angular.isDefined(item.login) &&
-                //     angular.isDefined(item.fired) &&
-                //     angular.isDefined(item.birthday) &&
-                //     angular.isDefined(item.email)*/
-                //    ) {
-                //        let ar = [];
-                //        let ar2 = [];
-                //
-                //        if (angular.isDefined(item.htmlData)) {
-                //            for (let key in item.htmlData) {
-                //                ar.push(item.htmlData[key]);
-                //            }
-                //            item.htmlData = ar;
-                //        }
-                //        if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
-                //
-                //
-                //        if (angular.isDefined(item.htmlData2)) {
-                //            for (let key in item.htmlData2) {
-                //                ar2.push(item.htmlData2[key]);
-                //            }
-                //            item.htmlData2 = ar2;
-                //        }
-                //        //toastr.success(info.newOk, info.ok);
-                //        //$state.go('home.admin.emergences');
-                //        item.$save(item, function (success) {
-                //                //console.log(success);
-                //                //location.reload();
-                //                toastr.success(info.newOk);
-                //                // /admin/emergence/
-                //                //$location.path('/profile') ;
-                //                $state.go('home.admin.emergences', {emergenceId: success.id});
-                //                //$state.go('home.admin.emergences');
-                //            },
-                //            function (err) {
-                //                toastr.error(err.data, info.error(89336));
-                //            });
-                //    }
-                //}
             };
 
-
+            $scope.showLogs = false;
+            $scope.showLog = function () {
+                $scope.showLogs = !$scope.showLogs;
+            };
             $scope.addContact = function () {
                 if (angular.isArray($scope.item.contacts)) {
                     $scope.item.contacts.push({type: "телефон", value: ""});

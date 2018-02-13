@@ -20,10 +20,14 @@ module.exports = {
         },
         commentItArr: {
             type: 'array',
-            defaultsTo:[]
+            defaultsTo: []
         },
-        commentIt:{
-          type:'strung'
+        itUpdateData: {
+            type: 'array',
+            defaultsTo: []
+        },
+        commentIt: {
+            type: 'strung'
         },
         action: {
             type: 'boolean',
@@ -83,6 +87,9 @@ module.exports = {
             dominant: true
         },
         boss: {
+            type: 'string'
+        },
+        commentFin: {
             type: 'string'
         },
         phone: {
