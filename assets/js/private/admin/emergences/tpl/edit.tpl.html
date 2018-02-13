@@ -104,8 +104,11 @@
                         <div layout="column" layout-align="center center" style="padding:0 0 80px" ng-cloak>
                             <div flex-gt-xs>
                                 <h4>Дата выхода сотрудника <span class="text-danger">*</span></h4>
-                                <md-datepicker ng-model="item.outputEmployee" ng-required md-placeholder="Enter date"
+                                <md-datepicker ng-if="!me.admin" ng-model="item.outputEmployee" ng-required md-placeholder="Enter date"
                                                md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"
+                                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
+                                <md-datepicker ng-if="me.admin" ng-model="item.outputEmployee" ng-required md-placeholder="Enter date"
+                                               md-max-date="ctrl.maxDate"
                                                md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
                             </div>
 
