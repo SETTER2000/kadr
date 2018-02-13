@@ -80,6 +80,7 @@ angular.module('EmergenceFModule')
                 templatePhone: '####',
                 headerTab: 'Предоставленное оборудование',
                 logChange: 'Лог изменений',
+                mindate:'Дата просрочена',
 
             };
             $scope.titleFinCheck = 'При снятии отметки о выполнении задачи, данные из поля "' + $scope.text.headerTab + '", будут удалены.';
@@ -1051,7 +1052,7 @@ angular.module('EmergenceFModule')
                     item.commentFin = '';
                     item.finCheck = false;
                 }
-
+                console.log('item.outputEmployee', item.outputEmployee);
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
 
 
