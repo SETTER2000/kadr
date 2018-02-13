@@ -1040,7 +1040,10 @@ angular.module('EmergenceFModule')
 
             $scope.saveEdit = function (item, isValid) {
 
+<<<<<<< HEAD
                 console.log('item.commentIt:', item.commentIt);
+=======
+>>>>>>> 7bcb42b721bd9165463c4c1be49514a36381e69d
                 if (item.commentIt) {
                     item.commentItArr.push({
                         comment: item.commentIt.trim(),
@@ -1049,7 +1052,11 @@ angular.module('EmergenceFModule')
                         fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
                     });
                 }
+<<<<<<< HEAD
                 console.log('item.commentFin:', item.commentFin);
+=======
+
+>>>>>>> 7bcb42b721bd9165463c4c1be49514a36381e69d
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
                     item.finCheck = false;
@@ -1061,15 +1068,21 @@ angular.module('EmergenceFModule')
 
                 //console.log('isValid object:', isValid);
                 if (isValid) {
+<<<<<<< HEAD
                     //$state.go('home.company.emergences');
                     //        //$scope.refresh();
+=======
+>>>>>>> 7bcb42b721bd9165463c4c1be49514a36381e69d
                     toastr.success(info.changed);
                     $scope.message = item.name + " " + item.email;
                 }
                 else {
                     $scope.message = "Error";
                     $scope.showError = true;
+<<<<<<< HEAD
                     console.log('cddd');
+=======
+>>>>>>> 7bcb42b721bd9165463c4c1be49514a36381e69d
                     return false;
                 }
 
