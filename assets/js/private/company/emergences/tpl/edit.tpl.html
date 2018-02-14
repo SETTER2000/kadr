@@ -91,23 +91,18 @@
                         <!--<div layout="column" layout-wrap layout-margin layout-align="center enter"  ng-cloak>-->
 
                         <div layout="column" layout-align="center center" style="padding:0 0 80px" ng-cloak>
-                            <md-input-container  flex-gt-sm>
+                            <md-input-container flex-gt-sm>
+                                <div flex-gt-xs>
+                                    <h4>Дата выхода сотрудника </h4>
+                                    <md-datepicker name="itemOutputEmployee" ng-model="item.outputEmployee" md-placeholder="Enter date"
+                                                   md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"></md-datepicker>
+                                </div>
 
-                            <div flex-gt-xs>
-                                <h4>Дата выхода сотрудника <span class="text-danger">*</span></h4>
-                                <md-datepicker name="itemOutputEmployee" ng-model="item.outputEmployee" required md-placeholder="Enter date"
-                                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"
-                                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
-                            </div>
-
-                            <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" ng-messages-multiple>
-                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
-                                <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
-                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
-                                <div ng-message="mindate" class="my-message">{{text.mindate}}</div>
-                            </div>
-                                </md-input-container>
-
+                                <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" ng-messages-multiple>
+                                    <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                    <div ng-message="mindate" class="my-message">{{text.mindate}}</div>
+                                </div>
+                            </md-input-container>
                         </div>
 
 
@@ -381,8 +376,8 @@
                                                 <a href="#" class="btn btn-default  disabled" role="button">
                                      <span class="glyphicon " ng-class="{ 'glyphicon-saved':item.createdAt}"
                                            aria-hidden="true"></span>
-                                                {{item.getCreatedAt() | date:'dd.MM.yyyy HH:mm'}}
-                                            </a>
+                                                    {{item.getCreatedAt() | date:'dd.MM.yyyy HH:mm'}}
+                                                </a>
                                             </div>
                                             <!--<span id="helpBlock4" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
                                     </div>

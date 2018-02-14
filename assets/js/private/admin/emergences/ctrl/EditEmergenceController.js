@@ -86,7 +86,11 @@ angular.module('EmergenceModule')
             $scope.comment = false;
             $scope.ctrl = {
                 minDate: new Date(),
-                maxDate: new Date(moment().add(2,'months'))
+                maxDate: new Date(moment().add(2, 'months')),
+                onlyWeekendsPredicate: function (date) {
+                    var day = date.getDay();
+                    return day === 0 || day === 6;
+                }
             };
 
 
@@ -831,7 +835,6 @@ angular.module('EmergenceModule')
             $scope.htmlData = '<h4 class="text-danger" ng-cloak>Пожалуйста, вставьте шаблон сообщения!</h4>';
             $scope.htmlData2 = '<h4 class="text-danger" ng-cloak>Пожалуйста, вставьте шаблон дополнительного уведомления!</h4>';
 
-
             var reversValue = function (item) {
                 item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
                 //item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
@@ -858,16 +861,28 @@ angular.module('EmergenceModule')
                     {id: 'Сотрудник юридического отдела', name: 'Сотрудник юридического отдела'}
                 ]
             };
+
             $scope.checkedValue = function () {
                 $scope.item.endKadr = ($scope.item.startKadr && $scope.item.finCheck && $scope.item.ahoCheck && $scope.item.itCheck);
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
 
+
             $scope.saveEditFin = function (item, isValid) {
+
+                if (!isValid) {
+                    $scope.item.finCheck = false;
+                    return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
+                }
+                if(moment().isAfter(moment(item.outputEmployee)) && !$scope.me.admin){
+                    $scope.item.finCheck = false;
+                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                }
                 item.finUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
                 $state.go('home.admin.emergences');
             };
+
 
             $scope.saveEditAho = function (item, isValid) {
                 item.ahoUpdate = $scope.me.id;
@@ -884,6 +899,7 @@ angular.module('EmergenceModule')
             $scope.$watch('item.kadrValid', function (val) {
                 $scope.checkedValue();
             });
+
             $scope.$watch('item.startKadr', function (val) {
                 $scope.checkedValue();
             });
@@ -895,16 +911,15 @@ angular.module('EmergenceModule')
 
             $scope.$watch('item.ahoCheck', function (val) {
                 $scope.checkedValue();
-
             });
 
             $scope.$watch('item.itCheck', function (val) {
                 $scope.checkedValue();
             });
 
-
             $scope.saveEdit = function (item, isValid) {
 
+                if(moment().isAfter(moment(item.outputEmployee)) && !$scope.me.admin) return toastr.error('Дата просрочена.', 'Ошибка!');
 
                 if (item.commentIt) {
                     item.commentItArr.push({
@@ -922,7 +937,6 @@ angular.module('EmergenceModule')
 
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
 
-
                 $scope.checkedValue();
                 item = reversValue(item);
 
@@ -936,8 +950,6 @@ angular.module('EmergenceModule')
                 }
 
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
-
-
                 if (angular.isDefined(item.id)) {
                     item.$update({id: item.id}, item);
                     //item.$update(item, function (success) {

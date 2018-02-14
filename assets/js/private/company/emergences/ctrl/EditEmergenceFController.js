@@ -131,7 +131,11 @@ angular.module('EmergenceFModule')
 
             $scope.ctrl = {
                 minDate: new Date(),
-                maxDate: new Date(moment().add(2, 'months'))
+                maxDate: new Date(moment().add(2, 'months')),
+                onlyWeekendsPredicate: function (date) {
+                    var day = date.getDay();
+                    return day === 0 || day === 6;
+                }
             };
 
 
@@ -956,10 +960,31 @@ angular.module('EmergenceFModule')
             //    //$state.go('home.company.emergences');
             //};
             //
+
+
+         
+            //$scope.saveEditButton = function (item, isValid) {
+            //    checkDateCurrent();
+            //    if (!isValid) {
+            //        $scope.item.finCheck = false;
+            //        return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
+            //    }
+            //
+            //    $scope.saveEdit(item, isValid);
+            //    //$state.apply();
+            //    //toastr.success(info.changed);
+            //    //$state.go('home.company.emergences', toastr.success(info.changed));
+            //};
             $scope.saveEditFin = function (item, isValid) {
+
                 if (!isValid) {
                     $scope.item.finCheck = false;
                     return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
+                }
+
+                if(moment().isAfter(moment(item.outputEmployee))){
+                    $scope.item.finCheck = false;
+                    return toastr.error('Дата просрочена.', 'Ошибка!');
                 }
                 item.finUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
@@ -1040,6 +1065,14 @@ angular.module('EmergenceFModule')
             moment.relativeTimeThreshold('m', 60);
 
             $scope.saveEdit = function (item, isValid) {
+//moment('2010-10-20').isSameOrAfter('2010-10-19'); // true
+//                console.log('item.outputEmployee', item.outputEmployee);
+//                console.log('Проверяемый момент', moment(item.outputEmployee,['DD.MM.YYYY']));
+//                console.log('Текущий момент', moment());
+//                console.log('ITEM START:',moment('14.02.2018',['DD.MM.YYYY']).isAfter(moment(item.outputEmployee)));
+
+                if(moment().isAfter(moment(item.outputEmployee))) return toastr.error('Дата просрочена.', 'Ошибка!');
+
                 if (item.commentIt) {
                     item.commentItArr.push({
                         comment: item.commentIt.trim(),
@@ -1052,7 +1085,7 @@ angular.module('EmergenceFModule')
                     item.commentFin = '';
                     item.finCheck = false;
                 }
-                console.log('item.outputEmployee', item.outputEmployee);
+
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
 
 

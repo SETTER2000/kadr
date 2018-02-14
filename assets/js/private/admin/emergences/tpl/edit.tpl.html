@@ -103,23 +103,33 @@
 
                         <div layout="column" layout-align="center center" style="padding:0 0 80px" ng-cloak>
                             <div flex-gt-xs>
-                                <h4>Дата выхода сотрудника <span class="text-danger">*</span></h4>
-                                <md-datepicker ng-if="!me.admin" ng-model="item.outputEmployee" ng-required md-placeholder="Enter date"
-                                               md-min-date="ctrl.minDate" md-max-date="ctrl.maxDate"
-                                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
-                                <md-datepicker ng-if="me.admin" ng-model="item.outputEmployee" ng-required md-placeholder="Enter date"
-                                               md-max-date="ctrl.maxDate"
-                                               md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>
+                                <h4>Дата выхода сотрудника </h4>
+
+                                <md-datepicker ng-if="!me.admin" name="itemOutputEmployee" ng-model="item.outputEmployee"
+                                               md-placeholder="Enter date"
+                                               md-min-date="ctrl.minDate"
+                                               md-max-date="ctrl.maxDate"></md-datepicker>
+
+                                <md-datepicker ng-if="me.admin" name="itemOutputEmployeeAdmin" ng-model="item.outputEmployee"
+                                               md-placeholder="Enter date"
+                                               md-max-date="ctrl.maxDate"></md-datepicker>
+                            </div>
+                            <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" ng-messages-multiple>
+                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                <div ng-message="mindate" class="my-message">{{text.mindate}}</div>
                             </div>
 
+                            <div ng-messages="userForm.itemOutputEmployeeAdmin.$error" role="alert" ng-messages-multiple>
+                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                            </div>
                             <!--<div flex-gt-xs>-->
                             <!--<h4>Only weekends are selectable</h4>-->
                             <!--<md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"-->
                             <!--md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>-->
                             <!--</div>-->
-                            <div class="text-danger" ng-show="showError">
-                                {{getError(userForm.itemOutputEmployee.$error)}}
-                            </div>
+                            <!--<div class="text-danger" ng-show="showError">-->
+                                <!--{{getError(userForm.itemOutputEmployee.$error)}}-->
+                            <!--</div>-->
                         </div>
 
 
@@ -541,55 +551,148 @@
 
 
             <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О   -->
+            <form name="finForm" novalidate
+                  enctype="multipart/form-data">
+                <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
+                    <div class="panel-heading">
+                        Финансовый отдел
+                        <span ng-click="shoFin()" ng-if="item.commentFin" style="padding-top: 3px" class="pull-right glyphicon"
+                              ng-class="{'glyphicon-menu-down':hideFin, 'glyphicon-menu-up':!hideFin}"></span>
+                    </div>
 
-            <div ng-if="edit && item.startKadr && item.finCheck" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
-                <div class="panel-heading"> Финансовый отдел</div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <table class="table">
-                                <tr>
-                                    <td width="10px">
-                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck"
-                                                     ng-change="saveEditFin(item, userForm.$valid)"
-                                                     aria-label="Checkbox 1"
-                                                     class="green md-align-top-left" flex></md-checkbox>
-                                    </td>
-                                    <td>
-                                        <span ng-if="!item.finCheck">{{titles.noCheck}}   </span>
-                                        <span ng-if="item.finCheck">{{titles.check}} </span>
-                                    </td>
-                                    <td class="pull-right">
-                                        <span ng-if="item.finUpdate" class="text-right">{{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>
-                                    </td>
-                                </tr>
-                                <tr ng-if="item.commentFin">
-                                    <td colspan="5">
-                                        <xls-html-table dt-item="item.commentFin" header-tab="text.headerTab"></xls-html-table>
-                                    </td>
-                                </tr>
-                                <!--<tr >-->
+                    <div class="panel-body drop-length">
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <table class="table">
+                                    <tr>
+                                        <td width="10px">
+                                            <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" title="{{titleFinCheck}}"
+                                                         ng-change="saveEditFin(item, finForm.$valid)"
+                                                         aria-label="Checkbox 1"
+                                                         class="green md-align-top-left" flex></md-checkbox>
+                                        </td>
+                                        <td>
+                                            <span ng-if="!item.finCheck">{{titles.noCheck}}   </span>
+                                            <span ng-if="item.finCheck">{{titles.check}} </span>
+                                        </td>
+                                        <td class="pull-right">
+                                            <span ng-if="item.finUpdate" class="text-right">
+                                                <md-tooltip md-direction="top">{{amended}}</md-tooltip>
+                                                {{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>
+                                        </td>
+                                    </tr>
+                                    <tr ng-hide="(item.commentFin && hideFin)">
+                                        <td colspan="3">
+                                            <md-input-container class="md-block">
+                                                <label>Информация по предоставленному оборудованию </label>
+                            <textarea name="itemCommentFin" required ng-model="item.commentFin"
+                                      placeholder="вставьте сюда скопированную таблицу Excl и поставьте отметку о выполнение"
+                                      ng-maxlength="maxLengthFin"
+                                      md-maxlength="maxLengthFin"
+                                      ng-minlength="minLength"
+                                      rows="1" md-select-on-focus></textarea>
+                                                <div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>
+                                                    <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                                    <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                                    <div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>
+                                                </div>
+                                            </md-input-container>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table class="table">
+
+                                    <tr ng-if="item.commentFin">
+                                        <td colspan="5">
+
+
+                                            <!--<h4>Вставьте скопированную таблицу Excl:</h4>-->
+                                            <!--<textarea  ng-model="item.commentFin" ></textarea><br>-->
+
+                                            <!--<div xls-html="item" property="commentFin"></div>-->
+                                            <xls-html-table dt-item="item.commentFin" header-tab="text.headerTab"></xls-html-table>
+                                            <!--<button type="button" ng-click="generateTable(excelData)" class="btn btn-default">XLS to HTML</button>-->
+                                            <!--<input type="button" onclick="javascript:generateTable()" value="Genereate Table"/>-->
+
+                                            <!--<hr>-->
+                                            <!--<p ng-bind-html="bindHtml"></p>-->
+                                            <!--<div id="excel_table"></div>-->
+
+                                        </td>
+                                    </tr>
+                                    <!--<tr>-->
                                     <!--<td colspan="3">-->
-                                        <!--<md-input-container class="md-block">-->
-                                            <!--<label>Информация по предоставленному оборудованию</label>-->
-                            <!--<textarea ng-disabled="(item.kadrValid || me.kadr)" name="itemCommentFin" required  ng-model="item.commentFin"-->
-                                      <!--ng-maxlength="maxLengthFin"-->
-                                      <!--md-maxlength="maxLengthFin"-->
-                                      <!--ng-minlength="minLength"-->
-                                      <!--rows="1" md-select-on-focus></textarea>-->
-                                            <!--<div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>-->
-                                                <!--<div ng-message="required" class="my-message">{{text.noEmpty}}</div>-->
-                                                <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
-                                                <!--<div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>-->
-                                            <!--</div>-->
-                                        <!--</md-input-container>-->
+                                    <!--<pre>{{item.commentFin}}</pre>-->
+                                    <!--<p ng-bind-html="item.commentFin"></p>-->
                                     <!--</td>-->
-                                <!--</tr>-->
-                            </table>
+                                    <!--</tr>-->
+
+                                </table>
+                                <!--<label>-->
+                                <!--&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.finCheck" aria-label="Switch 4">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span ng-if="!item.finCheck">{{titles.check}} нет</span>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<span ng-if="item.finCheck">{{titles.check}} да</span>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</md-switch>&ndash;&gt;-->
+                                <!--<md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" aria-label="Checkbox 1"-->
+                                <!--class="green md-align-top-left" flex>-->
+                                <!--<span ng-if="!item.finCheck">{{titles.noCheck}}</span>-->
+                                <!--<span ng-if="item.finCheck">{{titles.check}}</span>-->
+                                <!--</md-checkbox>-->
+                                <!--</label>-->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
+            <!--<div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">-->
+                <!--<div class="panel-heading"> Финансовый отдел</div>-->
+                <!--<div class="panel-body">-->
+                    <!--<div class="form-group">-->
+                        <!--<div class="checkbox">-->
+                            <!--<table class="table">-->
+                                <!--<tr>-->
+                                    <!--<td width="10px">-->
+                                        <!--<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck"-->
+                                                     <!--ng-change="saveEditFin(item, userForm.$valid)"-->
+                                                     <!--aria-label="Checkbox 1"-->
+                                                     <!--class="green md-align-top-left" flex></md-checkbox>-->
+                                    <!--</td>-->
+                                    <!--<td>-->
+                                        <!--<span ng-if="!item.finCheck">{{titles.noCheck}}   </span>-->
+                                        <!--<span ng-if="item.finCheck">{{titles.check}} </span>-->
+                                    <!--</td>-->
+                                    <!--<td class="pull-right">-->
+                                        <!--<span ng-if="item.finUpdate" class="text-right">{{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--<tr ng-if="item.commentFin">-->
+                                    <!--<td colspan="5">-->
+                                        <!--<xls-html-table dt-item="item.commentFin" header-tab="text.headerTab"></xls-html-table>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--&lt;!&ndash;<tr >&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td colspan="3">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<md-input-container class="md-block">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<label>Информация по предоставленному оборудованию</label>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<textarea ng-disabled="(item.kadrValid || me.kadr)" name="itemCommentFin" required  ng-model="item.commentFin"&ndash;&gt;-->
+                                      <!--&lt;!&ndash;ng-maxlength="maxLengthFin"&ndash;&gt;-->
+                                      <!--&lt;!&ndash;md-maxlength="maxLengthFin"&ndash;&gt;-->
+                                      <!--&lt;!&ndash;ng-minlength="minLength"&ndash;&gt;-->
+                                      <!--&lt;!&ndash;rows="1" md-select-on-focus></textarea>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<div ng-message="required" class="my-message">{{text.noEmpty}}</div>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+                            <!--</table>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
 
             <!-- А Х О  В Ы П О Л Н Е Н О   -->
