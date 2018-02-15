@@ -697,7 +697,7 @@
 
             <!-- А Х О  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="edit && item.startKadr && item.ahoCheck" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
+            <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
                 <div class="panel-heading">АХО</div>
                 <div class="panel-body">
                     <div class="form-group">
@@ -736,7 +736,7 @@
             <!-- IT  В Ы П О Л Н Е Н О   -->
             <form name="itForm" novalidate
                   ng-submit="saveEdit(item, itForm.$valid)" enctype="multipart/form-data">
-                <div ng-if="edit && item.startKadr && item.itCheck" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
+                <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
                     <div class="panel-heading">IT</div>
                     <div class="panel-body ">
                         <form name="createForm" novalidate enctype="multipart/form-data">
@@ -936,20 +936,20 @@
 
             <!-- С О З Д А Н О   -->
 
-            <div ng-if="edit && item.startKadr && (item.email || item.phoneNumber)" class="panel panel-default"
-                 ng-class="{'panel-success':(item.email && item.phoneNumber)}">
-                <div class="panel-heading">Созданы ресурсы</div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label class="control-label">Email</label>
-                        <input ng-disabled="(item.kadrValid  || me.kadr)" type="email" class="form-control" ng-model="item.email">
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Телефон</label>
-                        <input ng-disabled="(item.kadrValid  || me.kadr)" type="text" class="form-control" ng-model="item.phoneNumber">
-                    </div>
-                </div>
-            </div>
+            <!--<div ng-if="edit && item.startKadr && (item.email || item.phoneNumber)" class="panel panel-default"-->
+                 <!--ng-class="{'panel-success':(item.email && item.phoneNumber)}">-->
+                <!--<div class="panel-heading">Созданы ресурсы</div>-->
+                <!--<div class="panel-body">-->
+                    <!--<div class="form-group">-->
+                        <!--<label class="control-label">Email</label>-->
+                        <!--<input ng-disabled="(item.kadrValid  || me.kadr)" type="email" class="form-control" ng-model="item.email">-->
+                    <!--</div>-->
+                    <!--<div class="form-group">-->
+                        <!--<label class="control-label">Телефон</label>-->
+                        <!--<input ng-disabled="(item.kadrValid  || me.kadr)" type="text" class="form-control" ng-model="item.phoneNumber">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
             <!-- П О Л У Ч А Т Е Л И  П И С Е М -->
             <div ng-if="false" class="row">

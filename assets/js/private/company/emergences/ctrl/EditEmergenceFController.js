@@ -121,16 +121,16 @@ angular.module('EmergenceFModule')
             $scope.comment = false;
             $scope.hideFin = true;
 
-            $scope.$watch('commentFin', function (val) {
-                //$scope.hideFin = angular.isUndefined(val);
-            });
+            //$scope.$watch('commentFin', function (val) {
+            //    //$scope.hideFin = angular.isUndefined(val);
+            //});
             $scope.shoFin = function () {
                 return $scope.hideFin = !$scope.hideFin;
             };
 
 
             $scope.ctrl = {
-                minDate: new Date(),
+                minDate: new Date(moment().add(1, 'day')),
                 maxDate: new Date(moment().add(2, 'months')),
                 onlyWeekendsPredicate: function (date) {
                     var day = date.getDay();
@@ -962,19 +962,13 @@ angular.module('EmergenceFModule')
             //
 
 
-         
-            //$scope.saveEditButton = function (item, isValid) {
-            //    checkDateCurrent();
-            //    if (!isValid) {
-            //        $scope.item.finCheck = false;
-            //        return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
-            //    }
-            //
-            //    $scope.saveEdit(item, isValid);
-            //    //$state.apply();
-            //    //toastr.success(info.changed);
-            //    //$state.go('home.company.emergences', toastr.success(info.changed));
-            //};
+
+            $scope.errDate = function (item) {
+                if(moment().isAfter(moment(item.outputEmployee))){
+                 return true;
+                }
+                return false;
+            };
             $scope.saveEditFin = function (item, isValid) {
 
                 if (!isValid) {
@@ -982,7 +976,7 @@ angular.module('EmergenceFModule')
                     return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
                 }
 
-                if(moment().isAfter(moment(item.outputEmployee))){
+                if($scope.errDate(item)) {
                     $scope.item.finCheck = false;
                     return toastr.error('Дата просрочена.', 'Ошибка!');
                 }
@@ -997,12 +991,28 @@ angular.module('EmergenceFModule')
                 $scope.showLogs = !$scope.showLogs;
             };
             $scope.saveEditAho = function (item, isValid) {
+
+                if($scope.errDate(item)) {
+                    $scope.item.ahoCheck = false;
+                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                }
+                //if(moment().isAfter(moment(item.outputEmployee))){
+                //    $scope.item.ahoCheck = false;
+                //    return toastr.error('Дата просрочена.', 'Ошибка!');
+                //}
+
                 item.ahoUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
 
             $scope.saveEditIt = function (item, isValid) {
+
+                if($scope.errDate(item)) {
+                    $scope.item.itCheck = false;
+                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                }
+
                 item.itUpdate = $scope.me.id;
                 if (!angular.isArray(item.itUpdateData))  item.itUpdateData = [];
 
@@ -1070,8 +1080,9 @@ angular.module('EmergenceFModule')
 //                console.log('Проверяемый момент', moment(item.outputEmployee,['DD.MM.YYYY']));
 //                console.log('Текущий момент', moment());
 //                console.log('ITEM START:',moment('14.02.2018',['DD.MM.YYYY']).isAfter(moment(item.outputEmployee)));
+                if($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
 
-                if(moment().isAfter(moment(item.outputEmployee))) return toastr.error('Дата просрочена.', 'Ошибка!');
+                //if(moment().isAfter(moment(item.outputEmployee))) return toastr.error('Дата просрочена.', 'Ошибка!');
 
                 if (item.commentIt) {
                     item.commentItArr.push({

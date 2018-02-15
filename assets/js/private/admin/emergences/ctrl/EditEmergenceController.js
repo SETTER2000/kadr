@@ -84,6 +84,7 @@ angular.module('EmergenceModule')
             };
             $scope.debug = true;
             $scope.comment = false;
+            $scope.hideFin = true;
             $scope.ctrl = {
                 minDate: new Date(),
                 maxDate: new Date(moment().add(2, 'months')),
@@ -127,6 +128,9 @@ angular.module('EmergenceModule')
                         return info.maxlength + $scope.maxLength;
                     }
                 }
+            };
+            $scope.shoFin = function () {
+                return $scope.hideFin = !$scope.hideFin;
             };
 
             /**
