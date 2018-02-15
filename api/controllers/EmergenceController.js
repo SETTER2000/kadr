@@ -387,7 +387,7 @@ module.exports = {
                                                         avatarUrl: findUser.avatarUrl
                                                     }, req);
                                                     sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: findOneEm}, req);
-                                                    res.ok(findOneEm);
+                                                    res.send(findOneEm);
                                                 });
                                         }
                                     });

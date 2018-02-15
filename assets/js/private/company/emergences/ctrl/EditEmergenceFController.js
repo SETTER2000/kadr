@@ -69,6 +69,7 @@ angular.module('EmergenceFModule')
             };
             $scope.text = {
                 noEmpty: 'Поле не должно быть пустым.',
+                noEmptyDate: 'Нет даты.',
                 noPatternW: 'Писать только русские буквы.',
                 emailPattern: 'Не корректный email.',
                 minlengthServer: 'Странное имя для руководителя!?',
@@ -81,6 +82,7 @@ angular.module('EmergenceFModule')
                 headerTab: 'Предоставленное оборудование',
                 logChange: 'Лог изменений',
                 mindate:'Дата просрочена',
+                maxdate:'Дата просрочена',
 
             };
             $scope.titleFinCheck = 'При снятии отметки о выполнении задачи, данные из поля "' + $scope.text.headerTab + '", будут удалены.';
@@ -130,6 +132,7 @@ angular.module('EmergenceFModule')
 
 
             $scope.ctrl = {
+                //minDate: new Date(),
                 minDate: new Date(moment().add(1, 'day')),
                 maxDate: new Date(moment().add(2, 'months')),
                 onlyWeekendsPredicate: function (date) {
@@ -330,6 +333,14 @@ angular.module('EmergenceFModule')
                 }
             });
 
+
+            $scope.dt = new Date();
+            $scope.$watch('dt', function (val) {
+                if (val) $scope.item.outputEmployee = val;
+            });
+            $scope.$watch('item.outputEmployee', function (val) {
+                if (val) $scope.dt = val;
+            });
 
             $scope.examples2 = [
                 {
@@ -764,14 +775,14 @@ angular.module('EmergenceFModule')
                 ];
             $scope.modeSelect = $scope.options[0];
 
-            $scope.closed = function () {
-                if ($scope.close) {
-                    $scope.close = false;
-                }
-                else {
-                    $scope.close = true;
-                }
-            };
+            //$scope.closed = function () {
+            //    if ($scope.close) {
+            //        $scope.close = false;
+            //    }
+            //    else {
+            //        $scope.close = true;
+            //    }
+            //};
 
             $scope.refresh = function () {
                 let item = $scope.item = EmergencesF.get({id: $stateParams.emergenceId},
@@ -788,6 +799,7 @@ angular.module('EmergenceFModule')
                 );
                 //$scope.item.year = item.getYear();
                 //$scope.getAllUsers();
+                $scope.item.outputEmployee = item.formatDate();
                 $scope.item.name = item.getFullName();
             };
 
@@ -896,23 +908,8 @@ angular.module('EmergenceFModule')
             $scope.htmlData2 = '<h4 class="text-danger" ng-cloak>Пожалуйста, вставьте шаблон дополнительного уведомления!</h4>';
 
 
-            //var reversValue = function (item) {
-            //    var u = item.start;
-            //    //console.log('DDDDD item.start', item.start);
-            //    //console.log('DDDDD item.outputEmployee', item.outputEmployee);
-            //    //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-            //    item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
-            //    item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
-            //    //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-            //    //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-            //    //item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-            //    var q = item.start;
-            //
-            //    return item;
-            //};
             var reversValue = function (item) {
                 item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
-                //item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
                 return item;
             };
             $scope.locations = {
@@ -991,16 +988,10 @@ angular.module('EmergenceFModule')
                 $scope.showLogs = !$scope.showLogs;
             };
             $scope.saveEditAho = function (item, isValid) {
-
                 if($scope.errDate(item)) {
                     $scope.item.ahoCheck = false;
                     return toastr.error('Дата просрочена.', 'Ошибка!');
                 }
-                //if(moment().isAfter(moment(item.outputEmployee))){
-                //    $scope.item.ahoCheck = false;
-                //    return toastr.error('Дата просрочена.', 'Ошибка!');
-                //}
-
                 item.ahoUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
@@ -1062,7 +1053,7 @@ angular.module('EmergenceFModule')
             $scope.daxs = {
                 model: null,
                 availableOptions: [
-                    {id: 'Нет прав', name: 'Нет прав'},
+                    //{id: 'Нет прав', name: 'Нет прав'},
                     {id: 'Менеджер', name: 'Менеджер'},
                     {id: 'Финансовый менеджер', name: 'Финансовый менеджер'},
                     {id: 'Сотрудник отдела логистики', name: 'Сотрудник отдела логистики'},

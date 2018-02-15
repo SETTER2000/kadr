@@ -53,7 +53,9 @@
 
 
                 <div class="panel-body">
-
+                    <a href="#" ng-click="onPanel()" class="btn btn-link pull-right">
+                        <span class=" glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>
+                    </a>
                     <form name="userForm" novalidate
                           ng-submit="saveEdit(item, userForm.$valid)" enctype="multipart/form-data">
 
@@ -89,47 +91,40 @@
                                     <!--&lt;!&ndash;<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>&ndash;&gt;-->
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <a href="#" ng-click="onPanel()" class="btn btn-link pull-right">
-                                    <span class=" glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>
-                                </a>
-                            </div>
+                            <!--<div class="col-md-6">-->
+                            <!--<a href="#" ng-click="onPanel()" class="btn btn-link pull-right">-->
+                            <!--<span class=" glyphicon" ng-class="{'glyphicon-menu-right':close,'glyphicon-menu-left':!close}"></span>-->
+                            <!--</a>-->
+                            <!--</div>-->
                         </div>
-
-
 
 
                         <!-- Д А Т А  В Ы Х О Д А  С О Т Р У Д Н И К А -->
 
                         <div layout="column" layout-align="center center" style="padding:0 0 80px" ng-cloak>
-                            <div flex-gt-xs>
-                                <h4>Дата выхода сотрудника </h4>
+                            <md-input-container flex-gt-sm>
+                                <div flex-gt-xs>
+                                    <h4>Дата выхода сотрудника </h4>
+                                    <md-datepicker required ng-if="!me.admin" name="itemOutputEmployee" ng-model="item.outputEmployee"
 
-                                <md-datepicker ng-if="!me.admin" name="itemOutputEmployee" ng-model="item.outputEmployee"
-                                               md-placeholder="Enter date"
-                                               md-min-date="ctrl.minDate"
-                                               md-max-date="ctrl.maxDate"></md-datepicker>
+                                                   md-placeholder="Enter date"
+                                                   md-min-date="ctrl.minDate"
+                                                   md-max-date="ctrl.maxDate">
+                                    </md-datepicker>
 
-                                <md-datepicker ng-if="me.admin" name="itemOutputEmployeeAdmin" ng-model="item.outputEmployee"
-                                               md-placeholder="Enter date"
-                                               md-max-date="ctrl.maxDate"></md-datepicker>
-                            </div>
-                            <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" ng-messages-multiple>
-                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
-                                <div ng-message="mindate" class="my-message">{{text.mindate}}</div>
-                            </div>
-
-                            <div ng-messages="userForm.itemOutputEmployeeAdmin.$error" role="alert" ng-messages-multiple>
-                                <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
-                            </div>
-                            <!--<div flex-gt-xs>-->
-                            <!--<h4>Only weekends are selectable</h4>-->
-                            <!--<md-datepicker ng-model="ctrl.myDate" md-placeholder="Enter date"-->
-                            <!--md-date-filter="ctrl.onlyWeekendsPredicate"></md-datepicker>-->
-                            <!--</div>-->
-                            <!--<div class="text-danger" ng-show="showError">-->
-                                <!--{{getError(userForm.itemOutputEmployee.$error)}}-->
-                            <!--</div>-->
+                                    <md-datepicker required ng-if="me.admin" name="itemOutputEmployeeAdmin" ng-model="item.outputEmployee"
+                                                   md-placeholder="Enter date"
+                                                   md-max-date="ctrl.maxDate">
+                                    </md-datepicker>
+                                </div>
+                                <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" ng-messages-multiple>
+                                    <div ng-message="required" class="my-message">{{text.noEmptyDate}}</div>
+                                    <div ng-message="mindate" class="my-message">{{text.mindate}}</div>
+                                </div>
+                                <div ng-messages="userForm.itemOutputEmployeeAdmin.$error" role="alert" ng-messages-multiple>
+                                    <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                </div>
+                            </md-input-container>
                         </div>
 
 
@@ -226,8 +221,6 @@
                         </div>
 
 
-
-
                         <!-- З А П У С К  П Р О Е К Т А -->
 
                         <div class="form-group" ng-show="false">
@@ -250,8 +243,6 @@
                         </div>
 
 
-
-
                         <!-- Д О Л Ж Н О С Т Ь -->
                         <br>
                         <div layout-gt-sm="row">
@@ -271,7 +262,6 @@
                         </div>
 
 
-
                         <!-- B O S S -->
 
                         <div layout-gt-sm="row">
@@ -287,12 +277,11 @@
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
-                                    <div ng-message="minlength" class="my-message"> {{text.minlengthServer}} <i class="far fa-smile"></i> </div>
+                                    <div ng-message="minlength" class="my-message"> {{text.minlengthServer}} <i class="far fa-smile"></i>
+                                    </div>
                                 </div>
                             </md-input-container>
                         </div>
-
-
 
 
                         <!-- L O C A T I O N -->
@@ -335,13 +324,12 @@
                         </md-input-container>
 
 
-
                         <!-- D A X -->
 
                         <md-input-container>
                             <label>Права в DAX</label>
                             <md-select name="itemDax" ng-model="item.dax">
-                                <md-option><em>--</em></md-option>
+                                <md-option><em>Нет прав</em></md-option>
                                 <md-option ng-repeat="option in daxs.availableOptions" ng-value="option.id">
                                     {{option.name}}
                                 </md-option>
@@ -349,66 +337,64 @@
                         </md-input-container>
 
 
-
                         <div class="well" style="margin: 30px 0">
-                        <!-- P H O N E -->
+                            <!-- P H O N E -->
 
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-model="item.phone" class="green" aria-label="Switch 1">
-                                        <!--<span ng-if="!item.phone">Телефон не нужен</span>-->
-                                        <span class="text-gray" ng-class="{'action':item.phone}">Телефон</span>
-                                    </md-switch>
-                                </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <md-switch ng-model="item.phone" class="green" aria-label="Switch 1">
+                                            <!--<span ng-if="!item.phone">Телефон не нужен</span>-->
+                                            <span class="text-gray" ng-class="{'action':item.phone}">Телефон</span>
+                                        </md-switch>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
 
-                        <!-- R E M O T E  A C C E S S -->
+                            <!-- R E M O T E  A C C E S S -->
 
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-model="item.remote" class="green" aria-label="Switch 2">
-                                        <!--<span ng-if="!item.remote">Удалённый доступ не нужен</span>-->
-                                        <span class="text-gray" ng-class="{'action':item.remote}">Удалённый доступ</span>
-                                    </md-switch>
-                                </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <md-switch ng-model="item.remote" class="green" aria-label="Switch 2">
+                                            <!--<span ng-if="!item.remote">Удалённый доступ не нужен</span>-->
+                                            <span class="text-gray" ng-class="{'action':item.remote}">Удалённый доступ</span>
+                                        </md-switch>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
 
-                        <!-- M O B I L E -->
+                            <!-- M O B I L E -->
 
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-model="item.mobile" class="green" aria-label="Switch 3">
-                                        <!--<span ng-if="!item.mobile">Мобильный не нужен</span>-->
-                                        <span class="text-gray" ng-class="{'action':item.mobile}">Корпоративный мобильный</span>
-                                    </md-switch>
-                                </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <md-switch ng-model="item.mobile" class="green" aria-label="Switch 3">
+                                            <!--<span ng-if="!item.mobile">Мобильный не нужен</span>-->
+                                            <span class="text-gray" ng-class="{'action':item.mobile}">Корпоративный мобильный</span>
+                                        </md-switch>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
 
-                        <!-- B U S S I N E S  C A R D -->
+                            <!-- B U S S I N E S  C A R D -->
 
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <md-switch ng-model="item.bussinescard" class="green" aria-label="Switch 4">
-                                        <!--<span ng-if="!item.bussinescard">Визитки не нужны</span>-->
-                                        <span class="text-gray" ng-class="{'action':item.bussinescard}">Визитки</span>
-                                    </md-switch>
-                                </label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <md-switch ng-model="item.bussinescard" class="green" aria-label="Switch 4">
+                                            <!--<span ng-if="!item.bussinescard">Визитки не нужны</span>-->
+                                            <span class="text-gray" ng-class="{'action':item.bussinescard}">Визитки</span>
+                                        </md-switch>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
                         </div>
                         <!-- S T A T U S -->
-
 
 
                         <div ng-if="(me.admin && item.id)" class="row">
@@ -553,7 +539,8 @@
             <!-- Ф И Н О Т Д Е Л  В Ы П О Л Н Е Н О   -->
             <form name="finForm" novalidate
                   enctype="multipart/form-data">
-                <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">
+                <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default"
+                     ng-class="{'panel-success':item.finCheck}">
                     <div class="panel-heading">
                         Финансовый отдел
                         <span ng-click="shoFin()" ng-if="item.commentFin" style="padding-top: 3px" class="pull-right glyphicon"
@@ -646,58 +633,59 @@
                 </div>
             </form>
             <!--<div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default" ng-class="{'panel-success':item.finCheck}">-->
-                <!--<div class="panel-heading"> Финансовый отдел</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<div class="form-group">-->
-                        <!--<div class="checkbox">-->
-                            <!--<table class="table">-->
-                                <!--<tr>-->
-                                    <!--<td width="10px">-->
-                                        <!--<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck"-->
-                                                     <!--ng-change="saveEditFin(item, userForm.$valid)"-->
-                                                     <!--aria-label="Checkbox 1"-->
-                                                     <!--class="green md-align-top-left" flex></md-checkbox>-->
-                                    <!--</td>-->
-                                    <!--<td>-->
-                                        <!--<span ng-if="!item.finCheck">{{titles.noCheck}}   </span>-->
-                                        <!--<span ng-if="item.finCheck">{{titles.check}} </span>-->
-                                    <!--</td>-->
-                                    <!--<td class="pull-right">-->
-                                        <!--<span ng-if="item.finUpdate" class="text-right">{{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>-->
-                                    <!--</td>-->
-                                <!--</tr>-->
-                                <!--<tr ng-if="item.commentFin">-->
-                                    <!--<td colspan="5">-->
-                                        <!--<xls-html-table dt-item="item.commentFin" header-tab="text.headerTab"></xls-html-table>-->
-                                    <!--</td>-->
-                                <!--</tr>-->
-                                <!--&lt;!&ndash;<tr >&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<td colspan="3">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<md-input-container class="md-block">&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<label>Информация по предоставленному оборудованию</label>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<textarea ng-disabled="(item.kadrValid || me.kadr)" name="itemCommentFin" required  ng-model="item.commentFin"&ndash;&gt;-->
-                                      <!--&lt;!&ndash;ng-maxlength="maxLengthFin"&ndash;&gt;-->
-                                      <!--&lt;!&ndash;md-maxlength="maxLengthFin"&ndash;&gt;-->
-                                      <!--&lt;!&ndash;ng-minlength="minLength"&ndash;&gt;-->
-                                      <!--&lt;!&ndash;rows="1" md-select-on-focus></textarea>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<div ng-message="required" class="my-message">{{text.noEmpty}}</div>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-                            <!--</table>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--<div class="panel-heading"> Финансовый отдел</div>-->
+            <!--<div class="panel-body">-->
+            <!--<div class="form-group">-->
+            <!--<div class="checkbox">-->
+            <!--<table class="table">-->
+            <!--<tr>-->
+            <!--<td width="10px">-->
+            <!--<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck"-->
+            <!--ng-change="saveEditFin(item, userForm.$valid)"-->
+            <!--aria-label="Checkbox 1"-->
+            <!--class="green md-align-top-left" flex></md-checkbox>-->
+            <!--</td>-->
+            <!--<td>-->
+            <!--<span ng-if="!item.finCheck">{{titles.noCheck}}   </span>-->
+            <!--<span ng-if="item.finCheck">{{titles.check}} </span>-->
+            <!--</td>-->
+            <!--<td class="pull-right">-->
+            <!--<span ng-if="item.finUpdate" class="text-right">{{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>-->
+            <!--</td>-->
+            <!--</tr>-->
+            <!--<tr ng-if="item.commentFin">-->
+            <!--<td colspan="5">-->
+            <!--<xls-html-table dt-item="item.commentFin" header-tab="text.headerTab"></xls-html-table>-->
+            <!--</td>-->
+            <!--</tr>-->
+            <!--&lt;!&ndash;<tr >&ndash;&gt;-->
+            <!--&lt;!&ndash;<td colspan="3">&ndash;&gt;-->
+            <!--&lt;!&ndash;<md-input-container class="md-block">&ndash;&gt;-->
+            <!--&lt;!&ndash;<label>Информация по предоставленному оборудованию</label>&ndash;&gt;-->
+            <!--&lt;!&ndash;<textarea ng-disabled="(item.kadrValid || me.kadr)" name="itemCommentFin" required  ng-model="item.commentFin"&ndash;&gt;-->
+            <!--&lt;!&ndash;ng-maxlength="maxLengthFin"&ndash;&gt;-->
+            <!--&lt;!&ndash;md-maxlength="maxLengthFin"&ndash;&gt;-->
+            <!--&lt;!&ndash;ng-minlength="minLength"&ndash;&gt;-->
+            <!--&lt;!&ndash;rows="1" md-select-on-focus></textarea>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div ng-message="required" class="my-message">{{text.noEmpty}}</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
+            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+            <!--</table>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
 
 
             <!-- А Х О  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default" ng-class="{'panel-success':item.ahoCheck}">
+            <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default"
+                 ng-class="{'panel-success':item.ahoCheck}">
                 <div class="panel-heading">АХО</div>
                 <div class="panel-body">
                     <div class="form-group">
@@ -736,7 +724,8 @@
             <!-- IT  В Ы П О Л Н Е Н О   -->
             <form name="itForm" novalidate
                   ng-submit="saveEdit(item, itForm.$valid)" enctype="multipart/form-data">
-                <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
+                <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default"
+                     ng-class="{'panel-success':item.itCheck}">
                     <div class="panel-heading">IT</div>
                     <div class="panel-body ">
                         <form name="createForm" novalidate enctype="multipart/form-data">
@@ -745,7 +734,7 @@
                                     <table class="table">
                                         <tr>
                                             <td width="10px">
-                                                <md-checkbox ng-disabled="(item.kadrValid || me.kadr)"  ng-model="item.itCheck"
+                                                <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck"
                                                              ng-change="saveEditIt(item, userForm.$valid)"
                                                              aria-label="Checkbox 3"
                                                              class="green md-align-top-left" flex></md-checkbox>
@@ -877,41 +866,41 @@
 
             <!-- IT  В Ы П О Л Н Е Н О  OLD  -->
             <!--<div ng-if="edit && item.startKadr && item.itCheck " class="panel panel-default" ng-class="{'panel-success':item.itCheck}">-->
-                <!--<div class="panel-heading">IT</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<div class="form-group">-->
-                        <!--<div class="checkbox">-->
-                            <!--<table class="table">-->
-                                <!--<tr>-->
-                                    <!--<td width="10px">-->
-                                        <!--<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck"-->
-                                                     <!--ng-change="saveEditIt(item, userForm.$valid)"-->
-                                                     <!--aria-label="Checkbox 1"-->
-                                                     <!--class="green md-align-top-left" flex></md-checkbox>-->
-                                    <!--</td>-->
-                                    <!--<td>-->
-                                        <!--<span ng-if="!item.itCheck">{{titles.noCheck}}   </span>-->
-                                        <!--<span ng-if="item.itCheck">{{titles.check}} </span>-->
-                                    <!--</td>-->
-                                    <!--<td class="pull-right">-->
-                                        <!--<span ng-if="item.itUpdate" class="text-right">{{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>-->
-                                    <!--</td>-->
-                                <!--</tr>-->
-                            <!--</table>-->
-                            <!--&lt;!&ndash;<label>&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Switch 4">&ndash;&gt;&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.check}} нет</span>&ndash;&gt;&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}} да</span>&ndash;&gt;&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash;</md-switch>&ndash;&gt;&ndash;&gt;-->
-                            <!--&lt;!&ndash;<md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Checkbox 1"&ndash;&gt;-->
-                            <!--&lt;!&ndash;class="green md-align-top-left" flex>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.noCheck}}</span>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}}</span>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</md-checkbox>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</label>&ndash;&gt;-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--<div class="panel-heading">IT</div>-->
+            <!--<div class="panel-body">-->
+            <!--<div class="form-group">-->
+            <!--<div class="checkbox">-->
+            <!--<table class="table">-->
+            <!--<tr>-->
+            <!--<td width="10px">-->
+            <!--<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck"-->
+            <!--ng-change="saveEditIt(item, userForm.$valid)"-->
+            <!--aria-label="Checkbox 1"-->
+            <!--class="green md-align-top-left" flex></md-checkbox>-->
+            <!--</td>-->
+            <!--<td>-->
+            <!--<span ng-if="!item.itCheck">{{titles.noCheck}}   </span>-->
+            <!--<span ng-if="item.itCheck">{{titles.check}} </span>-->
+            <!--</td>-->
+            <!--<td class="pull-right">-->
+            <!--<span ng-if="item.itUpdate" class="text-right">{{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>-->
+            <!--</td>-->
+            <!--</tr>-->
+            <!--</table>-->
+            <!--&lt;!&ndash;<label>&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Switch 4">&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.check}} нет</span>&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}} да</span>&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;</md-switch>&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;<md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Checkbox 1"&ndash;&gt;-->
+            <!--&lt;!&ndash;class="green md-align-top-left" flex>&ndash;&gt;-->
+            <!--&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.noCheck}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;</md-checkbox>&ndash;&gt;-->
+            <!--&lt;!&ndash;</label>&ndash;&gt;-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
 
 
@@ -937,18 +926,18 @@
             <!-- С О З Д А Н О   -->
 
             <!--<div ng-if="edit && item.startKadr && (item.email || item.phoneNumber)" class="panel panel-default"-->
-                 <!--ng-class="{'panel-success':(item.email && item.phoneNumber)}">-->
-                <!--<div class="panel-heading">Созданы ресурсы</div>-->
-                <!--<div class="panel-body">-->
-                    <!--<div class="form-group">-->
-                        <!--<label class="control-label">Email</label>-->
-                        <!--<input ng-disabled="(item.kadrValid  || me.kadr)" type="email" class="form-control" ng-model="item.email">-->
-                    <!--</div>-->
-                    <!--<div class="form-group">-->
-                        <!--<label class="control-label">Телефон</label>-->
-                        <!--<input ng-disabled="(item.kadrValid  || me.kadr)" type="text" class="form-control" ng-model="item.phoneNumber">-->
-                    <!--</div>-->
-                <!--</div>-->
+            <!--ng-class="{'panel-success':(item.email && item.phoneNumber)}">-->
+            <!--<div class="panel-heading">Созданы ресурсы</div>-->
+            <!--<div class="panel-body">-->
+            <!--<div class="form-group">-->
+            <!--<label class="control-label">Email</label>-->
+            <!--<input ng-disabled="(item.kadrValid  || me.kadr)" type="email" class="form-control" ng-model="item.email">-->
+            <!--</div>-->
+            <!--<div class="form-group">-->
+            <!--<label class="control-label">Телефон</label>-->
+            <!--<input ng-disabled="(item.kadrValid  || me.kadr)" type="text" class="form-control" ng-model="item.phoneNumber">-->
+            <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
 
             <!-- П О Л У Ч А Т Е Л И  П И С Е М -->

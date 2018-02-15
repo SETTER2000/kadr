@@ -42,6 +42,7 @@ angular.module('EmergenceModule')
 
             $scope.text = {
                 noEmpty: 'Поле не должно быть пустым.',
+                noEmptyDate: 'Нет даты.',
                 noPatternW: 'Писать только русские буквы.',
                 minlengthServer: 'Странное имя для руководителя!?',
                 minlength: "Не менее 3 знаков должно быть.",
@@ -49,7 +50,8 @@ angular.module('EmergenceModule')
                 noEmail: "Не корректный email.",
                 maxlength: "Много букв!",
                 headerTab: 'Предоставленное оборудование',
-                logChange:'Лог изменений',
+                logChange: 'Лог изменений',
+                mindate: 'Дата просрочена',
             };
             var info = {
                 changed: 'Изменения сохранены!',
@@ -86,12 +88,13 @@ angular.module('EmergenceModule')
             $scope.comment = false;
             $scope.hideFin = true;
             $scope.ctrl = {
-                minDate: new Date(),
+                minDate: new Date(moment().add(1, 'day')),
                 maxDate: new Date(moment().add(2, 'months')),
-                onlyWeekendsPredicate: function (date) {
-                    var day = date.getDay();
-                    return day === 0 || day === 6;
-                }
+                dt: new Date()
+                //onlyWeekendsPredicate: function (date) {
+                //    var day = date.getDay();
+                //    return day === 0 || day === 6;
+                //}
             };
 
 
@@ -262,8 +265,6 @@ angular.module('EmergenceModule')
             });
 
 
-
-
             $scope.$watch('item.outputEmployee', function (val, old) {
 
                 if (val) {
@@ -289,6 +290,14 @@ angular.module('EmergenceModule')
                     $scope.setData();
                 }
             });
+
+            //$scope.dt = new Date();
+            //$scope.$watch('dt', function (val) {
+            //    if (val) $scope.item.outputEmployee = val;
+            //});
+            //$scope.$watch('item.outputEmployee', function (val) {
+            //    if (val) $scope.dt =new Date(val);
+            //});
 
 
             $scope.examples2 = [
@@ -329,11 +338,11 @@ angular.module('EmergenceModule')
                 $scope.item.start = $scope.timeDate = fn($scope.item);
             };
 
-            $scope.expr2 = "outputEmployee | date:'dd.MM.yyyy'";
-            $scope.parseExpression2 = function () {
-                var fn = $parse($scope.expr2);
-                $scope.item.outputEmployee = $scope.timeDate = fn($scope.item);
-            };
+            //$scope.expr2 = "outputEmployee | date:'dd.MM.yyyy'";
+            //$scope.parseExpression2 = function () {
+            //    var fn = $parse($scope.expr2);
+            //    $scope.item.outputEmployee = $scope.timeDate = fn($scope.item);
+            //};
 
             //$scope.$watch('year', function (val, old) {
             //    if (val) {
@@ -719,21 +728,22 @@ angular.module('EmergenceModule')
                 ];
             $scope.modeSelect = $scope.options[0];
 
-            $scope.closed = function () {
-                if ($scope.close) {
-                    $scope.close = false;
-                }
-                else {
-                    $scope.close = true;
-                }
-            };
+            //$scope.closed = function () {
+            //    if ($scope.close) {
+            //        $scope.close = false;
+            //    }
+            //    else {
+            //        $scope.close = true;
+            //    }
+            //};
 
             $scope.refresh = function () {
-                let item = $scope.item = Emergences.get({id: $stateParams.emergenceId},
+                let item = $scope.item =Emergences.get({id: $stateParams.emergenceId},
                     function (emergences) {
                         console.log('EDIT EMERGENCE refresh function', emergences);
                         $scope.flatpicker.setDate(emergences.period);
-                        $scope.emergences = emergences;
+
+                            $scope.emergences = emergences;
                         //$scope.departments = emergences.departments;
                     }, function (err) {
                         // активируем по умолчанию создаваемую запись
@@ -745,6 +755,7 @@ angular.module('EmergenceModule')
                 //$scope.item.year = item.getYear();
                 //$scope.getAllUsers();
                 $scope.item.name = item.getFullName();
+                $scope.item.outputEmployee = item.formatDate();
             };
 
             $scope.removePosition = function (obj) {
@@ -841,7 +852,6 @@ angular.module('EmergenceModule')
 
             var reversValue = function (item) {
                 item.start = ( item.start) ? new Date(moment(item.start, ['DD.MM.YYYY HH:mm'])) : null;
-                //item.outputEmployee = ( item.outputEmployee) ? new Date(moment(item.outputEmployee, ['DD.MM.YYYY'])) : null;
                 return item;
             };
 
@@ -857,7 +867,7 @@ angular.module('EmergenceModule')
             $scope.daxs = {
                 model: null,
                 availableOptions: [
-                    {id: 'Нет прав', name: 'Нет прав'},
+                    //{id: 'Нет прав', name: 'Нет прав'},
                     {id: 'Менеджер', name: 'Менеджер'},
                     {id: 'Финансовый менеджер', name: 'Финансовый менеджер'},
                     {id: 'Сотрудник отдела логистики', name: 'Сотрудник отдела логистики'},
@@ -870,7 +880,12 @@ angular.module('EmergenceModule')
                 $scope.item.endKadr = ($scope.item.startKadr && $scope.item.finCheck && $scope.item.ahoCheck && $scope.item.itCheck);
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
-
+            $scope.errDate = function (item) {
+                if (moment().isAfter(moment(item.outputEmployee)) && !$scope.me.admin) {
+                    return true;
+                }
+                return false;
+            };
 
             $scope.saveEditFin = function (item, isValid) {
 
@@ -878,7 +893,8 @@ angular.module('EmergenceModule')
                     $scope.item.finCheck = false;
                     return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
                 }
-                if(moment().isAfter(moment(item.outputEmployee)) && !$scope.me.admin){
+
+                if ($scope.errDate(item)) {
                     $scope.item.finCheck = false;
                     return toastr.error('Дата просрочена.', 'Ошибка!');
                 }
@@ -888,17 +904,52 @@ angular.module('EmergenceModule')
             };
 
 
+            //$scope.saveEditAho = function (item, isValid) {
+            //    item.ahoUpdate = $scope.me.id;
+            //    $scope.saveEdit(item, isValid);
+            //    $state.go('home.admin.emergences');
+            //};
+
             $scope.saveEditAho = function (item, isValid) {
+                if ($scope.errDate(item)) {
+                    $scope.item.ahoCheck = false;
+                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                }
                 item.ahoUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
-                $state.go('home.admin.emergences');
+                $state.go('home.company.emergences', toastr.success(info.changed));
             };
+            //$scope.saveEditIt = function (item, isValid) {
+            //    item.itUpdate = $scope.me.id;
+            //    $scope.saveEdit(item, isValid);
+            //    $state.go('home.admin.emergences');
+            //};
 
             $scope.saveEditIt = function (item, isValid) {
+
+                if ($scope.errDate(item)) {
+                    $scope.item.itCheck = false;
+                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                }
+
                 item.itUpdate = $scope.me.id;
+                if (!angular.isArray(item.itUpdateData))  item.itUpdateData = [];
+
+                item.itUpdateData.push({
+                    action: item.itCheck,
+                    img: $scope.me.avatarUrl,
+                    lastName: $scope.me.lastName,
+                    firstName: $scope.me.firstName,
+                    patronymicName: $scope.me.patronymicName,
+                    fullName: $scope.me.lastName + ' ' + $scope.me.firstName + ' ' + $scope.me.patronymicName,
+                    shortName: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '.' + $scope.me.patronymicName[0] + '.',
+                    date: new Date()
+                });
+
                 $scope.saveEdit(item, isValid);
-                $state.go('home.admin.emergences');
+                $state.go('home.company.emergences', toastr.success(info.changed));
             };
+
 
             $scope.$watch('item.kadrValid', function (val) {
                 $scope.checkedValue();
@@ -923,7 +974,7 @@ angular.module('EmergenceModule')
 
             $scope.saveEdit = function (item, isValid) {
 
-                if(moment().isAfter(moment(item.outputEmployee)) && !$scope.me.admin) return toastr.error('Дата просрочена.', 'Ошибка!');
+                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
 
                 if (item.commentIt) {
                     item.commentItArr.push({

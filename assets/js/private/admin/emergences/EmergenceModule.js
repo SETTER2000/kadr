@@ -119,6 +119,9 @@ angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMater
 
         };
 
+        Emergences.prototype.formatDate = function () {
+            return this.outputEmployee = (this.outputEmployee) ? new Date(this.outputEmployee) : new Date();
+        };
         Emergences.prototype.goOpen = function () {
             return this.go = (this.go) ? false : true;
         };

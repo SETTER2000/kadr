@@ -109,7 +109,9 @@ angular.module('EmergenceFModule', ['ui.router', 'toastr', 'ngResource', 'ngMate
             });
 
         };
-
+        EmergencesF.prototype.formatDate = function () {
+            return this.outputEmployee = (this.outputEmployee) ? new Date(this.outputEmployee) : new Date();
+        };
         EmergencesF.prototype.goOpen = function () {
             return this.go = (this.go) ? false : true;
         };
