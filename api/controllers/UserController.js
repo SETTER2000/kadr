@@ -102,7 +102,7 @@ module.exports = {
                         return res.ok(users);
                     });
             } else {
-                
+
                 User.find()
                     .populate('positions')
                     .populate('vacations')
@@ -384,7 +384,7 @@ module.exports = {
      * Поиск руководителя в LDAP
      */
     bossLDAP: function (req, res) {
-        sails.log.info('Поиск руководителя в LDAP для сотрудника: ', req.param('lastName') +' '+ req.param('firstName') +' '+ req.param('patronymicName'));
+        sails.log.info('Поиск руководителя в LDAP для сотрудника: ', req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName'));
         const clientSearchLDAP = ldap.createClient({
             url: sails.config.ldap.uri
         });
@@ -786,7 +786,6 @@ module.exports = {
     },
 
 
-
     /**
      * Показать пользователя
      * @param req
@@ -956,39 +955,39 @@ module.exports = {
     restoreProfile: function (req, res) {
 
         User.findOne({
-            email: req.param('email'),
-            action: true
-        },
+                email: req.param('email'),
+                action: true
+            },
             function foundUser(err, user) {
-            if (err) return res.negotiate(err);
-            if (!user) return res.notFound();
+                if (err) return res.negotiate(err);
+                if (!user) return res.notFound();
 
-            Passwords.checkPassword({
-                passwordAttempt: req.param('password'),
-                encryptedPassword: user.encryptedPassword
-            }).exec({
+                Passwords.checkPassword({
+                    passwordAttempt: req.param('password'),
+                    encryptedPassword: user.encryptedPassword
+                }).exec({
 
-                error: function (err) {
-                    return res.negotiate(err);
-                },
+                    error: function (err) {
+                        return res.negotiate(err);
+                    },
 
-                incorrect: function () {
-                    return res.notFound();
-                },
+                    incorrect: function () {
+                        return res.notFound();
+                    },
 
-                success: function () {
-                    User.update({
-                        id: user.id
-                    }, {
-                        deleted: false
-                    }).exec(function (err, updatedUser) {
-                        req.session.me = user.id;
-                        //console.log(updatedUser);
-                        return res.json(updatedUser);
-                    });
-                }
+                    success: function () {
+                        User.update({
+                            id: user.id
+                        }, {
+                            deleted: false
+                        }).exec(function (err, updatedUser) {
+                            req.session.me = user.id;
+                            //console.log(updatedUser);
+                            return res.json(updatedUser);
+                        });
+                    }
+                });
             });
-        });
     },
 
     /**
@@ -1161,7 +1160,7 @@ module.exports = {
             if (!findOne) return res.badRequest();
             if (findOne.switchAdmin) {
                 let admin = (findOne.admin) ? false : true;
-                sails.log.info('Переключение режима сотрудник (false)/admin (true): '+ new Date(), admin );
+                sails.log.info('Переключение режима сотрудник (false)/admin (true): ' + new Date(), admin);
                 User.update({id: req.session.me}, {
                     admin: admin
                 }).exec(function (err, update) {
@@ -1172,7 +1171,7 @@ module.exports = {
 
             if (findOne.switchKadr) {
                 let kadr = (findOne.kadr) ? false : true;
-                sails.log.info('Переключение режима сотрудник (false)/kadr (true): '+ new Date(), kadr);
+                sails.log.info('Переключение режима сотрудник (false)/kadr (true): ' + new Date(), kadr);
                 User.update({id: req.session.me}, {
                     kadr: kadr
                 }).exec(function (err, update) {
@@ -1199,21 +1198,17 @@ module.exports = {
         });
     },
 
-    /**
-     * Дать/Снять доступ к модулю Emergence (выход нового пользователя)
-     * @param req
-     * @param res
-     */
-    updateEmergence: function (req, res) {
-        //console.log('REG ALLL:', req.params.all());
-        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        User.update(req.param('id'), {
-            emergence: req.param('emergence')
-        }).exec(function (err, update) {
-            if (err) return res.negotiate(err);
-            return res.ok();
-        });
-    },
+
+    //updateEmergence: function (req, res) {
+    //    //console.log('REG ALLL:', req.params.all());
+    //    if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+    //    User.update(req.param('id'), {
+    //        emergence: req.param('emergence')
+    //    }).exec(function (err, update) {
+    //        if (err) return res.negotiate(err);
+    //        return res.ok();
+    //    });
+    //},
 
     /**
      * Дать/Снять доступ к модулю Vacation (отпуска пользователя)
@@ -1243,24 +1238,50 @@ module.exports = {
             vacation: req.param('change')
         }).exec(function (err, update) {
             if (err) return res.negotiate(err);
-            //console.log('update', update.length);
+            console.log('update', update.length);
             return res.ok();
         });
     },
+
     /**
-     * сразу всем Дать/Снять доступ к модулю Vacation  (отпуска пользователя)
+     * Дать/Снять доступ к модулю Emergence (выход нового пользователя)
+     * @param req
+     * @param res
+     */
+    updateEmergence: function (req, res) {
+        console.log('REG ALLL666:', req.params.all());
+        console.log('req.param id:', req.param('id'));
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        if (req.param('id') === 'undefined') return res.badRequest();
+
+        User.update(req.param('id'), {
+            emergence: [{
+                action: req.param('action'),
+                see: req.param('see'),
+            }]
+        }).exec(function (err, update) {
+            if (err) return res.negotiate(err);
+            return res.ok();
+        });
+    },
+
+
+    /**
+     * сразу всем Дать/Снять доступ к модулю Emergence  (отпуска пользователя)
      * @param req
      * @param res
      */
     updateEmergenceAll: function (req, res) {
         //console.log('REG ALLL updateEmergenceAll:', req.params.all());
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        User.update({}, {
-            emergence: req.param('change')
-        }).exec(function (err, update) {
-            if (err) return res.negotiate(err);
-            //console.log('update', update.length);
-            return res.ok();
+        User.native(function (err, collection) {
+            if (err) return res.serverError(err);
+            collection.update({emergence: { $elemMatch: { action: { $ne: req.param('action') } } }},  { $set: { "emergence.$.action" : req.param('action')} },{multi:true},
+                function (err, result) {
+                    if (err) return res.serverError(err);
+                    return res.ok();
+                }
+            );
         });
     },
 
@@ -1360,7 +1381,11 @@ module.exports = {
                     });
             });
     },
-
+    /**
+     * Выбрать всех не уволеных пользователей
+     * @param req
+     * @param res
+     */
     adminUsers: function (req, res) {
         User.find({
             where: {fired: false},

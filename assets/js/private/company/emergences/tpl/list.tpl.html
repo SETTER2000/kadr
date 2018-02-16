@@ -1,4 +1,3 @@
-<!--<div ng-cloak class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-scope">-->
 <div class="col-sm-11  col-md-12  main">
     <div class="page-header">
         <h2 ng-if="!items[0].sections">Создайте заявку</h2>
@@ -97,70 +96,19 @@
             </div>
         </div>
         <div class="col-md-3">
-            <!--<select class="form-control" role="group"-->
-            <!--ng-model="modeSelect" ng-options="item.display for item in options track by item.value">-->
-            <!--</select>-->
             <md-select class="mr0" placeholder="Выбрать" ng-model="modeSelect" md-on-open="loadOptions()" style="min-width: 200px;">
                 <md-option ng-value="item" ng-repeat="item in options">{{item.display}}</md-option>
             </md-select>
-            <!--<div ng-switch on="modeSelect.value" style="margin-top:20px;">-->
-            <!--<table class="table" ng-switch-when="table">-->
-            <!--<thead>-->
-            <!--<tr>-->
-            <!--<th>Name</th>-->
-            <!--<th>Value</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tr ng-repeat="item in items">-->
-            <!--<td>{{item.getFullName()}}</td>-->
-            <!--<td>{{item.login}}</td>-->
-            <!--</tr>-->
-            <!--</table>-->
-            <!--<div class="list-group" ng-switch-when="list">-->
-            <!--<a href="#" class="list-group-item active">-->
-            <!--Список-->
-            <!--</a>-->
-            <!--<a href="#" ng-repeat="item in items" class="list-group-item">-->
-            <!--{{item.getFullName()}}:{{item.login}}-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--<ul class="list-group" ng-switch-when="budges">-->
-            <!--<li ng-repeat="item in items" class="list-group-item">-->
-            <!--<span class="badge">{{item.login}}</span>-->
-            <!--{{item.getFullName()}}-->
-            <!--</li>-->
-            <!--</ul>-->
-
-
-            <!--</div>-->
-
         </div>
     </div>
-    <!--<button type="submit" size="large">Click Me!</button>-->
-    <!--{{charText}}  {{where}}-->
-
-    <!--<pagination num-pages="numPages"-->
-    <!--limit-rows="limitRows"-->
-    <!--default-rows="defaultRows"-->
-    <!--length-object="items.length"-->
-    <!--current-page="currentPage"-->
-    <!--on-select-page="selectCount=selectCount+1">-->
-    <!--</pagination>-->
-
     <div class="row">
         <div class="col-md-12">
             &nbsp;
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-12">
             <div class="input-group">
-
-                <!--<span ng-if="(searchText.length>0)" class="input-group-addon" id="basic-addon1">-->
-                <!--{{filtered.length}}-->
-                <!--</span>-->
-
                 <input type="text" class="form-control" ng-model="searchText" placeholder="Поиск ...">
                      <span class="input-group-btn">
                        <button ng-click="searchText=''" class="btn btn-default" type="button">
@@ -170,29 +118,6 @@
             </div>
         </div>
     </div>
-
-    <!--<div class="row" ng-cloak>-->
-    <!--<div class="col-md-12">-->
-    <!--<div class="panel panel-info">-->
-    <!--<div class="panel-heading">-->
-
-
-    <!--</div>-->
-    <!--<div class="panel-body">-->
-    <!--<div ng-switch on="modeSelect.value" style="margin-top:20px;">-->
-    <!--<div ng-switch-when="list">-->
-    <!--<ng-include src="listView"></ng-include>-->
-    <!--</div>-->
-    <!--<div ng-switch-when="table">-->
-    <!--<ng-include src="tableView"></ng-include>-->
-    <!--</div>-->
-    <!--<div ng-switch-when="action">-->
-    <!--<ng-include src="actionView"></ng-include>-->
-    <!--</div>-->
-    <!--<div ng-switch-when="work">-->
-    <!--<ng-include src="workView"></ng-include>-->
-    <!--</div>-->
-    <!--</div>-->
     <div ng-switch on="modeSelect.value" style="margin-top:20px;">
         <div ng-switch-when="all">
             <div ui-view="actionView"></div>
@@ -211,12 +136,7 @@
         </div>
     </div>
 </div>
-
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
 <div ui-view="list"></div>
 <div ui-view="attendance"></div>
-
 <pre class="pull-right" ng-if="debug"><h2>{{items| json}}</h2></pre>
-</div>
+<!--</div>-->

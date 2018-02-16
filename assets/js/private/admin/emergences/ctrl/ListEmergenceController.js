@@ -315,20 +315,36 @@
 
             });
 
+
+
+
+
+
             $scope.refresh = function (where) {
                 if (where) {
                     $scope.where = where;
                 } else {
                     $scope.where = {};
                 }
+                //$scope.query = {
+                //    where: $scope.where,
+                //    sort: $scope.sort,
+                //    limit: $scope.limitAll,
+                //    property: 'lastName',
+                //    char: $scope.charText + '%'
+                //};
+                let whomCreated = (!$scope.me.emergence[0].see) ? $scope.me.id : false;
+
                 $scope.query = {
                     where: $scope.where,
                     sort: $scope.sort,
                     limit: $scope.limitAll,
                     property: 'lastName',
+                    whomCreated: whomCreated,
                     char: $scope.charText + '%'
                 };
 
+                //console.log('SEEE', $scope.me.emergence[0].see);
                 $scope.items = Emergences.query($scope.query, function (emergence) {
                     //console.log('EMERGENCE ITEMS:', emergence);
                     $scope.items = emergence;

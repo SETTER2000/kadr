@@ -26,7 +26,7 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        //console.log('GET ALL PARAMS Emergence:', req.params.all());
+        console.log('GET ALL PARAMS Emergence:', req.params.all());
         var q = {
             limit: req.param('limit'),
             sort: req.param('sort')
@@ -34,8 +34,21 @@ module.exports = {
         if (!_.isUndefined(req.param('where')) && !_.isUndefined(req.param('char'))) {
             var y = {};
             y[req.param('property')] = {'like': req.param('char')};
+            if(req.param('whomCreated') !== 'false') {y.whomCreated = req.param('whomCreated');}
+                //y['whomCreate']={id:"58e35656594105801c9d9203"};
+            //console.log('whomCreated',  req.param('whomCreated'));
             q.where = y;
         }
+        //console.log('POPPP',req.param('whomCreated'));
+        if(req.param('whomCreated'))
+        {
+           var objCreated = {
+                where: {
+                    id: req.param('whomCreated')
+                }
+            }
+        }
+
         if (req.param('id')) {
             Emergence.findOne(req.param('id'))
                 .populate('positions')
@@ -73,7 +86,8 @@ module.exports = {
                      skip: 2353,
                      limit: 25
                      }*/
-
+                    //q.where = { whomCreate:{id: '58e35656594105801c9d9203'}};
+                    //console.log('QUERY ', q);
                     Emergence.find(q)
                         .populate('positions')
                         .populate('departments')
@@ -105,6 +119,7 @@ module.exports = {
                                     //console.log('Все файлы успешно обработаны');
                                 }
                             });
+                            //console.log('emergences', emergences);
                             res.send(emergences);
                         });
                 });
@@ -311,8 +326,12 @@ module.exports = {
                     worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
                 };
 
-                if (req.param('commentIt')) {obj.commentItArr = req.param('commentItArr');}
-                if (req.param('itUpdateData')) {obj.itUpdateData = req.param('itUpdateData');}
+                if (req.param('commentIt')) {
+                    obj.commentItArr = req.param('commentItArr');
+                }
+                if (req.param('itUpdateData')) {
+                    obj.itUpdateData = req.param('itUpdateData');
+                }
 
                 User.findOne({id: obj.whomUpdated})
                     .exec((err, findUser) => {

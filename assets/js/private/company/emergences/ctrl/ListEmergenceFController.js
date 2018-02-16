@@ -102,8 +102,8 @@
 
 
 
-            //$scope.defaultRows = ($scope.me.defaultRows) ? $scope.me.defaultRows : 15;
-            $scope.defaultRows =10;
+                //$scope.defaultRows = ($scope.me.defaultRows) ? $scope.me.defaultRows : 15;
+            $scope.defaultRows = 10;
             $scope.limitRows = [2, 3, 5, 7, 10, 15, 30, 50, 70, 100];
             $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
 
@@ -129,10 +129,10 @@
                 title: 'На проверке',
                 titleService: 'Проверено',
                 startProject: 'Подача заявки',
-                textHead:'Сообщения отправлены',
+                textHead: 'Сообщения отправлены',
                 outputEmployee: 'Выход сотрудника',
-                check:'выполнено',
-                checkKadr:'начать обработку'
+                check: 'выполнено',
+                checkKadr: 'начать обработку'
             };
 
 
@@ -211,7 +211,6 @@
             //$scope.listView = "/js/private/company/emergence/views/home.company.emergence.list.html";
             //$scope.actionView = "/js/private/company/emergence/views/home.company.emergence.action.html";
             //$scope.workView = "/js/private/company/emergence/views/home.company.emergence.work.html";
-
 
 
             $scope.loadOptions = function () {
@@ -314,18 +313,23 @@
                 } else {
                     $scope.where = {};
                 }
+
+                let whomCreated = (!$scope.me.emergence[0].see) ? $scope.me.id : false;
+
                 $scope.query = {
                     where: $scope.where,
                     sort: $scope.sort,
                     limit: $scope.limitAll,
                     property: 'lastName',
+                    whomCreated: whomCreated,
                     char: $scope.charText + '%'
                 };
 
-                $scope.items = EmergencesF.query($scope.query, function (emergence) {
-                    //console.log('EMERGENCE ITEMS:', emergence);
-                    $scope.items = emergence;
+                //console.log('SEEE', $scope.me.emergence[0].see);
 
+                $scope.items = EmergencesF.query($scope.query, function (emergence) {
+                    console.log('EMERGENCE ITEMS:', emergence);
+                    $scope.items = emergence;
                     $scope.countCurrentView = emergence.length;
                     $scope.objectName = emergence;
                     //$scope.numPages = Math.floor(emergence.length / $scope.defaultRows) + 1;

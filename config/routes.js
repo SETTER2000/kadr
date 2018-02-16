@@ -68,6 +68,7 @@ module.exports.routes = {
     'PUT /user/update-action/:id': 'UserController.updateAction',
     'PUT /user/update-emergence-all': 'UserController.updateEmergenceAll',
     'PUT /user/update-emergence/:id': 'UserController.updateEmergence',
+    //'PUT /user/update-emergence/:id': 'UserController.updateEmergence',
     'PUT /user/update-vacation-all': 'UserController.updateVacationAll',
     'PUT /user/update-vacation/:id': 'UserController.updateVacation',
     'PUT /user/update-deleted/:id': 'UserController.updateDeleted',

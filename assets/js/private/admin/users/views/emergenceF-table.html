@@ -213,7 +213,8 @@
     </tr>
 
     <!-- B O D Y  T A B L E -->
-    <tr ng-class="{'success':item.endKadr, 'danger':item.kadrValid}" ng-repeat="item in filtered=(items | filter:{$:searchText} | filter:filterObject |
+    <!--| filter:{whomCreated:{id:me.id}}-->
+    <tr ng-class="{'success':item.endKadr, 'danger':item.kadrValid}" ng-repeat="item in filtered=(items  | filter:{$:searchText} | filter:filterObject |
 orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo: defaultRows)" ng-cloak>
 
         <!-- I N D E X -->
@@ -221,22 +222,10 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             {{$index+1}}
         </td>
 
-        <!-- А В А Т А Р -->
-        <!--<td>-->
-        <!--&lt;!&ndash;<img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}" alt=""></td>&ndash;&gt;-->
-        <!--<img ng-if="item.avatarUrl" alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="photo"/>-->
-        <!--<img ng-if="!item.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>-->
-        <!--</td>-->
 
         <!-- F I O -->
         <td class="text-nowrap">
-            <!--<a ng-if="(item.status==='Новая' || me.admin)"  ui-sref="home.company.emergences.edit({emergenceId:item.id})">-->
-                <!--&lt;!&ndash;<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">&ndash;&gt;-->
-                <!--{{item.getFullName()}}-->
-            <!--</a>-->
-            <!--<span ng-if="(item.status!=='Новая' && !me.admin)">{{item.getFullName()}}</span>-->
             <a title="{{item.lastName}} {{item.firstName}} {{item.patronymicName}}" ui-sref="home.company.emergences.edit({emergenceId:item.id})">
-            <!--<a ng-if="(item.status==='Новая' || me.admin)" class="position" ui-sref="home.company.emergences.edit({id:155})">-->
                 {{item.lastName}} {{item.firstName[0]}}. {{item.patronymicName[0]}}.
             </a>
         </td>
@@ -252,17 +241,6 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <td class="text-center">
             {{item.outputEmployee | date:"dd.MM.yyyy"}}
         </td>
-
-
-        <!-- C O U N T  D A T A S E A R C H -->
-        <!--<td class="text-center">-->
-        <!--{{item.vacations | countSelectedDays}} &nbsp; из &nbsp;{{ item.countData }}-->
-        <!--</td>-->
-
-        <!--&lt;!&ndash; Y E A R &ndash;&gt;-->
-        <!--<td class="text-center">-->
-        <!--{{item.year}}-->
-        <!--</td>-->
 
         <!-- S T A T U S -->
         <td class="text-center ">
@@ -319,15 +297,10 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             <!--НОВАЯ-->
             <div ng-if="item.logSender && item.go && (item.status==='Новая')" class="animate-if">
                 <h6>Рассылка:{{item.start | deadline}}</h6>
-                <!--<div class="list-group" ng-repeat="sender in item.logSender">-->
-                <!--<p>-->
-                <!--<span class="text-info">{{sender.lastName}} {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.  </span>-->
-                <!--<span class="glyphicon" ng-class="{'glyphicon-ok':sender.action, 'text-success':sender.action,}"></span>-->
-                <!--</p>-->
-                <!--</div>-->
             </div>
 
             <!--ОТКЛОНЕНА-->
+
             <div ng-if="item.logSender && item.go && (item.status==='Отклонена')" class="animate-if">
                 <span ng-if="(item.commentKadr.length <= 50)"><strong>Комментарий:</strong> <br>{{item.commentKadr}} </span>
                 <div ng-if="(item.commentKadr.length > 50)" class="row" style="position: relative">
@@ -340,51 +313,20 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
                             </div>
                             <div class="panel-body ">
                                 <span class="pull-left"> {{item.commentKadr}}</span>
-                                <!--<dl ng-repeat="sender in item.logSender">-->
-                                <!--<dt><span class="text-info">{{sender.lastName}} {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.  </span></dt>-->
-                                <!--<dd> <small>{{sender.positions[0].name}}</small> </dd>-->
-                                <!--&lt;!&ndash;<dd>- <span class="glyphicon" ng-class="{'glyphicon-ok':sender.action, 'text-success':sender.action,}"></span></dd>&ndash;&gt;-->
-                                <!--</dl>-->
-
                             </div>
 
                         </div>
-
-                        <!--<div class="list-group" ng-repeat="sender in item.logSender">-->
-                        <!--<p>-->
-                        <!--<span class="text-info">{{sender.lastName}} {{sender.firstName[0]}}.{{sender.patronymicName[0]}}.  </span>-->
-                        <!--<span class="glyphicon" ng-class="{'glyphicon-ok':sender.action, 'text-success':sender.action,}"></span>-->
-                        <!--</p>-->
-                        <!--</div>-->
                     </div>
                 </div>
             </div>
         </td>
 
+
+
         <!-- Д А Т А  З А П У С К А  П Р О Е К Т А -->
         <td class="text-center">
             {{item.start | date:"dd.MM.yyyy HH:mm"}}
         </td>
-        <!-- F R O M -->
-        <!--<td class="text-center">-->
-        <!--{{item.from | date : "dd.MM.yyyy "}}-->
-        <!--</td>-->
-
-        <!--&lt;!&ndash; T O &ndash;&gt;-->
-        <!--<td class="text-center">-->
-        <!--{{item.to | date : "dd.MM.yyyy "}}-->
-        <!--</td>-->
-
-
-        <!-- К О Л-В О  Д Н Е Й -->
-        <!--<td class="text-center">-->
-        <!--{{item.daysSelectHoliday }}-->
-        <!--</td>-->
-
-        <!-- А К Т И В А Ц И Я -->
-        <!--<td class="text-center">-->
-            <!--<span ng-if="item.action" class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>-->
-        <!--</td>-->
 
 
         <!-- К А Д Р Ы  Н А Ч А Т Ь  П Р О Ц Е Д У Р У -->

@@ -18,6 +18,13 @@ const http = require('http');
 
 
 module.exports = {
+
+    /**
+     * Получить настройки для определённого модуля
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     get: function (req, res) {
         "use strict";
         //console.log(req.params.all());
@@ -37,18 +44,13 @@ module.exports = {
      * @param res
      */
     checkSenderEmergence: function (req, res) {
-        //console.log('REG ALLL updateEmergenceAll:', req.params.all());
-        //console.log('REG ALLL updateEmergenceAll:', req.path);
-        //console.log('REG ALLL updateEmergenceAll:', req.url);
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         Setting.findOrCreate({name: req.param('module')}, {name: req.param('module')})
             .exec((err, createdOrFoundRecords)=> {
-                //console.log('What\'s cookin\' '+createdOrFoundRecords.name+'?');
                 Setting.update({name: createdOrFoundRecords.name}, {
                     checkSender: req.param('change')
                 }).exec(function (err, update) {
                     if (err) return res.negotiate(err);
-                    //console.log('update', update.length);
                     return res.ok();
                 });
             });

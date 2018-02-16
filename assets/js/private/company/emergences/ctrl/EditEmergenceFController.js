@@ -775,15 +775,6 @@ angular.module('EmergenceFModule')
                 ];
             $scope.modeSelect = $scope.options[0];
 
-            //$scope.closed = function () {
-            //    if ($scope.close) {
-            //        $scope.close = false;
-            //    }
-            //    else {
-            //        $scope.close = true;
-            //    }
-            //};
-
             $scope.refresh = function () {
                 let item = $scope.item = EmergencesF.get({id: $stateParams.emergenceId},
                     function (emergences) {
@@ -797,8 +788,6 @@ angular.module('EmergenceFModule')
                         item.countData = 0;
                     }
                 );
-                //$scope.item.year = item.getYear();
-                //$scope.getAllUsers();
                 $scope.item.outputEmployee = item.formatDate();
                 $scope.item.name = item.getFullName();
             };
@@ -979,9 +968,7 @@ angular.module('EmergenceFModule')
                 }
                 item.finUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
-                //$state.apply();
-                //toastr.success(info.changed);
-                //$state.go('home.company.emergences', toastr.success(info.changed));
+                $state.go('home.company.emergences', toastr.success(info.changed));
             };
             $scope.showLogs = false;
             $scope.showLog = function () {

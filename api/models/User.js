@@ -73,9 +73,14 @@ module.exports = {
         },
 
         emergence: {
-            type: 'boolean',
-            defaultsTo: false
+            type:'array',
+            defaultsTo:[]
         },
+
+        //emergence: {
+        //          type: 'boolean',
+        //          defaultsTo: false
+        //      },
 
         //доступ к модулю отпусков
         vacation: {

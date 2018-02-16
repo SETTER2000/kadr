@@ -32,7 +32,7 @@
                             <!--<li><a ng-if="(me.admin)" ui-sref="home.admin.documents">Документы и отчётность</a></li>-->
                         </ul>
                     </li>
-                    <li ng-if="(!me.admin && !me.kadr && me.emergence)" class="dropdown">
+                    <li ng-if="(!me.admin && !me.kadr && me.emergence[0].action)" class="dropdown">
                         <div  ng-show="bdgs.length" class="badges-position">
                             <div class="badge danger" ng-mouseover="clickToOpen()">
                                 {{bdgs.length}}
