@@ -546,75 +546,46 @@
                         <span ng-click="shoFin()" ng-if="item.commentFin" style="padding-top: 3px" class="pull-right glyphicon"
                               ng-class="{'glyphicon-menu-down':hideFin, 'glyphicon-menu-up':!hideFin}"></span>
                     </div>
-
                     <div class="panel-body drop-length">
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <table class="table">
-                                    <tr>
-                                        <td width="10px">
-                                            <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" title="{{titleFinCheck}}"
-                                                         ng-change="saveEditFin(item, finForm.$valid)"
-                                                         aria-label="Checkbox 1"
-                                                         class="green md-align-top-left" flex></md-checkbox>
-                                        </td>
-                                        <td>
-                                            <span ng-if="!item.finCheck">{{titles.noCheck}}   </span>
-                                            <span ng-if="item.finCheck">{{titles.check}} </span>
-                                        </td>
-                                        <td class="pull-right">
-                                            <span ng-if="item.finUpdate" class="text-right">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" title="{{titleFinCheck}}"
+                                             ng-change="saveEditFin(item, finForm.$valid)"
+                                             aria-label="Checkbox 1"
+                                             class="green md-align-top-left" flex>
+                                    <span ng-if="!item.finCheck">{{titles.noCheck}}   </span>
+                                    <span ng-if="item.finCheck">{{titles.check}} </span>
+                                </md-checkbox>
+                            </div>
+                            <div class="col-md-6 ">
+                                 <span ng-if="item.finUpdate" class="pull-right">
                                                 <md-tooltip md-direction="top">{{amended}}</md-tooltip>
                                                 {{item.finUpdate.lastName}} {{item.finUpdate.firstName[0]}}. {{item.finUpdate.patronymicName[0]}}.</span>
-                                        </td>
-                                    </tr>
-                                    <tr ng-hide="(item.commentFin && hideFin)">
-                                        <td colspan="3">
-                                            <md-input-container class="md-block">
-                                                <label>Информация по предоставленному оборудованию </label>
+
+                            </div>
+                        </div>
+                        <md-divider ng-if="!$last"></md-divider>
+                        <div class="row" ng-hide="(item.commentFin && hideFin)">
+                            <div class="col-md-12">
+                                <md-input-container class="md-block">
+                                    <label>Информация по предоставленному оборудованию </label>
                             <textarea name="itemCommentFin" required ng-model="item.commentFin"
                                       placeholder="вставьте сюда скопированную таблицу Excl и поставьте отметку о выполнение"
                                       ng-maxlength="maxLengthFin"
                                       md-maxlength="maxLengthFin"
                                       ng-minlength="minLength"
                                       rows="1" md-select-on-focus></textarea>
-                                                <div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>
-                                                    <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
-                                                    <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
-                                                    <div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>
-                                                </div>
-                                            </md-input-container>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <table class="table">
-
-                                    <tr ng-if="item.commentFin">
-                                        <td colspan="5">
-
-
-                                            <!--<h4>Вставьте скопированную таблицу Excl:</h4>-->
-                                            <!--<textarea  ng-model="item.commentFin" ></textarea><br>-->
-
-                                            <!--<div xls-html="item" property="commentFin"></div>-->
-                                            <xls-html-table dt-item="item.commentFin" header-tab="text.headerTab"></xls-html-table>
-                                            <!--<button type="button" ng-click="generateTable(excelData)" class="btn btn-default">XLS to HTML</button>-->
-                                            <!--<input type="button" onclick="javascript:generateTable()" value="Genereate Table"/>-->
-
-                                            <!--<hr>-->
-                                            <!--<p ng-bind-html="bindHtml"></p>-->
-                                            <!--<div id="excel_table"></div>-->
-
-                                        </td>
-                                    </tr>
-                                    <!--<tr>-->
-                                    <!--<td colspan="3">-->
-                                    <!--<pre>{{item.commentFin}}</pre>-->
-                                    <!--<p ng-bind-html="item.commentFin"></p>-->
-                                    <!--</td>-->
-                                    <!--</tr>-->
-
-                                </table>
+                                    <div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>
+                                        <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
+                                        <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                        <div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="item.commentFin">
+                            <div class="col-md-12">
+                                        <xls-html-table dt-item="item.commentFin" header-tab="text.headerTab"></xls-html-table>
                             </div>
                         </div>
                     </div>
@@ -629,27 +600,46 @@
                  ng-class="{'panel-success':item.ahoCheck}">
                 <div class="panel-heading">АХО</div>
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <table class="table">
-                                <tr>
-                                    <td width="10px">
-                                        <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.ahoCheck"
-                                                     ng-change="saveEditAho(item, userForm.$valid)"
-                                                     aria-label="Checkbox 1"
-                                                     class="green md-align-top-left" flex></md-checkbox>
-                                    </td>
-                                    <td>
-                                        <span ng-if="!item.ahoCheck">{{titles.noCheck}}   </span>
-                                        <span ng-if="item.ahoCheck">{{titles.check}} </span>
-                                    </td>
-                                    <td class="pull-right">
-                                        <span ng-if="item.ahoUpdate" class="text-right">{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span>
-                                    </td>
-                                </tr>
-                            </table>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <md-checkbox ng-disabled="(item.kadrValid || me.kadr)"  ng-model="item.ahoCheck"
+                                         ng-change="saveEditAho(item, userForm.$valid)"
+                                         aria-label="Checkbox 1"
+                                         class="green md-align-top-left" flex>
+                                <span ng-if="!item.ahoCheck">{{titles.noCheck}}   </span>
+                                <span ng-if="item.ahoCheck">{{titles.check}} </span>
+                            </md-checkbox>
+                        </div>
+                        <div class="col-md-6">
+                             <span ng-if="item.ahoUpdate" class="pull-right"><md-tooltip md-direction="top">{{amended}}
+                             </md-tooltip>{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span>
                         </div>
                     </div>
+
+
+                    <!--<div class="form-group">-->
+                        <!--<div class="checkbox">-->
+                            <!--<table class="table">-->
+                                <!--<tr>-->
+                                    <!--<td width="10px">-->
+                                        <!--<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.ahoCheck"-->
+                                                     <!--ng-change="saveEditAho(item, userForm.$valid)"-->
+                                                     <!--aria-label="Checkbox 1"-->
+                                                     <!--class="green md-align-top-left" flex></md-checkbox>-->
+                                    <!--</td>-->
+                                    <!--<td>-->
+                                        <!--<span ng-if="!item.ahoCheck">{{titles.noCheck}}   </span>-->
+                                        <!--<span ng-if="item.ahoCheck">{{titles.check}} </span>-->
+                                    <!--</td>-->
+                                    <!--<td class="pull-right">-->
+                                        <!--<span ng-if="item.ahoUpdate" class="text-right">{{item.ahoUpdate.lastName}} {{item.ahoUpdate.firstName[0]}}. {{item.ahoUpdate.patronymicName[0]}}.</span>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                            <!--</table>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
 
@@ -662,81 +652,80 @@
                     <div class="panel-heading">IT</div>
                     <div class="panel-body ">
                         <form name="createForm" novalidate enctype="multipart/form-data">
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <table class="table">
-                                        <tr>
-                                            <td width="10px">
-                                                <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck"
-                                                             ng-change="saveEditIt(item, userForm.$valid)"
-                                                             aria-label="Checkbox 3"
-                                                             class="green md-align-top-left" flex></md-checkbox>
-                                            </td>
-                                            <td>
-                                                <span ng-if="!item.itCheck">{{titles.noCheck}}   </span>
-                                                <span ng-if="item.itCheck">{{titles.check}} </span>
-                                            </td>
-                                            <td class="pull-right">
-                                        <span ng-if="item.itUpdate" class="text-right" ng-click="showLog()">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck"
+                                                 ng-change="saveEditIt(item, userForm.$valid)"
+                                                 aria-label="Checkbox 3"
+                                                 class="green md-align-top-left" flex>
+                                        <span ng-if="!item.itCheck">{{titles.noCheck}}   </span>
+                                        <span ng-if="item.itCheck">{{titles.check}} </span>
+                                    </md-checkbox>
+                                </div>
+                                <div class="col-md-6">
+                                       <span ng-if="item.itUpdate" class="pull-right" ng-click="showLog()">
                                             <md-tooltip md-direction="top">{{amended}} {{item.itUpdateData[(item.itUpdateData.length -
                                                 1)].date | date:"dd.MM.yyyy HH:mm:ss"}}
                                             </md-tooltip>
                                             {{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>
 
-                                                <div ng-if="showLogs" class="animate-if">
-                                                    <small class="pull-right text-grey">{{text.logChange}}</small>
-                                                    <md-list-item class="md-3-line pad-min" ng-repeat="itm in item.itUpdateData ">
-                                                        <img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.shortName}}"
-                                                             title="{{itm.fullName}}"/>
-                                                        <div class="md-list-item-text" layout="column">
-                                                            <h3>{{ itm.fullName }}</h3>
-                                                            <p><span ng-if="!itm.action">{{titles.noCheck}}</span>
+                                    <div ng-if="showLogs" class="animate-if">
+                                        <h5 class="text-grey">{{text.logChange}}</h5>
+                                        <md-list-item class="md-3-line pad-min" ng-repeat="itm in item.itUpdateData ">
+                                            <img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.shortName}}"
+                                                 title="{{itm.fullName}}"/>
+                                            <div class="md-list-item-text" layout="column">
+                                                <h3>{{ itm.fullName }}</h3>
+                                                <p><span ng-if="!itm.action">{{titles.noCheck}}</span>
                                                                 <span ng-if="itm.action"
                                                                       class="text-success"><strong>{{titles.check}} </strong></span></p>
-                                                            <small class=" text-grey"><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em>
-                                                            </small>
-                                                        </div>
-                                                    </md-list-item>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <md-input-container flex>
-                                                    <label>Email</label>
-                                                    <input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">
-                                                    <div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>
-                                                        <!--<div ng-message="required" class="my-message">{{text.noEmpty}}</div>-->
-                                                        <!--<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>-->
-                                                        <div ng-message="email" class="my-message">{{text.noEmail}}</div>
-                                                        <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
-                                                        <!--<div ng-message="minlength" class="my-message">{{text.minlength}}</div>-->
-                                                    </div>
-                                                </md-input-container>
-                                            </td>
-                                            <td>
-                                                <md-input-container flex>
-                                                    <label>Внутренний телефон
+                                                <small class=" text-grey"><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em>
+                                                </small>
+                                            </div>
+                                        </md-list-item>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <md-divider ng-if="!$last"></md-divider>
+                                    <p>&nbsp;</p></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <md-input-container flex>
+                                        <label>Email</label>
+                                        <input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">
+                                        <div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>
+                                            <!--<div ng-message="required" class="my-message">{{text.noEmpty}}</div>-->
+                                            <!--<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>-->
+                                            <div ng-message="email" class="my-message">{{text.noEmail}}</div>
+                                            <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
+                                            <!--<div ng-message="minlength" class="my-message">{{text.minlength}}</div>-->
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-md-6">
+                                    <md-input-container flex>
+                                        <label>Внутренний телефон
 
-                                                    </label>
-                                                    <input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"
-                                                           ng-pattern="/^[0-9]{4}$/"/>
+                                        </label>
+                                        <input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"
+                                               ng-pattern="/^[0-9]{4}$/"/>
 
-                                                    <!--<div class="hint" style="color: #9a9a9a" ng-show="showHints">{{text.templatePhone}}</div>-->
+                                        <!--<div class="hint" style="color: #9a9a9a" ng-show="showHints">{{text.templatePhone}}</div>-->
 
-                                                    <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert"
-                                                         ng-messages-multiple>
-                                                        <div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>
-                                                    </div>
-                                                </md-input-container>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="10">
-                                                <div class="row">
-                                                    <div class="col-md-11">
-                                                        <md-input-container class="md-block">
-                                                            <label>Комментарий </label>
+                                        <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert"
+                                             ng-messages-multiple>
+                                            <div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <md-input-container class="md-block">
+                                        <label>Комментарий </label>
                             <textarea name="itemCommentIt" ng-model="item.commentIt"
                                       placeholder="Добавьте свой комментарий"
                                       ng-maxlength="maxLengthIt"
@@ -744,53 +733,166 @@
                                       ng-minlength="minLength"
                                       rows="1" md-select-on-focus></textarea>
 
-                                                            <div ng-messages="itForm.itemCommentIt.$error" role="alert"
-                                                                 ng-messages-multiple>
-                                                                <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
-                                                                <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
-                                                            </div>
-                                                        </md-input-container>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <div class="btn-group" role="group" aria-label="...">
-                                                            <button type="submit" ng-disabled="!item.commentIt"
-                                                                    class="btn btn-success btn-xs">
-                                                                <md-tooltip md-direction="top">Сохранить комментарий</md-tooltip>
-                                                                <span class="glyphicon glyphicon-check"></span></button>
-                                                            <!--<button type="button" class="btn btn-default">2</button>-->
-
-                                                            <!--<div class="btn-group" role="group">-->
-                                                            <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                                                            <!--Dropdown-->
-                                                            <!--<span class="caret"></span>-->
-                                                            <!--</button>-->
-                                                            <!--<ul class="dropdown-menu">-->
-                                                            <!--<li><a href="#">Dropdown link</a></li>-->
-                                                            <!--<li><a href="#">Dropdown link</a></li>-->
-                                                            <!--</ul>-->
-                                                            <!--</div>-->
-                                                        </div>
-                                                        <!--<button  href="#" class="btn btn-sussess pull-right"><span class="glyphicon glyphicon-plus"></span></button></div>-->
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">
-                                                                <img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"
-                                                                     title="{{itm.fio}}"/>
-                                                                <div class="md-list-item-text" layout="column">
-                                                                    <!--<h3>{{ item.who }}</h3>-->
-                                                                    <p>{{ itm.comment}} </p>
-                                                                    <small><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>
-                                                                </div>
-                                                            </md-list-item>
-                                                        </div>
-                                                    </div>
-                                            </td>
-                                        </tr>
-
-                                    </table>
+                                        <div ng-messages="itForm.itemCommentIt.$error" role="alert"
+                                             ng-messages-multiple>
+                                            <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
+                                            <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <button type="submit" ng-disabled="!item.commentIt"
+                                                class="btn btn-success btn-xs">
+                                            <md-tooltip md-direction="top">Сохранить комментарий</md-tooltip>
+                                            <span class="glyphicon glyphicon-check"></span></button>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">
+                                        <img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"
+                                             title="{{itm.fio}}"/>
+                                        <div class="md-list-item-text" layout="column">
+                                            <!--<h3>{{ item.who }}</h3>-->
+                                            <p>{{ itm.comment}} </p>
+                                            <small><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>
+                                        </div>
+                                    </md-list-item>
+                                </div>
+                            </div>
+
+
+                            <!--<div class="form-group">-->
+                                <!--<div class="checkbox">-->
+                                    <!--<table class="table">-->
+                                        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<td width="10px">&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck"&ndash;&gt;-->
+                                                             <!--&lt;!&ndash;ng-change="saveEditIt(item, userForm.$valid)"&ndash;&gt;-->
+                                                             <!--&lt;!&ndash;aria-label="Checkbox 3"&ndash;&gt;-->
+                                                             <!--&lt;!&ndash;class="green md-align-top-left" flex></md-checkbox>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<td>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.noCheck}}   </span>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}} </span>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<td class="pull-right">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<span ng-if="item.itUpdate" class="text-right" ng-click="showLog()">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<md-tooltip md-direction="top">{{amended}} {{item.itUpdateData[(item.itUpdateData.length - &ndash;&gt;-->
+                                                <!--&lt;!&ndash;1)].date | date:"dd.MM.yyyy HH:mm:ss"}}&ndash;&gt;-->
+                                            <!--&lt;!&ndash;</md-tooltip>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;{{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>&ndash;&gt;-->
+
+                                                <!--&lt;!&ndash;<div ng-if="showLogs" class="animate-if">&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<small class="pull-right text-grey">{{text.logChange}}</small>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<md-list-item class="md-3-line pad-min" ng-repeat="itm in item.itUpdateData ">&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;<img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.shortName}}"&ndash;&gt;-->
+                                                             <!--&lt;!&ndash;title="{{itm.fullName}}"/>&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;<div class="md-list-item-text" layout="column">&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;<h3>{{ itm.fullName }}</h3>&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;<p><span ng-if="!itm.action">{{titles.noCheck}}</span>&ndash;&gt;-->
+                                                                <!--&lt;!&ndash;<span ng-if="itm.action"&ndash;&gt;-->
+                                                                      <!--&lt;!&ndash;class="text-success"><strong>{{titles.check}} </strong></span></p>&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;<small class=" text-grey"><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em>&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;</small>&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</md-list-item>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<td colspan="2">&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<md-input-container flex>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<label>Email</label>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;&lt;!&ndash;<div ng-message="required" class="my-message">{{text.noEmpty}}</div>&ndash;&gt;&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;&lt;!&ndash;<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>&ndash;&gt;&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;<div ng-message="email" class="my-message">{{text.noEmail}}</div>&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;&lt;!&ndash;<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>&ndash;&gt;&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;&lt;!&ndash;<div ng-message="minlength" class="my-message">{{text.minlength}}</div>&ndash;&gt;&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<td>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;<md-input-container flex>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<label>Внутренний телефон&ndash;&gt;-->
+
+                                                    <!--&lt;!&ndash;</label>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"&ndash;&gt;-->
+                                                           <!--&lt;!&ndash;ng-pattern="/^[0-9]{4}$/"/>&ndash;&gt;-->
+
+                                                    <!--&lt;!&ndash;&lt;!&ndash;<div class="hint" style="color: #9a9a9a" ng-show="showHints">{{text.templatePhone}}</div>&ndash;&gt;&ndash;&gt;-->
+
+                                                    <!--&lt;!&ndash;<div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert"&ndash;&gt;-->
+                                                         <!--&lt;!&ndash;ng-messages-multiple>&ndash;&gt;-->
+                                                        <!--&lt;!&ndash;<div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                                <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+                                        <!--<tr>-->
+                                            <!--<td colspan="10">-->
+                                                <!--<div class="row">-->
+                                                    <!--<div class="col-md-11">-->
+                                                        <!--<md-input-container class="md-block">-->
+                                                            <!--<label>Комментарий </label>-->
+                            <!--<textarea name="itemCommentIt" ng-model="item.commentIt"-->
+                                      <!--placeholder="Добавьте свой комментарий"-->
+                                      <!--ng-maxlength="maxLengthIt"-->
+                                      <!--md-maxlength="maxLengthIt"-->
+                                      <!--ng-minlength="minLength"-->
+                                      <!--rows="1" md-select-on-focus></textarea>-->
+
+                                                            <!--<div ng-messages="itForm.itemCommentIt.$error" role="alert"-->
+                                                                 <!--ng-messages-multiple>-->
+                                                                <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
+                                                                <!--<div ng-message="minlength" class="my-message">{{text.minlength}}</div>-->
+                                                            <!--</div>-->
+                                                        <!--</md-input-container>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="col-md-1">-->
+                                                        <!--<div class="btn-group" role="group" aria-label="...">-->
+                                                            <!--<button type="submit" ng-disabled="!item.commentIt"-->
+                                                                    <!--class="btn btn-success btn-xs">-->
+                                                                <!--<md-tooltip md-direction="top">Сохранить комментарий</md-tooltip>-->
+                                                                <!--<span class="glyphicon glyphicon-check"></span></button>-->
+                                                            <!--&lt;!&ndash;<button type="button" class="btn btn-default">2</button>&ndash;&gt;-->
+
+                                                            <!--&lt;!&ndash;<div class="btn-group" role="group">&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;Dropdown&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;<span class="caret"></span>&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;<ul class="dropdown-menu">&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;<li><a href="#">Dropdown link</a></li>&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;<li><a href="#">Dropdown link</a></li>&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;</ul>&ndash;&gt;-->
+                                                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                                        <!--</div>-->
+                                                        <!--&lt;!&ndash;<button  href="#" class="btn btn-sussess pull-right"><span class="glyphicon glyphicon-plus"></span></button></div>&ndash;&gt;-->
+                                                    <!--</div>-->
+                                                    <!--<div class="row">-->
+                                                        <!--<div class="col-md-12">-->
+                                                            <!--<md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">-->
+                                                                <!--<img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"-->
+                                                                     <!--title="{{itm.fio}}"/>-->
+                                                                <!--<div class="md-list-item-text" layout="column">-->
+                                                                    <!--&lt;!&ndash;<h3>{{ item.who }}</h3>&ndash;&gt;-->
+                                                                    <!--<p>{{ itm.comment}} </p>-->
+                                                                    <!--<small><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>-->
+                                                                <!--</div>-->
+                                                            <!--</md-list-item>-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                            <!--</td>-->
+                                        <!--</tr>-->
+
+                                    <!--</table>-->
+                                <!--</div>-->
+                            <!--</div>-->
                         </form>
                     </div>
                 </div>
