@@ -534,6 +534,38 @@ module.exports = {
             });
     },
 
+    /**
+     * Удалить комментарий IT
+     * @param req
+     * @param res
+     * @param next
+     */
+    deleteCommentIT:function (req, res, next) {
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+
+        console.log('PARAM ALL', req.params.all());
+
+        //  let arr = [];
+        //  let u = item.commentItArr;
+        //   item.commentItArr =[];
+        //  for (var key in u) {
+        //      //console.log('ID', id);
+        //      //console.log('KEY9999',$scope.item.commentItArr[key].id);
+        //      if (u[key].id === id) {
+        //          //console.log('RAVEN IDDDD',$scope.item.commentItArr[key][id]);
+        //          //console.log('RAVEN',$scope.item.commentItArr[key]);
+        //          u.splice(key, 1);
+        //      }else{
+        //          arr.push(u[key]);
+        //      }
+        //  }
+        //item.commentItArr = arr;
+        //  item.$update({id:item.id},item);
+
+
+        res.ok();
+        
+    },
 
     //
     //

@@ -628,9 +628,7 @@
                                       md-maxlength="maxLengthIt"
                                       ng-minlength="minLength"
                                       rows="1" md-select-on-focus></textarea>
-
-                                        <div ng-messages="itForm.itemCommentIt.$error" role="alert"
-                                             ng-messages-multiple>
+                                        <div ng-messages="itForm.itemCommentIt.$error" role="alert" ng-messages-multiple>
                                             <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                                             <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
                                         </div>
@@ -648,8 +646,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">
-                                        <img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"
-                                             title="{{itm.fio}}"/>
+                                        <img ng-if="itm.img" title="{{itm.fio}}" alt="{{ itm.fio }}" ng-src="{{ itm.img }}" class="md-avatar"/>
+                                        <img ng-if="!itm.img" title="{{itm.fio}} фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="md-avatar"/>
+                                        <!--<img  ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"  title="{{itm.fio}}"/>-->
+
                                         <div class="md-list-item-text" layout="column">
                                             <!--<h3>{{ item.who }}</h3>-->
                                             <p>{{ itm.comment}} </p>

@@ -150,7 +150,7 @@ angular.module('EmergenceFModule')
             $scope.minLength = 3;
             $scope.maxLength = 20;
             $scope.maxLengthFin = 6000;
-            $scope.maxLengthIt = 100;
+            $scope.maxLengthIt = 300;
             $scope.maxLengthPost = 40;
             $scope.maxlengthTextarea = 150;
 
@@ -983,7 +983,9 @@ angular.module('EmergenceFModule')
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
-
+            $scope.getRandomId = function(){
+                return Math.floor((Math.random()*999999)+1);
+            };
             $scope.saveEditIt = function (item, isValid) {
 
                 if($scope.errDate(item)) {
@@ -1064,6 +1066,7 @@ angular.module('EmergenceFModule')
 
                 if (item.commentIt) {
                     item.commentItArr.push({
+                        id:$scope.getRandomId(),
                         comment: item.commentIt.trim(),
                         img: $scope.me.avatarUrl,
                         date: new Date(),

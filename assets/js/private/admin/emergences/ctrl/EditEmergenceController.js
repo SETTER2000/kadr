@@ -35,6 +35,38 @@ angular.module('EmergenceModule')
 
                 }, 900);
             };
+
+            $scope.deleteComment = function (item, id) {
+                if (!angular.isDefined(id)) return toastr.error('Отсутствует ID комментария. Не смогу удалить.', 'Ошибка 6212!');
+
+                $http.put('/emergence/delete-commentIt/'+id, item).then(function (success) {
+                    toastr.success(info.changed, success);
+                    //$scope.refresh();
+                });
+              //  let arr = [];
+              //  let u = item.commentItArr;
+              //   item.commentItArr =[];
+              //  for (var key in u) {
+              //      //console.log('ID', id);
+              //      //console.log('KEY9999',$scope.item.commentItArr[key].id);
+              //      if (u[key].id === id) {
+              //          //console.log('RAVEN IDDDD',$scope.item.commentItArr[key][id]);
+              //          //console.log('RAVEN',$scope.item.commentItArr[key]);
+              //          u.splice(key, 1);
+              //      }else{
+              //          arr.push(u[key]);
+              //      }
+              //  }
+              //item.commentItArr = arr;
+              //  item.$update({id:item.id},item);
+
+            };
+
+            //$scope.$watch('arNewComment', function (val) {
+            //    if (val) $scope.item.commentItArr = val;
+            //});
+
+
             $scope.close = $scope.edit;
             $scope.onPanel = function () {
                 $scope.close = !$scope.close;
@@ -104,7 +136,7 @@ angular.module('EmergenceModule')
             $scope.maxLengthPost = 70;
             $scope.maxlengthText = 150;
             $scope.maxLengthFin = 6000;
-            $scope.maxLengthIt = 100;
+            $scope.maxLengthIt = 300;
             $scope.getError = function (error) {
                 /*
                  serForm.itemFirstName.$error.required
@@ -738,12 +770,12 @@ angular.module('EmergenceModule')
             //};
 
             $scope.refresh = function () {
-                let item = $scope.item =Emergences.get({id: $stateParams.emergenceId},
+                let item = $scope.item = Emergences.get({id: $stateParams.emergenceId},
                     function (emergences) {
                         console.log('EDIT EMERGENCE refresh function', emergences);
                         $scope.flatpicker.setDate(emergences.period);
 
-                            $scope.emergences = emergences;
+                        $scope.emergences = emergences;
                         //$scope.departments = emergences.departments;
                     }, function (err) {
                         // активируем по умолчанию создаваемую запись
@@ -971,13 +1003,16 @@ angular.module('EmergenceModule')
             $scope.$watch('item.itCheck', function (val) {
                 $scope.checkedValue();
             });
-
+            $scope.getRandomId = function () {
+                return Math.floor((Math.random() * 999999) + 1);
+            };
             $scope.saveEdit = function (item, isValid) {
 
                 if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
 
                 if (item.commentIt) {
                     item.commentItArr.push({
+                        id: $scope.getRandomId(),
                         comment: item.commentIt.trim(),
                         img: $scope.me.avatarUrl,
                         date: new Date(),

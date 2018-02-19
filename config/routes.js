@@ -166,6 +166,7 @@ module.exports.routes = {
     // 'GET /emergence/min-year':    'EmergenceController.minYear',
     // 'GET /emergence/to-years':    'EmergenceController.getHolidaysToYears',
      'GET /emergence/logSender/:id':    'EmergenceController.getLogSender',
+     'PUT /emergence/delete-commentIt/:id':    'EmergenceController.deleteCommentIT',
 
 
     /**

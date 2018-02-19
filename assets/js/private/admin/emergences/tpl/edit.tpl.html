@@ -741,7 +741,7 @@
                                     </md-input-container>
                                 </div>
                                 <div class="col-md-1">
-                                    <div class="btn-group" role="group" aria-label="...">
+                                    <div class="btn-group" role="group" >
                                         <button type="submit" ng-disabled="!item.commentIt"
                                                 class="btn btn-success btn-xs">
                                             <md-tooltip md-direction="top">Сохранить комментарий</md-tooltip>
@@ -752,13 +752,27 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">
-                                        <img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"
-                                             title="{{itm.fio}}"/>
+                                        <img ng-if="itm.img" title="{{itm.fio}}" alt="{{ itm.fio }}" ng-src="{{ itm.img }}" class="md-avatar"/>
+                                        <img ng-if="!itm.img" title="{{itm.fio}} фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="md-avatar"/>
+
+                                        <!--<img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"-->
+                                             <!--title="{{itm.fio}}"/>-->
                                         <div class="md-list-item-text" layout="column">
                                             <!--<h3>{{ item.who }}</h3>-->
                                             <p>{{ itm.comment}} </p>
                                             <small><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>
+
+                                            <span aria-label="deleteComent" ng-click="deleteComment(item, itm.id)" class="md-secondary md-hue-3 glyphicon glyphicon-remove"></span>
+
+                                            <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
+                                            <!--<md-icon md-svg-icon="communication:email"  ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3 " ><span class="md-secondary md-hue-3 glyphicon glyphicon-remove"></span></md-icon>-->
+                                            <!--<md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>-->
                                         </div>
+                                        <!--<div class="md-list-item-text" layout="column" >-->
+
+                                            <!--<p class="pull-right"><span class="glyphicon glyphicon-remove"></span></p>-->
+
+                                        <!--</div>-->
                                     </md-list-item>
                                 </div>
                             </div>
