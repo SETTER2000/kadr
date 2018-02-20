@@ -452,12 +452,51 @@ module.exports = {
     },
 
     /**
+     * Сохранить комментарий IT
+     * @param req
+     * @param res
+     */
+    saveComment: function (req, res) {
+        if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        //console.log('REQ ALL::', req.params.all());
+
+        User.findOne({id: req.session.me})
+            .populate('positions')
+            .populate('departments')
+            .exec((err, finOneUser) => {
+                "use strict";
+                if (err) return res.serverError(err);
+                Emergence.native(function (err, collection) {
+                    if (err) return res.serverError(err);
+                    collection.update({"_id": ObjectId(req.param('id'))}, {"$set": {"commentItArr": req.param('commentItArr')}},
+                        (err, results)=> {
+                            "use strict";
+                            if (err) return res.serverError(err);
+                            Emergence.findOne(req.param('id')).exec((err, findOneEm)=> {
+                                if (err) return res.serverError(err);
+                                sails.sockets.broadcast('emergence', 'hello-emergence-save-comment', {howdy: findOneEm}, req);
+                                //sails.sockets.broadcast('emergence', 'badges-emergence', {
+                                //    badges: [findOneEm],
+                                //    action: 'удалён',
+                                //    shortName: finOneUser.getShortName(),
+                                //    fullName: finOneUser.getFullName(),
+                                //    avatarUrl: finOneUser.avatarUrl
+                                //}, req);
+                                res.ok(findOneEm);
+                            });
+                        });
+                });
+            });
+    },
+
+
+    /**
      * Удалить комментарий IT
      * @param req
      * @param res
      * @param next
      */
-    deleteCommentIT: function (req, res, next) {
+    deleteComment: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.findOne({id: req.session.me})
             .populate('positions')

@@ -645,8 +645,8 @@
 
 
             <!-- IT  В Ы П О Л Н Е Н О   -->
-            <form name="itForm" novalidate
-                  ng-submit="saveEdit(item, itForm.$valid)" enctype="multipart/form-data">
+            <!--<form name="itForm" novalidate-->
+                  <!--ng-submit="saveEdit(item, itForm.$valid)" enctype="multipart/form-data">-->
                 <div ng-if="((edit && item.startKadr) || me.admin)" class="panel panel-default"
                      ng-class="{'panel-success':item.itCheck}">
                     <div class="panel-heading">IT</div>
@@ -722,6 +722,7 @@
                                     </md-input-container>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-md-11">
                                     <md-input-container class="md-block">
@@ -742,13 +743,14 @@
                                 </div>
                                 <div class="col-md-1">
                                     <div class="btn-group" role="group" >
-                                        <button  ng-disabled="!item.commentIt"
-                                                class="btn btn-success btn-xs">
+                                        <button  ng-click="saveComment(item)" ng-disabled="!item.commentIt"
+                                                class="btn btn-link btn-xs">
                                             <md-tooltip md-direction="top">Сохранить комментарий</md-tooltip>
                                             <span class="glyphicon glyphicon-check"></span></button>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">
@@ -911,7 +913,7 @@
                         </form>
                     </div>
                 </div>
-            </form>
+            <!--</form>-->
 
 
             <!-- IT  В Ы П О Л Н Е Н О  OLD  -->

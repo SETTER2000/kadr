@@ -167,6 +167,19 @@ angular.module('EmergenceModule')
                 //$scope.refresh();
             });
 
+            io.socket.on('hello-emergence-save-comment', function (data) {
+                ////console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
+                if (!data.howdy)  $state.go('home.admin.emergences');
+                console.log('data.howdy', data.howdy);
+                //console.log('data.item',$scope.item);
+                $scope.$apply(function () {
+                    $scope.item.commentItArr = data.howdy.commentItArr;
+                });
+
+                //$scope.$apply();
+                //$scope.refresh();
+            });
+
             io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
                 ////console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
             });
@@ -994,10 +1007,18 @@ angular.module('EmergenceModule')
             $scope.getRandomId = function () {
                 return Math.floor((Math.random() * 999999) + 1);
             };
-            $scope.saveEdit = function (item, isValid) {
-
+            //$scope.deleteComment = function (commentId) {
+            //    if (!angular.isDefined(commentId)) return toastr.error('Отсутствует ID комментария. Не смогу удалить.', 'Ошибка 6212!');
+            //
+            //    $http.put('/emergence/delete-commentIt/' + $scope.item.id + '/' + commentId).then(function (success) {
+            //        toastr.success(info.changed, success);
+            //        ////console.log('APPP',success.data);
+            //        $scope.item.commentItArr = success.data.commentItArr;
+            //        //$scope.refresh();
+            //    });
+            //};
+            $scope.saveComment= function (item) {
                 if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
-
                 if (item.commentIt) {
                     item.commentItArr.push({
                         id: $scope.getRandomId(),
@@ -1006,7 +1027,30 @@ angular.module('EmergenceModule')
                         date: new Date(),
                         fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
                     });
+
+                    $http.put('/emergence/save-comment/' + $scope.item.id, item).then(function (success) {
+                                toastr.success(info.changed, success);
+                                ////console.log('APPP',success.data);
+                                $scope.item.commentItArr = success.data.commentItArr;
+                                //$scope.refresh();
+                            });
                 }
+                return ;
+            };
+
+            $scope.saveEdit = function (item, isValid) {
+
+                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
+
+                //if (item.commentIt) {
+                //    item.commentItArr.push({
+                //        id: $scope.getRandomId(),
+                //        comment: item.commentIt.trim(),
+                //        img: $scope.me.avatarUrl,
+                //        date: new Date(),
+                //        fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
+                //    });
+                //}
 
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
