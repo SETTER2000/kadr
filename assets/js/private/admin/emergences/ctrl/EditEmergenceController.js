@@ -1017,7 +1017,7 @@ angular.module('EmergenceModule')
             //        //$scope.refresh();
             //    });
             //};
-            $scope.saveComment= function (item) {
+            $scope.saveComment = function (item) {
                 if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
                 if (item.commentIt) {
                     item.commentItArr.push({
@@ -1029,13 +1029,13 @@ angular.module('EmergenceModule')
                     });
 
                     $http.put('/emergence/save-comment/' + $scope.item.id, item).then(function (success) {
-                                toastr.success(info.changed, success);
-                                ////console.log('APPP',success.data);
-                                $scope.item.commentItArr = success.data.commentItArr;
-                                //$scope.refresh();
-                            });
+                        toastr.success(info.changed, success);
+                        ////console.log('APPP',success.data);
+                        $scope.item.commentIt = '';
+                        $scope.item.commentItArr = success.data.commentItArr;
+                        //$scope.refresh();
+                    });
                 }
-                return ;
             };
 
             $scope.saveEdit = function (item, isValid) {
