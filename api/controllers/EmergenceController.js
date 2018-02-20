@@ -26,7 +26,7 @@ module.exports = {
     get: function (req, res) {
         "use strict";
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('GET ALL PARAMS Emergence:', req.params.all());
+        //console.log('GET ALL PARAMS Emergence:', req.params.all());
         var q = {
             limit: req.param('limit'),
             sort: req.param('sort')
@@ -34,15 +34,16 @@ module.exports = {
         if (!_.isUndefined(req.param('where')) && !_.isUndefined(req.param('char'))) {
             var y = {};
             y[req.param('property')] = {'like': req.param('char')};
-            if(req.param('whomCreated') !== 'false') {y.whomCreated = req.param('whomCreated');}
-                //y['whomCreate']={id:"58e35656594105801c9d9203"};
+            if (req.param('whomCreated') !== 'false') {
+                y.whomCreated = req.param('whomCreated');
+            }
+            //y['whomCreate']={id:"58e35656594105801c9d9203"};
             //console.log('whomCreated',  req.param('whomCreated'));
             q.where = y;
         }
         //console.log('POPPP',req.param('whomCreated'));
-        if(req.param('whomCreated'))
-        {
-           var objCreated = {
+        if (req.param('whomCreated')) {
+            var objCreated = {
                 where: {
                     id: req.param('whomCreated')
                 }
@@ -99,7 +100,7 @@ module.exports = {
                             if (!emergences) return res.notFound();
                             async.each(emergences, function (file, callback) {
                                 if (file.length > 32) {
-                                    console.log('Это имя слишком длинное');
+                                    sails.log.warn('Это имя слишком длинное');
                                     callback('Слишком длинное имя файла');
                                 } else {
                                     Vacation.find({
@@ -114,7 +115,7 @@ module.exports = {
                                 }
                             }, function (err) {
                                 if (err) {
-                                    console.log('Не удалось обработать файл');
+                                    sails.log.error('Не удалось обработать файл');
                                 } else {
                                     //console.log('Все файлы успешно обработаны');
                                 }
@@ -140,7 +141,7 @@ module.exports = {
         if (_.isUndefined(req.param('departments')[0].id)) return res.badRequest('Не указан департамент.');
         let start = moment(req.param('start')).format('YYYY-MM-DDTHH:mmZ');
 
-        console.log('Create  req.param', req.param('departments'));
+        //console.log('Create  req.param', req.param('departments'));
 
         Department.findOne({id: req.param('departments')[0].id}).exec((err, findDepart)=> {
             "use strict";
@@ -201,7 +202,7 @@ module.exports = {
                     Emergence.create(obj)
                         .exec(function (err, createEmergence) {
                             if (err) return res.serverError(err);
-                            console.log(obj.section + ' создан пользователем:', findUser.getFullName());
+                            sails.log.info(obj.section + ' создан пользователем:', findUser.getFullName());
                             findUser.emergenceWhomCreated.add(createEmergence.id);
                             findUser.save(function (err) {
                                 if (err) {
@@ -266,7 +267,7 @@ module.exports = {
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
         let sectionUrl = (req.param('worked')) ? 'company' : 'admin';
         //console.log('ALL REQUEST worked: ', req.param('worked'));
-        console.log('ALL REQQQQ: ', req.params.all());
+        //console.log('ALL REQQQQ: ', req.params.all());
         //console.log('REQUEST PARAM itUpdate: ', req.param('itUpdate'));
         Department.findOne({id: req.param('departments')[0].id})
             .exec((err, findDepart)=> {
@@ -356,37 +357,6 @@ module.exports = {
                                     .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                     .exec((err, findOneEm) => {
                                         if (req.param('positionRemove')) {
-                                            //console.log('PARAM', req.param('positionRemove'));
-                                            //findOneEm.positions.remove(req.param('positionRemove'));
-                                            //findOneEm.save(function (err) {
-                                            //    if (err) return res.negotiate(err);
-                                            //    findUser.save(function (err) {
-                                            //        if (err) return res.negotiate(err);
-                                            //
-                                            //        //console.log('UPDATED:', findOneEm.action+' '+ findOneEm.worked+' '+ findOneEm.sendService+' '+ findOneEm.startKadr);
-                                            //
-                                            //        Emergence.find({sort: 'start DESC'})
-                                            //            .populate('positions')
-                                            //            .populate('departments')
-                                            //            .populate('whomCreated')
-                                            //            .populate('whomUpdated')
-                                            //            .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
-                                            //            .exec((err, findsEmergence) => {
-                                            //                if (err) return res.serverError(err);
-                                            //                sails.sockets.broadcast('emergence', 'hello-emergence', {howdy: findsEmergence}, req);
-                                            //                sails.sockets.broadcast('emergence', 'badges-emergence', {
-                                            //                    badges: objEdit,
-                                            //                    action: 'удалён',
-                                            //                    shortName: findUser.getShortName(),
-                                            //                    fullName: findUser.getFullName(),
-                                            //                    avatarUrl: findUser.avatarUrl
-                                            //                }, req);
-                                            //                findOneEm.start = new Date(findOneEm.start);
-                                            //                console.log('UPDATE OUT', findOneEm);
-                                            //                res.send(findOneEm);
-                                            //            });
-                                            //    });
-                                            //});
                                         } else {
                                             //console.log('UPDATED2:', findOneEm.action+' '+ findOneEm.worked+' '+ findOneEm.sendService+' '+ findOneEm.startKadr);
                                             Emergence.find({sort: 'start DESC'})
@@ -430,62 +400,13 @@ module.exports = {
                 res.ok(findsUser.logSender);
             });
     },
-    //
-    //
-    ///**
-    // * Собираем Email сотрудников для рассылки
-    // * уведомления о начале сбора отпусков на след. год
-    // * только активные учётки и только кто работает в данный момент
-    // *
-    // * @param req
-    // * @param res
-    // */
-    //ticket: function (req, res) {
-    //    User.find({action: true, fired: false}).exec((err, usersFind) => {
-    //        "use strict";
-    //        if (err) return res.serverError(err);
-    //        if (!usersFind) return res.notFound('Пользователи для получения рассылки не найдены.');
-    //        let strEmail = '';
-    //        if (_.isArray(usersFind) && (usersFind.length > 0)) {
-    //            let a = [];
-    //            _.forEach(usersFind, function (val, key) {
-    //                a.push(val.email);
-    //            });
-    //            strEmail = a.join(',');
-    //        }
-    //        //sails.log('Email для рассылки: ', strEmail);
-    //
-    //        strEmail = (strEmail) ? strEmail : '';
-    //        console.log('Создатель графика отпусков:', strEmail);
-    //
-    //        let options = {
-    //            to: strEmail, // Кому: можно несколько получателей указать через запятую
-    //            subject: ' ✔ ' + obj.section + ' создал: ' + findUser.getFullName(), // Тема письма
-    //            text: '<h2>Уведомление. ' + obj.section + ' запущен. </h2>', // plain text body
-    //            html: '' +
-    //            '<h2>' + obj.section + '.  </h2> ' +
-    //            '<p>Вы создали ' + obj.section + ' с названием: ' + obj.name + '</p>' +
-    //            '<p>Период сбора информации установлен:<br>c ' + moment(obj.from).format('llll') + '<br> по ' + moment(obj.to).format('llll') + '</p>' +
-    //            '<p> В данный момент проект запущен.<br> Статус "' + obj.status + '" изменён на "' + updated[0].status + '".</p>' +
-    //            '<p>Начало рассылки: ' + moment(obj.start).format('DD.MM.YYYY HH:mm:ss') + '' +
-    //            '<br>Окончание рассылки: ' + moment(foo).format('DD.MM.YYYY HH:mm:ss') + '</p>' +
-    //            '<p>Рассылка сообщений сотрудникам закончена.</p>'
-    //        };
-    //        EmailService.sender(options);
-    //        res.send(createEmergence);
-    //
-    //
-    //    });
-    //
-    //},
-    //
-    //
-    ///**
-    // * Удалить
-    // * @param req
-    // * @param res
-    // * @param next
-    // */
+
+    /**
+     * Удалить
+     * @param req
+     * @param res
+     * @param next
+     */
     destroy: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.findOne({id: req.session.me})
@@ -507,9 +428,9 @@ module.exports = {
                         //if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с '+req.param('year')+' годом. <a class="kadr-link"  target="_blank" href="/vacation/delete-all/'+req.param('year')+'"><i class="fa fa-link" aria-hidden="true"></i> Удалить </a>');
                         Emergence.destroy({id: finds.id}, (err) => {
                             if (err) return next(err);
-                            console.log('Выход нового сотрудника - удалил:', req.session.me);
+                            sails.log.info('Выход нового сотрудника - удалил:', req.session.me);
                             finds.updatedAt = new Date();
-                            console.log('Выход нового сотрудника - удалён:', finds);
+                            sails.log.info('Выход нового сотрудника - удалён:', finds);
                             Emergence.find()
                                 .populate('positions')
                                 .populate('departments')
@@ -540,117 +461,36 @@ module.exports = {
      * @param res
      * @param next
      */
-    deleteCommentIT:function (req, res, next) {
+    deleteCommentIT: function (req, res, next) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
-        console.log('PARAM ALL', req.params.all());
-
-        //  let arr = [];
-        //  let u = item.commentItArr;
-        //   item.commentItArr =[];
-        //  for (var key in u) {
-        //      //console.log('ID', id);
-        //      //console.log('KEY9999',$scope.item.commentItArr[key].id);
-        //      if (u[key].id === id) {
-        //          //console.log('RAVEN IDDDD',$scope.item.commentItArr[key][id]);
-        //          //console.log('RAVEN',$scope.item.commentItArr[key]);
-        //          u.splice(key, 1);
-        //      }else{
-        //          arr.push(u[key]);
-        //      }
-        //  }
-        //item.commentItArr = arr;
-        //  item.$update({id:item.id},item);
-
-
-        res.ok();
-        
+        User.findOne({id: req.session.me})
+            .populate('positions')
+            .populate('departments')
+            .exec((err, finOneUser) => {
+                "use strict";
+                if (err) return res.serverError(err);
+                Emergence.native(function (err, collection) {
+                    if (err) return res.serverError(err);
+                    collection.update({"_id": ObjectId(req.param('id'))}, {"$pull": {"commentItArr": {id: +req.param('commentId')}}},
+                        (err, results)=> {
+                            "use strict";
+                            if (err) return res.serverError(err);
+                            Emergence.findOne(req.param('id')).exec((err, findOneEm)=> {
+                                if (err) return res.serverError(err);
+                                sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: findOneEm}, req);
+                                //sails.sockets.broadcast('emergence', 'badges-emergence', {
+                                //    badges: [findOneEm],
+                                //    action: 'удалён',
+                                //    shortName: finOneUser.getShortName(),
+                                //    fullName: finOneUser.getFullName(),
+                                //    avatarUrl: finOneUser.avatarUrl
+                                //}, req);
+                                res.ok();
+                            });
+                        });
+                });
+            });
     },
-
-    //
-    //
-    ///**
-    // * Обновить 'кол-во строк в таблице' пользователю
-    // * @param req
-    // * @param res
-    // */
-    //updateDefaultRows: function (req, res) {
-    //    //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-    //    Emergence.update(req.session.me, {
-    //            defaultRows: req.param('defaultRows')
-    //        })
-    //        .exec(function (err, update) {
-    //            if (err) return res.negotiate(err);
-    //            return res.ok(update);
-    //        });
-    //},
-    //
-    //
-    ///**
-    // * Возвращает максимальный номер года
-    // * на который есть выход нового сотрудника
-    // * @param req
-    // * @param res
-    // */
-    //maxYear: function (req, res) {
-    //    //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-    //    Emergence.find({sort: 'year DESC', action: true, limit: 1}).exec((err, findOne)=> {
-    //        "use strict";
-    //        if (err) res.serverError(err);
-    //        res.ok(findOne[0]);
-    //
-    //    });
-    //},
-    //
-    //
-    ///**
-    // * Возвращает минимальный номер года
-    // * на который есть выход нового сотрудника
-    // * @param req
-    // * @param res
-    // */
-    //minYear: function (req, res) {
-    //    //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-    //    Emergence.find({sort: 'year', action: true, limit: 1}).exec((err, findOne)=> {
-    //        "use strict";
-    //        if (err) res.serverError(err);
-    //        res.ok(findOne[0]);
-    //    });
-    //},
-    //
-    //
-    ///**
-    // * Возвращает кол-во запланированных отпусков
-    // */
-    //getHolidaysToYears: function (req, res) {
-    //    Vacation.native(function (err, collection) {
-    //        if (err) return res.serverError(err);
-    //        let start = new Date(moment(req.param('year'), ['YYYY']).format('YYYY-MM-DD'));
-    //        let end = new Date(moment(req.param('year'), ['YYYY']).add(1, 'year').format('YYYY-MM-DD'));
-    //        let y = 0;
-    //        collection.aggregate([{$match: {$and: [{from: {$gte: start}}, {from: {$lt: end}}, {action: {$eq: true}}]}}, {
-    //                $group: {
-    //                    _id: "$owner",
-    //                    cntDs: {$sum: "$daysSelectHoliday"}
-    //                }
-    //            }, {$project: {id: 1, summa: {$cond: {if: {$gte: ["$cntDs", 28]}, then: 1, else: 0}}}}])
-    //            .toArray(function (err, results) {
-    //                if (err) return res.serverError(err);
-    //                //return results;
-    //                _.forEach(results, function (value, key) {
-    //                    console.log('numSelected', value.summa);
-    //                    y += value.summa;
-    //                });
-    //                //console.log('y', y);
-    //                return res.send({sumDays: y});
-    //            });
-    //
-    //    });
-    //
-    //
-    //},
-    //
-    //
 
 
     /**

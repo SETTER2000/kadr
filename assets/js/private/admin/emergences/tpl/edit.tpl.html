@@ -759,10 +759,11 @@
                                              <!--title="{{itm.fio}}"/>-->
                                         <div class="md-list-item-text" layout="column">
                                             <!--<h3>{{ item.who }}</h3>-->
-                                            <p>{{ itm.comment}} </p>
                                             <small><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>
+                                            <p>{{ itm.comment}} </p>
 
-                                            <span aria-label="deleteComent" ng-click="deleteComment(item, itm.id)" class="md-secondary md-hue-3 glyphicon glyphicon-remove"></span>
+
+                                            <span ng-if="me.admin" title="Удалить" aria-label="deleteComent" ng-click="deleteComment(itm.id)" class="md-secondary md-hue-3 glyphicon glyphicon-remove"></span>
 
                                             <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
                                             <!--<md-icon md-svg-icon="communication:email"  ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3 " ><span class="md-secondary md-hue-3 glyphicon glyphicon-remove"></span></md-icon>-->

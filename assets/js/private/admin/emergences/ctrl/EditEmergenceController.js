@@ -20,51 +20,27 @@ angular.module('EmergenceModule')
                 return $timeout(function () {
 
                     $scope.departments = Departments.query({action: true, limit: 300, sort: 'name'}, function (departments) {
-                        //console.log('DEPARTMENTS:', departments);
+                        ////console.log('DEPARTMENTS:', departments);
                         $scope.departments = departments;
                     }, function (err) {
                         toastr.error(err, 'Ошибка ListDepartmentController!');
                     });
-                    //$scope.users =  $scope.users  || [
-                    //        { id: 1, name: 'Scooby Doo' },
-                    //        { id: 2, name: 'Shaggy Rodgers' },
-                    //        { id: 3, name: 'Fred Jones' },
-                    //        { id: 4, name: 'Daphne Blake' },
-                    //        { id: 5, name: 'Velma Dinkley' }
-                    //    ];
 
                 }, 900);
             };
 
-            $scope.deleteComment = function (item, id) {
-                if (!angular.isDefined(id)) return toastr.error('Отсутствует ID комментария. Не смогу удалить.', 'Ошибка 6212!');
+            $scope.deleteComment = function (commentId) {
+                if (!angular.isDefined(commentId)) return toastr.error('Отсутствует ID комментария. Не смогу удалить.', 'Ошибка 6212!');
 
-                $http.put('/emergence/delete-commentIt/'+id, item).then(function (success) {
+                $http.put('/emergence/delete-commentIt/'+$scope.item.id+'/'+commentId).then(function (success) {
                     toastr.success(info.changed, success);
+                    ////console.log('APPP',success.data);
+                    //$scope.item.commentItArr = success.data.commentItArr;
                     //$scope.refresh();
                 });
-              //  let arr = [];
-              //  let u = item.commentItArr;
-              //   item.commentItArr =[];
-              //  for (var key in u) {
-              //      //console.log('ID', id);
-              //      //console.log('KEY9999',$scope.item.commentItArr[key].id);
-              //      if (u[key].id === id) {
-              //          //console.log('RAVEN IDDDD',$scope.item.commentItArr[key][id]);
-              //          //console.log('RAVEN',$scope.item.commentItArr[key]);
-              //          u.splice(key, 1);
-              //      }else{
-              //          arr.push(u[key]);
-              //      }
-              //  }
-              //item.commentItArr = arr;
-              //  item.$update({id:item.id},item);
-
             };
 
-            //$scope.$watch('arNewComment', function (val) {
-            //    if (val) $scope.item.commentItArr = val;
-            //});
+
 
 
             $scope.close = $scope.edit;
@@ -172,15 +148,17 @@ angular.module('EmergenceModule')
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
             io.socket.on('hello-emergence-edit', function (data) {
-                console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
+                ////console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
                 if (!data.howdy)  $state.go('home.admin.emergences');
-                //$scope.item = data.howdy;
+                //console.log('data.howdy', data.howdy);
+                //console.log('data.item',$scope.item);
+                //$scope.item.commentItArr = data.howdy.commentItArr;
                 //$scope.$apply();
                 $scope.refresh();
             });
 
             io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
-                //console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
+                ////console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
             });
 
 
@@ -227,8 +205,8 @@ angular.module('EmergenceModule')
             //   if(val) {
             //       var CurrentTime = new Date();
             //       CurrentTime.setMinutes(CurrentTime.getMinutes() + +val);
-            //       console.log(CurrentTime.getHours()+":"+CurrentTime.getMinutes());
-            //       console.log(CurrentTime);
+            //       //console.log(CurrentTime.getHours()+":"+CurrentTime.getMinutes());
+            //       //console.log(CurrentTime);
             //       $scope.item.start = CurrentTime;
             //   }
             //});
@@ -269,12 +247,12 @@ angular.module('EmergenceModule')
 
                     Departments.get({id: val},
                         function (ems) {
-                            //console.log('WATCH item.departments', ems);
+                            ////console.log('WATCH item.departments', ems);
                             $scope.otdel = ems.name;
                             $scope.setData();
                             $scope.apply();
                         }, function (err) {
-                            console.log('ERRRR PRO:', err);
+                            //console.log('ERRRR PRO:', err);
                         }
                     );
 
@@ -390,7 +368,7 @@ angular.module('EmergenceModule')
             //    if (val) {
             //        $http.get('/vacation/delete-all/' + year)
             //            .then(function (res) {
-            //                console.log('EYYYYYYEEEESS: ', res.data );
+            //                //console.log('EYYYYYYEEEESS: ', res.data );
             //            });
             //    }
             //};
@@ -444,8 +422,8 @@ angular.module('EmergenceModule')
              * по сути это обработчик события onChange в документации Flatpickr
              * https://chmln.github.io/flatpickr/options/#eventsAPI
              *
-             * console.log('changeMonth', fpItem.changeMonth(1)) - изменяет текущий месяц на один вперед
-             * console.log('changeMonth', fpItem.changeMonth(0, false)) - изменяет текущий месяц на январь, после каждого клика
+             * //console.log('changeMonth', fpItem.changeMonth(1)) - изменяет текущий месяц на один вперед
+             * //console.log('changeMonth', fpItem.changeMonth(0, false)) - изменяет текущий месяц на январь, после каждого клика
              *
              * @param fpItem
              * @returns {*}
@@ -453,55 +431,55 @@ angular.module('EmergenceModule')
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
                 //$scope.to = fpItem.selectedDates[1];
-                //console.log('DASSS 1', fpItem.selectedDates[0]);
-                //console.log('DASSS 2', fpItem.selectedDates[1]);
+                ////console.log('DASSS 1', fpItem.selectedDates[0]);
+                ////console.log('DASSS 2', fpItem.selectedDates[1]);
                 $scope.item.from = fpItem.selectedDates[0];
                 $scope.item.to = fpItem.selectedDates[1];
                 /**
                  * Кол-во выбраных дней
                  */
                 $scope.item.daysSelectHoliday = $scope.getCountDay(fpItem.selectedDates);
-                console.log('DAY COUNT', $scope.daysSelectHoliday);
+                //console.log('DAY COUNT', $scope.daysSelectHoliday);
 
                 if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
                     toastr.warning(info.maxTwoWeek);
                 }
 
 
-                //console.log('******************************************************* // ************************************* ');
+                ////console.log('******************************************************* // ************************************* ');
                 if ($scope.intersection) {
                     let x = [];
                     $scope.intersection.forEach(function (val, key, arr) {
                         if (fpItem.selectedDates[0]) {
                             (moment(fpItem.selectedDates[0]).isBetween(val.from, val.to)) ? val.inr = 1 : val.inr = 0;
-                            //console.log('#1Проверяемое число c индексом ноль:', fpItem.selectedDates[0]);
-                            //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+                            ////console.log('#1Проверяемое число c индексом ноль:', fpItem.selectedDates[0]);
+                            ////console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
 
                             if (!val.inr) {
                                 (moment(fpItem.selectedDates[0]).isSame(val.from) || moment(fpItem.selectedDates[0]).isSame(val.to)) ? val.inr = 1 : val.inr = 0;
-                                //console.log('#2 Проверяемое число c индексом ноль:', fpItem.selectedDates[0]);
-                                //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+                                ////console.log('#2 Проверяемое число c индексом ноль:', fpItem.selectedDates[0]);
+                                ////console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
                             }
 
                         }
                         if (fpItem.selectedDates[1] && !val.inr) {
                             (moment(fpItem.selectedDates[1]).isBetween(val.from, val.to)) ? val.inr = 1 : val.inr = 0;
-                            //console.log('#1 Проверяемое число c индексом один:', fpItem.selectedDates[1]);
-                            //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+                            ////console.log('#1 Проверяемое число c индексом один:', fpItem.selectedDates[1]);
+                            ////console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
                             if (!val.inr) {
                                 (moment(fpItem.selectedDates[1]).isSame(val.from) || moment(fpItem.selectedDates[1]).isSame(val.to)) ? val.inr = 1 : val.inr = 0;
-                                //console.log('#2 Проверяемое число c индексом один:', fpItem.selectedDates[1]);
-                                //console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
+                                ////console.log('#2 Проверяемое число c индексом один:', fpItem.selectedDates[1]);
+                                ////console.log('Входит ли в этот промежуток?:', 'c ' + val.from + ' по ' + val.to + ': ' + val.inr);
                             }
                         }
 
                         if (fpItem.selectedDates[0] && !val.inr && fpItem.selectedDates[1]) {
-                            //console.log('******************************************************* // ************************************* ');
+                            ////console.log('******************************************************* // ************************************* ');
                             (moment(val.from).isBetween(fpItem.selectedDates[0], fpItem.selectedDates[1])) ? val.inr = 1 : val.inr = 0;
-                            //console.log('Проверяем отпуск на предмет вхождение в промежуток чисел во вновь выбранном отуске.', val.from);
-                            //console.log('Входит ли в этот промежуток?:', 'c ' + fpItem.selectedDates[0] + ' по ' + fpItem.selectedDates[1] + ': ' + val.inr);
+                            ////console.log('Проверяем отпуск на предмет вхождение в промежуток чисел во вновь выбранном отуске.', val.from);
+                            ////console.log('Входит ли в этот промежуток?:', 'c ' + fpItem.selectedDates[0] + ' по ' + fpItem.selectedDates[1] + ': ' + val.inr);
                         }
-                        //console.log('******************************************************* // ************************************* ');
+                        ////console.log('******************************************************* // ************************************* ');
 
 
                         x.push(val);
@@ -541,7 +519,7 @@ angular.module('EmergenceModule')
             };
 
             $scope.searchTextChange = function (text) {
-                //console.log('SEARCH', text);
+                ////console.log('SEARCH', text);
             };
 
 
@@ -624,11 +602,11 @@ angular.module('EmergenceModule')
             //$scope.getAllUsers = function () {
             //    let itemsUsers = $scope.itemsUsers = Users.query({},
             //        function (users) {
-            //            //console.log('EDIT USERS EMERGENCE', users);
+            //            ////console.log('EDIT USERS EMERGENCE', users);
             //            $scope.itemsUsers = users;
             //            //$scope.getBoss();
             //        }, function (err) {
-            //            console.log(err, 'ОШибка в USERS objects');
+            //            //console.log(err, 'ОШибка в USERS objects');
             //            // активируем по умолчанию создаваемую запись
             //            //item.action = true;
             //            //item.status = 'Новая';
@@ -662,13 +640,13 @@ angular.module('EmergenceModule')
             //     minDate: 'today',
             //     // Обработчик события на изменения даты
             //     //onChange: function(selectedDates, dateStr, instance) {
-            //     //    console.log('selectedDates',selectedDates);
+            //     //    //console.log('selectedDates',selectedDates);
             //     //},
             //     // Обработчик события на изменения года
             //     onYearChange: function (selectedDates, dateStr, instance) {
-            //         //console.log('CHANGE1', instance);
+            //         ////console.log('CHANGE1', instance);
             //         $scope.yearFrom = instance.currentYear;
-            //         //console.log('ESS',  $scope.yearFrom);
+            //         ////console.log('ESS',  $scope.yearFrom);
             //         $scope.$apply();
             //     },
             //
@@ -697,7 +675,7 @@ angular.module('EmergenceModule')
             //     //]
             //
             //     //parseDate: function (str) {
-            //     //    console.log('new Date(str)',new Date(str.selectedDates));
+            //     //    //console.log('new Date(str)',new Date(str.selectedDates));
             //     //    return new Date(str.selectedDates);
             //     //}
             //     //maxDate: info.maxDate // максимальная дата
@@ -709,7 +687,7 @@ angular.module('EmergenceModule')
             //    return o;
             //};
 
-            //console.log('YEAAARRRRRRRRR', moment().add(1, 'year').get('year'));
+            ////console.log('YEAAARRRRRRRRR', moment().add(1, 'year').get('year'));
             $scope.dateOpts = {
                 locale: info.ru,
                 //mode: "range",
@@ -737,8 +715,8 @@ angular.module('EmergenceModule')
             //
             // $scope.toggleBlur = function (mx) {
             //     //if(!mx) mx.selectedDates = new Date();
-            //     ////console.log('mx.selectedDates: ', mx.selectedDates);
-            //     ////console.log('SelectedDates XX7:',moment.parseZone(mx.selectedDates[1]).format());
+            //     //////console.log('mx.selectedDates: ', mx.selectedDates);
+            //     //////console.log('SelectedDates XX7:',moment.parseZone(mx.selectedDates[1]).format());
             //     //
             //     //$scope.query.sd = mx.selectedDates;
             //     //$scope.mx = mx.selectedDates;
@@ -772,7 +750,7 @@ angular.module('EmergenceModule')
             $scope.refresh = function () {
                 let item = $scope.item = Emergences.get({id: $stateParams.emergenceId},
                     function (emergences) {
-                        console.log('EDIT EMERGENCE refresh function', emergences);
+                        //console.log('EDIT EMERGENCE refresh function', emergences);
                         $scope.flatpicker.setDate(emergences.period);
 
                         $scope.emergences = emergences;
@@ -811,7 +789,7 @@ angular.module('EmergenceModule')
             });
             $scope.$watch('item.start', function (value) {
                 if (value) {
-                    //console.log('ПРОЕКТ  НЕ ОТРАБОТАЛ', value);
+                    ////console.log('ПРОЕКТ  НЕ ОТРАБОТАЛ', value);
                     if (($scope.item.status === 'Новая' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
                         toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
                             {
@@ -835,7 +813,7 @@ angular.module('EmergenceModule')
                     if ($scope.item.status !== 'Новая' || moment(value, ["DD.MM.YYYY"]).isValid() || !$scope.item.action) return;
                     let nm;
 
-                    //console.log('FORMAT 55', value);
+                    ////console.log('FORMAT 55', value);
                     nm = (moment(value).isSameOrBefore(moment())) ? 'Новая запущена' : 'Запуск проекта';
                     toastr.info(nm + ': ' + moment(value).fromNow() + ',  <br> в ' + moment(new Date(value)).format('llll'), info.warning,
                         {
@@ -1171,7 +1149,7 @@ angular.module('EmergenceModule')
                             $scope.refresh();
                         },
                         function (err) {
-                            //console.log('ERR: ', err);
+                            ////console.log('ERR: ', err);
                             toastr.error(err.data.invalidAttributes, info.error(44006));
                         });
                 }
@@ -1225,7 +1203,7 @@ angular.module('EmergenceModule')
                             //$scope.item.firedDate = success.getFiredDate;
                         },
                         function (err) {
-                            //console.log(info.error, err);
+                            ////console.log(info.error, err);
                             toastr.error(err.data.invalidAttributes, info.error(90));
                         });
                 }

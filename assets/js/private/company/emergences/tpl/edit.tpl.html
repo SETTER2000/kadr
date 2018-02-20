@@ -649,11 +649,10 @@
                                         <img ng-if="itm.img" title="{{itm.fio}}" alt="{{ itm.fio }}" ng-src="{{ itm.img }}" class="md-avatar"/>
                                         <img ng-if="!itm.img" title="{{itm.fio}} фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="md-avatar"/>
                                         <!--<img  ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"  title="{{itm.fio}}"/>-->
-
                                         <div class="md-list-item-text" layout="column">
-                                            <!--<h3>{{ item.who }}</h3>-->
-                                            <p>{{ itm.comment}} </p>
                                             <small><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>
+                                            <p>{{ itm.comment}} </p>
+
                                         </div>
                                     </md-list-item>
                                 </div>
