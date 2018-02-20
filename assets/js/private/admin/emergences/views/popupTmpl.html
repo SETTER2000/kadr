@@ -28,7 +28,7 @@
                 <h4>{{item.badges[0].lastName}} {{item.badges[0].firstName[0]}}. {{item.badges[0].patronymicName[0]}}.</h4>
                 <p>{{item.action}} в {{item.badges[0].updatedAt| date: 'dd.MM.yyyy HH:mm:ss'}}</p>
             </div>
-            <md-button class="md-secondary" ng-disabled="(item.action==='удалён')" md-no-ink ng-href="/admin/emergences/edit/{{item.badges[0].id}}">
+            <md-button class="md-secondary" ng-disabled="(item.action==='удалён')" aria-label="fod" md-no-ink ng-href="/admin/emergences/edit/{{item.badges[0].id}}">
                 <i ng-if="(item.action !=='удалён')" class="fa fa-angle-double-right" aria-hidden="true"></i>
 
                 <!--<a ng-if="(item.action !=='удалён')" type="button"-->

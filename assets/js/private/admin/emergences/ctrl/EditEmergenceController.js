@@ -32,15 +32,13 @@ angular.module('EmergenceModule')
             $scope.deleteComment = function (commentId) {
                 if (!angular.isDefined(commentId)) return toastr.error('Отсутствует ID комментария. Не смогу удалить.', 'Ошибка 6212!');
 
-                $http.put('/emergence/delete-commentIt/'+$scope.item.id+'/'+commentId).then(function (success) {
+                $http.put('/emergence/delete-commentIt/' + $scope.item.id + '/' + commentId).then(function (success) {
                     toastr.success(info.changed, success);
                     ////console.log('APPP',success.data);
-                    //$scope.item.commentItArr = success.data.commentItArr;
+                    $scope.item.commentItArr = success.data.commentItArr;
                     //$scope.refresh();
                 });
             };
-
-
 
 
             $scope.close = $scope.edit;
@@ -105,7 +103,7 @@ angular.module('EmergenceModule')
                 //}
             };
 
-
+            $scope.amended = 'Внёс изменения';
             $scope.matchPattern = new RegExp('[а-яА-ЯёЁ]+');
             $scope.minLength = 3;
             $scope.maxLength = 20;
@@ -155,6 +153,18 @@ angular.module('EmergenceModule')
                 //$scope.item.commentItArr = data.howdy.commentItArr;
                 //$scope.$apply();
                 $scope.refresh();
+            });
+            io.socket.on('hello-emergence-delete-comment', function (data) {
+                ////console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
+                if (!data.howdy)  $state.go('home.admin.emergences');
+                console.log('data.howdy', data.howdy);
+                //console.log('data.item',$scope.item);
+                $scope.$apply(function () {
+                    $scope.item.commentItArr = data.howdy.commentItArr;
+                });
+
+                //$scope.$apply();
+                //$scope.refresh();
             });
 
             io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
@@ -1020,15 +1030,6 @@ angular.module('EmergenceModule')
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
                 if (angular.isDefined(item.id)) {
                     item.$update({id: item.id}, item);
-                    //item.$update(item, function (success) {
-                    //        toastr.success(info.changed);
-                    //        $state.go('home.admin.emergences');
-                    //    },
-                    //    function (err) {
-                    //        if (err.status == 400)  toastr.error(err.statusText + ' ' + err.data.details, info.error(err.status));
-                    //        toastr.error(err.data, info.error(11445));
-                    //    }
-                    //);
                 } else {
                     if (angular.isDefined(item)) {
                         let ar = [];

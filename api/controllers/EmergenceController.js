@@ -266,9 +266,6 @@ module.exports = {
         let fullName = req.param('lastName') + ' ' + req.param('firstName') + ' ' + req.param('patronymicName');
         if (!req.param('departments')) return res.badRequest('Не указан департамент.');
         let sectionUrl = (req.param('worked')) ? 'company' : 'admin';
-        //console.log('ALL REQUEST worked: ', req.param('worked'));
-        //console.log('ALL REQQQQ: ', req.params.all());
-        //console.log('REQUEST PARAM itUpdate: ', req.param('itUpdate'));
         Department.findOne({id: req.param('departments')[0].id})
             .exec((err, findDepart)=> {
                 "use strict";
@@ -326,14 +323,12 @@ module.exports = {
                     positions: req.param('positions'),
                     worked: moment().isSameOrAfter(moment(new Date(req.param('start')), ['X']))
                 };
-
                 if (req.param('commentIt')) {
                     obj.commentItArr = req.param('commentItArr');
                 }
                 if (req.param('itUpdateData')) {
                     obj.itUpdateData = req.param('itUpdateData');
                 }
-
                 User.findOne({id: obj.whomUpdated})
                     .exec((err, findUser) => {
                         "use strict";
@@ -368,6 +363,7 @@ module.exports = {
                                                 .exec((err, findsEmergence) => {
                                                     if (err) return res.serverError(err);
                                                     sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsEmergence}, req);
+                                                    sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: findOneEm}, req);
                                                     sails.sockets.broadcast('emergence', 'badges-emergence', {
                                                         badges: objEdit,
                                                         action: 'обновлён',
@@ -375,7 +371,7 @@ module.exports = {
                                                         fullName: findUser.getFullName(),
                                                         avatarUrl: findUser.avatarUrl
                                                     }, req);
-                                                    sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: findOneEm}, req);
+
                                                     res.send(findOneEm);
                                                 });
                                         }
@@ -477,7 +473,7 @@ module.exports = {
                             if (err) return res.serverError(err);
                             Emergence.findOne(req.param('id')).exec((err, findOneEm)=> {
                                 if (err) return res.serverError(err);
-                                sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: findOneEm}, req);
+                                sails.sockets.broadcast('emergence', 'hello-emergence-delete-comment', {howdy: findOneEm}, req);
                                 //sails.sockets.broadcast('emergence', 'badges-emergence', {
                                 //    badges: [findOneEm],
                                 //    action: 'удалён',
@@ -485,7 +481,7 @@ module.exports = {
                                 //    fullName: finOneUser.getFullName(),
                                 //    avatarUrl: finOneUser.avatarUrl
                                 //}, req);
-                                res.ok();
+                                res.ok(findOneEm);
                             });
                         });
                 });

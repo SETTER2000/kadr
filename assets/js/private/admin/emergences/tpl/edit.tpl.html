@@ -549,7 +549,7 @@
                     <div class="panel-body drop-length">
                         <div class="row">
                             <div class="col-md-6">
-                                <md-checkbox ng-disabled="item.kadrValid" ng-model="item.finCheck" title="{{titleFinCheck}}"
+                                <md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.finCheck" title="{{titleFinCheck}}"
                                              ng-change="saveEditFin(item, finForm.$valid)"
                                              aria-label="Checkbox 1"
                                              class="green md-align-top-left" flex>
@@ -596,7 +596,7 @@
 
             <!-- А Х О  В Ы П О Л Н Е Н О   -->
 
-            <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default"
+            <div ng-if="((edit && item.startKadr) || me.admin)" class="panel panel-default"
                  ng-class="{'panel-success':item.ahoCheck}">
                 <div class="panel-heading">АХО</div>
                 <div class="panel-body">
@@ -647,7 +647,7 @@
             <!-- IT  В Ы П О Л Н Е Н О   -->
             <form name="itForm" novalidate
                   ng-submit="saveEdit(item, itForm.$valid)" enctype="multipart/form-data">
-                <div ng-if="((edit && item.startKadr && item.finCheck) || me.admin)" class="panel panel-default"
+                <div ng-if="((edit && item.startKadr) || me.admin)" class="panel panel-default"
                      ng-class="{'panel-success':item.itCheck}">
                     <div class="panel-heading">IT</div>
                     <div class="panel-body ">
@@ -742,7 +742,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <div class="btn-group" role="group" >
-                                        <button type="submit" ng-disabled="!item.commentIt"
+                                        <button  ng-disabled="!item.commentIt"
                                                 class="btn btn-success btn-xs">
                                             <md-tooltip md-direction="top">Сохранить комментарий</md-tooltip>
                                             <span class="glyphicon glyphicon-check"></span></button>
