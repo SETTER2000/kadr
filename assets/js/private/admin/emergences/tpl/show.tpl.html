@@ -3,6 +3,7 @@
         <h2>{{item.getFullName()}}
             <div class="btn-group-xs pull-right">
                 <a ui-sref="home.admin.emergences" class="btn btn-sm btn-warning">
+                    <md-tooltip md-direction="left">к списку</md-tooltip>
                     <span class="glyphicon glyphicon-list"></span>
                 </a>
                 <a ng-if="me.admin" ui-sref="home.admin.emergences.edit({emergenceId:item.id})" class="btn btn-sm btn-warning">

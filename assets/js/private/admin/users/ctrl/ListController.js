@@ -88,7 +88,8 @@
                 updatedAtArea: 'Update',
                 roomArea: 'Комната',
                 departmentArea: 'Отдел',
-                positionArea: 'Должность'
+                positionArea: 'Должность',
+                firedDateArea:'Дата увольнения'
             };
 
 

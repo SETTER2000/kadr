@@ -153,7 +153,7 @@
         </th>
 
         <!-- С О З Д А Л -->
-        <th ng-if="!me.see" class="text-center">
+        <th ng-if="me.emergence[0].see" class="text-center">
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('whomCreated[0].lastName')">
                 {{nameHeader.sevenArea}}
                 <span class="sortOrder" ng-show="propertyName === 'whomCreated[0].lastName'"
@@ -330,7 +330,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
 
         <!-- С О З Д А Л -->
-        <td ng-if="!me.see" class="text-center text-nowrap">
+        <td ng-if="me.emergence[0].see" class="text-center text-nowrap">
             {{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}} {{item.whomCreated.patronymicName[0]}}
         </td>
 
@@ -354,6 +354,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <!-- B U T T O N -->
         <td class="btn-group-xs">
             <a ui-sref="home.company.emergence({emergenceId:item.id})" class="btn" ng-class="{'btn-link': !item.fired, ' btn-danger':item.fired}">
+                <md-tooltip md-direction="left">общая информация</md-tooltip>
                 <span class="glyphicon" ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"
               aria-hidden="true">  </span>
             </a>

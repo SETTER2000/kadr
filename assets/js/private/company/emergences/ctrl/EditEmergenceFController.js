@@ -1090,6 +1090,7 @@ angular.module('EmergenceFModule')
 //                console.log('Текущий момент', moment());
 //                console.log('ITEM START:',moment('14.02.2018',['DD.MM.YYYY']).isAfter(moment(item.outputEmployee)));
                 if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
+if(!item.departments) return toastr.error('Не указано подразделение.', 'Ошибка!');
 
                 //if(moment().isAfter(moment(item.outputEmployee))) return toastr.error('Дата просрочена.', 'Ошибка!');
 
@@ -1115,7 +1116,7 @@ angular.module('EmergenceFModule')
 
 
                 if (isValid) {
-                    toastr.success(info.changed);
+                    //toastr.success(info.changed, 'OK!!');
                     $scope.message = item.name + " " + item.email;
                 }
                 else {

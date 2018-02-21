@@ -19,6 +19,16 @@
             </button>
         </th>
 
+
+        <!-- Д А Т А  У В О Л Ь Н Е Н И Я -->
+        <th  ng-if="filterObject.fired" class="text-center">
+            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('firedDate')">
+                {{nameHeader.firedDateArea}}
+                <span class="sortOrder" ng-show="propertyName === 'firedDate'"
+      ng-class="{reverse: reverse}"></span>
+            </button>
+        </th>
+
         <!-- К О М Н А Т А -->
         <th class="text-center">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('room')">
@@ -109,6 +119,11 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
             <a  href="{{item.getEditUrl(item.id)}}">
                 {{item.getFullName()}}
             </a>
+        </td>
+
+       <!-- Д А Т А  У В О Л Ь Н Е Н И Я -->
+        <td ng-if="item.fired" class="text-center">
+            {{item.firedDate | date:"dd.MM.yyyy"}}
         </td>
 
         <!-- К О М Н А Т А -->

@@ -435,6 +435,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <!-- B U T T O N -->
         <td class="btn-group-xs">
             <a ui-sref="home.admin.emergence({emergenceId:item.id})" class="btn" ng-class="{'btn-link': !item.fired, ' btn-danger':item.fired}">
+                <md-tooltip md-direction="left">общая информация</md-tooltip>
                 <span class="glyphicon" ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"
               aria-hidden="true">  </span>
             </a>
