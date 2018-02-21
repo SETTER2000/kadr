@@ -153,7 +153,7 @@
         </th>
 
         <!-- С О З Д А Л -->
-        <th class="text-center">
+        <th ng-if="!me.see" class="text-center">
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('whomCreated[0].lastName')">
                 {{nameHeader.sevenArea}}
                 <span class="sortOrder" ng-show="propertyName === 'whomCreated[0].lastName'"
@@ -172,12 +172,12 @@
 
 
         <!-- C R E A T E -->
-        <th ng-if="me.admin" class="text-center ">
-            <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('createdAt')">
-                {{nameHeader.createdAtArea}}  <span class="sortOrder" ng-show="propertyName === 'createdAt'"
-                                                    ng-class="{reverse: reverse}"></span>
-            </button>
-        </th>
+        <!--<th ng-if="me.admin" class="text-center ">-->
+            <!--<button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('createdAt')">-->
+                <!--{{nameHeader.createdAtArea}}  <span class="sortOrder" ng-show="propertyName === 'createdAt'"-->
+                                                    <!--ng-class="{reverse: reverse}"></span>-->
+            <!--</button>-->
+        <!--</th>-->
 
 
         <!-- U P D A T E -->
@@ -188,28 +188,6 @@
             </button>
         </th>
         <th></th>
-        <!--&lt;!&ndash; К О Н Т А К Т Ы &ndash;&gt;-->
-        <!--<th class="wdt">-->
-        <!--<div class="btn-group pull-right">-->
-        <!--<button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('contacts')">-->
-        <!--<span class="sortOrder" ng-show="propertyName === 'contacts'" ng-class="{reverse: reverse}"></span>-->
-        <!--Контакты: {{fieldName}}-->
-        <!--</button>-->
-        <!--<button type="button" class="btn btn-sm btn-default  not-border dropdown-toggle" data-toggle="dropdown"-->
-        <!--aria-haspopup="true" aria-expanded="false">-->
-        <!--<span class="caret"></span>-->
-        <!--<span class="sr-only">Контакты: {{fieldName}}</span>-->
-        <!--</button>-->
-        <!--<ul class="dropdown-menu">-->
-        <!--&lt;!&ndash;<li><a href="#" ng-click="fieldName='Email'">Email</a></li>&ndash;&gt;-->
-        <!--<li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>-->
-        <!--<li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>-->
-        <!--<li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>-->
-        <!--&lt;!&ndash;<li role="separator" class="divider"></li>&ndash;&gt;-->
-        <!--&lt;!&ndash;<li><a href="#">Separated link</a></li>&ndash;&gt;-->
-        <!--</ul>-->
-        <!--</div>-->
-        <!--</th>-->
     </tr>
 
     <!-- B O D Y  T A B L E -->
@@ -352,7 +330,7 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
 
         <!-- С О З Д А Л -->
-        <td class="text-center text-nowrap">
+        <td ng-if="!me.see" class="text-center text-nowrap">
             {{item.whomCreated.lastName}} {{item.whomCreated.firstName[0]}} {{item.whomCreated.patronymicName[0]}}
         </td>
 
@@ -363,14 +341,14 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         </td>
 
         <!-- C R E A T E -->
-        <td ng-if="me.admin" class="text-center">
-            {{item.createdAt | date:"dd.MM.yyyy HH:mm:ss"}}
-        </td>
+        <!--<td ng-if="me.admin" class="text-center">-->
+            <!--{{item.createdAt | date:"dd.MM.yyyy HH:mm:ss"}}-->
+        <!--</td>-->
 
         <!-- U P D A T E -->
-        <td ng-if="me.admin" class="text-center">
-            {{item.updatedAt | date:"dd.MM.yyyy HH:mm:ss"}}
-        </td>
+        <!--<td ng-if="me.admin" class="text-center">-->
+            <!--{{item.updatedAt | date:"dd.MM.yyyy HH:mm:ss"}}-->
+        <!--</td>-->
 
 
         <!-- B U T T O N -->

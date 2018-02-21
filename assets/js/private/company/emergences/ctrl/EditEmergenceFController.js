@@ -81,8 +81,8 @@ angular.module('EmergenceFModule')
                 templatePhone: '####',
                 headerTab: 'Предоставленное оборудование',
                 logChange: 'Лог изменений',
-                mindate:'Дата просрочена',
-                maxdate:'Дата просрочена',
+                mindate: 'Дата просрочена',
+                maxdate: 'Дата просрочена',
 
             };
             $scope.titleFinCheck = 'При снятии отметки о выполнении задачи, данные из поля "' + $scope.text.headerTab + '", будут удалены.';
@@ -188,13 +188,22 @@ angular.module('EmergenceFModule')
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
             io.socket.on('hello-emergence-edit', function (data) {
-                //console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
                 if (!data.howdy)  $state.go('home.company.emergences');
-                //$scope.item = data.howdy;
-                //$scope.$apply();
                 $scope.refresh();
             });
-
+            io.socket.on('hello-emergence-delete-comment', function (data) {
+                if (!data.howdy)  $state.go('home.admin.emergences');
+                $scope.$apply(function () {
+                    $scope.item.commentItArr = data.howdy.commentItArr;
+                });
+            });
+            io.socket.on('hello-emergence-save-comment', function (data) {
+                console.log('DATAAAA', data.howdy);
+                if (!data.howdy)  $state.go('home.admin.emergences');
+                $scope.$apply(function () {
+                    $scope.item.commentItArr = data.howdy.commentItArr;
+                });
+            });
             io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
                 //console.log('Сервер ответил кодом ' + jwRes.statusCode + ' и данными: ', data);
             });
@@ -216,9 +225,6 @@ angular.module('EmergenceFModule')
                 //"showMethod": "fadeIn",
                 //"hideMethod": "fadeOut"
             });
-
-            //$scope.examples = ['settings', 'home', 'options', 'other'];
-            //$scope.year = moment().get('year');
 
             $scope.examples = [
                 //{
@@ -948,10 +954,9 @@ angular.module('EmergenceFModule')
             //
 
 
-
             $scope.errDate = function (item) {
-                if(moment().isAfter(moment(item.outputEmployee))){
-                 return true;
+                if (moment().isAfter(moment(item.outputEmployee))) {
+                    return true;
                 }
                 return false;
             };
@@ -962,7 +967,7 @@ angular.module('EmergenceFModule')
                     return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
                 }
 
-                if($scope.errDate(item)) {
+                if ($scope.errDate(item)) {
                     $scope.item.finCheck = false;
                     return toastr.error('Дата просрочена.', 'Ошибка!');
                 }
@@ -975,7 +980,7 @@ angular.module('EmergenceFModule')
                 $scope.showLogs = !$scope.showLogs;
             };
             $scope.saveEditAho = function (item, isValid) {
-                if($scope.errDate(item)) {
+                if ($scope.errDate(item)) {
                     $scope.item.ahoCheck = false;
                     return toastr.error('Дата просрочена.', 'Ошибка!');
                 }
@@ -983,12 +988,12 @@ angular.module('EmergenceFModule')
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
             };
-            $scope.getRandomId = function(){
-                return Math.floor((Math.random()*999999)+1);
+            $scope.getRandomId = function () {
+                return Math.floor((Math.random() * 999999) + 1);
             };
             $scope.saveEditIt = function (item, isValid) {
 
-                if($scope.errDate(item)) {
+                if ($scope.errDate(item)) {
                     $scope.item.itCheck = false;
                     return toastr.error('Дата просрочена.', 'Ошибка!');
                 }
@@ -1054,25 +1059,49 @@ angular.module('EmergenceFModule')
             var roundingDefault = moment.relativeTimeRounding();
             moment.relativeTimeThreshold('m', 60);
 
+            $scope.getRandomId = function () {
+                return Math.floor((Math.random() * 999999) + 1);
+            };
+
+            $scope.saveComment = function (item) {
+                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
+                if (item.commentIt) {
+                    item.commentItArr.push({
+                        id: $scope.getRandomId(),
+                        comment: item.commentIt.trim(),
+                        img: $scope.me.avatarUrl,
+                        date: new Date(),
+                        fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
+                    });
+
+                    $http.put('/emergence/save-comment/' + $scope.item.id, item).then(function (success) {
+                        toastr.success(info.changed, success);
+                        ////console.log('APPP',success.data);
+                        $scope.item.commentIt = '';
+                        $scope.item.commentItArr = success.data.commentItArr;
+                        //$scope.refresh();
+                    });
+                }
+            };
             $scope.saveEdit = function (item, isValid) {
 //moment('2010-10-20').isSameOrAfter('2010-10-19'); // true
 //                console.log('item.outputEmployee', item.outputEmployee);
 //                console.log('Проверяемый момент', moment(item.outputEmployee,['DD.MM.YYYY']));
 //                console.log('Текущий момент', moment());
 //                console.log('ITEM START:',moment('14.02.2018',['DD.MM.YYYY']).isAfter(moment(item.outputEmployee)));
-                if($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
+                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
 
                 //if(moment().isAfter(moment(item.outputEmployee))) return toastr.error('Дата просрочена.', 'Ошибка!');
 
-                if (item.commentIt) {
-                    item.commentItArr.push({
-                        id:$scope.getRandomId(),
-                        comment: item.commentIt.trim(),
-                        img: $scope.me.avatarUrl,
-                        date: new Date(),
-                        fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
-                    });
-                }
+                //if (item.commentIt) {
+                //    item.commentItArr.push({
+                //        id:$scope.getRandomId(),
+                //        comment: item.commentIt.trim(),
+                //        img: $scope.me.avatarUrl,
+                //        date: new Date(),
+                //        fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
+                //    });
+                //}
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
                     item.finCheck = false;

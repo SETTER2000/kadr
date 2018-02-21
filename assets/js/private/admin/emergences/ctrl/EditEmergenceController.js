@@ -29,16 +29,6 @@ angular.module('EmergenceModule')
                 }, 900);
             };
 
-            $scope.deleteComment = function (commentId) {
-                if (!angular.isDefined(commentId)) return toastr.error('Отсутствует ID комментария. Не смогу удалить.', 'Ошибка 6212!');
-
-                $http.put('/emergence/delete-commentIt/' + $scope.item.id + '/' + commentId).then(function (success) {
-                    toastr.success(info.changed, success);
-                    ////console.log('APPP',success.data);
-                    $scope.item.commentItArr = success.data.commentItArr;
-                    //$scope.refresh();
-                });
-            };
 
 
             $scope.close = $scope.edit;
@@ -54,6 +44,8 @@ angular.module('EmergenceModule')
                 minlength: "Не менее 3 знаков должно быть.",
                 minlengthFin: "Не менее 10 знаков должно быть.",
                 noEmail: "Не корректный email.",
+                textPhone: '- Пожалуйста, введите корректно номер телефона.',
+                templatePhone: '####',
                 maxlength: "Много букв!",
                 headerTab: 'Предоставленное оборудование',
                 logChange: 'Лог изменений',
@@ -90,7 +82,7 @@ angular.module('EmergenceModule')
                 minDate: "01-01-1950",
                 maxDate: "31-12-2030"
             };
-            $scope.debug = true;
+            $scope.debug = false;
             $scope.comment = false;
             $scope.hideFin = true;
             $scope.ctrl = {
@@ -146,38 +138,21 @@ angular.module('EmergenceModule')
              * TODO WEBSOCKET: Подключаемся к сокету обработка события hello
              */
             io.socket.on('hello-emergence-edit', function (data) {
-                ////console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
                 if (!data.howdy)  $state.go('home.admin.emergences');
-                //console.log('data.howdy', data.howdy);
-                //console.log('data.item',$scope.item);
-                //$scope.item.commentItArr = data.howdy.commentItArr;
-                //$scope.$apply();
                 $scope.refresh();
             });
             io.socket.on('hello-emergence-delete-comment', function (data) {
-                ////console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
                 if (!data.howdy)  $state.go('home.admin.emergences');
-                console.log('data.howdy', data.howdy);
-                //console.log('data.item',$scope.item);
                 $scope.$apply(function () {
                     $scope.item.commentItArr = data.howdy.commentItArr;
                 });
-
-                //$scope.$apply();
-                //$scope.refresh();
             });
 
             io.socket.on('hello-emergence-save-comment', function (data) {
-                ////console.log('Socket room: ' + data.howdy + ' подключился только что к комнате edit!');
                 if (!data.howdy)  $state.go('home.admin.emergences');
-                console.log('data.howdy', data.howdy);
-                //console.log('data.item',$scope.item);
                 $scope.$apply(function () {
                     $scope.item.commentItArr = data.howdy.commentItArr;
                 });
-
-                //$scope.$apply();
-                //$scope.refresh();
             });
 
             io.socket.get('/say/emergence/hello', function gotResponse(data, jwRes) {
@@ -202,8 +177,6 @@ angular.module('EmergenceModule')
                 //"hideMethod": "fadeOut"
             });
 
-            //$scope.examples = ['settings', 'home', 'options', 'other'];
-            //$scope.year = moment().get('year');
 
             $scope.examples = [
                 //{
@@ -259,18 +232,14 @@ angular.module('EmergenceModule')
             };
             $scope.$watch('item.departments', function (val, old) {
                 if (val) {
-
                     $scope.departments = val;
                 }
             });
 
             $scope.$watch('item.departments[0].id', function (val, old) {
                 if (val) {
-
-
                     Departments.get({id: val},
                         function (ems) {
-                            ////console.log('WATCH item.departments', ems);
                             $scope.otdel = ems.name;
                             $scope.setData();
                             $scope.apply();
@@ -278,16 +247,6 @@ angular.module('EmergenceModule')
                             //console.log('ERRRR PRO:', err);
                         }
                     );
-
-                    //$scope.examples2[0] = {
-                    //    description: 'Дополнительное уведомление о не заполненной информации.',
-                    //    name: '№1',
-                    //    tmpl: '<h1>Уважаемый коллега!</h1> ' +
-                    //    '<p>Вы не заполнили график отпусков на следующий календарный год. Просьба проделать данную работу до <b></b></p>'
-                    //
-                    //};
-
-
                 }
             });
             $scope.$watch('item.post', function (val, old) {
@@ -299,7 +258,6 @@ angular.module('EmergenceModule')
 
 
             $scope.$watch('item.outputEmployee', function (val, old) {
-
                 if (val) {
                     $scope.outputEmployee = val;
                     $scope.setData();
@@ -323,14 +281,6 @@ angular.module('EmergenceModule')
                     $scope.setData();
                 }
             });
-
-            //$scope.dt = new Date();
-            //$scope.$watch('dt', function (val) {
-            //    if (val) $scope.item.outputEmployee = val;
-            //});
-            //$scope.$watch('item.outputEmployee', function (val) {
-            //    if (val) $scope.dt =new Date(val);
-            //});
 
 
             $scope.examples2 = [
@@ -371,40 +321,6 @@ angular.module('EmergenceModule')
                 $scope.item.start = $scope.timeDate = fn($scope.item);
             };
 
-            //$scope.expr2 = "outputEmployee | date:'dd.MM.yyyy'";
-            //$scope.parseExpression2 = function () {
-            //    var fn = $parse($scope.expr2);
-            //    $scope.item.outputEmployee = $scope.timeDate = fn($scope.item);
-            //};
-
-            //$scope.$watch('year', function (val, old) {
-            //    if (val) {
-            //        $http.get('/emergence/to-years?year=' + val)
-            //            .then(function (data) {
-            //                $scope.sumDays = data.data.sumDays;
-            //            });
-            //    }
-            //});
-            //href="/vacation/delete-all/'+req.param('year')+'"
-            //$scope.addiction = function() {
-            //    if(!angular.isNumber(year)) return;
-            //    if (val) {
-            //        $http.get('/vacation/delete-all/' + year)
-            //            .then(function (res) {
-            //                //console.log('EYYYYYYEEEESS: ', res.data );
-            //            });
-            //    }
-            //};
-
-            //$scope.$watch('emergences', function (val, old) {
-            //    if (val) {
-            //        $http.get('/emergence/to-years?year=' + val.year)
-            //            .then(function (data) {
-            //                $scope.sumDays = data.data.sumDays;
-            //            });
-            //    }
-            //});
-
 
             $scope.radioData = [
                 {label: 'работает', value: false},
@@ -417,6 +333,7 @@ angular.module('EmergenceModule')
             $scope.addPersonIAgree = 'Выбрать "я согласующий" для';
             $scope.simulateQuery = false;
             $scope.isDisabled = false;
+            $scope.loginAdmin = false;
 
             $scope.getCountDay = function (arr) {
                 if (angular.isArray(arr) && arr.length == 2) {
@@ -513,20 +430,7 @@ angular.module('EmergenceModule')
             $scope.newState = function (state) {
                 alert("Sorry! You'll need to create a Constitution for " + state + " first!");
             };
-            //$scope.fixYear = function () {
-            //    if (!angular.isNumber($scope.item.year)) {
-            //        toastr.error('Год введён не корректно!', info.error(8966));
-            //    }
-            //    return;
-            //};
-            // ******************************
-            // Internal methods
-            // ******************************
 
-            /**
-             * Search for states... use $timeout to simulate
-             * remote dataservice call.
-             */
             $scope.querySearch = function (query) {
                 var results = query ? $scope.states.filter(createFilterFor(query)) : $scope.states,
                     deferred;
@@ -619,28 +523,6 @@ angular.module('EmergenceModule')
                 $scope.selectedItem = obj;
             };
 
-            /**
-             * Запрос кол-ва пользователей в системе
-             */
-            //$scope.getAllUsers = function () {
-            //    let itemsUsers = $scope.itemsUsers = Users.query({},
-            //        function (users) {
-            //            ////console.log('EDIT USERS EMERGENCE', users);
-            //            $scope.itemsUsers = users;
-            //            //$scope.getBoss();
-            //        }, function (err) {
-            //            //console.log(err, 'ОШибка в USERS objects');
-            //            // активируем по умолчанию создаваемую запись
-            //            //item.action = true;
-            //            //item.status = 'Новая';
-            //            //item.sc = function () {
-            //            //    return 'Отпуск';
-            //            //};
-            //
-            //        }
-            //    );
-            //};
-
 
             function createFilterFor(query) {
                 let lowercaseQuery = angular.lowercase(query);
@@ -650,67 +532,7 @@ angular.module('EmergenceModule')
             }
 
 
-            //$scope.close = 1;
 
-            $scope.loginAdmin = false;
-
-            // $scope.dateOpts = {
-            //     locale: info.ru, // язык
-            //     mode: "range", // диапазон дат выбрать
-            //     dateFormat: info.dateFormat, // формат даты
-            //     allowInput: false, // ручной ввод даты
-            //     inline: false, // календарь открыт: true; false закрыт
-            //     minDate: 'today',
-            //     // Обработчик события на изменения даты
-            //     //onChange: function(selectedDates, dateStr, instance) {
-            //     //    //console.log('selectedDates',selectedDates);
-            //     //},
-            //     // Обработчик события на изменения года
-            //     onYearChange: function (selectedDates, dateStr, instance) {
-            //         ////console.log('CHANGE1', instance);
-            //         $scope.yearFrom = instance.currentYear;
-            //         ////console.log('ESS',  $scope.yearFrom);
-            //         $scope.$apply();
-            //     },
-            //
-            //     //onDayCreate: function (dObj, dStr, fp, dayElem) {
-            //     //    //dayOff.forEach(function (v, k, arr) {
-            //     //    //    if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-            //     //    //        dayElem.innerHTML += "<span   class='event busy'></span>";
-            //     //    //    }
-            //     //    //});
-            //     //    celebration.forEach(function (v, k, arr) {
-            //     //        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-            //     //            dayElem.innerHTML += "<span title='На час пораньше'  class='event celebration'>*</span>";
-            //     //        }
-            //     //    });
-            //     //    holiday.forEach(function (v, k, arr) {
-            //     //        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-            //     //            dayElem.innerHTML += "<span title='Праздник'  class='event busy holiday'></span>";
-            //     //        }
-            //     //    });
-            //     //},
-            //     //disable: [
-            //     //    function(date) {
-            //     //        // отключить каждый  8 ой
-            //     //        return !(date.getDate() % 2);
-            //     //    }
-            //     //]
-            //
-            //     //parseDate: function (str) {
-            //     //    //console.log('new Date(str)',new Date(str.selectedDates));
-            //     //    return new Date(str.selectedDates);
-            //     //}
-            //     //maxDate: info.maxDate // максимальная дата
-            //     //defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
-            // };
-
-            //$scope.minYear = function () {
-            //    let o = moment().add(1, 'year').get('year');
-            //    return o;
-            //};
-
-            ////console.log('YEAAARRRRRRRRR', moment().add(1, 'year').get('year'));
             $scope.dateOpts = {
                 locale: info.ru,
                 //mode: "range",
@@ -735,17 +557,6 @@ angular.module('EmergenceModule')
                 //defaultDate: 'today'
             };
 
-            //
-            // $scope.toggleBlur = function (mx) {
-            //     //if(!mx) mx.selectedDates = new Date();
-            //     //////console.log('mx.selectedDates: ', mx.selectedDates);
-            //     //////console.log('SelectedDates XX7:',moment.parseZone(mx.selectedDates[1]).format());
-            //     //
-            //     //$scope.query.sd = mx.selectedDates;
-            //     //$scope.mx = mx.selectedDates;
-            //     //$scope.refresh();
-            // };
-
             var uploader = $scope.uploader = new FileUploader({
                 url: '/file/upload',
                 autoUpload: true,
@@ -760,15 +571,6 @@ angular.module('EmergenceModule')
                     {display: "Загрузить файл", value: "uploader"}
                 ];
             $scope.modeSelect = $scope.options[0];
-
-            //$scope.closed = function () {
-            //    if ($scope.close) {
-            //        $scope.close = false;
-            //    }
-            //    else {
-            //        $scope.close = true;
-            //    }
-            //};
 
             $scope.refresh = function () {
                 let item = $scope.item = Emergences.get({id: $stateParams.emergenceId},
@@ -1007,16 +809,17 @@ angular.module('EmergenceModule')
             $scope.getRandomId = function () {
                 return Math.floor((Math.random() * 999999) + 1);
             };
-            //$scope.deleteComment = function (commentId) {
-            //    if (!angular.isDefined(commentId)) return toastr.error('Отсутствует ID комментария. Не смогу удалить.', 'Ошибка 6212!');
-            //
-            //    $http.put('/emergence/delete-commentIt/' + $scope.item.id + '/' + commentId).then(function (success) {
-            //        toastr.success(info.changed, success);
-            //        ////console.log('APPP',success.data);
-            //        $scope.item.commentItArr = success.data.commentItArr;
-            //        //$scope.refresh();
-            //    });
-            //};
+            $scope.deleteComment = function (commentId) {
+                if (!angular.isDefined(commentId)) return toastr.error('Отсутствует ID комментария. Не смогу удалить.', 'Ошибка 6212!');
+
+                $http.put('/emergence/delete-commentIt/' + $scope.item.id + '/' + commentId).then(function (success) {
+                    toastr.success(info.changed, success);
+                    ////console.log('APPP',success.data);
+                    $scope.item.commentItArr = success.data.commentItArr;
+                    //$scope.refresh();
+                });
+            };
+
             $scope.saveComment = function (item) {
                 if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
                 if (item.commentIt) {

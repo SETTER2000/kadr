@@ -117,11 +117,11 @@
                                                    md-max-date="ctrl.maxDate">
                                     </md-datepicker>
                                 </div>
-                                <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmptyDate}}</div>
                                     <div ng-message="mindate" class="my-message">{{text.mindate}}</div>
                                 </div>
-                                <div ng-messages="userForm.itemOutputEmployeeAdmin.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemOutputEmployeeAdmin.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                 </div>
                             </md-input-container>
@@ -149,7 +149,7 @@
                                        placeholder="Иванов"
                                        ng-pattern="matchPattern">
 
-                                <div ng-messages="userForm.itemLastName.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemLastName.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
@@ -170,7 +170,7 @@
                                        md-maxlength="maxLength"
                                        placeholder="Иван"
                                        ng-pattern="matchPattern">
-                                <div ng-messages="userForm.itemFirstName.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemFirstName.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
@@ -190,7 +190,7 @@
                                        md-maxlength="maxLength"
                                        placeholder="Иванович"
                                        ng-pattern="matchPattern">
-                                <div ng-messages="userForm.itemPatronymicName.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemPatronymicName.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
@@ -214,7 +214,7 @@
                                     <md-option ng-value="department" ng-repeat="department in departments">{{department.name}}</md-option>
                                 </md-select>
 
-                                <div ng-messages="userForm.itemDepartments.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemDepartments.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                 </div>
                             </md-input-container>
@@ -253,7 +253,7 @@
                                        ng-minlength="minLength"
                                        ng-maxlength="maxLengthPost"
                                        md-maxlength="maxLengthPost">
-                                <div ng-messages="userForm.itemPost.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemPost.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                                     <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
@@ -273,7 +273,7 @@
                                        ng-maxlength="maxLengthPost"
                                        md-maxlength="maxLengthPost"
                                        ng-pattern="matchPattern">
-                                <div ng-messages="userForm.itemBoss.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemBoss.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
@@ -317,7 +317,7 @@
                                       ng-maxlength="maxlengthText"
                                       md-maxlength="maxlengthText"
                                       rows="1" md-select-on-focus></textarea>
-                            <div ng-messages="userForm.itemExtra.$error" role="alert" ng-messages-multiple>
+                            <div ng-messages="userForm.itemExtra.$error" role="alert" multiple>
                                 <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                 <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                             </div>
@@ -510,7 +510,7 @@
                                       ng-maxlength="maxlengthText"
                                       md-maxlength="maxlengthText"
                                       rows="1" md-select-on-focus></textarea>
-                        <div ng-messages="userForm.itemCommentKadr.$error" role="alert" ng-messages-multiple>
+                        <div ng-messages="userForm.itemCommentKadr.$error" role="alert" multiple>
                             <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                             <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                         </div>
@@ -575,7 +575,7 @@
                                       md-maxlength="maxLengthFin"
                                       ng-minlength="minLength"
                                       rows="1" md-select-on-focus></textarea>
-                                    <div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>
+                                    <div ng-messages="finForm.itemCommentFin.$error" role="alert" multiple>
                                         <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                         <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                                         <div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>
@@ -696,7 +696,7 @@
                                     <md-input-container flex>
                                         <label>Email</label>
                                         <input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">
-                                        <div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>
+                                        <div ng-messages="createForm.itemEmail.$error" role="alert" multiple>
                                             <!--<div ng-message="required" class="my-message">{{text.noEmpty}}</div>-->
                                             <!--<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>-->
                                             <div ng-message="email" class="my-message">{{text.noEmail}}</div>
@@ -707,24 +707,21 @@
                                 </div>
                                 <div class="col-md-6">
                                     <md-input-container flex>
-                                        <label>Внутренний телефон
-
-                                        </label>
+                                        <label>Внутренний телефон </label>
                                         <input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"
                                                ng-pattern="/^[0-9]{4}$/"/>
 
                                         <!--<div class="hint" style="color: #9a9a9a" ng-show="showHints">{{text.templatePhone}}</div>-->
 
-                                        <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert"
-                                             ng-messages-multiple>
+                                        <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert" multiple>
                                             <div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>
                                         </div>
                                     </md-input-container>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-11">
+
                                     <md-input-container class="md-block">
                                         <label>Комментарий </label>
                             <textarea name="itemCommentIt" ng-model="item.commentIt"
@@ -733,13 +730,12 @@
                                       md-maxlength="maxLengthIt"
                                       ng-minlength="minLength"
                                       rows="1" md-select-on-focus></textarea>
-
-                                        <div ng-messages="itForm.itemCommentIt.$error" role="alert"
-                                             ng-messages-multiple>
+                                        <div ng-messages="createForm.itemCommentIt.$error" role="alert" multiple>
                                             <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                                             <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
                                         </div>
                                     </md-input-container>
+
                                 </div>
                                 <div class="col-md-1">
                                     <div class="btn-group" role="group" >
@@ -750,229 +746,24 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">
                                         <img ng-if="itm.img" title="{{itm.fio}}" alt="{{ itm.fio }}" ng-src="{{ itm.img }}" class="md-avatar"/>
                                         <img ng-if="!itm.img" title="{{itm.fio}} фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="md-avatar"/>
-
-                                        <!--<img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"-->
-                                             <!--title="{{itm.fio}}"/>-->
                                         <div class="md-list-item-text" layout="column">
-                                            <!--<h3>{{ item.who }}</h3>-->
                                             <small><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>
                                             <p>{{ itm.comment}} </p>
-
-
-                                            <span ng-if="me.admin" title="Удалить" aria-label="deleteComent" ng-click="deleteComment(itm.id)" class="md-secondary md-hue-3 glyphicon glyphicon-remove"></span>
-
-                                            <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>-->
-                                            <!--<md-icon md-svg-icon="communication:email"  ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3 " ><span class="md-secondary md-hue-3 glyphicon glyphicon-remove"></span></md-icon>-->
-                                            <!--<md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>-->
+                                            <span ng-if="me.admin" title="Удалить" aria-label="deleteComment" ng-click="deleteComment(itm.id)" class="md-secondary md-hue-3 glyphicon glyphicon-remove"></span>
                                         </div>
-                                        <!--<div class="md-list-item-text" layout="column" >-->
-
-                                            <!--<p class="pull-right"><span class="glyphicon glyphicon-remove"></span></p>-->
-
-                                        <!--</div>-->
                                     </md-list-item>
                                 </div>
                             </div>
 
-
-                            <!--<div class="form-group">-->
-                                <!--<div class="checkbox">-->
-                                    <!--<table class="table">-->
-                                        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td width="10px">&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck"&ndash;&gt;-->
-                                                             <!--&lt;!&ndash;ng-change="saveEditIt(item, userForm.$valid)"&ndash;&gt;-->
-                                                             <!--&lt;!&ndash;aria-label="Checkbox 3"&ndash;&gt;-->
-                                                             <!--&lt;!&ndash;class="green md-align-top-left" flex></md-checkbox>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.noCheck}}   </span>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}} </span>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td class="pull-right">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<span ng-if="item.itUpdate" class="text-right" ng-click="showLog()">&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<md-tooltip md-direction="top">{{amended}} {{item.itUpdateData[(item.itUpdateData.length - &ndash;&gt;-->
-                                                <!--&lt;!&ndash;1)].date | date:"dd.MM.yyyy HH:mm:ss"}}&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</md-tooltip>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;{{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>&ndash;&gt;-->
-
-                                                <!--&lt;!&ndash;<div ng-if="showLogs" class="animate-if">&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<small class="pull-right text-grey">{{text.logChange}}</small>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<md-list-item class="md-3-line pad-min" ng-repeat="itm in item.itUpdateData ">&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;<img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.shortName}}"&ndash;&gt;-->
-                                                             <!--&lt;!&ndash;title="{{itm.fullName}}"/>&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;<div class="md-list-item-text" layout="column">&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;<h3>{{ itm.fullName }}</h3>&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;<p><span ng-if="!itm.action">{{titles.noCheck}}</span>&ndash;&gt;-->
-                                                                <!--&lt;!&ndash;<span ng-if="itm.action"&ndash;&gt;-->
-                                                                      <!--&lt;!&ndash;class="text-success"><strong>{{titles.check}} </strong></span></p>&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;<small class=" text-grey"><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em>&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;</small>&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;</md-list-item>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<tr>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td colspan="2">&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<md-input-container flex>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<label>Email</label>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;&lt;!&ndash;<div ng-message="required" class="my-message">{{text.noEmpty}}</div>&ndash;&gt;&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;&lt;!&ndash;<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>&ndash;&gt;&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;<div ng-message="email" class="my-message">{{text.noEmail}}</div>&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;&lt;!&ndash;<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>&ndash;&gt;&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;&lt;!&ndash;<div ng-message="minlength" class="my-message">{{text.minlength}}</div>&ndash;&gt;&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<td>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;<md-input-container flex>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<label>Внутренний телефон&ndash;&gt;-->
-
-                                                    <!--&lt;!&ndash;</label>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"&ndash;&gt;-->
-                                                           <!--&lt;!&ndash;ng-pattern="/^[0-9]{4}$/"/>&ndash;&gt;-->
-
-                                                    <!--&lt;!&ndash;&lt;!&ndash;<div class="hint" style="color: #9a9a9a" ng-show="showHints">{{text.templatePhone}}</div>&ndash;&gt;&ndash;&gt;-->
-
-                                                    <!--&lt;!&ndash;<div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert"&ndash;&gt;-->
-                                                         <!--&lt;!&ndash;ng-messages-multiple>&ndash;&gt;-->
-                                                        <!--&lt;!&ndash;<div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                                <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;</td>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-                                        <!--<tr>-->
-                                            <!--<td colspan="10">-->
-                                                <!--<div class="row">-->
-                                                    <!--<div class="col-md-11">-->
-                                                        <!--<md-input-container class="md-block">-->
-                                                            <!--<label>Комментарий </label>-->
-                            <!--<textarea name="itemCommentIt" ng-model="item.commentIt"-->
-                                      <!--placeholder="Добавьте свой комментарий"-->
-                                      <!--ng-maxlength="maxLengthIt"-->
-                                      <!--md-maxlength="maxLengthIt"-->
-                                      <!--ng-minlength="minLength"-->
-                                      <!--rows="1" md-select-on-focus></textarea>-->
-
-                                                            <!--<div ng-messages="itForm.itemCommentIt.$error" role="alert"-->
-                                                                 <!--ng-messages-multiple>-->
-                                                                <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
-                                                                <!--<div ng-message="minlength" class="my-message">{{text.minlength}}</div>-->
-                                                            <!--</div>-->
-                                                        <!--</md-input-container>-->
-                                                    <!--</div>-->
-                                                    <!--<div class="col-md-1">-->
-                                                        <!--<div class="btn-group" role="group" aria-label="...">-->
-                                                            <!--<button type="submit" ng-disabled="!item.commentIt"-->
-                                                                    <!--class="btn btn-success btn-xs">-->
-                                                                <!--<md-tooltip md-direction="top">Сохранить комментарий</md-tooltip>-->
-                                                                <!--<span class="glyphicon glyphicon-check"></span></button>-->
-                                                            <!--&lt;!&ndash;<button type="button" class="btn btn-default">2</button>&ndash;&gt;-->
-
-                                                            <!--&lt;!&ndash;<div class="btn-group" role="group">&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;Dropdown&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;<span class="caret"></span>&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;</button>&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;<ul class="dropdown-menu">&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;<li><a href="#">Dropdown link</a></li>&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;<li><a href="#">Dropdown link</a></li>&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-                                                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                                        <!--</div>-->
-                                                        <!--&lt;!&ndash;<button  href="#" class="btn btn-sussess pull-right"><span class="glyphicon glyphicon-plus"></span></button></div>&ndash;&gt;-->
-                                                    <!--</div>-->
-                                                    <!--<div class="row">-->
-                                                        <!--<div class="col-md-12">-->
-                                                            <!--<md-list-item class="md-1-line pad" ng-repeat="itm in item.commentItArr ">-->
-                                                                <!--<img ng-src="{{itm.img}}" class="md-avatar" alt="{{itm.fio}}"-->
-                                                                     <!--title="{{itm.fio}}"/>-->
-                                                                <!--<div class="md-list-item-text" layout="column">-->
-                                                                    <!--&lt;!&ndash;<h3>{{ item.who }}</h3>&ndash;&gt;-->
-                                                                    <!--<p>{{ itm.comment}} </p>-->
-                                                                    <!--<small><em>{{itm.date | date:"dd.MM.yyyy HH:mm:ss"}}</em></small>-->
-                                                                <!--</div>-->
-                                                            <!--</md-list-item>-->
-                                                        <!--</div>-->
-                                                    <!--</div>-->
-                                            <!--</td>-->
-                                        <!--</tr>-->
-
-                                    <!--</table>-->
-                                <!--</div>-->
-                            <!--</div>-->
                         </form>
                     </div>
                 </div>
             <!--</form>-->
-
-
-            <!-- IT  В Ы П О Л Н Е Н О  OLD  -->
-            <!--<div ng-if="edit && item.startKadr && item.itCheck " class="panel panel-default" ng-class="{'panel-success':item.itCheck}">-->
-            <!--<div class="panel-heading">IT</div>-->
-            <!--<div class="panel-body">-->
-            <!--<div class="form-group">-->
-            <!--<div class="checkbox">-->
-            <!--<table class="table">-->
-            <!--<tr>-->
-            <!--<td width="10px">-->
-            <!--<md-checkbox ng-disabled="(item.kadrValid || me.kadr)" ng-model="item.itCheck"-->
-            <!--ng-change="saveEditIt(item, userForm.$valid)"-->
-            <!--aria-label="Checkbox 1"-->
-            <!--class="green md-align-top-left" flex></md-checkbox>-->
-            <!--</td>-->
-            <!--<td>-->
-            <!--<span ng-if="!item.itCheck">{{titles.noCheck}}   </span>-->
-            <!--<span ng-if="item.itCheck">{{titles.check}} </span>-->
-            <!--</td>-->
-            <!--<td class="pull-right">-->
-            <!--<span ng-if="item.itUpdate" class="text-right">{{item.itUpdate.lastName}} {{item.itUpdate.firstName[0]}}. {{item.itUpdate.patronymicName[0]}}.</span>-->
-            <!--</td>-->
-            <!--</tr>-->
-            <!--</table>-->
-            <!--&lt;!&ndash;<label>&ndash;&gt;-->
-            <!--&lt;!&ndash;&lt;!&ndash;<md-switch ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Switch 4">&ndash;&gt;&ndash;&gt;-->
-            <!--&lt;!&ndash;&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.check}} нет</span>&ndash;&gt;&ndash;&gt;-->
-            <!--&lt;!&ndash;&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}} да</span>&ndash;&gt;&ndash;&gt;-->
-            <!--&lt;!&ndash;&lt;!&ndash;</md-switch>&ndash;&gt;&ndash;&gt;-->
-            <!--&lt;!&ndash;<md-checkbox ng-disabled="item.kadrValid" ng-model="item.itCheck" aria-label="Checkbox 1"&ndash;&gt;-->
-            <!--&lt;!&ndash;class="green md-align-top-left" flex>&ndash;&gt;-->
-            <!--&lt;!&ndash;<span ng-if="!item.itCheck">{{titles.noCheck}}</span>&ndash;&gt;-->
-            <!--&lt;!&ndash;<span ng-if="item.itCheck">{{titles.check}}</span>&ndash;&gt;-->
-            <!--&lt;!&ndash;</md-checkbox>&ndash;&gt;-->
-            <!--&lt;!&ndash;</label>&ndash;&gt;-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-
-
-            <!-- H E L P - D E S K  В Ы П О Л Н Е Н О   -->
-
-            <!--<div ng-if="edit" class="panel panel-default" ng-class="{'panel-success':item.hdCheck}">-->
-            <!--<div class="panel-heading">Help-Desk</div>-->
-            <!--<div class="panel-body">-->
-            <!--<div class="form-group">-->
-            <!--<div class="checkbox">-->
-            <!--<label>-->
-            <!--<md-switch ng-disabled="item.kadrValid" ng-model="item.hdCheck" aria-label="Switch 4">-->
-            <!--<span ng-if="!item.hdCheck">{{titles.check}} нет</span>-->
-            <!--<span ng-if="item.hdCheck">{{titles.check}} да</span>-->
-            <!--</md-switch>-->
-            <!--</label>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
 
 
             <!-- С О З Д А Н О   -->
@@ -1051,46 +842,6 @@
 
                 </div>
             </div>
-            <!--<div class="row" ng-if="item.start">-->
-            <!--<div class="col-md-12">-->
-            <!--&lt;!&ndash; Д О П О Л Н И Т Е Л Ь Н О Е  У В Е Д О М Л Е Н И Е  О  Н Е  З А П О Л Н Е Н Н О Й  И Н Ф О Р М А Ц И И   &ndash;&gt;-->
-
-            <!--<form class="form-horizontal" ng-show="comment2">-->
-            <!--<div class="form-group animate-if">-->
-            <!--<label class="col-sm-6 control-label">Шаблон о не заполненной информации: </label>-->
-            <!--<div class="col-sm-2">-->
-            <!--<select class="form-control size-xs" ng-model="item.htmlData2[0]"-->
-            <!--ng-options="option2.name for option2 in examples2 track by option2.tmpl"-->
-            <!--&gt;</select>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</form>-->
-
-            <!--<div ng-if="comment" class="animate-switch-container  clearfix animate-if" ng-switch-->
-            <!--on="item.htmlData2[0].name">-->
-            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-            <!--style="width: 100%; height: 120px; border: none"-->
-            <!--class="animate-switch" ng-switch-when="№1">    {{item.htmlData2[0].tmpl}}</textarea>-->
-            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-            <!--style="width: 100%; height: 120px; border: none"-->
-            <!--class="animate-switch" ng-switch-when="№2">{{item.htmlData2[0].tmpl}}</textarea>-->
-            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-            <!--style="width: 100%; height: 120px; border: none"-->
-            <!--class="animate-switch" ng-switch-when="№3"> {{item.htmlData2[0].tmpl}}</textarea>-->
-            <!--<textarea required ng-trim="true" ng-model="item.htmlData2[0].tmpl"-->
-            <!--style="width: 100%; height: 120px; border: none"-->
-            <!--class="animate-switch" ng-switch-when="№4">   {{item.htmlData2[0].tmpl}}</textarea>-->
-            <!--</div>-->
-
-            <!--<code class="pull-right new" ng-bind-html="item.htmlData2[0].description"></code>-->
-            <!--<div ng-if="item.htmlData2[0].tmpl" class="text-left well"-->
-            <!--ng-bind-html="item.htmlData2[0].tmpl"></div>-->
-            <!--<a href="#" style="text-decoration: none" ng-click="toogle2()">-->
-            <!--<div ng-if="!item.htmlData2[0].tmpl" class="text-left well" ng-bind-html="htmlData2"></div>-->
-            <!--</a>-->
-
-            <!--</div>-->
-            <!--</div>-->
 
             <!-- I N F O  P A N E L -->
 
@@ -1110,7 +861,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="row">

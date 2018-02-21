@@ -101,7 +101,7 @@
                                                    md-max-date="ctrl.maxDate"></md-datepicker>
                                 </div>
 
-                                <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemOutputEmployee.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmptyDate}}</div>
                                     <div ng-message="mindate" class="my-message">{{text.mindate}}</div>
                                     <div ng-message="maxdate" class="my-message">{{text.maxdate}}</div>
@@ -122,7 +122,7 @@
                                        placeholder="Иванов"
                                        ng-pattern="matchPattern">
 
-                                <div ng-messages="userForm.itemLastName.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemLastName.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
@@ -143,7 +143,7 @@
                                        md-maxlength="maxLength"
                                        placeholder="Иван"
                                        ng-pattern="matchPattern">
-                                <div ng-messages="userForm.itemFirstName.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemFirstName.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
@@ -163,7 +163,7 @@
                                        md-maxlength="maxLength"
                                        placeholder="Иванович"
                                        ng-pattern="matchPattern">
-                                <div ng-messages="userForm.itemPatronymicName.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemPatronymicName.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
@@ -187,7 +187,7 @@
                                     <md-option ng-value="department" ng-repeat="department in departments">{{department.name}}</md-option>
                                 </md-select>
 
-                                <div ng-messages="userForm.itemDepartments.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemDepartments.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                 </div>
                             </md-input-container>
@@ -226,7 +226,7 @@
                                        ng-minlength="minLength"
                                        ng-maxlength="maxLengthPost"
                                        md-maxlength="maxLengthPost">
-                                <div ng-messages="userForm.itemPost.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemPost.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                                     <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
@@ -246,7 +246,7 @@
                                        ng-maxlength="maxLengthPost"
                                        md-maxlength="maxLengthPost"
                                        ng-pattern="matchPattern">
-                                <div ng-messages="userForm.itemBoss.$error" role="alert" ng-messages-multiple>
+                                <div ng-messages="userForm.itemBoss.$error" role="alert" multiple>
                                     <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                     <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                     <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
@@ -290,7 +290,7 @@
                                       ng-maxlength="maxlengthText"
                                       md-maxlength="maxlengthText"
                                       rows="1" md-select-on-focus></textarea>
-                            <div ng-messages="userForm.itemExtra.$error" role="alert" ng-messages-multiple>
+                            <div ng-messages="userForm.itemExtra.$error" role="alert" multiple>
                                 <div ng-message="pattern" class="my-message">{{text.noPatternW}}</div>
                                 <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                             </div>
@@ -494,7 +494,7 @@
                                       md-maxlength="maxLengthFin"
                                       ng-minlength="minLength"
                                       rows="1" md-select-on-focus></textarea>
-                                    <div ng-messages="finForm.itemCommentFin.$error" role="alert" ng-messages-multiple>
+                                    <div ng-messages="finForm.itemCommentFin.$error" role="alert" multiple>
                                         <div ng-message="required" class="my-message">{{text.noEmpty}}</div>
                                         <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                                         <div ng-message="minlength" class="my-message">{{text.minlengthFin}}</div>
@@ -539,8 +539,8 @@
 
 
             <!-- IT  В Ы П О Л Н Е Н О   -->
-            <form name="itForm" novalidate
-                  ng-submit="saveEdit(item, itForm.$valid)" enctype="multipart/form-data">
+            <!--<form name="itForm" novalidate-->
+                  <!--ng-submit="saveEdit(item, itForm.$valid)" enctype="multipart/form-data">-->
                 <div ng-if="edit && item.startKadr" class="panel panel-default" ng-class="{'panel-success':item.itCheck}">
                     <div class="panel-heading">IT</div>
                     <div class="panel-body ">
@@ -591,33 +591,22 @@
                                     <md-input-container flex>
                                         <label>Email</label>
                                         <input name="itemEmail" ng-disabled="!edit" type="email" ng-model="item.email">
-                                        <div ng-messages="createForm.itemEmail.$error" role="alert" ng-messages-multiple>
-                                            <!--<div ng-message="required" class="my-message">{{text.noEmpty}}</div>-->
-                                            <!--<div ng-message="pattern" class="my-message">{{text.emailPattern}}</div>-->
+                                        <div ng-messages="createForm.itemEmail.$error" role="alert" multiple>
                                             <div ng-message="email" class="my-message">{{text.noEmail}}</div>
-                                            <!--<div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>-->
-                                            <!--<div ng-message="minlength" class="my-message">{{text.minlength}}</div>-->
                                         </div>
                                     </md-input-container>
                                 </div>
                                 <div class="col-md-6">
                                     <md-input-container flex>
-                                        <label>Внутренний телефон
-
-                                        </label>
+                                        <label>Внутренний телефон</label>
                                         <input name="itemPhoneNumber" ng-disabled="!edit" ng-model="item.phoneNumber"
                                                ng-pattern="/^[0-9]{4}$/"/>
-
-                                        <!--<div class="hint" style="color: #9a9a9a" ng-show="showHints">{{text.templatePhone}}</div>-->
-
-                                        <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert"
-                                             ng-messages-multiple>
+                                        <div ng-messages="createForm.itemPhoneNumber.$error" ng-hide="showHints" role="alert" multiple>
                                             <div ng-message="pattern">{{text.templatePhone}} {{text.textPhone}}</div>
                                         </div>
                                     </md-input-container>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-11">
                                     <md-input-container class="md-block">
@@ -628,7 +617,7 @@
                                       md-maxlength="maxLengthIt"
                                       ng-minlength="minLength"
                                       rows="1" md-select-on-focus></textarea>
-                                        <div ng-messages="itForm.itemCommentIt.$error" role="alert" ng-messages-multiple>
+                                        <div ng-messages="createForm.itemCommentIt.$error" role="alert" multiple>
                                             <div ng-message="maxlength" class="my-message">{{text.maxlength}}</div>
                                             <div ng-message="minlength" class="my-message">{{text.minlength}}</div>
                                         </div>
@@ -636,7 +625,7 @@
                                 </div>
                                 <div class="col-md-1">
                                     <div class="btn-group" role="group" aria-label="...">
-                                        <button type="submit" ng-disabled="!item.commentIt"
+                                        <button  ng-click="saveComment(item)" ng-disabled="!item.commentIt"
                                                 class="btn btn-success btn-xs">
                                             <md-tooltip md-direction="top">Сохранить комментарий</md-tooltip>
                                             <span class="glyphicon glyphicon-check"></span></button>
@@ -661,7 +650,7 @@
                         </form>
                     </div>
                 </div>
-            </form>
+            <!--</form>-->
 
 
             <!-- П О Л У Ч А Т Е Л И  П И С Е М -->
