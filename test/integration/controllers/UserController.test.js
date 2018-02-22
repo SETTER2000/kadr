@@ -3,10 +3,10 @@ var request = require('supertest');
 describe('UserController', function() {
 
     describe('#login()', function() {
-        it('should redirect to /mypage', function (done) {
+        it('следует перенаправить на / mypage', function (done) {
             request(sails.hooks.http.app)
-                .post('/users/login')
-                .send({ name: 'test', password: 'test' })
+                .put('/login')
+                .send({ name: 'test', password: '111111' })
                 .expect(302)
                 .expect('location','/mypage', done);
         });

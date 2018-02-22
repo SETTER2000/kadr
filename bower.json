@@ -40,13 +40,14 @@
     "moment": "^2.18.1",
     "angular-toastr": "^2.1.1",
     "moment-precise-range": "^1.0.1",
-    "angular-sanitize": "bower-angular-sanitize#^1.6.7",
+    "angular-sanitize": "^1.6.9",
     "ng-dialog": "^1.4.0",
     "angular-messages": "^1.6.9",
     "fontawesome": "^5.0.6"
   },
   "devDependencies": {
     "angular-translate": "^2.15.0",
-    "angular-translate-loader-url": "^2.15.0"
+    "angular-translate-loader-url": "^2.15.0",
+    "ngSanitize": "^0.0.2"
   }
 }

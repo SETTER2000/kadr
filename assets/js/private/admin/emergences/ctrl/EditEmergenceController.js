@@ -1,7 +1,8 @@
 'use strict';
 angular.module('EmergenceModule')
-    .controller('EditEmergenceController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'Emergences', 'moment', 'Positions', 'Departments', 'Vacations', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
-        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Emergences, moment, Positions, Departments, Vacations, Users, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
+    .controller('EditEmergenceController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'Emergences', 'moment', 'Departments', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log',
+        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Emergences, moment, Departments, Users, $stateParams, FileUploader, $timeout, $q, $log) {
+
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
             $scope.edit = $state.includes('home.admin.emergences.edit');
@@ -13,7 +14,11 @@ angular.module('EmergenceModule')
                 noCheck: 'Не выполнено',
                 //kadr:'Кадры. Начать обработку - ',
             };
+            $scope.counter = 0;
 
+            $scope.incrementCounter = function () {
+                $scope.counter++;
+            }
             $scope.loadUsers = function () {
 
                 // Use timeout to simulate a 650ms request.
@@ -25,10 +30,8 @@ angular.module('EmergenceModule')
                     }, function (err) {
                         toastr.error(err, 'Ошибка ListDepartmentController!');
                     });
-
                 }, 900);
             };
-
 
 
             $scope.close = $scope.edit;
@@ -530,7 +533,6 @@ angular.module('EmergenceModule')
                     return (state.value.indexOf(lowercaseQuery) === 0);
                 };
             }
-
 
 
             $scope.dateOpts = {

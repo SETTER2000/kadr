@@ -1,9 +1,15 @@
-﻿// При написании Unit тестов используется принцып AAA (Arrange/Act/Assert)
+﻿//var assert = require('assert');
+//var mocha = require('mocha');
+//var expect = require('chai').expect;
+
+
+// При написании Unit тестов используется принцып AAA (Arrange/Act/Assert)
 // Arrange - установка тестовых данных перед прохождением кадого теста (этот шаг называется setUp).
 // Act - описание действий, которые должен выполнить метод.
 // Assert - проверка результатов работы функции и ожидаемых результатов
 
 // describe - групировка нескольких связанных тестов
+
 describe("First simple test", function () {
 
     // Arrange
@@ -20,7 +26,7 @@ describe("First simple test", function () {
         
         // expect - идентифицирует результат работы теста (Assert)
         expect(value).toEqual(1);
-    })
+    });
 
     it("decrements value", function () {
         value--;
