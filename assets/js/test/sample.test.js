@@ -10,7 +10,7 @@
 
 // describe - групировка нескольких связанных тестов
 
-describe("First simple test", function () {
+describe("sample test", function () {
 
     // Arrange
     var value;

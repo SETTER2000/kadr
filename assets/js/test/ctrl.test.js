@@ -4,14 +4,14 @@
  * if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
  *
  */
-
 describe("EditEmergenceController", function () {
-
     // Arrange
     var mockScope = {};
     var controller;
-
+    //$scope.me = window.SAILS_LOCALS.me;
     // (angular.mock.module("exampleApp") используется для загрузки модуля "exampleApp"
+
+    // Загружаем модуль
     beforeEach(module("EmergenceModule", ($provide) => {
         $provide.provider('Users', function () {
             "use strict";
@@ -40,7 +40,7 @@ describe("EditEmergenceController", function () {
         });
     }));
 
-    // angular.mock.inject предоставляет возможность использования DI в тестах
+    // inject предоставляет возможность использования DI в тестах
     beforeEach(inject(function ($controller, $rootScope) {
         // создание нового scope
         mockScope = $rootScope.$new();
@@ -52,6 +52,11 @@ describe("EditEmergenceController", function () {
         });
     }));
 
+    // Act and Assess
+    it("Создание свойства me", function () {
+        // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0
+        expect(mockScope.me).toBeDefined()
+    });
     // Act and Assess
     it("Создание свойства counter", function () {
         // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0

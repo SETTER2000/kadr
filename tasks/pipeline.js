@@ -32,8 +32,10 @@ var jsFilesToInject = [
     'js/dependencies/sails.io.js',
     'js/dependencies/jquery.min.js',
     'js/dependencies/bootstrap.min.js',
-    'js/dependencies/angular.min.js', // Dependencies like jQuery, or Angular are brought in here
+    'js/dependencies/angular.min.js',
+    'js/dependencies/angular-mocks.js',
     'js/dependencies/angular-ui-router.min.js',
+    'js/dependencies/jstree.min.js',
     //'js/dependencies/angular-translate.js',
     //'js/dependencies/angular-translate-loader-url.js',
     'js/dependencies/angular-resource.min.js',
@@ -43,6 +45,7 @@ var jsFilesToInject = [
     'js/dependencies/moment-recur.js',
     'js/dependencies/ru.js',
     'js/dependencies/angular-moment.min.js',
+
 
     'js/dependencies/toastr/*.js',
     'js/dependencies/**/*.js',
