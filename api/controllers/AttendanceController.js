@@ -9,8 +9,6 @@
 
 
 
-
-
 module.exports = {
 
     getQuery: function (req, res) {
