@@ -4,7 +4,7 @@ module.exports = function (config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '../../../../',
+        basePath: '../',
 
 
         // frameworks to use
@@ -18,7 +18,7 @@ module.exports = function (config) {
             'dependencies/sails.io.js',
             'dependencies/jquery.min.js',
             'dependencies/bootstrap.min.js',
-            'dependencies/angular.js',
+            'dependencies/angular.min.js',
             'dependencies/angular-mocks.js',
             'dependencies/angular-ui-router.min.js',
             'dependencies/angular-resource.min.js',
@@ -33,13 +33,12 @@ module.exports = function (config) {
             'dependencies/ng-fx.min.js',
             'dependencies/angular-sanitize.min.js',
             'dependencies/ngDialog.js',
-            'private/admin/users/UserModule.js',
             'private/admin/emergences/EmergenceModule.js',
             'private/admin/emergences/ctrl/EditEmergenceController.js',
-
+            'private/admin/users/UserModule.js',
 
             //'private/HolidayModule.js',
-            'private/admin/emergences/test/*.test.js'
+            'test/*.test.js'
 
         ],
 
@@ -75,12 +74,46 @@ module.exports = function (config) {
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,
 
+        plugins: [
+            'karma-jasmine',
+            'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-ie-launcher',
+            'karma-virtualbox-ie11-launcher',
+
+        ],
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome'],
+        browsers: ['Chrome', 'FirefoxDeveloper','IE','VirtualBoxIE11onWin8'],
 
-
+        customLaunchers: {
+            Chrome_without_security: {
+                base: 'Chrome',
+                flags: ['--disable-web-security']
+            },
+            FirefoxAutoAllowGUM: {
+                base: 'Firefox',
+                prefs: {
+                    'media.navigator.permission.disabled': true
+                }
+            },
+            IE9: {
+                base: 'IE',
+                'x-ua-compatible': 'IE=EmulateIE9'
+            },
+            IE8: {
+                base: 'IE',
+                'x-ua-compatible': 'IE=EmulateIE8'
+            },
+            VirtualBoxIE11onWin8: {
+                base: 'VirtualBoxIE11',
+                keepAlive: true,
+                snapshot: 'pristine',
+                captureTimeout:'5000',
+                uuid: 'd31c787d-75bc-43c6-beee-bc941969060f'
+            }
+        },
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false,

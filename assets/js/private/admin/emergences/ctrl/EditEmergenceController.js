@@ -1,7 +1,8 @@
 'use strict';
 angular.module('EmergenceModule')
-    .controller('EditEmergenceController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'Emergences', 'moment', 'Departments', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log',
-        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Emergences, moment, Departments, Users, $stateParams, FileUploader, $timeout, $q, $log) {
+    .controller('EditEmergenceController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'Emergences', 'moment', 'Departments', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log','$window',
+        function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Emergences, moment, Departments, Users, $stateParams, FileUploader, $timeout, $q, $log,$window) {
+
 
             // $scope.me = window.SAILS_LOCALS.me;
             // if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
@@ -18,7 +19,29 @@ angular.module('EmergenceModule')
 
             $scope.incrementCounter = function () {
                 $scope.counter++;
-            }
+            };
+
+            $scope.password = '';
+            $scope.grade = function() {
+                var size = $scope.password.length;
+                if (size > 8) {
+                    $scope.strength = 'strong';
+                } else if (size > 3) {
+                    $scope.strength = 'medium';
+                } else {
+                    $scope.strength = 'weak';
+                }
+            };
+
+
+
+
+
+
+
+
+
+
             $scope.loadUsers = function () {
 
                 // Use timeout to simulate a 650ms request.
