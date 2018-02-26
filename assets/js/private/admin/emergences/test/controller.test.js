@@ -1,10 +1,3 @@
-/**
- * Перед тестированием закоментить в контроллере строки
- * $scope.me = window.SAILS_LOCALS.me;
- * if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
- *
- */
-
 describe("EditEmergenceController", function () {
 
     // Arrange
