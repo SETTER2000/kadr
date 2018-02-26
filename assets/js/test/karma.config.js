@@ -1,4 +1,3 @@
-// Karma configuration
 // Generated on Wed Feb 21 2018 23:09:27 GMT+0300 (RTZ 2 (зима))
 module.exports = function (config) {
     config.set({
@@ -80,7 +79,6 @@ module.exports = function (config) {
             'karma-firefox-launcher',
             'karma-ie-launcher',
             'karma-virtualbox-ie11-launcher',
-
         ],
 
         // start these browsers
@@ -109,9 +107,10 @@ module.exports = function (config) {
             VirtualBoxIE11onWin8: {
                 base: 'VirtualBoxIE11',
                 keepAlive: true,
-                snapshot: 'pristine',
+                snapshot: 'pr1',
                 captureTimeout:'5000',
-                uuid: 'd31c787d-75bc-43c6-beee-bc941969060f'
+                // uuid: 'd31c787d-75bc-43c6-beee-bc941969060f' // VBoxManage list vms
+                uuid: 'a60f40eb-405c-4a64-a5d4-fb5e055c094b' // VBoxManage list vms
             }
         },
         // Continuous Integration mode
@@ -121,5 +120,5 @@ module.exports = function (config) {
         // Concurrency level
         // how many browser should be started simultaneous
         concurrency: Infinity
-    })
-}
+    });
+};

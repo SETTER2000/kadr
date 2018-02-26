@@ -116,6 +116,7 @@
     "sails-memory": "^0.10.7",
     "sinon": "^4.3.0",
     "supertest": "^3.0.0",
+    "vagrant": "0.0.1",
     "vboxmanage": "0.0.15"
   }
 }
