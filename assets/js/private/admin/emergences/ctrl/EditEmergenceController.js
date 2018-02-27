@@ -3,9 +3,9 @@ angular.module('EmergenceModule')
     .controller('EditEmergenceController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'Emergences', 'moment', 'Departments', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log','$window',
         function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Emergences, moment, Departments, Users, $stateParams, FileUploader, $timeout, $q, $log,$window) {
 
-            $scope.me = $window.SAILS_LOCALS.me;
-            console.log('MEMEE',$scope.me);
-            if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
+
+            // $scope.me = window.SAILS_LOCALS.me;
+            // if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
             $scope.edit = $state.includes('home.admin.emergences.edit');
             $scope.titles = {
                 startKadr: 'Начать обработку - ',

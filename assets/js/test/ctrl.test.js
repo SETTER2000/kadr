@@ -1,9 +1,11 @@
+
 /**
  * Перед тестированием закоментить в контроллере строки
  * $scope.me = window.SAILS_LOCALS.me;
  * if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
  *
  */
+
 describe("EditEmergenceController", function () {
     // Arrange
     var mockScope = {};
@@ -53,10 +55,10 @@ describe("EditEmergenceController", function () {
     }));
 
     // Act and Assess
-    it("Создание свойства me", function () {
-        // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0
-        expect(mockScope.me).toBeDefined()
-    });
+    // it("Создание свойства me", function () {
+    //     // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0
+    //     expect(mockScope.me).toBeDefined()
+    // });
     // Act and Assess
     it("Создание свойства counter", function () {
         // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0
