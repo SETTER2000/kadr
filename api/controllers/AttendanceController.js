@@ -6,11 +6,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-
-
-
 module.exports = {
-
     getQuery: function (req, res) {
         Attendance.query(
             'SELECT * FROM attendance AS a ' +
