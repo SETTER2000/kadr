@@ -1,5 +1,5 @@
 angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
-        'AttendanceModule', 'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment'])
+        'AttendanceModule', 'angularFileUpload', 'ngAnimate', 'ng-fx', 'angularMoment','base64'])
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
     }])
@@ -107,7 +107,7 @@ angular.module('UserModule', ['ui.router', 'toastr', 'ngResource', 'ngMaterial',
             // Определяем собственный метод update на обоих уровнях, класса и экземпляра
             {
                 update: {
-                    method: 'PUT'
+                    method: 'PUT',
                 }
             }
         );

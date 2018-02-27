@@ -1,4 +1,3 @@
-
 /**
  * Перед тестированием закоментить в контроллере строки
  * $scope.me = window.SAILS_LOCALS.me;
@@ -8,17 +7,15 @@
 
 describe("EditEmergenceController", function () {
     // Arrange
-    var mockScope = {};
-    var controller;
-    //$scope.me = window.SAILS_LOCALS.me;
-    // (angular.mock.module("exampleApp") используется для загрузки модуля "exampleApp"
+    var scope, ctrl, httpBackend;
 
     // Загружаем модуль
     beforeEach(module("EmergenceModule", ($provide) => {
         $provide.provider('Users', function () {
             "use strict";
             return {
-                UsersFunction: function() {},
+                UsersFunction: function () {
+                },
                 $get: function () {
                     return {
                         UsersFunction: function () {
@@ -31,7 +28,8 @@ describe("EditEmergenceController", function () {
         $provide.provider('Departments', function () {
             "use strict";
             return {
-                DepartmentsFunction: function() {},
+                DepartmentsFunction: function () {
+                },
                 $get: function () {
                     return {
                         DepartmentsFunction: function () {
@@ -43,30 +41,36 @@ describe("EditEmergenceController", function () {
     }));
 
     // inject предоставляет возможность использования DI в тестах
-    beforeEach(inject(function ($controller, $rootScope) {
+    beforeEach(inject(function ($httpBackend, $controller, $rootScope) {
         // создание нового scope
-        mockScope = $rootScope.$new();
+        scope = $rootScope.$new();
+        httpBackend = $httpBackend;
+
+        httpBackend.when('GET', obj).respond(['Hello,world!']);
 
         // сервис $controller испольльзуется для инстанциирования объекта контроллера
         // метод принимает 2 аргумента имя контроллера и объект содержащий свойства, которые используются для разрешения зависимостей
-        controller = $controller("EditEmergenceController", {
-            $scope: mockScope
+        ctrl = $controller("EditEmergenceController", {
+            $scope: scope
         });
     }));
 
     // Act and Assess
     // it("Создание свойства me", function () {
     //     // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0
-    //     expect(mockScope.me).toBeDefined()
+    //     expect(scope.me).toBeDefined()
     // });
     // Act and Assess
     it("Создание свойства counter", function () {
         // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0
-        expect(mockScope.counter).toEqual(0);
+        expect(scope.counter).toEqual(0);
     });
     it("Инкримент свойства", function () {
         // после запуска функции incrementCounter значение счетчика должно быть равным 1
-        mockScope.incrementCounter();
-        expect(mockScope.counter).toEqual(1);
+        scope.incrementCounter();
+        expect(scope.counter).toEqual(1);
+    });
+    it("Создание массива Departments", function () {
+        expect(scope.Departments).toEqual(1);
     });
 });

@@ -99,12 +99,14 @@
   },
   "homepage": "https://github.com/SETTER2000/kadr#readme",
   "devDependencies": {
+    "angular-mocks": "^1.6.9",
     "assert": "^1.4.1",
     "grunt-mocha-test": "^0.13.3",
     "jasmine": "^3.0.0",
     "jasmine-core": "^2.99.1",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
     "karma-firefox-launcher": "^1.1.0",
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.1",
@@ -116,7 +118,6 @@
     "sails-memory": "^0.10.7",
     "sinon": "^4.3.0",
     "supertest": "^3.0.0",
-    "vagrant": "0.0.1",
     "vboxmanage": "0.0.15"
   }
 }

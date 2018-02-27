@@ -62,9 +62,21 @@
                             <input ng-if="edit" autofocus required type="text" class="form-control" ng-model="item.lastName">
                             <!--<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
                         </div>
+<!--999: {{ppp}}-->
+                      <!--444:  <img src="data:image/jpeg;base64,{{iop}}" />-->
+<!--iop:{{iop}}-->
 
-
+                       <!--88:: {{item.thumbnailPhoto}}-->
                         <div class="form-group">
+                            <!--<img src="data:image/jpeg;base64,{{item.thumbnailPhoto}}\" />-->
+                            <!--<img src="data:image/jpg;base64,R0lGODlhEAAOALMAAOazToeHh0tLS/7LZv/0j-->
+<!--vb29t/f3//Ub//ge8WSLf/rhf/3kdbW1mxsbP//mf///yH5BAAAAAAALAAAAAAQAA4AAA-->
+<!--Re8L1Ekyky67QZ1hLnjM5UUde0ECwLJoExKcppV0aCcGCmTIHEIUEqjgaORCMxIC6e0Cc-->
+<!--guWw6aFjsVMkkIr7g77ZKPJjPZqIyd7sJAgVGoEGv2xsBxqNgYPj/gAwXEQA7" width="16"-->
+                                                     <!--height="14" alt="внедренная иконка папки"/>-->
+
+                            <!--<img src="data:application/octet-stream,{{item.thumbnailPhoto}}" width="16"-->
+                                                     <!--height="14" alt="внедренная иконка папки"/>-->
                             <label class="control-label" for="inputSuccess2">Имя</label>
                             <input type="text" class="form-control" required ng-model="item.firstName">
                             <!--<span id="helpBlock2" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
@@ -73,6 +85,9 @@
                             <label class="control-label" for="inputSuccess3">Отчество</label>
                             <input type="text" class="form-control" required ng-model="item.patronymicName">
                             <!--<span id="helpBlock3" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
+
+                            {{resp}}
+
                         </div>
                         <div class="form-group">
                             <label class="control-label">

@@ -3,7 +3,7 @@ module.exports = function (config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '../',
+        basePath: '../assets/js/',
 
 
         // frameworks to use
@@ -37,7 +37,7 @@ module.exports = function (config) {
             'private/admin/users/UserModule.js',
 
             //'private/HolidayModule.js',
-            'test/*.test.js'
+            '../../test_unit/*.test.js'
 
         ],
 
@@ -78,12 +78,12 @@ module.exports = function (config) {
             'karma-chrome-launcher',
             'karma-firefox-launcher',
             'karma-ie-launcher',
-            'karma-virtualbox-ie11-launcher',
+            'karma-virtualbox-ie11-launcher'
         ],
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome', 'FirefoxDeveloper','IE','VirtualBoxIE11onWin8'],
+        browsers: ['Chrome', 'Firefox','IE','VirtualBoxIE11onWin8'],
 
         customLaunchers: {
             Chrome_without_security: {
@@ -96,21 +96,21 @@ module.exports = function (config) {
                     'media.navigator.permission.disabled': true
                 }
             },
-            IE9: {
-                base: 'IE',
-                'x-ua-compatible': 'IE=EmulateIE9'
-            },
-            IE8: {
-                base: 'IE',
-                'x-ua-compatible': 'IE=EmulateIE8'
-            },
+            //IE9: {
+            //    base: 'IE',
+            //    'x-ua-compatible': 'IE=EmulateIE9'
+            //},
+            //IE8: {
+            //    base: 'IE',
+            //    'x-ua-compatible': 'IE=EmulateIE8'
+            //},
             VirtualBoxIE11onWin8: {
                 base: 'VirtualBoxIE11',
                 keepAlive: true,
                 snapshot: 'pr1',
                 captureTimeout:'5000',
                 // uuid: 'd31c787d-75bc-43c6-beee-bc941969060f' // VBoxManage list vms
-                uuid: 'a60f40eb-405c-4a64-a5d4-fb5e055c094b' // VBoxManage list vms
+                uuid: '0a211676-f561-402b-a536-aaa878b0f391' // VBoxManage list vms
             }
         },
         // Continuous Integration mode

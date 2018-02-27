@@ -43,7 +43,8 @@
     "angular-sanitize": "^1.6.9",
     "ng-dialog": "^1.4.0",
     "angular-messages": "^1.6.9",
-    "fontawesome": "^5.0.6"
+    "fontawesome": "^5.0.6",
+    "angular-base64": "^2.0.5"
   },
   "devDependencies": {
     "angular-translate": "^2.15.0",

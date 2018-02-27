@@ -892,7 +892,7 @@ module.exports = {
                     //}
                     user.save(function (err) {
                         if (err) return res.negotiate('ERR: ' + err);
-                        res.ok();
+                        res.ok(user);
                     });
                 });
         });

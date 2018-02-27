@@ -1,7 +1,7 @@
 'use strict';
 angular.module('UserModule')
-    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', 'Vacations', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
-        function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, Vacations, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
+    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', 'Vacations', '$stateParams', '$base64', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
+        function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, Vacations, $stateParams, $base64, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             $scope.edit = $state.includes('home.admin.users.edit');
             $scope.debug = true;
@@ -488,11 +488,13 @@ angular.module('UserModule')
 
             $scope.getLdap = function () {
                 //console.log($scope.item.lastName);
+                //$photo = base64_encode($info[$i]['jpegphoto'][0]);
+                //echo "<img src=\"data:image/jpeg;base64," . $photo . "\" />";
                 $http.post('/users/ldap', {
                         name: $scope.item.lastName
                     })
                     .then(function onSuccess(sailsResponse) {
-                        //console.log('sailsResponse: ',sailsResponse);
+                        console.log('getLdap: ', sailsResponse);
                         let objectContacts = {};
                         $scope.item.contacts = [];
                         objectContacts.type = "Внутренний телефон";
@@ -504,6 +506,14 @@ angular.module('UserModule')
                         $scope.item.login = sailsResponse.data[0].sAMAccountName;
                         $scope.item.room = sailsResponse.data[0].physicalDeliveryOfficeName;
                         $scope.item.email = sailsResponse.data[0].mail;
+                        //$scope.encoded = $base64.encode('a string');
+                        //$scope.decoded = $base64.decode('YSBzdHJpbmc=');
+                        //$scope.ppp=sailsResponse.data[0].thumbnailPhoto;
+                        //var base64EncodedString = decodeURIComponent(ppp);
+                        //$scope.iop=$base64.decode(base64EncodedString);
+
+
+                        //$scope.item.thumbnailPhoto = $base64.encode(ppp);
                         $scope.item.contacts.push(objectContacts);
                         $scope.item.patronymicName = patronymic;
 
@@ -693,25 +703,44 @@ angular.module('UserModule')
 //item.notice = $scope.notice;
                 item = reversValue(item);
                 if (angular.isDefined(item.id)) {
-                    item.$update(item, function (success) {
-                            toastr.success(info.changed);
-                            $scope.refresh();
-                        },
-                        function (err) {
-                            toastr.error(err.data.invalidAttributes, info.error + ' 11445!');
-                        }
-                    );
+                    item.$update({id: item.id}, item);
+                    toastr.success(info.changed,'Ok!',$scope.refresh());
+
+                    $state.go('home.admin.users');
+
+
+
+                        //
+
+                        ////toastr.success(info.changed, info.ok);
+                        //let item = $scope.item = Users.get({id: $stateParams.userId}, function (users) {
+                        //        $scope.users = users;
+                        //        $scope.getBoss();
+                        //        item.getBirthday();
+                        //        item.getDateInWork();
+                        //        item.getFiredDate();
+                        //        item.getDecree();
+                        //    }
+                        //);
+                        //
+                        //
+
+
+
+                //        toastr.error(err.data.invalidAttributes, info.error + ' 11445!');
+
+
+                    //item.$update(item, function (success) {
+                    //        toastr.success(info.changed);
+                    //        $scope.refresh();
+                    //    },
+                    //    function (err) {
+                    //        toastr.error(err.data.invalidAttributes, info.error + ' 11445!');
+                    //    }
+                    //);
+
                 } else {
-                    if (angular.isDefined(item)
-                    //&& angular.isDefined(item.firstName) &&
-                    //angular.isDefined(item.lastName) &&
-                    //angular.isDefined(item.patronymicName)
-                    /*  &&
-                     angular.isDefined(item.login) &&
-                     angular.isDefined(item.fired) &&
-                     angular.isDefined(item.birthday) &&
-                     angular.isDefined(item.email)*/
-                    ) {
+                    if (angular.isDefined(item)) {
                         item.password = info.passDefault;
                         item.$save(item, function (success) {
                                 //console.log(success);
@@ -726,6 +755,7 @@ angular.module('UserModule')
                             });
                     }
                 }
+
             };
 
             $scope.addContact = function () {
