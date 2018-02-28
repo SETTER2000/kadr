@@ -57,7 +57,6 @@ module.exports = {
 
         if (req.param('id')) {
             User.findOne(req.param('id'))
-                .populate('positions')
                 .populate('vacations')
                 .populate('interfaces')
                 .populate('matchings')
@@ -67,7 +66,10 @@ module.exports = {
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
-                    //console.log('REG USER',user);
+                    console.log('GET OBJECT USER перед отдачей из DB',user);
+                    user.formatDate();
+                     //user.birthday = ( user.birthday) ? moment( user.birthday).format('DD.MM.YYYY') : null;
+                    console.log('GET OBJECT USER перед отдачей из DB c исправленной датой:',user);
                     res.ok(user);
 
                 });
@@ -546,6 +548,7 @@ module.exports = {
      * @param res
      */
     createUser: function (req, res) {
+
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
 
         if (!_.isString(req.param('lastName'))) {
@@ -573,7 +576,9 @@ module.exports = {
         if (req.param('lastName').length < 2 || req.param('lastName').length > 15) {
             return res.badRequest('Фамилия должна быть от 2 до 15 знаков!');
         }
-
+        let birthday = ( req.param('birthday')) ? new Date(moment(req.param('birthday'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+        let dateInWork = ( req.param('dateInWork')) ? new Date(moment(req.param('dateInWork'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+        console.log('CREATE ALL:', req.params.all());
         Passwords.encryptPassword({
             password: req.param('password'), difficulty: 10
         }).exec({
@@ -584,26 +589,28 @@ module.exports = {
                 Interface.create({year: moment().year()})
                     .exec((err, createInterface)=> {
                         if (err) {
-                            //console.log('ОШибка в User.createUser', err);
+                            console.log('ОШибка в User.createUser', err);
                             return res.negotiate(err);
                         }
                         User.create({
+                            action: req.param('action'),
                             login: req.param('login'),
                             email: req.param('email'),
                             firstName: req.param('firstName'),
                             lastName: req.param('lastName'),
                             patronymicName: req.param('patronymicName'),
                             encryptedPassword: encryptedPassword,
-                            birthday: req.param('birthday'),
+                            birthday: birthday,
                             contacts: req.param('contacts'),
                             subdivision: req.param('subdivision'),
-                            positions: req.param('positions'),
+                            position: req.param('position'),
                             pfr: req.param('pfr'),
                             parking: req.param('parking'),
                             park: req.param('park'),
+                            room:req.param('room'),
                             numCar: req.param('numCar'),
                             brandCar: req.param('brandCar'),
-                            dateInWork: req.param('dateInWork'),
+                            dateInWork: dateInWork,
                             lastLoggedIn: new Date(),
                             notice: [
                                 {name: 'Уведомление о начале сбора информации.', order: 1, value: true},
@@ -611,14 +618,17 @@ module.exports = {
                             ]
                             //gravatarUrl: gravatarUrl
                         }, function (err, newUser) {
-                            if (err) return res.negotiate(err);
+                            if (err) {
+                                console.log('ERR create USER', err);
+                                return res.badRequest('Пользователь не создан!');
+                            }
                             sails.log.info('Создан новый пользователь с логином:' + newUser.login);
 
                             newUser.interfaces.add(createInterface.id);
                             newUser.save(function (err) {
                                 if (err) return res.negotiate(err);
-
-                                res.send({id: newUser.id});
+                                sails.log.info('NEW USER:', newUser);
+                                res.send(newUser);
                             });
                         });
                     });
@@ -840,22 +850,26 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        console.log('UPDATE OBJECT USER входящий с формы, перед сохранением в DB: ', req.params.all());
         let fDt = (req.param('firedDate')) ? req.param('firedDate') : null;
+        let birthday = ( req.param('birthday')) ? new Date(moment(req.param('birthday'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+        let dateInWork = ( req.param('dateInWork')) ? new Date(moment(req.param('dateInWork'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
         var obj = {
+            action: req.param('action'),
             login: req.param('login'),
             email: req.param('email'),
             firstName: req.param('firstName'),
             lastName: req.param('lastName'),
             patronymicName: req.param('patronymicName'),
-            birthday: req.param('birthday'),
+            birthday: birthday,
             fired: req.param('fired'),
-            dateInWork: req.param('dateInWork'),
+            dateInWork: dateInWork,
             decree: req.param('decree'),
             subdivision: req.param('subdivision'),
             position: req.param('position'),
+            //position: req.param('position'),
             contacts: req.param('contacts'),
             firedDate: fDt,
-            action: req.param('action'),
             parking: req.param('parking'),
             park: req.param('park'),
             numCar: req.param('numCar'),
@@ -866,32 +880,31 @@ module.exports = {
             furlough: req.param('furlough'),
             notice: req.param('notice')
         };
-
+        console.log('UPDATE OBJECT USER входящий с формы, перед сохранением в DB с исправленной датой: ', obj);
         //console.log('Param ID: ', req.param('id'));
         //console.log('objEdit555: ', obj);
         User.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
             if (err)return res.redirect('/admin/users/edit/' + req.param('id'));
-            //console.log('objEdit: ', objEdit);
             User.findOne(req.param('id'))
-                .populate('positions')
                 .populate('vacations')
                 .populate('interfaces')
                 .exec(function (err, user) {
                     if (err) return res.negotiate(err);
                     if (!user) return res.notFound('Не могу');
-                    user.positions.add(req.param('positions'));
+                    //user.position.add(req.param('position'));
 
                     // if (_.isEmpty(req.param('position'))) {
                     //     user.positions.add({})
                     // }
-                    if (req.param('positionRemove')) {
-                        user.positions.remove(req.param('positionRemove'));
-                    }
+                    //if (req.param('positionRemove')) {
+                    //    user.position.remove(req.param('positionRemove'));
+                    //}
                     //if (req.param('furloughRemove')) {
                     //    user.furloughs.remove(req.param('furloughRemove'));
                     //}
                     user.save(function (err) {
                         if (err) return res.negotiate('ERR: ' + err);
+                        user.formatDate();
                         res.ok(user);
                     });
                 });
@@ -1276,7 +1289,7 @@ module.exports = {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
         User.native(function (err, collection) {
             if (err) return res.serverError(err);
-            collection.update({emergence: { $elemMatch: { action: { $ne: req.param('action') } } }},  { $set: { "emergence.$.action" : req.param('action')} },{multi:true},
+            collection.update({emergence: {$elemMatch: {action: {$ne: req.param('action')}}}}, {$set: {"emergence.$.action": req.param('action')}}, {multi: true},
                 function (err, result) {
                     if (err) return res.serverError(err);
                     return res.ok();

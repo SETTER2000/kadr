@@ -4,7 +4,7 @@
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
-
+const moment = require('moment');
 module.exports = {
     connection: 'userMongodbServer',
     //schema: true,
@@ -117,6 +117,18 @@ module.exports = {
             defaultsTo: '[]'
         },
 
+        departments: {
+            collection: 'department',
+            via: 'users',
+            dominant: true
+        },
+
+        positions: {
+            collection: 'position',
+            via: 'users',
+            dominant: true
+        },
+
         furlough: {
             type: 'array',
             defaultsTo: '[]'
@@ -202,17 +214,7 @@ module.exports = {
             type: 'string'
         },
 
-        departments: {
-            collection: 'department',
-            via: 'users',
-            dominant: true
-        },
 
-        positions: {
-            collection: 'position',
-            via: 'users',
-            dominant: true
-        },
         skds: {
             collection: 'skd',
             via: 'users',
@@ -339,6 +341,10 @@ module.exports = {
         },
         getShortName: function () {
             return this.lastName + ' ' + this.firstName.substr(0, 1) + '.' + this.patronymicName.substr(0, 1) + '.';
+        },
+        formatDate: function () {
+             this.birthday = ( this.birthday) ? moment( this.birthday).format('DD.MM.YYYY') : null;
+            this.dateInWork = ( this.dateInWork) ? moment( this.dateInWork).format('DD.MM.YYYY') : null;
         }
 
     }

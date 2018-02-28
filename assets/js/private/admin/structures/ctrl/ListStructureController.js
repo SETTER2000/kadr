@@ -152,8 +152,8 @@
 
 
                 $scope.refresh = function () {
-                    Structures.query($scope.query,
-                        function (structures) {
+                    Structures.query($scope.query, function (structures) {
+                        console.log('STRUCTURES:', structures);
                             $scope.items = structures;
                         }, function (err) {
                             toastr.error(err.data.details, 'Ошибка 7700! ' + err.data.message);

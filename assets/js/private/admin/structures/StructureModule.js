@@ -271,7 +271,7 @@ angular.module('StructureModule', ['ui.router', 'ngResource', 'vAccordion', 'ngA
             console.log('VALUE PARAM: ', param);
 
             if (angular.isArray(value) && value.length > 0 && angular.isString(param)) {
-                let positions = [];
+                let position = [];
                 for (var prop in value) {
                     if (value.hasOwnProperty(prop)) {
                         console.log("value." + prop + " = " + value[prop][param]);

@@ -25,11 +25,20 @@
             <tr ng-mouseover="vis=1"  ng-mouseleave="vis=0" ng-repeat="user in users">
                 <td><img ng-cloak width="40px" ng-src="{{user.avatarUrl}}" alt=""></td>
                 <td width="60%">{{user.lastName}} {{user.firstName}} {{user.patronymicName}}
-                    <br><!--<span class="glyphicon glyphicon-earphone"></span>&nbsp;&nbsp;&nbsp;--><strong>{{user.positions | getPosition: 'name' }}</strong>
+                    <br><!--<span class="glyphicon glyphicon-earphone"></span>&nbsp;&nbsp;&nbsp;-->
+                    <!--{{user.position | getPosition: 'name' }}-->
 
-                    <a   ng-if="vis"  class=" btn btn-group-xs pull-right not-border  btn-default text-right" href="/admin/users/edit/{{user.id}}">
+                        <span class="position" ng-controller="ListPositionController"
+                            ng-repeat="position in user.position | filter:{$:searchText}">
+                            <span style="list-style-type: none" ng-repeat="option in items | filter:position.id">
+                                <strong>  {{option.name}}</strong>
+                            </span>
+                        </span>
+                    <a   ng-if="vis"  class=" btn  btn-link btn-group-xs pull-right not-border  text-right" href="/admin/users/edit/{{user.id}}">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
+
+
                 </td>
                 <td>
                     <!--<div>&lt;!&ndash;<span class="glyphicon glyphicon-earphone"></span>&nbsp;&nbsp;&nbsp;&ndash;&gt;<strong>{{user.positions | getPosition: 'name' }}</strong></div>-->

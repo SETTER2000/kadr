@@ -355,7 +355,7 @@ angular.module('UserModule')
             $scope.dateOpts = {
                 locale: info.ru,
                 //mode: "range",
-                dateFormat: info.dateFormat,
+                dateFormat: "d.m.Y",
                 minDate: info.minDate,
                 maxDate: info.maxDate
                 //defaultDate: 'today'
@@ -372,7 +372,7 @@ angular.module('UserModule')
             $scope.dateOpts3 = {
                 locale: info.ru,
                 //mode: "range",
-                dateFormat: info.dateFormat,
+                dateFormat: "d.m.Y",
                 minDate: info.minDate
                 //defaultDate: 'today'
             };
@@ -609,10 +609,11 @@ angular.module('UserModule')
             };
             $scope.refresh = function () {
                 let item = $scope.item = Users.get({id: $stateParams.userId}, function (users) {
+                        console.log('RESPONSE USER:', users);
                         $scope.users = users;
                         $scope.getBoss();
-                        item.getBirthday();
-                        item.getDateInWork();
+                        //item.getBirthday();
+                        //item.getDateInWork();
                         item.getFiredDate();
                         item.getDecree();
                     }
@@ -684,12 +685,11 @@ angular.module('UserModule')
                         }
                     );
                 }
-
             };
 
             var reversValue = function (item) {
-                item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+                //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+                //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 item.decree = ( item.decree) ? new Date(moment(item.decree, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
                 return item;
@@ -702,53 +702,31 @@ angular.module('UserModule')
                 //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
 //item.notice = $scope.notice;
                 item = reversValue(item);
+
+
+
+
                 if (angular.isDefined(item.id)) {
-                    item.$update({id: item.id}, item);
-                    toastr.success(info.changed,'Ok!',$scope.refresh());
 
-                    $state.go('home.admin.users');
+                    Users.update({id: $stateParams.userId},item, function(user) {
+                        //user.abc = true;
+                        //user.$save();
+                        console.log('succes++++++', user);
+                        $scope.item =user;
+                        toastr.success(info.changed, 'Ok!');
 
+                    }, function (err) {
+                        console.log('ERRORRR::', err);
+                    });
 
-
-                        //
-
-                        ////toastr.success(info.changed, info.ok);
-                        //let item = $scope.item = Users.get({id: $stateParams.userId}, function (users) {
-                        //        $scope.users = users;
-                        //        $scope.getBoss();
-                        //        item.getBirthday();
-                        //        item.getDateInWork();
-                        //        item.getFiredDate();
-                        //        item.getDecree();
-                        //    }
-                        //);
-                        //
-                        //
-
-
-
-                //        toastr.error(err.data.invalidAttributes, info.error + ' 11445!');
-
-
-                    //item.$update(item, function (success) {
-                    //        toastr.success(info.changed);
-                    //        $scope.refresh();
-                    //    },
-                    //    function (err) {
-                    //        toastr.error(err.data.invalidAttributes, info.error + ' 11445!');
-                    //    }
-                    //);
 
                 } else {
                     if (angular.isDefined(item)) {
                         item.password = info.passDefault;
-                        item.$save(item, function (success) {
-                                //console.log(success);
-                                //location.reload();
+                        Users.save(item, function (user) {
                                 toastr.success(info.newUserOk);
-                                // /admin/user/
-                                //$location.path('/profile') ;
-                                $state.go('home.admin.user', {userId: success.id});
+                                $scope.item =user;
+                                $state.go('home.admin.users.edit', {userId: user.id});
                             },
                             function (err) {
                                 toastr.error(err.data.invalidAttributes, info.error + ' 89336!');
@@ -883,10 +861,10 @@ angular.module('UserModule')
 
 
             $scope.addPosition = function () {
-                if (angular.isArray($scope.item.positions)) {
-                    $scope.item.positions.push({});
+                if (angular.isArray($scope.item.position)) {
+                    $scope.item.position.push({});
                 } else {
-                    $scope.item.positions = [{}];
+                    $scope.item.position = [{}];
                 }
             };
             $scope.addFurlough = function () {
@@ -899,10 +877,10 @@ angular.module('UserModule')
 
             $scope.removePosition = function (obj) {
                 $scope.item.positionRemove = [];
-                if (!obj.id) $scope.item.positions = [];
-                for (let i = 0, ii = $scope.item.positions.length; i < ii; i++) {
-                    if ($scope.item.positions[i].id === obj.id) {
-                        $scope.item.positions.splice(i, 1);
+                if (!obj.id) $scope.item.position = [];
+                for (let i = 0, ii = $scope.item.position.length; i < ii; i++) {
+                    if ($scope.item.position[i].id === obj.id) {
+                        $scope.item.position.splice(i, 1);
                         $scope.item.positionRemove.push(obj.id);
                         return;
                     }
