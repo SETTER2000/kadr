@@ -16,10 +16,6 @@
              */
 
             $scope.bdgs = [];
-            //$scope.badg = function () {
-            //    return $scope.bdgs = [];
-            //};
-
 
             io.socket.on('badges-emergence', function (data) {
                 console.log('badges-emergence', data);
@@ -31,7 +27,6 @@
             $rootScope.$on('ngDialog.closing', function (e, $dialog) {
                 console.log('ngDialog closed: ' + $dialog.attr('id'));
                 if ($dialog.attr('aria-describedby') === 'RONA')  $scope.bdgs = [];
-
                 $scope.$apply();
             });
 

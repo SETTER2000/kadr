@@ -53,8 +53,8 @@
                 /**
                  * VALUES
                  */
-                $scope.defaultRows = 50;
-                $scope.limitRows = [50, 100, 300, 500, 700, 1000];
+                $scope.defaultRows = 10;
+                $scope.limitRows = [10, 30, 50, 100, 300, 500, 700, 1000];
                 $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
                 $scope.allRowsView = 'загружено:';
                 $scope.fioArea = 'ФИО';

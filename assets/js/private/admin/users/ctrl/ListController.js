@@ -96,7 +96,7 @@
             $scope.added = 'Добавить сотрудника';
             $scope.showBt = 1;
             // показать формочку выбора кол-ва строк на странице
-            $scope.showContIt = ($scope.me.admin) ? 1 : 0;
+            $scope.showContIt = ($scope.me.admin || $scope.me.kadr) ? 1 : 0;
             $scope.showStr = 0;
             $scope.urlBt = 'home.admin.users.create';
 
