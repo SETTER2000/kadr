@@ -28,13 +28,8 @@
                             console.log('response: ', response);
                             $scope.users = response.data;
                         });
-                    console.log('ups22:', quest);
                 };
 
-
-                /**
-                 * VALUES
-                 */
                 $scope.defaultRows = 50;
                 $scope.limitRows = [50, 100, 300, 500, 700, 1000];
                 $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
@@ -83,20 +78,9 @@
                     [
                         {display: "Древовидная структура", value: "structure"}
                     ];
-
-
                 $scope.modeSelect = $scope.options[0];
                 $scope.structureView = "/js/private/admin/structures/views/home.admin.structures.html";
-                //$scope.workView = "/js/private/admin/skds/views/home.admin.skds.work.html";
-                // $scope.testView = "/js/private/admin/skds/views/test.html";
-                // $scope.tableView = "/js/private/admin/skds/views/home.admin.skds.table.html";
-                // $scope.listView = "/js/private/admin/skds/views/home.admin.skds.list.html";
-                // $scope.actionView = "/js/private/admin/skds/views/home.admin.skds.action.html";
-
-
                 $scope.$watch('where', function (value, old) {
-                    // console.log('New val: ',value);
-                    // console.log('Old val: ',old);
                     $scope.query.regex = value;
                     $scope.refresh();
                 });
@@ -149,8 +133,6 @@
                 breadcrumb.set('Admin', '/admin');
                 breadcrumb.set('Structures', '/admin/' + $state.current.url);
                 $scope.breadcrumbs = breadcrumb;
-
-
                 $scope.refresh = function () {
                     Structures.query($scope.query, function (structures) {
                         console.log('STRUCTURES:', structures);

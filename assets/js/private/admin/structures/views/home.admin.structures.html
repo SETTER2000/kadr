@@ -10,60 +10,53 @@
             </li>
         </ul>
     </div>
-
 </div>
 <div class="col-md-6" id="table-run">
     <div id="log" ng-hide="true" class="quest"></div>
-    <div  class="table">
+    <div class="table">
         <table class="table table-condensed">
             <thead>
             <tr>
-                <th></th><th width="60%">ФИО</th> <th>Контакты</th>
+                <th></th>
+                <th width="60%">ФИО</th>
+                <th>Контакты</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-mouseover="vis=1"  ng-mouseleave="vis=0" ng-repeat="user in users">
+            <tr ng-mouseover="vis=1" ng-mouseleave="vis=0" ng-repeat="user in users">
                 <td><img ng-cloak width="40px" ng-src="{{user.avatarUrl}}" alt=""></td>
                 <td width="60%">{{user.lastName}} {{user.firstName}} {{user.patronymicName}}
-                    <br><!--<span class="glyphicon glyphicon-earphone"></span>&nbsp;&nbsp;&nbsp;-->
-                    <!--{{user.position | getPosition: 'name' }}-->
-
+                    <br>
                         <span class="position" ng-controller="ListPositionController"
-                            ng-repeat="position in user.position | filter:{$:searchText}">
+                              ng-repeat="position in user.position | filter:{$:searchText}">
                             <span style="list-style-type: none" ng-repeat="option in items | filter:position.id">
-                                <strong>  {{option.name}}</strong>
+                                <strong> {{option.name}}</strong>
                             </span>
                         </span>
-                    <a   ng-if="vis"  class=" btn  btn-link btn-group-xs pull-right not-border  text-right" href="/admin/users/edit/{{user.id}}">
+                    <a ng-if="vis" class=" btn  btn-link btn-group-xs pull-right not-border  text-right"
+                       href="/admin/users/edit/{{user.id}}">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-
-
                 </td>
                 <td>
-                    <!--<div>&lt;!&ndash;<span class="glyphicon glyphicon-earphone"></span>&nbsp;&nbsp;&nbsp;&ndash;&gt;<strong>{{user.positions | getPosition: 'name' }}</strong></div>-->
-                    <div><!--<span class="glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;&nbsp;--><a href="mailto:{{user.email}}">{{user.email }}</a></div>
-                    <div><!--<span class="glyphicon glyphicon-earphone"></span>&nbsp;&nbsp;&nbsp;-->{{user.contacts | getContact: 'Внутренний телефон' }}</div>
-
+                    <div>
+                        <a href="mailto:{{user.email}}">{{user.email}}</a>
+                    </div>
+                    <div>{{user.contacts | getContact: 'Внутренний телефон' }}</div>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-
-
 <a href="#toTop" class="button">↑</a>
-
 <script>
     var avatarElem = document.getElementById('avatar');
     var searchElem = document.getElementById('search');
     var tableRunElem = document.getElementById('table-run');
-
     var avatarSourceBottom = avatarElem.getBoundingClientRect().bottom + (window.pageYOffset - 80);
     var searchSourceBottom = searchElem.getBoundingClientRect().bottom + (window.pageYOffset - 100);
     var tableRunBottom = tableRunElem.getBoundingClientRect().bottom + (window.pageYOffset - 250);
-
     window.onscroll = function () {
         if (searchElem.classList.contains('fixed') && window.pageYOffset < searchSourceBottom) {
             searchElem.classList.remove('fixed');
@@ -75,15 +68,12 @@
         } else if (window.pageYOffset > avatarSourceBottom) {
             avatarElem.classList.add('fixed');
         }
-
         if (tableRunElem.classList.contains('fixed') && window.pageYOffset < tableRunBottom) {
             tableRunElem.classList.remove('fixed');
         } else if (window.pageYOffset > tableRunBottom) {
             tableRunElem.classList.add('fixed');
         }
     };
-
-
     (function ($scrollButton, $win) {
         $(document).scroll(function () {
             $scrollButton.toggleClass("visible", $win.scrollTop() > 300);
@@ -93,8 +83,6 @@
             $("body, html").animate({scrollTop: 0}, 500);
         });
     })($(".button"), $(window));
-
-
     $(function () {
         $('#container').jstree({
             'core': {
@@ -135,37 +123,15 @@
                     "icon": "glyphicon glyphicon-text-color"
                 }
             },
-//            "state": {"key": "state_demo"},
-
-//                "plugins": ["dnd", "contextmenu", "checkbox", "search", "state", "types","wholerow"]
-            "plugins": ["search",  "types", "state", "sort"]
+            "plugins": ["search", "types", "state", "sort"]
         });
-//        $('button').on("click", function () {
-//            var instance = $('#container').jstree(true);
-//            instance.deselect_all();
-//            instance.select_node('1');
-//        });
         $("#s").submit(function (e) {
             e.preventDefault();
             $("#container").jstree(true).search($("#q").val());
         });
-
-
-
         $('#container').on("changed.jstree", function (e, data) {
-
             $("#log").text(data.selected.toString());
-
             angular.element(log).scope().$apply("changed()");
-
         });
-
-
-//        console = {
-//            log: function (m) {
-//                $("#log").append("<br/>" + m.toString());
-//                $("#log2").val(m.toString());
-//            }
-//        };
     });
 </script>

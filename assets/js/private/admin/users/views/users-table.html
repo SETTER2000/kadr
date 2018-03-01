@@ -1,7 +1,6 @@
 <table class="table table-hover">
-   <!-- H E A D E R  T A B L E  -->
+    <!-- H E A D E R  T A B L E  -->
     <tr>
-
         <!-- I N D E X -->
         <th>#</th>
 
@@ -15,17 +14,17 @@
             <button class="btn btn-sm btn-default  not-border" ng-click="sortBy('lastName')">
                 {{nameHeader.fioArea}}
                 <span class="sortOrder" ng-show="propertyName === 'lastName'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
 
         <!-- Д А Т А  У В О Л Ь Н Е Н И Я -->
-        <th  ng-if="filterObject.fired" class="text-center">
+        <th ng-if="filterObject.fired" class="text-center">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('firedDate')">
                 {{nameHeader.firedDateArea}}
                 <span class="sortOrder" ng-show="propertyName === 'firedDate'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -34,7 +33,7 @@
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('room')">
                 {{nameHeader.roomArea}}
                 <span class="sortOrder" ng-show="propertyName === 'room'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -42,8 +41,8 @@
         <!-- О Т Д Е Л -->
         <th>
             <button class="btn  btn-sm btn-default not-border" ng-click="sortBy('departments[0].name')">
-               {{nameHeader.departmentArea}}
-                    <span class="sortOrder" ng-show="propertyName === 'departments[0].name'" ng-class="{reverse: reverse}"></span>
+                {{nameHeader.departmentArea}}
+                <span class="sortOrder" ng-show="propertyName === 'departments[0].name'" ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -53,7 +52,7 @@
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('positions[0].name')">
                 {{nameHeader.positionArea}}
                 <span class="sortOrder" ng-show="propertyName === 'positions[0].name'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -62,7 +61,7 @@
             <button class="btn  btn-sm btn-default  not-border" ng-click="sortBy('email')">
                 {{nameHeader.emailArea}}
                 <span class="sortOrder" ng-show="propertyName === 'email'"
-      ng-class="{reverse: reverse}"></span>
+                      ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -70,7 +69,7 @@
         <th ng-if="me.admin" class="text-center">
             <button class="btn  btn-sm btn-default  not-border " ng-click="sortBy('updatedAt')">
                 {{nameHeader.updatedAtArea}}  <span class="sortOrder" ng-show="propertyName === 'updatedAt'"
-                    ng-class="{reverse: reverse}"></span>
+                                                    ng-class="{reverse: reverse}"></span>
             </button>
         </th>
 
@@ -87,12 +86,9 @@
                     <span class="sr-only">Контакты: {{fieldName}}</span>
                 </button>
                 <ul class="dropdown-menu">
-                    <!--<li><a href="#" ng-click="fieldName='Email'">Email</a></li>-->
                     <li><a href="#" ng-click="fieldName='Мобильный'">Мобильный</a></li>
                     <li><a href="#" ng-click="fieldName='Телефон'">Телефон</a></li>
                     <li><a href="#" ng-click="fieldName='Внутренний телефон'">Внутренний телефон</a></li>
-                    <!--<li role="separator" class="divider"></li>-->
-                    <!--<li><a href="#">Separated link</a></li>-->
                 </ul>
             </div>
         </th>
@@ -109,19 +105,18 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
 
         <!-- А В А Т А Р -->
         <td>
-            <!--<img class="photo" ng-class="{photoSize:vid}" ng-mouseover="vid=true" ng-mouseleave="vid=false" ng-src="{{item.avatarUrl}}" alt=""></td>-->
             <img ng-if="item.avatarUrl" alt="{{ item.getFullName() }}" ng-src="{{ item.avatarUrl }}" class="photo"/>
             <img ng-if="!item.avatarUrl" title="фото отсутствует" src="http://placehold.it/40x40/E7E7E7/E7E7E7/&text=Нет" class="photo"/>
         </td>
 
         <!-- Ф И О -->
         <td>
-            <a  href="{{item.getEditUrl(item.id)}}">
+            <a href="{{item.getEditUrl(item.id)}}">
                 {{item.getFullName()}}
             </a>
         </td>
 
-       <!-- Д А Т А  У В О Л Ь Н Е Н И Я -->
+        <!-- Д А Т А  У В О Л Ь Н Е Н И Я -->
         <td ng-if="item.fired" class="text-center">
             {{item.firedDate | date:"dd.MM.yyyy"}}
         </td>
@@ -167,27 +162,6 @@ orderBy:propertyName:reverse | skipItems: ((currentPage-1)*defaultRows)| limitTo
         <td width="250px" class="text-right">
             {{item.getContact(fieldName)}}
         </td>
-        <!--<td>{{item.diff}}</td>-->
-        <!--<td class="btn-group-xs">-->
-        <!--&lt;!&ndash;<a ng-href="{{item.getShowUrl(item.id)}}" class="btn"&ndash;&gt;-->
-        <!--&lt;!&ndash;ng-class="{'btn-primary': !item.fired, ' btn-danger':item.fired}">&ndash;&gt;-->
-        <!--&lt;!&ndash;<span class="glyphicon"&ndash;&gt;-->
-        <!--&lt;!&ndash;ng-class="{'glyphicon-eye-open': !item.fired, 'glyphicon-eye-close':item.fired}"&ndash;&gt;-->
-        <!--&lt;!&ndash;aria-hidden="true"></span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-        <!--&lt;!&ndash;<a ui-sref="admin.users.edit({userId:'588b46b6d20dd30c17b27f03'})">Users Edit</a>&ndash;&gt;-->
-        <!--&lt;!&ndash;<a ui-sref="admin.users.edit({userId:item.id})" class="btn btn-sm btn-warning">&ndash;&gt;-->
-        <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-        <!--&lt;!&ndash;<a ng-href="{{item.getEditUrl(item.id)}}" class="btn btn-warning">&ndash;&gt;-->
-        <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</a>&ndash;&gt;-->
-        <!--</td>-->
-        <!--<td class="btn-group-xs">-->
-        <!--<a href="#">-->
-        <!--<span ng-if="mode" ng-click="delete(item)" class="glyphicon glyphicon-trash"></span>-->
-        <!--</a>-->
-        <!--</td>-->
     </tr>
 </table>
 
