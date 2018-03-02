@@ -36,6 +36,29 @@ angular.module('EmergenceModule')
                 }
             };
 
+
+            var authToken;
+
+            $http.get('/departments').then(function(response) {
+                authToken = response.headers('A-Token');
+                $scope.user = response.data;
+            }).catch(function() {
+                $scope.status = 'Failed...';
+            });
+
+            $scope.saveMessage = function(message) {
+                var headers = { 'Authorization': authToken };
+                $scope.status = 'Saving...';
+
+                $http.post('/add-msg.py', message, { headers: headers } ).then(function(response) {
+                    $scope.status = '';
+                }).catch(function() {
+                    $scope.status = 'Failed...';
+                });
+            };
+
+
+
             // end тестовые данные
 
             $scope.loadDepartments = function () {
