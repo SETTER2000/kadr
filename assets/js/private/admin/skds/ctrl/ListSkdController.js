@@ -6,53 +6,7 @@
                 $scope.me = window.SAILS_LOCALS.me;
                 if (!$scope.me.kadr && !$scope.me.admin) $state.go('home');
 
-                $scope.query = {
-                    where: {},
-                    sortField: $scope.sortField,
-                    sortTrend: $scope.sortTrend,
-                    limit: $scope.limitAll,
-                    page: 0,
-                    sd: $scope.start,
-                    regex: '',
-                    property: 'name'
-                };
 
-                //window.flatpickr = require('flatpickr');
-                $scope.dateOpts = {
-                    locale: 'ru',
-                    mode: "range",
-                    dateFormat: "d.m.Y",
-                    minDate: "01-01-2015",
-                    maxDate: "today"
-                    //defaultDate: 'today'
-                };
-
-                //$scope.datePostSetup = function (fpItem) {
-                //    console.log('SelectedDates', fpItem.selectedDates);
-                //    $scope.toggleBlur(fpItem.selectedDates);
-                //    console.log('flatpickr', fpItem);
-                //};
-
-                $scope.dates = [{'current':new Date()}];
-
-                $scope.expandCallback = function (index, id) {
-                    $scope.idUser = id;
-                };
-
-
-                $scope.$on('accordionA:onReady', function () {
-                    //console.log('accordionA is ready!');
-                });
-
-                $scope.$on('nestedAccordionA:onReady', function (id) {
-                    //console.log('nestedAccordionA is ready!');
-                    //console.log(id);
-                });
-
-
-                /**
-                 * VALUES
-                 */
                 $scope.defaultRows = 10;
                 $scope.limitRows = [10, 30, 50, 100, 300, 500, 700, 1000];
                 $scope.currentPage = 1; // инициализируем кнопку постраничной навигации
@@ -76,11 +30,6 @@
                 $scope.where = '^.';
                 $scope.sd = '';
                 $scope.enabledButton = false;
-                $scope.styleObj = {
-                    color: false,
-                    border: false,
-                    size: false
-                };
                 $scope.vis = false;
                 $scope.data = [];
                 $scope.data['selectedOption'] = {};
@@ -91,6 +40,52 @@
                 $scope.filedName = '_id';
                 $scope.urlBt='home.admin.users.create';
 
+
+                $scope.query = {
+                    where: {},
+                    sortField: $scope.sortField,
+                    sortTrend: $scope.sortTrend,
+                    limit: $scope.limitAll,
+                    page: 0,
+                    sd: $scope.start,
+                    regex: '',
+                    property: 'name'
+                };
+
+
+                $scope.dateOpts = {
+                    locale: 'ru',
+                    mode: "range",
+                    dateFormat: "d.m.Y",
+                    minDate: "01-01-2015",
+                    maxDate: "today"
+                    //defaultDate: 'today'
+                };
+
+
+                $scope.dates = [{'current':new Date()}];
+
+                $scope.expandCallback = function (index, id) {
+                    $scope.idUser = id;
+                };
+
+                //
+                //$scope.$on('accordionA:onReady', function () {
+                //    //console.log('accordionA is ready!');
+                //});
+                //
+                //$scope.$on('nestedAccordionA:onReady', function (id) {
+                //
+                //});
+
+
+
+
+                $scope.styleObj = {
+                    color: false,
+                    border: false,
+                    size: false
+                };
 
                 $http.get('/getListYear')
                     .then(function (attendance) {
@@ -114,16 +109,10 @@
 
                 $scope.modeSelect = $scope.options[0];
                 $scope.accordionView = "/js/private/admin/skds/views/home.admin.skds.accordion.html";
-                //$scope.workView = "/js/private/admin/skds/views/home.admin.skds.work.html";
-                // $scope.testView = "/js/private/admin/skds/views/test.html";
-                // $scope.tableView = "/js/private/admin/skds/views/home.admin.skds.table.html";
-                // $scope.listView = "/js/private/admin/skds/views/home.admin.skds.list.html";
-                // $scope.actionView = "/js/private/admin/skds/views/home.admin.skds.action.html";
+
 
 
                 $scope.$watch('where', function (value, old) {
-                    //console.log('New val: ',value);
-                    //console.log('Old val: ',old);
                     $scope.query.regex = value;
                     $scope.refresh();
                 });
@@ -131,9 +120,6 @@
 
                 $scope.toggleBlur = function (mx) {
                     if(!mx) mx.selectedDates = new Date();
-                    //console.log('mx.selectedDates: ', mx.selectedDates);
-                    //console.log('SelectedDates XX7:',moment.parseZone(mx.selectedDates[1]).format());
-
                     $scope.query.sd = mx.selectedDates;
                     $scope.mx = mx.selectedDates;
                     $scope.refresh();

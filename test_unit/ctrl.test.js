@@ -6,10 +6,11 @@
  */
 
 describe("EditEmergenceController", function () {
-    // Arrange
-    var scope, ctrl, httpBackend;
+    var $controller, $rootScope, $httpBackend, scope, controller,jsonHandler;
 
-    // Загружаем модуль
+    /**
+     * Load module
+     */
     beforeEach(module("EmergenceModule", ($provide) => {
         $provide.provider('Users', function () {
             "use strict";
@@ -39,38 +40,103 @@ describe("EditEmergenceController", function () {
             }
         });
     }));
+    beforeEach(inject((_$controller_, _$rootScope_,$injector)=> {
+        // Настройте ложные ответы службы http
+        $httpBackend = $injector.get('$httpBackend');
+        $controller = _$controller_;
+        $rootScope = _$rootScope_;
 
-    // inject предоставляет возможность использования DI в тестах
-    beforeEach(inject(function ($httpBackend, $controller, $rootScope) {
-        // создание нового scope
-        scope = $rootScope.$new();
-        httpBackend = $httpBackend;
+        jsonHandler= $httpBackend.when('GET', '/view1/data.json')
+            .respond({data: '[XXX,XXX,XXX]'});
 
-        httpBackend.when('GET', obj).respond(['Hello,world!']);
 
-        // сервис $controller испольльзуется для инстанциирования объекта контроллера
-        // метод принимает 2 аргумента имя контроллера и объект содержащий свойства, которые используются для разрешения зависимостей
-        ctrl = $controller("EditEmergenceController", {
-            $scope: scope
-        });
     }));
+    beforeEach(()=> {
+        scope = $rootScope.$new();
+        controller = $controller('EditEmergenceController', {$scope: scope});
+    });
 
-    // Act and Assess
-    // it("Создание свойства me", function () {
-    //     // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0
-    //     expect(scope.me).toBeDefined()
-    // });
-    // Act and Assess
-    it("Создание свойства counter", function () {
-        // Если контроллер работает правильно, то после его создания будет содержать значение counter = 0
-        expect(scope.counter).toEqual(0);
+
+    /**
+     * METHODS
+     */
+    describe('METHODS', ()=> {
+        describe('$scope.grade', () => {
+            it('устанавливает надёжность «strong», если длина пароля составляет > 8 символов',
+                () => {
+                    scope.password = 'longerthaneightchars';
+                    scope.grade();
+                    expect(scope.strength).toEqual('strong');
+                });
+            it('устанавливает надёжность «medium», если длина пароля составляет > 3 символов',
+                () => {
+                    scope.password = 'asaa';
+                    scope.grade();
+                    expect(scope.strength).toEqual('medium');
+                });
+            it('устанавливает надёжность «weak», если длина пароля составляет < 3 символов',
+                () => {
+                    scope.password = 'lo';
+                    scope.grade();
+                    expect(scope.strength).toEqual('weak');
+                });
+        });
+        describe('$scope.loadDepartments', () => {
+            //it('инициализирует переменную $scope.departments массивом',
+            //    () => {
+            //        $httpBackend.expectGET('/view1/data.json');
+            //        $controller;
+            //        $httpBackend.flush();
+            //    });
+            it('should get stuff', function () {
+                var url = '/departments';
+                var httpResponse = [{ "stuffId": 1 }, { "stuffId": 2 }];
+                scope.loadDepartments();
+                $httpBackend.expectGET(url).respond(200, httpResponse);
+
+                // Продолжить вот от сюда   https://docs.angularjs.org/api/ngMock/service/$httpBackend#overview
+                $httpBackend.flush();
+                expect(scope.departments.length).not.toBe(2);
+            } );
+
+        });
     });
-    it("Инкримент свойства", function () {
-        // после запуска функции incrementCounter значение счетчика должно быть равным 1
-        scope.incrementCounter();
-        expect(scope.counter).toEqual(1);
+
+
+    /**
+     * PROPERTIES
+     */
+    describe('PROPERTIES', ()=> {
+        describe('Properties controller', ()=> {
+            it('$scope.edit не может быть null', ()=> {
+                expect(scope.edit).not.toBeNull();
+            });
+            it('$scope.edit должна быть инициализирована true | false', ()=> {
+                expect(scope.edit).not.toEqual('');
+            });
+        });
     });
-    it("Создание массива Departments", function () {
-        expect(scope.Departments).toEqual(1);
+
+    /**
+     * OBJECTS
+     */
+    describe('OBJECTS', ()=> {
+        describe('$scope.titles', ()=> {
+            it('startKadr должна быть инициализирована', ()=> {
+                expect(scope.titles.startKadr).toMatch('Начать обработку - ');
+            });
+            it('endKadr должна быть инициализирована', ()=> {
+                expect(scope.titles.endKadr).toMatch('Обработка завершена - ');
+            });
+            it('kadrValid должна быть инициализирована', ()=> {
+                expect(scope.titles.kadrValid).toMatch('Отклонить заявку - ');
+            });
+            it('check должна быть инициализирована', ()=> {
+                expect(scope.titles.check).toMatch('Выполнено');
+            });
+            it('noCheck должна быть инициализирована', ()=> {
+                expect(scope.titles.noCheck).toMatch('Не выполнено');
+            });
+        });
     });
 });

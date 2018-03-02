@@ -4,7 +4,6 @@ angular.module('EmergenceFModule')
         function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, EmergencesF, moment, Departments, UsersF, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             if (!$scope.me || !$scope.me.emergence) return $state.go('home');
-            //if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.company.emergences');
 
             $scope.edit = $state.includes('home.company.emergences.edit');
             $scope.titles = {
@@ -16,32 +15,7 @@ angular.module('EmergenceFModule')
                 //kadr:'Кадры. Начать обработку - ',
             };
 
-            /**
-             *
-             * @returns {*}
-             */
-            //08.02.2018 16:21
-            //$scope.determinateValue = 30;
-            //$interval(function() {
-            //    $scope.determinateValue += 1;
-            //    if ($scope.determinateValue > 100) $scope.determinateValue = 30;
-            //}, 100, 0, true);
-
-            /**
-             *
-             * @returns {*}
-             */
-
-
-
-
-
-
-
-
-
-
-            $scope.loadUsers = function () {
+            $scope.loadDepartments = function () {
 
                 // Use timeout to simulate a 650ms request.
                 return $timeout(function () {
@@ -226,23 +200,7 @@ angular.module('EmergenceFModule')
                 //"hideMethod": "fadeOut"
             });
 
-            $scope.examples = [
-                //{
-                //    description: 'Уведомление о начале сбора информации',
-                //    name: '№2',
-                //    tmpl: 'Шаблон №2 - нет вариантов'
-                //},
-                //{
-                //    description: 'Уведомление о начале сбора информации',
-                //    name: '№3',
-                //    tmpl: 'Шаблон №3 - нет вариантов'
-                //},
-                //{
-                //    description: 'Уведомление о начале сбора информации',
-                //    name: '№4',
-                //    tmpl: 'Шаблон №4 - нет вариантов'
-                //}
-            ];
+            $scope.messages = [];
 
             $scope.to = '';
             //$scope.$watch('item.via', function (val, old) {
@@ -254,7 +212,7 @@ angular.module('EmergenceFModule')
             //       $scope.item.start = CurrentTime;
             //   }
             //});
-            //$scope.examples[0] = {
+            //$scope.messages[0] = {
             //    description: 'Уведомление о выходе нового сотрудника',
             //    outputEmployee:'',
             //    name: '№1',
@@ -268,7 +226,7 @@ angular.module('EmergenceFModule')
             $scope.outputEmployee = ' <mark>Дата выхода не указана</mark> ';
             $scope.fullName = ' <mark>FIO не указано</mark> ';
             $scope.setData = function () {
-                $scope.examples[0] = {
+                $scope.messages[0] = {
                     description: 'Уведомление о выходе нового сотрудника',
                     outputEmployee: '',
                     name: '№1',

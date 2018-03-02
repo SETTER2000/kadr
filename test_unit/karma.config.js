@@ -76,26 +76,36 @@ module.exports = function (config) {
         plugins: [
             'karma-jasmine',
             'karma-chrome-launcher',
-            'karma-firefox-launcher',
-            'karma-ie-launcher',
-            'karma-virtualbox-ie11-launcher'
+            //'karma-firefox-launcher',
+            //'karma-ie-launcher',
+            //'karma-virtualbox-ie11-launcher'
         ],
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome', 'Firefox','IE','VirtualBoxIE11onWin8'],
+        browsers: [
+            'Chrome',
+            //'Firefox',
+            //'IE_no_addons',
+            //'IE',
+            //'VirtualBoxIE11onWin8'
+        ],
 
         customLaunchers: {
             Chrome_without_security: {
                 base: 'Chrome',
                 flags: ['--disable-web-security']
             },
-            FirefoxAutoAllowGUM: {
-                base: 'Firefox',
-                prefs: {
-                    'media.navigator.permission.disabled': true
-                }
-            },
+            //FirefoxAutoAllowGUM: {
+            //    base: 'Firefox',
+            //    prefs: {
+            //        'media.navigator.permission.disabled': true
+            //    }
+            //},
+            //IE_no_addons: {
+            //    base:  'IE',
+            //    flags: ['-extoff']
+            //}
             //IE9: {
             //    base: 'IE',
             //    'x-ua-compatible': 'IE=EmulateIE9'
@@ -104,14 +114,15 @@ module.exports = function (config) {
             //    base: 'IE',
             //    'x-ua-compatible': 'IE=EmulateIE8'
             //},
-            VirtualBoxIE11onWin8: {
-                base: 'VirtualBoxIE11',
-                keepAlive: true,
-                snapshot: 'pr1',
-                captureTimeout:'5000',
-                // uuid: 'd31c787d-75bc-43c6-beee-bc941969060f' // VBoxManage list vms
-                uuid: '0a211676-f561-402b-a536-aaa878b0f391' // VBoxManage list vms
-            }
+
+            //VirtualBoxIE11onWin8: {
+            //    base: 'VirtualBoxIE11',
+            //    keepAlive: true,
+            //    snapshot: 'pr1',
+            //    captureTimeout:'5000',
+            //    // uuid: 'd31c787d-75bc-43c6-beee-bc941969060f' // VBoxManage list vms
+            //    uuid: '0a211676-f561-402b-a536-aaa878b0f391' // VBoxManage list vms
+            //}
         },
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits

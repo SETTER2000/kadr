@@ -450,7 +450,7 @@ module.provider('calendarService', function () {
          * либо возвращает установки по умолчанию
          */
         holidaySet: function (data) {
-            return  data = data || this;
+            return data = data || this;
             //if (angular.isDefined(setting)) {
             //    data = setting;
             //    return this;
@@ -494,12 +494,12 @@ module.provider('calendarService', function () {
         $get: function () {
             return {
                 year: [new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1, new Date().getFullYear() + 2],
-                allDaysHolidays : 'Всего праздничных и выходных дней в',
-                allDaysWork : 'Всего рабочих дней в',
-                hours:40,
+                allDaysHolidays: 'Всего праздничных и выходных дней в',
+                allDaysWork: 'Всего рабочих дней в',
+                hours: 40,
                 //hoursName : 'Количество рабочих часов при '+this.hours+'-часовой рабочей неделе в',
                 hoursGetDefault: function (hours) {
-                    return 'Количество рабочих часов при '+hours+'-часовой рабочей неделе в';
+                    return 'Количество рабочих часов при ' + hours + '-часовой рабочей неделе в';
                 },
                 getData: function () {
                     return data;
@@ -538,8 +538,8 @@ module.provider('calendarService', function () {
                         //console.log('ГОД currentYear: ', currentYear);
                         //console.log('ГОД -1: ', new Date().getFullYear() - 1);
                         if (year == (+yearNumber)) {
-                            console.log(text+' '+yearNumber+' г:', works);
-                            ob = text+' '+yearNumber+' г: '+ works;
+                            console.log(text + ' ' + yearNumber + ' г:', works);
+                            ob = text + ' ' + yearNumber + ' г: ' + works;
                             //obj.year = g;
                             //ob.push(obj);
                         }
@@ -558,8 +558,8 @@ module.provider('calendarService', function () {
                         //console.log('ГОД currentYear: ', currentYear);
                         //console.log('ГОД -1: ', new Date().getFullYear() - 1);
                         if (year == (+yearNumber)) {
-                            console.log(text+' '+yearNumber+' г:', works);
-                            ob = text+' '+yearNumber+' г: '+ works;
+                            console.log(text + ' ' + yearNumber + ' г:', works);
+                            ob = text + ' ' + yearNumber + ' г: ' + works;
                             //obj.year = g;
                             //ob.push(obj);
                         }
@@ -572,14 +572,14 @@ module.provider('calendarService', function () {
                     let data = this.getData();
                     let ob = '';
                     data.forEach(function (obj, k, arr) {
-                        let works = obj["Количество рабочих часов при "+hours+"-часовой рабочей неделе"];
+                        let works = obj["Количество рабочих часов при " + hours + "-часовой рабочей неделе"];
                         let year = obj["Год/Месяц"];
                         //console.log('ГОД year: ', year);
                         //console.log('ГОД currentYear: ', currentYear);
                         //console.log('ГОД -1: ', new Date().getFullYear() - 1);
                         if (year == (+yearNumber)) {
-                            console.log(text+' '+yearNumber+' г:', works);
-                            ob = text+' '+yearNumber+' г: '+ works;
+                            console.log(text + ' ' + yearNumber + ' г:', works);
+                            ob = text + ' ' + yearNumber + ' г: ' + works;
                             //obj.year = g;
                             //ob.push(obj);
                         }
@@ -720,16 +720,15 @@ var baseLogger = function () {
         console.log("Type " + this.msgType + " LOG #" + this.messageCount++ + ", message = " + msg);
     }
 };
-var debugLogger = function () {
-};
+var debugLogger = function () {};
 debugLogger.prototype = new baseLogger();
 debugLogger.prototype.msgType = "Debug";
-var errorLogger = function () {
-};
+var errorLogger = function () {};
 errorLogger.prototype = new baseLogger();
 errorLogger.prototype.msgType = "Error";
 
-// service - метод для создания сервисов. При использовании данного метода фабричная функция работает как конструктор.
+// service - метод для создания сервисов. При использовании данного метода
+// фабричная функция работает как конструктор.
 // Для создания сервисов AngularJS будет запускать эту функцию с использованием ключевого слова new
 module.service("logService", debugLogger).service("errorService", errorLogger);
 
