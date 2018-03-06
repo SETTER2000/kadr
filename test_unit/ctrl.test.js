@@ -41,7 +41,7 @@ describe("EditEmergenceController", function () {
         });
     }));
 
-    beforeEach(inject(function($injector) {
+    beforeEach(inject(function ($injector) {
         // Настройте ложные ответы службы http
         $httpBackend = $injector.get('$httpBackend');
         // общее определение для всех тестов
@@ -52,31 +52,28 @@ describe("EditEmergenceController", function () {
         $rootScope = $injector.get('$rootScope');
         // Служба $ controller используется для создания экземпляров контроллеров
         var $controller = $injector.get('$controller');
-
-        createController = function() {
-            return $controller('EditEmergenceController', {'$scope' : $rootScope });
+        createController = function () {
+            return $controller('EditEmergenceController', {'$scope': $rootScope});
         };
     }));
 
 
-    afterEach(function() {
+    afterEach(function () {
         $httpBackend.verifyNoOutstandingExpectation();
         $httpBackend.verifyNoOutstandingRequest();
     });
 
 
-    it('должен получить токен аутентификации', function() {
+    it('должен получить токен аутентификации', function () {
         $httpBackend.expectGET('/departments');
         var controller = createController();
         $httpBackend.flush();
     });
 
 
-    it('должна завершиться неудачей', function() {
-
+    it('должна завершиться неудачей', function () {
         // Обратите внимание, как вы можете изменить ответ даже после его установки
         authRequestHandler.respond(401, '');
-
         $httpBackend.expectGET('/departments');
         var controller = createController();
         $httpBackend.flush();
@@ -84,15 +81,13 @@ describe("EditEmergenceController", function () {
     });
 
 
-    it('должен отправлять msg на сервер', function() {
+    it('должен отправлять msg на сервер', function () {
         var controller = createController();
         $httpBackend.flush();
-
         // теперь вам не нужна аутентификация, но
         // контроллер все равно отправит запрос и
         // $httpBackend будет отвечать без необходимости
         // укажите ожидаемое и ответное действие для этого запроса
-
         $httpBackend.expectPOST('/add-msg.py', 'message content').respond(201, '');
         $rootScope.saveMessage('message content');
         expect($rootScope.status).toBe('Saving...');
@@ -101,19 +96,19 @@ describe("EditEmergenceController", function () {
     });
 
 
-    it('должен отправить заголовок auth', function() {
+    it('должен отправить заголовок auth', function () {
         var controller = createController();
         $httpBackend.flush();
-
-        $httpBackend.expectPOST('/add-msg.py', undefined, function(headers) {
+        $httpBackend.expectPOST('/add-msg.py', undefined, function (headers) {
             // проверяем, был ли отправлен заголовок, если это не ожидалось
             // совпадение с запросом, и тест не сработает
             return headers['Authorization'] === 'xxx';
         }).respond(201, '');
-
         $rootScope.saveMessage('whatever');
         $httpBackend.flush();
     });
+
+
     //
     // /**
     //  * METHODS
