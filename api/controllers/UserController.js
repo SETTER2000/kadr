@@ -66,10 +66,10 @@ module.exports = {
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
-                    console.log('GET OBJECT USER перед отдачей из DB',user);
+                    console.log('GET OBJECT USER перед отдачей из DB', user);
                     user.formatDate();
-                     //user.birthday = ( user.birthday) ? moment( user.birthday).format('DD.MM.YYYY') : null;
-                    console.log('GET OBJECT USER перед отдачей из DB c исправленной датой:',user);
+                    //user.birthday = ( user.birthday) ? moment( user.birthday).format('DD.MM.YYYY') : null;
+                    console.log('GET OBJECT USER перед отдачей из DB c исправленной датой:', user);
                     res.ok(user);
 
                 });
@@ -592,48 +592,56 @@ module.exports = {
                             console.log('ОШибка в User.createUser', err);
                             return res.negotiate(err);
                         }
-                        User.create({
-                            action: req.param('action'),
-                            login: req.param('login'),
-                            email: req.param('email'),
-                            firstName: req.param('firstName'),
-                            lastName: req.param('lastName'),
-                            patronymicName: req.param('patronymicName'),
-                            encryptedPassword: encryptedPassword,
-                            birthday: birthday,
-                            contacts: req.param('contacts'),
-                            subdivision: req.param('subdivision'),
-                            position: req.param('position'),
-                            pfr: req.param('pfr'),
-                            parking: req.param('parking'),
-                            park: req.param('park'),
-                            room:req.param('room'),
-                            numCar: req.param('numCar'),
-                            brandCar: req.param('brandCar'),
-                            dateInWork: dateInWork,
-                            lastLoggedIn: new Date(),
-                            notice: [
-                                {name: 'Уведомление о начале сбора информации.', order: 1, value: true},
-                                {name: 'Дополнительное уведомление о не заполненной информации по отпуску.', oreder: 2, value: false}
-                            ]
-                            //gravatarUrl: gravatarUrl
-                        }, function (err, newUser) {
-                            if (err) {
-                                console.log('ERR create USER', err);
-                                return res.badRequest('Пользователь не создан!');
-                            }
-                            sails.log.info('Создан новый пользователь с логином:' + newUser.login);
+                        User.findOne(req.session.me).exec((err, userCreated)=> {
+                            if (err) return res.negotiate(err);
+                            if (!userCreated) return res.notFound('Вы не авторизованы!');
+                            User.create({
+                                action: req.param('action'),
+                                login: req.param('login'),
+                                email: req.param('email'),
+                                firstName: req.param('firstName'),
+                                lastName: req.param('lastName'),
+                                lastNameChange: [{
+                                    lastName: req.param('lastName'),
+                                    changeDate: moment().format('DD.MM.YYYY HH:mm:ss'),
+                                    whoCreate: userCreated.getFullName()
+                                }],
+                                patronymicName: req.param('patronymicName'),
+                                encryptedPassword: encryptedPassword,
+                                birthday: birthday,
+                                contacts: req.param('contacts'),
+                                subdivision: req.param('subdivision'),
+                                position: req.param('position'),
+                                pfr: req.param('pfr'),
+                                parking: req.param('parking'),
+                                park: req.param('park'),
+                                room: req.param('room'),
+                                numCar: req.param('numCar'),
+                                brandCar: req.param('brandCar'),
+                                dateInWork: dateInWork,
+                                lastLoggedIn: new Date(),
+                                notice: [
+                                    {name: 'Уведомление о начале сбора информации.', order: 1, value: true},
+                                    {name: 'Дополнительное уведомление о не заполненной информации по отпуску.', oreder: 2, value: false}
+                                ]
+                                //gravatarUrl: gravatarUrl
+                            }, function (err, newUser) {
+                                if (err) {
+                                    console.log('ERR create USER', err);
+                                    return res.badRequest('Пользователь не создан!');
+                                }
+                                sails.log.info('Создан новый пользователь с логином:' + newUser.login);
 
-                            newUser.interfaces.add(createInterface.id);
-                            newUser.save(function (err) {
-                                if (err) return res.negotiate(err);
-                                sails.log.info('NEW USER:', newUser);
-                                res.send(newUser);
+                                newUser.interfaces.add(createInterface.id);
+                                newUser.save(function (err) {
+                                    if (err) return res.negotiate(err);
+                                    sails.log.info('NEW USER:', newUser);
+                                    res.send(newUser);
+                                });
                             });
                         });
+
                     });
-
-
             }
         });
     },
@@ -850,64 +858,79 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        console.log('UPDATE OBJECT USER входящий с формы, перед сохранением в DB: ', req.params.all());
-        let fDt = (req.param('firedDate')) ? req.param('firedDate') : null;
-        let birthday = ( req.param('birthday')) ? new Date(moment(req.param('birthday'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-        let dateInWork = ( req.param('dateInWork')) ? new Date(moment(req.param('dateInWork'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-        var obj = {
-            action: req.param('action'),
-            login: req.param('login'),
-            email: req.param('email'),
-            firstName: req.param('firstName'),
-            lastName: req.param('lastName'),
-            patronymicName: req.param('patronymicName'),
-            birthday: birthday,
-            fired: req.param('fired'),
-            dateInWork: dateInWork,
-            decree: req.param('decree'),
-            subdivision: req.param('subdivision'),
-            position: req.param('position'),
-            //position: req.param('position'),
-            contacts: req.param('contacts'),
-            firedDate: fDt,
-            parking: req.param('parking'),
-            park: req.param('park'),
-            numCar: req.param('numCar'),
-            brandCar: req.param('brandCar'),
-            pfr: req.param('pfr'),
-            avatarUrl: req.param('avatarUrl'),
-            room: req.param('room'),
-            furlough: req.param('furlough'),
-            notice: req.param('notice')
-        };
-        console.log('UPDATE OBJECT USER входящий с формы, перед сохранением в DB с исправленной датой: ', obj);
-        //console.log('Param ID: ', req.param('id'));
-        //console.log('objEdit555: ', obj);
-        User.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
-            if (err)return res.redirect('/admin/users/edit/' + req.param('id'));
-            User.findOne(req.param('id'))
-                .populate('vacations')
-                .populate('interfaces')
-                .exec(function (err, user) {
-                    if (err) return res.negotiate(err);
-                    if (!user) return res.notFound('Не могу');
-                    //user.position.add(req.param('position'));
+        let lastNameChange = [];
+        User.findOne(req.session.me).exec((err, userUpdated)=> {
+            if (err) return res.negotiate(err);
+            if (!userUpdated) return res.notFound('Вы не авторизованы!');
 
-                    // if (_.isEmpty(req.param('position'))) {
-                    //     user.positions.add({})
-                    // }
-                    //if (req.param('positionRemove')) {
-                    //    user.position.remove(req.param('positionRemove'));
-                    //}
-                    //if (req.param('furloughRemove')) {
-                    //    user.furloughs.remove(req.param('furloughRemove'));
-                    //}
-                    user.save(function (err) {
-                        if (err) return res.negotiate('ERR: ' + err);
-                        user.formatDate();
-                        res.ok(user);
+            let objectChange = {
+                lastName: req.param('lastName'),
+                changeDate: moment().format('DD.MM.YYYY HH:mm:ss'),
+                whoChanged: userUpdated.getFullName()
+            };
+
+            if (_.isArray(req.param('lastNameChange'))) {
+                lastNameChange = req.param('lastNameChange');
+                lastNameChange.push(objectChange);
+            } else {
+                lastNameChange.push(objectChange);
+            }
+            console.log('lastNameChange::', lastNameChange);
+            let fDt = (req.param('firedDate')) ? req.param('firedDate') : null;
+            let birthday = ( req.param('birthday')) ? new Date(moment(req.param('birthday'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+            let dateInWork = ( req.param('dateInWork')) ? new Date(moment(req.param('dateInWork'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
+            var obj = {
+                action: req.param('action'),
+                login: req.param('login'),
+                email: req.param('email'),
+                firstName: req.param('firstName'),
+                lastName: req.param('lastName'),
+                lastNameChange: lastNameChange,
+                patronymicName: req.param('patronymicName'),
+                birthday: birthday,
+                fired: req.param('fired'),
+                dateInWork: dateInWork,
+                decree: req.param('decree'),
+                subdivision: req.param('subdivision'),
+                position: req.param('position'),
+                contacts: req.param('contacts'),
+                firedDate: fDt,
+                parking: req.param('parking'),
+                park: req.param('park'),
+                numCar: req.param('numCar'),
+                brandCar: req.param('brandCar'),
+                pfr: req.param('pfr'),
+                avatarUrl: req.param('avatarUrl'),
+                room: req.param('room'),
+                furlough: req.param('furlough'),
+                notice: req.param('notice')
+            };
+            User.update(req.param('id'), obj).exec(function updateObj(err, objEdit) {
+                if (err)return res.redirect('/admin/users/edit/' + req.param('id'));
+                User.findOne(req.param('id'))
+                    .populate('vacations')
+                    .populate('interfaces')
+                    .exec(function (err, user) {
+                        if (err) return res.negotiate(err);
+                        if (!user) return res.notFound('Не могу');
+                        //user.position.add(req.param('position'));
+
+                        // if (_.isEmpty(req.param('position'))) {
+                        //     user.positions.add({})
+                        // }
+                        //if (req.param('positionRemove')) {
+                        //    user.position.remove(req.param('positionRemove'));
+                        //}
+                        //if (req.param('furloughRemove')) {
+                        //    user.furloughs.remove(req.param('furloughRemove'));
+                        //}
+                        user.save(function (err) {
+                            if (err) return res.negotiate('ERR: ' + err);
+                            user.formatDate();
+                            res.ok(user);
+                        });
                     });
-                });
+            });
         });
     },
 

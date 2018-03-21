@@ -34,6 +34,10 @@ module.exports = {
             minLength: 2,
             maxLength: 15
         },
+        lastNameChange: {
+            type:'array',
+            defaultsTo:[]
+        },
         patronymicName: {
             type: 'string',
             required: true,
