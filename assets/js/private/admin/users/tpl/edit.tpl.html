@@ -57,9 +57,11 @@
                             <label class="control-label" for="inputSuccess1">Фамилия </label>
                             <span ng-click="showLog()" class="animate-if" ng-if="(item.lastNameChange.length > 1)">
                                 <!--<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>-->
-                                <i class="fa fa-bars" aria-hidden="true"></i>
+                                <small  class="glyphicon" ng-class="{'glyphicon-menu-down':!showLogs, 'glyphicon-menu-up':showLogs}" ><md-tooltip md-direction="right">{{text.titleChange}}</md-tooltip></small>
 
-                                <md-tooltip md-direction="right">{{text.titleChange}}</md-tooltip>
+<!--<span ng-click="shoFin()" ng-if="item.commentFin" style="padding-top: 3px;" class=" ng-scope glyphicon-menu-up" ng-class=""></span>-->
+
+
                             </span>
                             <div ng-if="showLogs" class="animate-if">
                                 <!--<h5 class="text-grey">{{text.titleChange}}</h5>-->
@@ -75,7 +77,7 @@
                                             <!--</span>-->
                                         <!--</p>-->
                                         <small class=" text-grey">
-                                            <i class="fa fa-repeat" aria-hidden="true" title="{{text.whyChange}}"></i>
+                                            <small class="glyphicon glyphicon-ok-circle" aria-hidden="true" title="{{text.whyChange}}"></small>
                                              <em> {{itm.whoChanged}} в {{itm.changeDate | date:"dd.MM.yyyy HH:mm:ss"}}</em>
                                         </small>
                                     </div>
