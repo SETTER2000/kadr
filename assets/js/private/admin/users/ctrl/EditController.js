@@ -1,7 +1,7 @@
 'use strict';
 angular.module('UserModule')
-    .controller('EditController', ['$scope', '$http', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', 'Vacations', '$stateParams', '$base64', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
-        function ($scope, $http, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, Vacations, $stateParams, $base64, FileUploader, $timeout, $q, $log, $rootScope) {
+    .controller('EditController', ['$scope', '$http', '$mdDialog', 'toastr', '$interval', '$templateCache', '$state', 'Users', 'moment', 'Positions', 'Departments', 'Vacations', '$stateParams', '$base64', 'FileUploader', '$timeout', '$q', '$log', '$rootScope',
+        function ($scope, $http, $mdDialog, toastr, $interval, $templateCache, $state, Users, moment, Positions, Departments, Vacations, $stateParams, $base64, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             $scope.edit = $state.includes('home.admin.users.edit');
             $scope.debug = true;
@@ -21,6 +21,10 @@ angular.module('UserModule')
                 dateFormat: "d.m.Y",
                 minDate: "01-01-1950",
                 maxDate: "31-12-2002"
+            };
+            $scope.text = {
+                titleChange: 'История смены фамилии',
+                whyChange: 'Изменил'
             };
 
             $scope.radioData = [
@@ -123,11 +127,31 @@ angular.module('UserModule')
                 {name: 'Дополнительное уведомление о не заполненной информации по отпуску.', oreder: 2, value: false}
             ];
 
-            //$scope.gotlib= function () {
-            //    console.log('NEW VAL:', $scope.notice);
-            //    $scope.saveEdit(item);
-            //};
+            /**
+             * Popup. Показывает предыдущую фамилию
+             * @param ev
+             */
+            $scope.changeLastName = function (ev) {
+                let ln = $scope.item.lastNameChange.length;
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .parent(angular.element(document.querySelector('#popupContainer')))
+                        .clickOutsideToClose(true)
+                        .title('Предыдущая фамилия')
+                        .textContent($scope.item.lastNameChange[ln - 2].lastName)
+                        .ariaLabel('Alert Dialog')
+                        .ok('Ок!')
+                        .targetEvent(ev)
+                );
+            };
+            $scope.showLogs = false;
 
+            $scope.showLog = function () {
+                $scope.showLogs = !$scope.showLogs;
+            };
+            $scope.listChangeLastName = function () {
+
+            };
             $scope.addPersonName = 'Выбрать согласующих для';
             $scope.addPersonAnnounced = 'Выбрать оповещаемых для';
             $scope.addPersonIntersections = 'Выбрать "пересечения" для';
@@ -704,15 +728,13 @@ angular.module('UserModule')
                 item = reversValue(item);
 
 
-
-
                 if (angular.isDefined(item.id)) {
 
-                    Users.update({id: $stateParams.userId},item, function(user) {
+                    Users.update({id: $stateParams.userId}, item, function (user) {
                         //user.abc = true;
                         //user.$save();
                         console.log('succes++++++', user);
-                        $scope.item =user;
+                        $scope.item = user;
                         toastr.success(info.changed, 'Ok!');
 
                     }, function (err) {
@@ -725,7 +747,7 @@ angular.module('UserModule')
                         item.password = info.passDefault;
                         Users.save(item, function (user) {
                                 toastr.success(info.newUserOk);
-                                $scope.item =user;
+                                $scope.item = user;
                                 $state.go('home.admin.users.edit', {userId: user.id});
                             },
                             function (err) {

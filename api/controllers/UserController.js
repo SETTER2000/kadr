@@ -604,7 +604,8 @@ module.exports = {
                                 lastNameChange: [{
                                     lastName: req.param('lastName'),
                                     changeDate: moment().format('DD.MM.YYYY HH:mm:ss'),
-                                    whoCreate: userCreated.getFullName()
+                                    whoChanged: userCreated.getFullName(),
+                                    whoChangeId:req.session.me
                                 }],
                                 patronymicName: req.param('patronymicName'),
                                 encryptedPassword: encryptedPassword,
@@ -640,7 +641,6 @@ module.exports = {
                                 });
                             });
                         });
-
                     });
             }
         });
@@ -858,24 +858,24 @@ module.exports = {
      */
     update: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-        let lastNameChange = [];
+
         User.findOne(req.session.me).exec((err, userUpdated)=> {
             if (err) return res.negotiate(err);
             if (!userUpdated) return res.notFound('Вы не авторизованы!');
-
             let objectChange = {
                 lastName: req.param('lastName'),
                 changeDate: moment().format('DD.MM.YYYY HH:mm:ss'),
-                whoChanged: userUpdated.getFullName()
+                whoChanged: userUpdated.getFullName(),
+                whoChangeId:req.session.me
             };
-
-            if (_.isArray(req.param('lastNameChange'))) {
-                lastNameChange = req.param('lastNameChange');
-                lastNameChange.push(objectChange);
+            let lastNameChange = (req.param('lastNameChange')) ? req.param('lastNameChange'): [];
+            let ln = lastNameChange.length;
+            if (_.isArray(req.param('lastNameChange')) && ln > 0) {
+                if(lastNameChange[--ln].lastName !== req.param('lastName')) lastNameChange.push(objectChange);
             } else {
                 lastNameChange.push(objectChange);
             }
-            console.log('lastNameChange::', lastNameChange);
+
             let fDt = (req.param('firedDate')) ? req.param('firedDate') : null;
             let birthday = ( req.param('birthday')) ? new Date(moment(req.param('birthday'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
             let dateInWork = ( req.param('dateInWork')) ? new Date(moment(req.param('dateInWork'), ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
