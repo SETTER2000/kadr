@@ -2,8 +2,8 @@
 angular.module('EmergenceModule')
     .controller('EditEmergenceController', ['$scope', '$http', '$parse', 'toastr', 'toastrConfig', '$interval', '$templateCache', '$state', 'Emergences', 'moment', 'Departments', 'Users', '$stateParams', 'FileUploader', '$timeout', '$q', '$log', '$window',
         function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Emergences, moment, Departments, Users, $stateParams, FileUploader, $timeout, $q, $log, $window) {
-            //$scope.me = window.SAILS_LOCALS.me;
-            // if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
+            $scope.me = window.SAILS_LOCALS.me;
+            if (!$scope.me.admin && !$scope.me.kadr) return $state.go('home.admin.emergences');
 
             $scope.edit = $state.includes('home.admin.emergences.edit');
 
@@ -39,24 +39,23 @@ angular.module('EmergenceModule')
 
             var authToken;
 
-            $http.get('/departments').then(function(response) {
+            $http.get('/departments').then(function (response) {
                 authToken = response.headers('A-Token');
                 $scope.user = response.data;
-            }).catch(function() {
+            }).catch(function () {
                 $scope.status = 'Failed...';
             });
 
-            $scope.saveMessage = function(message) {
-                var headers = { 'Authorization': authToken };
+            $scope.saveMessage = function (message) {
+                var headers = {'Authorization': authToken};
                 $scope.status = 'Saving...';
 
-                $http.post('/add-msg.py', message, { headers: headers } ).then(function(response) {
+                $http.post('/add-msg.py', message, {headers: headers}).then(function (response) {
                     $scope.status = '';
-                }).catch(function() {
+                }).catch(function () {
                     $scope.status = 'Failed...';
                 });
             };
-
 
 
             // end тестовые данные

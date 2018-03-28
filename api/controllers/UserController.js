@@ -46,7 +46,6 @@ moment.locale('ru');
 var count = 5;
 
 module.exports = {
-
     /**
      * Получить всех пользователей системы
      * @param req
@@ -54,7 +53,6 @@ module.exports = {
      */
     get: function (req, res) {
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
         if (req.param('id')) {
             User.findOne(req.param('id'))
                 .populate('vacations')
@@ -66,12 +64,8 @@ module.exports = {
                 .exec(function foundUser(err, user) {
                     if (err) return res.serverError(err);
                     if (!user) return res.notFound();
-                    console.log('GET OBJECT USER перед отдачей из DB', user);
                     user.formatDate();
-                    //user.birthday = ( user.birthday) ? moment( user.birthday).format('DD.MM.YYYY') : null;
-                    console.log('GET OBJECT USER перед отдачей из DB c исправленной датой:', user);
                     res.ok(user);
-
                 });
         }
         else {
@@ -548,9 +542,7 @@ module.exports = {
      * @param res
      */
     createUser: function (req, res) {
-
         if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
-
         if (!_.isString(req.param('lastName'))) {
             return res.badRequest('Фамилия не заполнена.');
         }
@@ -566,7 +558,6 @@ module.exports = {
         if (!_.isString(req.param('email'))) {
             return res.badRequest('Email не заполнен.');
         }
-
         if (req.param('patronymicName').length < 2 || req.param('patronymicName').length > 15) {
             return res.badRequest('Отчество должно быть от 2 до 15 знаков!');
         }
@@ -802,7 +793,6 @@ module.exports = {
             });
         });
     },
-
 
     /**
      * Показать пользователя
