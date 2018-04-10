@@ -381,7 +381,8 @@ angular.module('UserModule')
                 //mode: "range",
                 dateFormat: "d.m.Y",
                 minDate: info.minDate,
-                maxDate: info.maxDate
+                maxDate: info.maxDate,
+                allowInput:true // ручной ввод
                 //defaultDate: 'today'
             };
 

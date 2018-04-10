@@ -52,9 +52,7 @@ angular.module('EmergenceModule', ['ui.router', 'toastr', 'ngResource', 'ngMater
                         controller: 'AdministrationEmergenceController'
                     }
                 }
-            })
-
-        ;
+            });
     })
     .constant('CONF_MODULE_EMERGENCE', {baseUrl: '/emergences/:emergenceId'})
     .run(function ($rootScope, $state, $stateParams, amMoment) {

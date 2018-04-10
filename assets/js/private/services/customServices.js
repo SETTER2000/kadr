@@ -1,7 +1,6 @@
 /**
  * Created by apetrov on 10.01.2018.
  */
-
 var module = angular.module('customServices', []);
 
 

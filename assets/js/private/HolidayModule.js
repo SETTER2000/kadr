@@ -20,7 +20,7 @@ angular.module('Holiday', [
         'AdminModule',
         'ngMaterial',
         'ngMessages',
-    'base64',
+        'base64',
 
 
         'DepartmentFModule',

@@ -378,11 +378,9 @@ angular.module('EmergenceModule')
                  * Кол-во выбраных дней
                  */
                 $scope.item.daysSelectHoliday = $scope.getCountDay(fpItem.selectedDates);
-
                 if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
                     toastr.warning(info.maxTwoWeek);
                 }
-
                 if ($scope.intersection) {
                     let x = [];
                     $scope.intersection.forEach(function (val, key, arr) {
@@ -539,11 +537,9 @@ angular.module('EmergenceModule')
             $scope.refresh = function () {
                 let item = $scope.item = Emergences.get({id: $stateParams.emergenceId},
                     function (emergences) {
-                        //console.log('EDIT EMERGENCE refresh function', emergences);
                         $scope.flatpicker.setDate(emergences.period);
                         $scope.emergences = emergences;
                     }, function (err) {
-                        // активируем по умолчанию создаваемую запись
                         item.action = true;
                         item.status = 'Новая';
                         item.countData = 0;

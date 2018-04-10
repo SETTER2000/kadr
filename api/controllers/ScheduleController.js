@@ -388,16 +388,12 @@ module.exports = {
                     if (err) return res.serverError(err);
                     //return results;
                     _.forEach(results, function (value, key) {
-                        console.log('numSelected', value.summa);
                         y += value.summa;
                     });
                     //console.log('y', y);
                     return res.send({sumDays: y});
                 });
-
         });
-
-
     },
 
 
