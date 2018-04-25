@@ -451,11 +451,14 @@ angular.module('VacationModule')
              */
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
-
+                //console.log('SURI++++', moment('2019-02-10T13:30').twix('2019-02-25T13:30'));
+                //console.log('SURI--2++++', fpItem.selectedDates);
+                //console.log('SURI-fpItem.selectedDates:', moment(fpItem.selectedDates[0]).twix(new Date(fpItem.selectedDates[1])));
                 /**
                  * Кол-во выбраных дней
                  */
-                $scope.daysSelectHoliday = calendarService.getCountDay(fpItem.selectedDates);
+                let countDayTwix = moment(fpItem.selectedDates[0]).twix(new Date(fpItem.selectedDates[1]));
+                $scope.daysSelectHoliday = calendarService.getCountDay(fpItem.selectedDates,countDayTwix);
                 if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
                     toastr.warning(info.maxTwoWeek);
                 }

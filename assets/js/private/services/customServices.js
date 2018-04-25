@@ -667,11 +667,18 @@ module.provider('calendarService', function () {
                     }
                     return arr;
                 },
-                getCountDay: function (arr) {
-                    if (angular.isArray(arr) && arr.length == 2) {
+                getCountDay: function (arr,countDayTwix) {
+
+                    //console.log('arr0',arr);
+                    if (angular.isArray(arr) && arr.length == 2 && countDayTwix) {
                         let h = this.getHoliday();
-                        let t = moment(arr[0]).twix(new Date(arr[1]));
-                        let count = +t.count('day');
+                        //let t = moment(arr[0]).twix(new Date(arr[1]));
+                        //console.log('countDayTwix:::', countDayTwix);
+                        //console.log('arr:::', arr);
+                        let count = +countDayTwix.count('day');
+
+                        //console.log('COUT::', count);
+                        
                         for (let i in h) {
                             if (moment(h[i], 'DD.MM.YYYY').isBetween(arr[0], arr[1])) {
                                 count--

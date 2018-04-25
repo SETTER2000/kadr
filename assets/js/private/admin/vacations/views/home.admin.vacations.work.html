@@ -82,12 +82,13 @@
         <td nowrap>
             <span class="position">{{item.owner.lastName}} {{item.owner.firstName[0]}} {{item.owner.patronymicName[0]}}</span>
         </td>
-        <td class="text-center">
-            {{item.daysSelectHoliday}}
-        </td>
         <td>
             <span>{{item.furlough.name}}</span>
         </td>
+        <td class="text-center">
+            {{item.daysSelectHoliday}}
+        </td>
+
         <td class="text-center">
             <span title="{{item.status | changeName}}" ng-class="item.status | getICO"></span>
         </td>

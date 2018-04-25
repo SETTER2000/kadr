@@ -31,50 +31,6 @@
                 </button>
             </div>
         </h2>
-
-        <!--<span am-time-ago="message.unixTime | amFromUnix">-->
-        <!--<p>{{message.date | amUtc | amDateFormat:'DD.MM.YYYY HH:mm:ss'}}</p>-->
-
-        <!--<p>{{message.date | amUtcOffset:'+0300' | amDateFormat:'MM.DD.YYYY HH:mm:ss'}}</p>-->
-        <!--<span am-time-ago="message.time| amParse:'DD.MM.YYYY HH:mm:ss'"></span>-->
-        <!--<p>Локально: {{local}}</p>-->
-        <!--<p>Локальное время: {{localTime}}</p>-->
-        <!--<p>Сколько прошло?: {{end}}</p>-->
-        <!--<p>diff: {{diff}}</p>-->
-        <!--<p>days: {{days}}</p>-->
-        <!--<p>Год високосный?  {{yearLeap}}</p>-->
-        <!--<p>hours: {{hours}}</p>-->
-        <!--<p>Month: {{month}}</p>-->
-        <!--<p>Months: {{months}}</p>-->
-        <!--<p>seconds: {{seconds}}</p>-->
-        <!--<p>{{message.date | amUtc | amLocal | amDateFormat:'MM.DD.YYYY HH:mm:ss'}}</p>-->
-        <!--<p>{{message.date | amTimezone:'Israel' | amDateFormat:'MM.DD.YYYY HH:mm:ss'}}</p>-->
-        <!--&lt;!&ndash;<p>Message age: {{message.ageInMinutes | amDurationFormat : 'minute' }}</p>&ndash;&gt;-->
-        <!--<p>Message age: {{calendar }}</p>-->
-
-
-        <!--<p>Scheduled {{message.createdAt | amDifference : null : 'days' }} days from now</p>-->
-        <!--<ul class="breadcrumb">-->
-        <!--<li ng-repeat="breadcrumb in breadcrumbs.getAll()">-->
-        <!--<ng-switch on="$last">-->
-        <!--<span ng-switch-when="true">{{breadcrumb.name}}</span>-->
-        <!--<span ng-switch-default>-->
-        <!--<a href="{{breadcrumb.path}}">{{breadcrumb.name}}</a>-->
-        <!--</span>-->
-        <!--</ng-switch>-->
-        <!--</li>-->
-        <!--</ul>-->
-        <!--<ul class="nav">-->
-        <!--<li ng-class="{ active: $state.includes('users') }"><a href="#/users">Contacts</a></li>-->
-        <!--<li ng-class="{ active: $state.includes('about') }"><a href="/about">About</a></li>-->
-        <!--</ul>-->
-        <!--<ol class="breadcrumb">-->
-        <!--<li><a href="#">Home</a></li>-->
-        <!--<li><a href="#">Library</a></li>-->
-        <!--<li class="active">Data</li>-->
-        <!--</ol>-->
-
-
         <div ui-view></div>
         <div ui-view="settings"></div>
     </div>
@@ -99,20 +55,6 @@
                            char-text="charText"
                            get-char-text="getCharText(ch)">
                 </word-part>
-
-
-                <!--&lt;!&ndash; Г О Д &ndash;&gt;-->
-
-                <!--&lt;!&ndash;{{ interface.year}}&ndash;&gt;-->
-                <!--<div class="form-group form-inline">-->
-                <!--<label> Год:-->
-                <!--<select class="form-control" ng-model="interface"-->
-                <!--ng-options="option as option.year  for option in options2 track by option.id">-->
-                <!--</select>-->
-                <!--</label>-->
-                <!--</div>-->
-
-
                 <div ng-if="!searchText" ng-repeat="it in arrButton" class="btn-group btn-group-sm"
                      role="group" aria-label="4">
                     <button ng-click="getPage(it.numberPage)" type="button" ng-bind="it.numberPage"
@@ -120,78 +62,12 @@
                 </div>
             </div>
         </div>
-
-
-        <!--<div class="col-md-2">-->
-        <!--&lt;!&ndash;<md-input-container>&ndash;&gt;-->
-        <!--&lt;!&ndash;<label>Представлено</label>&ndash;&gt;-->
-        <!--&lt;!&ndash;<md-select ng-model="modeSelect" md-selected-text="getSelectedText()">&ndash;&gt;-->
-        <!--&lt;!&ndash;<md-optgroup label="Представления">&ndash;&gt;-->
-        <!--&lt;!&ndash;<md-option ng-value="item.display" ng-repeat="item in options">{{item.display}}</md-option>&ndash;&gt;-->
-        <!--&lt;!&ndash;</md-optgroup>&ndash;&gt;-->
-        <!--&lt;!&ndash;</md-select>&ndash;&gt;-->
-        <!--&lt;!&ndash;</md-input-container>&ndash;&gt;-->
-
-
-        <!--</div>-->
-        <!--<div class="col-md-1">-->
-        <!--<select  class="form-control" role="group"-->
-        <!--ng-model="modeSelectYear"-->
-        <!--ng-options="item.display for item in options2 track by item.value">-->
-        <!--</select>-->
-        <!--</div>-->
         <div class="col-md-2" >
-            <!--<select class="form-control" role="group"-->
-            <!--ng-model="modeSelect"-->
-            <!--ng-options="item.display for item in options track by item.value">-->
-            <!--</select>-->
             <md-select class="mr0" placeholder="Выбрать" ng-model="modeSelect" md-on-open="loadOptions()" style="min-width: 200px;">
                 <md-option ng-value="item" ng-repeat="item in options">{{item.display}}</md-option>
             </md-select>
-            <!--<div ng-switch on="modeSelect.value" style="margin-top:20px;">-->
-            <!--<table class="table" ng-switch-when="table">-->
-            <!--<thead>-->
-            <!--<tr>-->
-            <!--<th>Name</th>-->
-            <!--<th>Value</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tr ng-repeat="item in items">-->
-            <!--<td>{{item.getFullName()}}</td>-->
-            <!--<td>{{item.login}}</td>-->
-            <!--</tr>-->
-            <!--</table>-->
-            <!--<div class="list-group" ng-switch-when="list">-->
-            <!--<a href="#" class="list-group-item active">-->
-            <!--Список-->
-            <!--</a>-->
-            <!--<a href="#" ng-repeat="item in items" class="list-group-item">-->
-            <!--{{item.getFullName()}}:{{item.login}}-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--<ul class="list-group" ng-switch-when="budges">-->
-            <!--<li ng-repeat="item in items" class="list-group-item">-->
-            <!--<span class="badge">{{item.login}}</span>-->
-            <!--{{item.getFullName()}}-->
-            <!--</li>-->
-            <!--</ul>-->
-
-
-            <!--</div>-->
-
         </div>
     </div>
-    <!--<button type="submit" size="large">Click Me!</button>-->
-    <!--{{charText}}  {{where}}-->
-
-    <!--<pagination num-pages="numPages"-->
-    <!--limit-rows="limitRows"-->
-    <!--default-rows="defaultRows"-->
-    <!--length-object="items.length"-->
-    <!--current-page="currentPage"-->
-    <!--on-select-page="selectCount=selectCount+1">-->
-    <!--</pagination>-->
-
     <div class="row">
         <div class="col-md-12">
             &nbsp;
@@ -201,11 +77,6 @@
     <div class="row">
         <div class="col-md-12">
             <div class="input-group">
-
-                <!--<span ng-if="(searchText.length>0)" class="input-group-addon" id="basic-addon1">-->
-                <!--{{filtered.length}}-->
-                <!--</span>-->
-
                 <input type="text" class="form-control" ng-model="searchText" placeholder="Поиск ...">
                      <span class="input-group-btn">
                        <button ng-click="searchText=''" class="btn btn-default" type="button">
@@ -215,15 +86,6 @@
             </div>
         </div>
     </div>
-
-    <!--<div class="row" ng-cloak>-->
-    <!--<div class="col-md-12">-->
-    <!--<div class="panel panel-info">-->
-    <!--<div class="panel-heading">-->
-
-
-    <!--</div>-->
-    <!--<div class="panel-body">-->
     <div class="row" >
         <div class="col-md-10">
             <div ng-switch on="modeSelect.value">

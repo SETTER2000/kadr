@@ -28,7 +28,7 @@
 
 
             $rootScope.$on('ngDialog.closing', function (e, $dialog) {
-                console.log('ngDialog closed: ' + $dialog.attr('id'));
+                //console.log('ngDialog closed: ' + $dialog.attr('id'));
                 if($dialog.attr('aria-describedby') === 'RONA')  $scope.bdgs = [];
 
                 $scope.$apply();

@@ -70,7 +70,7 @@ angular.module('EmployeeModule')
             $scope.delete = function (item) {
                 console.log(item);
                 item.$delete(item, function (success) {
-                    console.log(success);
+                    //console.log(success);
                     alert('OK! Объект удалён.');
                     $scope.redirect('/admin/employees');
                     // $scope.items.splice($scope.items.indexOf(item), 1);
