@@ -16,24 +16,13 @@ angular.module('EmergenceFModule')
             };
 
             $scope.loadDepartments = function () {
-
-                // Use timeout to simulate a 650ms request.
                 return $timeout(function () {
-
                     $scope.departments = Departments.query({action: true, limit: 300, sort: 'name'}, function (departments) {
                         //console.log('DEPARTMENTS:', departments);
                         $scope.departments = departments;
                     }, function (err) {
                         toastr.error(err, 'Ошибка ListDepartmentController!');
                     });
-                    //$scope.users =  $scope.users  || [
-                    //        { id: 1, name: 'Scooby Doo' },
-                    //        { id: 2, name: 'Shaggy Rodgers' },
-                    //        { id: 3, name: 'Fred Jones' },
-                    //        { id: 4, name: 'Daphne Blake' },
-                    //        { id: 5, name: 'Velma Dinkley' }
-                    //    ];
-
                 }, 900);
             };
 
@@ -41,6 +30,7 @@ angular.module('EmergenceFModule')
             $scope.onPanel = function () {
                 $scope.close = !$scope.close;
             };
+
             $scope.text = {
                 noEmpty: 'Поле не должно быть пустым.',
                 noEmptyDate: 'Нет даты.',
@@ -56,8 +46,7 @@ angular.module('EmergenceFModule')
                 headerTab: 'Предоставленное оборудование',
                 logChange: 'Лог изменений',
                 mindate: 'Дата просрочена',
-                maxdate: 'Дата просрочена',
-
+                maxdate: 'Дата просрочена'
             };
             $scope.titleFinCheck = 'При снятии отметки о выполнении задачи, данные из поля "' + $scope.text.headerTab + '", будут удалены.';
             $scope.amended = 'Внёс изменения';
@@ -97,9 +86,6 @@ angular.module('EmergenceFModule')
             $scope.comment = false;
             $scope.hideFin = true;
 
-            //$scope.$watch('commentFin', function (val) {
-            //    //$scope.hideFin = angular.isUndefined(val);
-            //});
             $scope.shoFin = function () {
                 return $scope.hideFin = !$scope.hideFin;
             };
@@ -107,7 +93,7 @@ angular.module('EmergenceFModule')
 
             $scope.ctrl = {
                 //minDate: new Date(),
-                minDate: new Date(moment().add(1, 'day')),
+                minDate: new Date(moment().endOf("days").subtract(1, 'days')),
                 maxDate: new Date(moment().add(2, 'months')),
                 onlyWeekendsPredicate: function (date) {
                     var day = date.getDay();
@@ -172,7 +158,6 @@ angular.module('EmergenceFModule')
                 });
             });
             io.socket.on('hello-emergence-save-comment', function (data) {
-                console.log('DATAAAA', data.howdy);
                 if (!data.howdy)  $state.go('home.admin.emergences');
                 $scope.$apply(function () {
                     $scope.item.commentItArr = data.howdy.commentItArr;
@@ -203,24 +188,7 @@ angular.module('EmergenceFModule')
             $scope.messages = [];
 
             $scope.to = '';
-            //$scope.$watch('item.via', function (val, old) {
-            //   if(val) {
-            //       var CurrentTime = new Date();
-            //       CurrentTime.setMinutes(CurrentTime.getMinutes() + +val);
-            //       console.log(CurrentTime.getHours()+":"+CurrentTime.getMinutes());
-            //       console.log(CurrentTime);
-            //       $scope.item.start = CurrentTime;
-            //   }
-            //});
-            //$scope.messages[0] = {
-            //    description: 'Уведомление о выходе нового сотрудника',
-            //    outputEmployee:'',
-            //    name: '№1',
-            //    tmpl: '<h1>Уважаемые, коллеги!</h1>' +
-            //    '<p> Планируется выход нового сотрудника - '+$scope.item.getFullName()+' в '+$scope.otdel+' на должность Инженер по предпродажной подготовке. </p>' +
-            //    '<p>Предполагаемая дата выхода - '+ moment($scope.outputEmployee, ['DD.MM.YYYY']).format('DD.MM.YYYY')+'. </p>' +
-            //    '<p>Ссылка на заявку -  <a href="http://corp/beta/user.php">'+$scope.item.getFullName()+'</a></p>'
-            //};
+
             $scope.otdel = ' <mark>Отдел не указан</mark> ';
             $scope.post = ' <mark>Должность не указана</mark> ';
             $scope.outputEmployee = ' <mark>Дата выхода не указана</mark> ';
@@ -297,8 +265,12 @@ angular.module('EmergenceFModule')
                 }
             });
 
+            //new Date(year, month, date, hours, minutes, seconds, ms)
+            $scope.dt = new Date(moment().endOf("days").subtract(1, 'days'));
 
-            $scope.dt = new Date();
+            console.log('$scope.dt:', $scope.dt);
+            console.log('moment().endOf("day"):', moment().endOf("day"));
+
             $scope.$watch('dt', function (val) {
                 if (val) $scope.item.outputEmployee = val;
             });
@@ -632,63 +604,7 @@ angular.module('EmergenceFModule')
 
             $scope.loginAdmin = false;
 
-            // $scope.dateOpts = {
-            //     locale: info.ru, // язык
-            //     mode: "range", // диапазон дат выбрать
-            //     dateFormat: info.dateFormat, // формат даты
-            //     allowInput: false, // ручной ввод даты
-            //     inline: false, // календарь открыт: true; false закрыт
-            //     minDate: 'today',
-            //     // Обработчик события на изменения даты
-            //     //onChange: function(selectedDates, dateStr, instance) {
-            //     //    console.log('selectedDates',selectedDates);
-            //     //},
-            //     // Обработчик события на изменения года
-            //     onYearChange: function (selectedDates, dateStr, instance) {
-            //         //console.log('CHANGE1', instance);
-            //         $scope.yearFrom = instance.currentYear;
-            //         //console.log('ESS',  $scope.yearFrom);
-            //         $scope.$apply();
-            //     },
-            //
-            //     //onDayCreate: function (dObj, dStr, fp, dayElem) {
-            //     //    //dayOff.forEach(function (v, k, arr) {
-            //     //    //    if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-            //     //    //        dayElem.innerHTML += "<span   class='event busy'></span>";
-            //     //    //    }
-            //     //    //});
-            //     //    celebration.forEach(function (v, k, arr) {
-            //     //        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-            //     //            dayElem.innerHTML += "<span title='На час пораньше'  class='event celebration'>*</span>";
-            //     //        }
-            //     //    });
-            //     //    holiday.forEach(function (v, k, arr) {
-            //     //        if (moment(arr[k], 'DD.MM.YYYY').isSame(dayElem.dateObj)) {
-            //     //            dayElem.innerHTML += "<span title='Праздник'  class='event busy holiday'></span>";
-            //     //        }
-            //     //    });
-            //     //},
-            //     //disable: [
-            //     //    function(date) {
-            //     //        // отключить каждый  8 ой
-            //     //        return !(date.getDate() % 2);
-            //     //    }
-            //     //]
-            //
-            //     //parseDate: function (str) {
-            //     //    console.log('new Date(str)',new Date(str.selectedDates));
-            //     //    return new Date(str.selectedDates);
-            //     //}
-            //     //maxDate: info.maxDate // максимальная дата
-            //     //defaultDate: [moment().year($scope.me.interfaces[0].year)._d, moment().year($scope.me.interfaces[0].year)._d] // по умолчанию какая дата отображается
-            // };
 
-            //$scope.minYear = function () {
-            //    let o = moment().add(1, 'year').get('year');
-            //    return o;
-            //};
-
-            //console.log('YEAAARRRRRRRRR', moment().add(1, 'year').get('year'));
             $scope.dateOpts = {
                 locale: info.ru,
                 //mode: "range",
@@ -697,7 +613,7 @@ angular.module('EmergenceFModule')
                 // dateFormat: info.dateTimeFormat,
                 dateFormat: info.dateFormat,
                 //minDate: info.minDate
-                minDate: 'today', // минимальная дата
+                minDate: 'today' // минимальная дата
                 //defaultDate: 'today'
             };
 
@@ -913,22 +829,20 @@ angular.module('EmergenceFModule')
 
 
             $scope.errDate = function (item) {
-                if (moment().isAfter(moment(item.outputEmployee))) {
-                    return true;
-                }
-                return false;
+                return !moment().isSameOrBefore(moment(item.outputEmployee));
             };
             $scope.saveEditFin = function (item, isValid) {
+                if ($scope.errDate(item)) {
+                    $scope.item.finCheck = false;
+                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                }
 
                 if (!isValid) {
                     $scope.item.finCheck = false;
                     return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
                 }
 
-                if ($scope.errDate(item)) {
-                    $scope.item.finCheck = false;
-                    return toastr.error('Дата просрочена.', 'Ошибка!');
-                }
+
                 item.finUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
                 $state.go('home.company.emergences', toastr.success(info.changed));
@@ -1037,44 +951,23 @@ angular.module('EmergenceFModule')
                         ////console.log('APPP',success.data);
                         $scope.item.commentIt = '';
                         $scope.item.commentItArr = success.data.commentItArr;
-                        //$scope.refresh();
                     });
                 }
             };
+
+
             $scope.saveEdit = function (item, isValid) {
-//moment('2010-10-20').isSameOrAfter('2010-10-19'); // true
-//                console.log('item.outputEmployee', item.outputEmployee);
-//                console.log('Проверяемый момент', moment(item.outputEmployee,['DD.MM.YYYY']));
-//                console.log('Текущий момент', moment());
-//                console.log('ITEM START:',moment('14.02.2018',['DD.MM.YYYY']).isAfter(moment(item.outputEmployee)));
                 if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
-if(!item.departments) return toastr.error('Не указано подразделение.', 'Ошибка!');
-
-                //if(moment().isAfter(moment(item.outputEmployee))) return toastr.error('Дата просрочена.', 'Ошибка!');
-
-                //if (item.commentIt) {
-                //    item.commentItArr.push({
-                //        id:$scope.getRandomId(),
-                //        comment: item.commentIt.trim(),
-                //        img: $scope.me.avatarUrl,
-                //        date: new Date(),
-                //        fio: $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '.'
-                //    });
-                //}
+                if(!item.departments) return toastr.error('Не указано подразделение.', 'Ошибка!');
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
                     item.finCheck = false;
                 }
 
                 if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
-
-
                 $scope.checkedValue();
                 item = reversValue(item);
-
-
                 if (isValid) {
-                    //toastr.success(info.changed, 'OK!!');
                     $scope.message = item.name + " " + item.email;
                 }
                 else {
@@ -1085,23 +978,8 @@ if(!item.departments) return toastr.error('Не указано подразде�
 
                 if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
 
-
                 if (angular.isDefined(item.id)) {
-                    //console.log('UPDATE item *****:', item);
-
                     item.$update({id: item.id}, item);
-
-                    //item.$update({id:item.id},item, function (success) {
-                    //        $state.go('home.company.emergences');
-                    //        //$scope.refresh();
-                    //        toastr.success(info.changed);
-                    //    },
-                    //    function (err) {
-                    //        console.log('ERR11445', err);
-                    //        if (err.status == 400)  toastr.error(err.statusText + ' ' + err.data.details, info.error(err.status));
-                    //        toastr.error(err.data, info.error(11445));
-                    //  length exceeds the capacity  }
-                    //);
                 } else {
                     if (angular.isDefined(item)) {
                         let ar = [];
@@ -1115,8 +993,6 @@ if(!item.departments) return toastr.error('Не указано подразде�
                             }
                             item.htmlData = ar;
                         }
-                        //if (!angular.isArray(item.htmlData) || item.htmlData[0] === null) return toastr.error(info.messageErr, info.error(5978));
-
 
                         if (angular.isDefined(item.htmlData2)) {
                             for (let key in item.htmlData2) {
@@ -1124,16 +1000,16 @@ if(!item.departments) return toastr.error('Не указано подразде�
                             }
                             item.htmlData2 = ar2;
                         }
+
                         //toastr.success(info.newOk, info.ok);
                         //$state.go('home.company.emergences');
                         item.$save(item, function (success) {
                                 //console.log(success);
                                 //location.reload();
                                 toastr.success(info.newOk);
-                                // /admin/emergence/
-                                //$location.path('/profile') ;
+
                                 $state.go('home.company.emergences', {emergenceId: success.id});
-                                //$state.go('home.company.emergences');
+
                             },
                             function (err) {
                                 toastr.error(err.data, info.error(89036));
