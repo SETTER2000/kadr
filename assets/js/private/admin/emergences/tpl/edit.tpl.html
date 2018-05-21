@@ -106,14 +106,11 @@
                                 <div flex-gt-xs>
                                     <h4>Дата выхода сотрудника </h4>
                                     <md-datepicker required ng-if="!me.admin" name="itemOutputEmployee" ng-model="item.outputEmployee"
-
-                                                   md-placeholder="Enter date"
                                                    md-min-date="ctrl.minDate"
                                                    md-max-date="ctrl.maxDate">
                                     </md-datepicker>
 
                                     <md-datepicker required ng-if="me.admin" name="itemOutputEmployeeAdmin" ng-model="item.outputEmployee"
-                                                   md-placeholder="Enter date"
                                                    md-max-date="ctrl.maxDate">
                                     </md-datepicker>
                                 </div>

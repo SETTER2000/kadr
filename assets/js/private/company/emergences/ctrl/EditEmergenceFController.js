@@ -46,7 +46,8 @@ angular.module('EmergenceFModule')
                 headerTab: 'Предоставленное оборудование',
                 logChange: 'Лог изменений',
                 mindate: 'Дата просрочена',
-                maxdate: 'Дата просрочена'
+                maxdate: 'Дата просрочена',
+                dateExpired: 'Дата просрочена'
             };
             $scope.titleFinCheck = 'При снятии отметки о выполнении задачи, данные из поля "' + $scope.text.headerTab + '", будут удалены.';
             $scope.amended = 'Внёс изменения';
@@ -92,8 +93,9 @@ angular.module('EmergenceFModule')
 
 
             $scope.ctrl = {
-                //minDate: new Date(),
-                minDate: new Date(moment().endOf("days").subtract(1, 'days')),
+                minDate: new Date(),
+                //minDate: new Date(moment().endOf("days")),
+                //minDate: new Date(moment().endOf("days").subtract(1, 'days')),
                 maxDate: new Date(moment().add(2, 'months')),
                 onlyWeekendsPredicate: function (date) {
                     var day = date.getDay();
@@ -266,7 +268,7 @@ angular.module('EmergenceFModule')
             });
 
             //new Date(year, month, date, hours, minutes, seconds, ms)
-            $scope.dt = new Date(moment().endOf("days").subtract(1, 'days'));
+            $scope.dt = new Date(moment().startOf("days").add(3,'hours'));
 
             console.log('$scope.dt:', $scope.dt);
             console.log('moment().endOf("day"):', moment().endOf("day"));
@@ -829,17 +831,24 @@ angular.module('EmergenceFModule')
 
 
             $scope.errDate = function (item) {
-                return !moment().isSameOrBefore(moment(item.outputEmployee));
+                return moment().endOf('day').isBefore(moment(item.outputEmployee), 'year');
             };
+            $scope.dateExpired = function () {
+
+            };
+
+            // Fin
             $scope.saveEditFin = function (item, isValid) {
-                if ($scope.errDate(item)) {
+
+                let m = moment().endOf('day').subtract(1,'minute');
+                if (m.isAfter(moment(item.outputEmployee).endOf('day'))) {
                     $scope.item.finCheck = false;
-                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                    return toastr.error($scope.text.dateExpired, info.error(720));
                 }
 
                 if (!isValid) {
                     $scope.item.finCheck = false;
-                    return toastr.error('Нет информации по предоставленному оборудованию!', 'Ошибка!');
+                    return toastr.error('Нет информации по предоставленному оборудованию!', info.error(719));
                 }
 
 
@@ -851,10 +860,13 @@ angular.module('EmergenceFModule')
             $scope.showLog = function () {
                 $scope.showLogs = !$scope.showLogs;
             };
+
+            // AHO
             $scope.saveEditAho = function (item, isValid) {
-                if ($scope.errDate(item)) {
+                let m = moment().endOf('day').subtract(1,'minute');
+                if (m.isAfter(moment(item.outputEmployee).endOf('day'))) {
                     $scope.item.ahoCheck = false;
-                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                    return toastr.error($scope.text.dateExpired, info.error(721));
                 }
                 item.ahoUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
@@ -863,11 +875,13 @@ angular.module('EmergenceFModule')
             $scope.getRandomId = function () {
                 return Math.floor((Math.random() * 999999) + 1);
             };
-            $scope.saveEditIt = function (item, isValid) {
 
-                if ($scope.errDate(item)) {
+            // IT
+            $scope.saveEditIt = function (item, isValid) {
+                let m = moment().endOf('day').subtract(1,'minute');
+                if (m.isAfter(moment(item.outputEmployee).endOf('day'))) {
                     $scope.item.itCheck = false;
-                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                    return toastr.error($scope.text.dateExpired, info.error(722));
                 }
 
                 item.itUpdate = $scope.me.id;
@@ -936,7 +950,7 @@ angular.module('EmergenceFModule')
             };
 
             $scope.saveComment = function (item) {
-                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
+                if ($scope.errDate(item)) return toastr.error($scope.text.dateExpired, info.error(723));
                 if (item.commentIt) {
                     item.commentItArr.push({
                         id: $scope.getRandomId(),
@@ -957,14 +971,14 @@ angular.module('EmergenceFModule')
 
 
             $scope.saveEdit = function (item, isValid) {
-                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
-                if(!item.departments) return toastr.error('Не указано подразделение.', 'Ошибка!');
+                if ($scope.errDate(item)) return toastr.error($scope.text.dateExpired, info.error(718));
+                if(!item.departments) return toastr.error('Не указано подразделение.', info.error(717));
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
                     item.finCheck = false;
                 }
 
-                if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(5828));
+                if (!item.outputEmployee) return toastr.error(info.filedErr('"Дата выхода сотрудника"', 'не заполнена'), info.error(716));
                 $scope.checkedValue();
                 item = reversValue(item);
                 if (isValid) {
@@ -976,7 +990,7 @@ angular.module('EmergenceFModule')
                     return false;
                 }
 
-                if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(731));
+                if (!angular.isDefined(item.departments) || item.departments.length < 1) return toastr.error(info.filedErr('"Отдел"', 'не заполнено'), info.error(715));
 
                 if (angular.isDefined(item.id)) {
                     item.$update({id: item.id}, item);
@@ -1012,7 +1026,7 @@ angular.module('EmergenceFModule')
 
                             },
                             function (err) {
-                                toastr.error(err.data, info.error(89036));
+                                toastr.error(err.data, info.error(714));
                             });
                     }
                 }
@@ -1027,22 +1041,6 @@ angular.module('EmergenceFModule')
                 }
             };
 
-            //$scope.addFurlough = function () {
-            //    if (angular.isArray($scope.item.fur)) {
-            //        $scope.item.fur.push({type: "отпуск", from: "", to:""});
-            //    } else {
-            //        $scope.item.fur = [{type: "отпуск", from: "", to: ""}];
-            //    }
-            //};
-
-            //$scope.removeFurlough = function (obj) {
-            //    let furloughs = $scope.item.fur;
-            //    for (let i = 0, ii = furloughs.length; i < ii; i++) {
-            //        if (obj === furloughs[i]) {
-            //            furloughs.splice(i, 1);
-            //        }
-            //    }
-            //};
             $scope.removeContact = function (contact) {
                 let contacts = $scope.item.contacts;
                 for (let i = 0, ii = contacts.length; i < ii; i++) {
@@ -1095,10 +1093,6 @@ angular.module('EmergenceFModule')
             $scope.removeBirthday = function (item) {
                 item.birthday = null;
                 item = reversValue(item);
-                //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-
                 if (angular.isDefined(item.id)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
@@ -1106,7 +1100,7 @@ angular.module('EmergenceFModule')
                         },
                         function (err) {
                             //console.log('ERR: ', err);
-                            toastr.error(err.data.invalidAttributes, info.error(44006));
+                            toastr.error(err.data.invalidAttributes, info.error(713));
                         });
                 }
             };
@@ -1114,53 +1108,39 @@ angular.module('EmergenceFModule')
             $scope.removeDateInWork = function (item) {
                 item.dateInWork = null;
                 item = reversValue(item);
-                //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-
                 if (angular.isDefined(item.id)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $scope.refresh();
                         },
                         function (err) {
-                            toastr.error(err.data.invalidAttributes, info.error(792));
+                            toastr.error(err.data.invalidAttributes, info.error(712));
                         });
                 }
             };
             $scope.removeDecree = function (item) {
                 item.decree = null;
                 item = reversValue(item);
-                //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-
                 if (angular.isDefined(item.id)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $scope.refresh();
                         },
                         function (err) {
-                            toastr.error(err.data.invalidAttributes, info.error(1564));
+                            toastr.error(err.data.invalidAttributes, info.error(711));
                         });
                 }
             };
             $scope.removeFired = function (item) {
                 item.firedDate = null;
                 item = reversValue(item);
-                //item.birthday = ( item.birthday) ? new Date(moment(item.birthday, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.dateInWork = (item.dateInWork) ? new Date(moment(item.dateInWork, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-                //item.firedDate = ( item.firedDate) ? new Date(moment(item.firedDate, ['DD.MM.YYYY']).format('YYYY-MM-DD')) : null;
-
                 if (angular.isDefined(item.id)) {
                     item.$update(item, function (success) {
                             toastr.success(info.changed);
                             $scope.refresh();
-                            //$scope.item.firedDate = success.getFiredDate;
                         },
                         function (err) {
-                            //console.log(info.error, err);
-                            toastr.error(err.data.invalidAttributes, info.error(90));
+                            toastr.error(err.data.invalidAttributes, info.error(710));
                         });
                 }
             };
@@ -1205,8 +1185,6 @@ angular.module('EmergenceFModule')
             $scope.canRevert = function () {
                 return !angular.equals($scope.item, original);
             };
-
             $scope.refresh();
-
         }
     ]);

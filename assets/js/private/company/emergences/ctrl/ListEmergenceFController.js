@@ -328,7 +328,7 @@
                 //console.log('SEEE', $scope.me.emergence[0].see);
 
                 $scope.items = EmergencesF.query($scope.query, function (emergence) {
-                    console.log('EMERGENCE ITEMS:', emergence);
+                    //console.log('EMERGENCE ITEMS:', emergence);
                     $scope.items = emergence;
                     $scope.countCurrentView = emergence.length;
                     $scope.objectName = emergence;

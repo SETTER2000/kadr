@@ -130,11 +130,13 @@ angular.module('EmergenceModule')
             $scope.debug = false;
             $scope.comment = false;
             $scope.hideFin = true;
-
+            //$scope.dt = new Date(moment().startOf("days").add(3,'hours'));
             $scope.ctrl = {
-                minDate: new Date(moment().add(1, 'day')),
+                minDate: new Date(),
+                //minDate: new Date(moment().add(1, 'day')),
                 maxDate: new Date(moment().add(2, 'months')),
-                dt: new Date()
+                dt: new Date(moment().startOf("days").add(3,'hours'))
+                //dt: new Date()
                 //onlyWeekendsPredicate: function (date) {
                 //    var day = date.getDay();
                 //    return day === 0 || day === 6;
@@ -666,9 +668,11 @@ angular.module('EmergenceModule')
                 $scope.item.endKadr = ($scope.item.startKadr && $scope.item.finCheck && $scope.item.ahoCheck && $scope.item.itCheck);
                 $scope.item.status = ($scope.item.kadrValid) ? 'Отклонена' : (($scope.item.endKadr) ? 'Завершена' : 'В работе');
             };
-
+            //$scope.errDate = function (item) {
+            //    return moment().endOf('day').isBefore(moment(item.outputEmployee));
+            //};
             $scope.errDate = function (item) {
-                if (moment().isAfter(moment(item.outputEmployee)) && !$scope.me.admin) {
+                if (moment().endOf('day').isBefore(moment(item.outputEmployee)) && !$scope.me.admin) {
                     return true;
                 }
                 return false;
