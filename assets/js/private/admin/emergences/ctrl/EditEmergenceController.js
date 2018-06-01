@@ -92,6 +92,7 @@ angular.module('EmergenceModule')
                 headerTab: 'Предоставленное оборудование',
                 logChange: 'Лог изменений',
                 mindate: 'Дата просрочена',
+                dateExpired: 'Дата просрочена'
             };
 
             var info = {
@@ -671,12 +672,21 @@ angular.module('EmergenceModule')
             //$scope.errDate = function (item) {
             //    return moment().endOf('day').isBefore(moment(item.outputEmployee));
             //};
+            //$scope.errDate = function (item) {
+            //    if (moment().endOf('day').isBefore(moment(item.outputEmployee)) && !$scope.me.admin) {
+            //        return true;
+            //    }
+            //    return false;
+            //};
+
             $scope.errDate = function (item) {
-                if (moment().endOf('day').isBefore(moment(item.outputEmployee)) && !$scope.me.admin) {
-                    return true;
-                }
-                return false;
+
+                    if (moment().endOf('day').isBefore(moment(item.outputEmployee), 'year') && !$scope.me.admin) {
+                        return true;
+                    }
+                    return false;
             };
+
 
             $scope.saveEditFin = function (item, isValid) {
                 if (!isValid) {
@@ -686,7 +696,7 @@ angular.module('EmergenceModule')
 
                 if ($scope.errDate(item)) {
                     $scope.item.finCheck = false;
-                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                    return toastr.error('Дата просрочена.', 'Ошибка 1758!');
                 }
                 item.finUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
@@ -696,7 +706,7 @@ angular.module('EmergenceModule')
             $scope.saveEditAho = function (item, isValid) {
                 if ($scope.errDate(item)) {
                     $scope.item.ahoCheck = false;
-                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                    return toastr.error('Дата просрочена.', 'Ошибка 1700!');
                 }
                 item.ahoUpdate = $scope.me.id;
                 $scope.saveEdit(item, isValid);
@@ -706,7 +716,7 @@ angular.module('EmergenceModule')
             $scope.saveEditIt = function (item, isValid) {
                 if ($scope.errDate(item)) {
                     $scope.item.itCheck = false;
-                    return toastr.error('Дата просрочена.', 'Ошибка!');
+                    return toastr.error('Дата просрочена.', 'Ошибка 1701!');
                 }
 
                 item.itUpdate = $scope.me.id;
@@ -761,7 +771,7 @@ angular.module('EmergenceModule')
             };
 
             $scope.saveComment = function (item) {
-                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
+                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка 1702!');
                 if (item.commentIt) {
                     item.commentItArr.push({
                         id: $scope.getRandomId(),
@@ -780,8 +790,8 @@ angular.module('EmergenceModule')
             };
 
             $scope.saveEdit = function (item, isValid) {
-                if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка!');
-
+                //if ($scope.errDate(item)) return toastr.error('Дата просрочена.', 'Ошибка 1703!');
+                if ($scope.errDate(item)) return toastr.error($scope.text.dateExpired, info.error(1703));
                 if (!item.finCheck || !angular.isDefined(item.commentFin)) {
                     item.commentFin = '';
                     item.finCheck = false;
