@@ -474,9 +474,9 @@
                 <div class="panel-body">
                     <div class="form-group">
                         <div class="checkbox">
-
                             <label>
-                                <md-switch ng-disabled="item.startKadr || item.kadrValid" ng-model="item.startKadr" aria-label="Switch 4">
+                                <md-switch ng-disabled="item.startKadr || item.kadrValid"
+                                           ng-model="item.startKadr" aria-label="Switch 4">
                                     <span ng-if="!item.startKadr">{{titles.startKadr}} нет</span>
                                     <span ng-if="item.startKadr">{{titles.startKadr}} да</span>
                                 </md-switch>
@@ -487,13 +487,19 @@
 
                     <!-- К А Д Р Ы  О Т К Л О Н И Т Ь  З А Я В К У -->
 
-                    <div class="form-group">
+                    <div ng-if="me.kadr || me.admin" class="form-group">
                         <div class="checkbox">
                             <label>
-                                <md-switch ng-disabled="(item.endKadr || item.startKadr)" ng-model="item.kadrValid" aria-label="Switch 4">
+                                <md-switch ng-disabled="(item.endKadr)"
+                                           ng-model="item.kadrValid" aria-label="Switch 4">
                                     <span ng-if="!item.kadrValid">{{titles.kadrValid}} нет</span>
                                     <span ng-if="item.kadrValid">{{titles.kadrValid}} да</span>
                                 </md-switch>
+                                <!--<md-switch ng-disabled="(item.endKadr || item.startKadr)" -->
+                                           <!--ng-model="item.kadrValid" aria-label="Switch 4">-->
+                                    <!--<span ng-if="!item.kadrValid">{{titles.kadrValid}} нет</span>-->
+                                    <!--<span ng-if="item.kadrValid">{{titles.kadrValid}} да</span>-->
+                                <!--</md-switch>-->
                             </label>
                         </div>
                     </div>
