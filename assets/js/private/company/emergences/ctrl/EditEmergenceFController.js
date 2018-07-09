@@ -113,7 +113,7 @@ angular.module('EmergenceFModule')
             $scope.maxLength = 20;
             $scope.maxLengthFin = 6000;
             $scope.maxLengthIt = 300;
-            $scope.maxLengthPost = 40;
+            $scope.maxLengthPost = 70;
             $scope.maxlengthTextarea = 150;
 
             $scope.getError = function (error) {
