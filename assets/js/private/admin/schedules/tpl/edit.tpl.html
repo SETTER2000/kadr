@@ -79,10 +79,10 @@
 
                             <label class="control-label" for="inputSuccess1">Год</label>
                             <!--<input  type="text" class="form-control" ng-model="item.lastName">-->
-                            <input ng-if="!edit" autofocus required type="number" min="{{minYear()}}" max="2030" ng-change="fixYear()"
+                            <input ng-if="!edit" autofocus required type="number" min="{{minYear()}}" max="{{values.maxYear}}" ng-change="fixYear()"
                                    class="form-control"
                                    ng-model="item.year">
-                            <input ng-if="edit" autofocus required min="{{minYear()}}" max="2030" ng-init="getYear()" ng-change="fixYear()"
+                            <input ng-if="edit" autofocus required min="{{minYear()}}" max="{{values.maxYear}}" ng-init="getYear()" ng-change="fixYear()"
                                    type="number" class="form-control" ng-model="item.year">
                             <!--<span id="helpBlock" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
                         </div>

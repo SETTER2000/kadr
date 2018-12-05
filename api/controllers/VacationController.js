@@ -110,6 +110,7 @@ module.exports = {
      */
     create: function (req, res) {
         //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        console.log(req.param('daysSelectHoliday'));
         if (!_.isNumber(req.param('daysSelectHoliday'))) return res.negotiate('Кол-во дней не число.');
         let obj = {
             section: 'Отпуск',

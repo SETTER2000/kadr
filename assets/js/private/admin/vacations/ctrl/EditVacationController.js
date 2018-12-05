@@ -350,6 +350,10 @@ angular.module('VacationModule')
                             });
                     },
                     function (selectedDates, dateStr, instance) {
+                        /**
+                         *  Устанавливаем на календарь минимально доступный год,
+                         *  который запланирован в Графике отпусков
+                         */
                         $http.get('/schedule/min-year')
                             .then(function onSuccess(sailsResponse) {
 
@@ -458,6 +462,9 @@ angular.module('VacationModule')
                  * Кол-во выбраных дней
                  */
                 let countDayTwix = moment(fpItem.selectedDates[0]).twix(new Date(fpItem.selectedDates[1]));
+                
+                console.log('Значение countDayTwix:');
+                console.log(countDayTwix);
                 $scope.daysSelectHoliday = calendarService.getCountDay(fpItem.selectedDates,countDayTwix);
                 if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
                     toastr.warning(info.maxTwoWeek);

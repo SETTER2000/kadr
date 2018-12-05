@@ -59,18 +59,18 @@ module.exports = {
                             if (err) return res.serverError(err);
                             if (!users) return res.notFound();
 
-                          /*  {
-                                where: { /!* ... *!/ },
-                                groupBy: [ /!* ... *!/ ],
-                                    sum: [ /!* ... *!/ ],
-                                average: [ /!* ... *!/ ],
-                                count: true,
-                                min: [ /!* ... *!/ ],
-                                max: [ /!* ... *!/ ],
-                                sort: { /!* ... *!/ },
-                                skip: 2353,
-                                    limit: 25
-                            }*/
+                            /*  {
+                             where: { /!* ... *!/ },
+                             groupBy: [ /!* ... *!/ ],
+                             sum: [ /!* ... *!/ ],
+                             average: [ /!* ... *!/ ],
+                             count: true,
+                             min: [ /!* ... *!/ ],
+                             max: [ /!* ... *!/ ],
+                             sort: { /!* ... *!/ },
+                             skip: 2353,
+                             limit: 25
+                             }*/
                             Schedule.find()
                                 .populate('whomCreated')
                                 .populate('whomUpdated')
@@ -294,7 +294,7 @@ module.exports = {
                     "use strict";
                     if (err) return res.serverError(err);
                     if (!finds) return res.notFound();
-                    if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с '+req.param('year')+' годом. <a class="kadr-link"  target="_blank" href="/vacation/delete-all/'+req.param('year')+'"><i class="fa fa-link" aria-hidden="true"></i> Удалить </a>');
+                    if (finds.vacations.length > 0) return res.badRequest('График не может быть удалён, существуют зависимости. Сначала удалите все отпуска связаные с ' + req.param('year') + ' годом. <a class="kadr-link"  target="_blank" href="/vacation/delete-all/' + req.param('year') + '"><i class="fa fa-link" aria-hidden="true"></i> Удалить </a>');
                     Schedule.destroy({id: finds.id}, (err) => {
                         if (err) return next(err);
                         console.log('Отпуск удалил:', req.session.me);

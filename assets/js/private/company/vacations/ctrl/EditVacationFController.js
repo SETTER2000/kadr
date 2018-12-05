@@ -343,6 +343,10 @@ angular.module('VacationFModule')
                             });
                     },
                     function (selectedDates, dateStr, instance) {
+                        /**
+                         *  Устанавливаем на календарь минимально доступный год,
+                         *  который запланирован в Графике отпусков
+                         */
                         $http.get('/schedule/min-year')
                             .then(function onSuccess(sailsResponse) {
 
@@ -443,11 +447,17 @@ angular.module('VacationFModule')
              */
             $scope.datePostSetup = function (fpItem) {
                 $scope.flatpicker = fpItem;
-
+                let countDayTwix = moment(fpItem.selectedDates[0]).twix(new Date(fpItem.selectedDates[1]));
                 /**
                  * Кол-во выбраных дней
                  */
-                $scope.daysSelectHoliday = calendarService.getCountDay(fpItem.selectedDates);
+                $scope.daysSelectHoliday = calendarService.getCountDay(fpItem.selectedDates, countDayTwix);
+
+                //console.log("fpItem.selectedDates: ");
+                //console.log(fpItem.selectedDates);
+                console.log("$scope.daysSelectHoliday: ");
+                console.log($scope.daysSelectHoliday);
+
                 if (($scope.daysSelectHoliday > 14) && !$scope.item.maxTwoWeek) {
                     toastr.warning(info.maxTwoWeek);
                 }
@@ -633,6 +643,8 @@ angular.module('VacationFModule')
                 } else {
                     if (angular.isDefined(item)) {
                         item.daysSelectHoliday = $scope.daysSelectHoliday;
+                        console.log('ITEM**::::::');
+                        console.log(item);
                         item.$save(item, function (success) {
 
                                 toastr.success(info.newUserOk);
@@ -643,7 +655,7 @@ angular.module('VacationFModule')
                             function (err) {
                                 //toastr.error(err, 'Ошибка 3990');
                                 //console.log('err.data',err.data);
-                                toastr.error(err.data, info.error + ' 890');
+                                toastr.error(err.data, info.error + ' c890');
                             });
                     }
                 }

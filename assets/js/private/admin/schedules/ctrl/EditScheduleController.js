@@ -4,6 +4,9 @@ angular.module('ScheduleModule')
         function ($scope, $http, $parse, toastr, toastrConfig, $interval, $templateCache, $state, Schedules, moment, Positions, Departments, Vacations, Users, $stateParams, FileUploader, $timeout, $q, $log, $rootScope) {
             $scope.me = window.SAILS_LOCALS.me;
             $scope.edit = $state.includes('home.admin.schedules.edit');
+            $scope.values = {
+                maxYear: 2030
+            };
             var info = {
                 changed: 'Изменения сохранены!',
                 passChange: 'Пароль обновлён!',
@@ -63,11 +66,6 @@ angular.module('ScheduleModule')
                     description: 'Уведомление о начале сбора информации',
                     name: '№3',
                     tmpl: 'Шаблон №3 - нет вариантов'
-                },
-                {
-                    description: 'Уведомление о начале сбора информации',
-                    name: '№4',
-                    tmpl: 'Шаблон №4 - нет вариантов'
                 }
             ];
             $scope.to = '';
@@ -82,14 +80,14 @@ angular.module('ScheduleModule')
                         '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
                     };
 
-                    $scope.examples[0]= {
+                    $scope.examples[0] = {
                         description: 'Уведомление о начале сбора информации',
                         name: '№1',
                         tmpl: '<h1>Уважаемые коллеги!</h1> ' +
-                        '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в ' + ($scope.year + 1) + ' году ' +
-                        'Генеральным директором подписан приказ о подготовке графика отпусков на ' + ($scope.year + 1) + ' год.</p> ' +
+                        '<p>В целях исполнения требований Трудового кодекса РФ, а также для обеспечения нормальной работы компании в ' + ($scope.year) + ' году ' +
+                        'Генеральным директором подписан приказ о подготовке графика отпусков на ' + ($scope.year) + ' год.</p> ' +
                         '<p>Коллеги, прошу  в срок до  <b>' + moment($scope.to).format('DD.MM.YYYY') + ' </b> ' +
-                        'запланировать свои отпуска на ' + ($scope.year + 1) + ' год и внести информацию в единую информационную систему по ' +
+                        'запланировать свои отпуска на ' + ($scope.year) + ' год и внести информацию в единую информационную систему по ' +
                         'адресу: <a href="http://corp/beta/user.php">http://corp/beta/user.php</a></p>' +
                         '<p>&nbsp;</p> <p>' + $scope.me.positions[0].name + '<br> ЗАО НТЦ «Ландата»<br>' + $scope.me.lastName + ' ' + $scope.me.firstName[0] + '. ' + $scope.me.patronymicName[0] + '. </p>'
                     };
@@ -105,11 +103,6 @@ angular.module('ScheduleModule')
                     description: 'Дополнительное уведомление о не заполненной информации.',
                     name: '№3',
                     tmpl: 'Шаблон №3 - нет вариантов'
-                },
-                {
-                    description: 'Дополнительное уведомление о не заполненной информации.',
-                    name: '№4',
-                    tmpl: 'Шаблон №4 - нет вариантов'
                 }
             ];
             $scope.toOpen = function () {
@@ -142,12 +135,12 @@ angular.module('ScheduleModule')
                 }
             });
             //href="/vacation/delete-all/'+req.param('year')+'"
-            $scope.addiction = function() {
-                if(!angular.isNumber(year)) return;
+            $scope.addiction = function () {
+                if (!angular.isNumber(year)) return;
                 if (val) {
                     $http.get('/vacation/delete-all/' + year)
                         .then(function (res) {
-                            console.log('EYYYYYYEEEESS: ', res.data );
+                            console.log('EYYYYYYEEEESS: ', res.data);
                         });
                 }
             };
@@ -470,6 +463,10 @@ angular.module('ScheduleModule')
 
             $scope.minYear = function () {
                 let o = moment().add(1, 'year').get('year');
+                if ($scope.me.admin) {
+                    o = moment().subtract(10, 'years').get('year');
+                }
+
                 return o;
             };
 
@@ -546,7 +543,7 @@ angular.module('ScheduleModule')
             $scope.$watch('item.start', function (value) {
                 if (value) {
                     if (($scope.item.status === 'Проект' && moment(value, ['DD.MM.YYYY HH:mm']).isBefore(moment()))) {
-                        toastr.error('Этот проект не отработал, возможно сервер был не доступен в момент запуска проекта в работу.', info.error(5000),
+                        toastr.error('Этот проект не отработал! Возможно сервер был не доступен в момент запуска проекта в работу или просто не верно выставлено время запуска проекта.', info.error(5000),
                             {
                                 //"closeButton": true,
                                 //"debug": false,
@@ -605,7 +602,7 @@ angular.module('ScheduleModule')
 
 
             $scope.delete2 = function (item) {
-                item.$delete({id: item.id, year:item.year}, function (success) {
+                item.$delete({id: item.id, year: item.year}, function (success) {
                     toastr.success(info.objectDelete, info.ok);
                     $state.go(info.redirectSelf);
                     // $location.path("/table");
@@ -644,7 +641,7 @@ angular.module('ScheduleModule')
 
             $scope.saveEdit = function (item) {
                 item = reversValue(item);
-                 console.log('********************************Перед созданием', item);
+                console.log('********************************Перед созданием', item);
                 if (!item.htmlData) return toastr.error(info.messageErr, info.error(5978));
                 if (!item.htmlData[1]) return toastr.error(info.messageErr, info.error(5979));
                 if (!item.to) return toastr.error(info.filedErr('"по"', 'не заполнено'), info.error(5828));
@@ -672,7 +669,7 @@ angular.module('ScheduleModule')
                     ) {
                         let ar = [];
                         if (!angular.isArray(item.htmlData)) {
-                            for(let key in item.htmlData){
+                            for (let key in item.htmlData) {
                                 ar.push(item.htmlData[key]);
                             }
                             item.htmlData = ar;
