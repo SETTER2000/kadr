@@ -432,7 +432,9 @@ module.exports = {
                     sails.log.info('Найден руководитель в LDAP: ' + JSON.stringify(entry.object.manager));
                     empl = entry.object;
                 });
-
+                ldapUser.on('searchReference', function(referral) {
+                    sails.log.info('referral: ' + referral.uris.join());
+                });
                 ldapUser.on('error', function (err) {
                     console.error('ОШибка-222: ' + err.message);
                 });
