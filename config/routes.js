@@ -82,6 +82,11 @@ module.exports.routes = {
     'POST /users/ldap': 'UserController.searchLDAP',
 
 
+    /** API **/
+
+    'GET /user/api/all': 'UserController.apiAll',
+
+
     //'POST /user/:id/chat':          'UserController.chat',
     //'PUT  /user/:id/join':          'UserController.joinChat',
     //'PUT  /user/:id/typing':        'UserController.typing',

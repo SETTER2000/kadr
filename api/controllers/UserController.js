@@ -1475,6 +1475,37 @@ module.exports = {
 
 
     /**
+     * API
+     * Получить список пользователей
+     * @param req
+     * @param res
+     */
+    apiAll: function (req, res) {
+        //if (!req.session.me) return res.view('public/header', {layout: 'homepage'});
+        User.native(function (err, collection) {
+            if (err) return res.serverError(err);
+            //console.log('WEEE', req.param('year'));
+            collection.aggregate([{$match: {fired: false}}, {$sort: {lastName: 1}}, {
+                    $project: {
+                        lastName: 1,
+                        firstName: 1,
+                        patronymicName: 1,
+                        avatarUrl: 1,
+                        email:1,
+                        login:1,
+                        contacts:1,
+                        getShortName: 1
+                    }
+                }])
+                .toArray(function (err, results) {
+                    if (err) return res.serverError(err);
+                    return res.ok(results);
+                });
+        });
+    },
+
+
+    /**
      * Обновить согласующего пользователю
      * @param req
      * @param res
