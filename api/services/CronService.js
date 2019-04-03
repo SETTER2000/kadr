@@ -26,14 +26,16 @@ module.exports = {
 
         Schedule.find({action: true, worked: false})
             .exec((err, finds) => {
-                if (err) return res.serverError(err);
+                if (err) return console.log('Ошибка при поиске расписания: ', err);
+                //if (err) return res.serverError(err);
                 if (!finds.length) return;
                 sails.log.info('Cron tasks0: ', finds.length);
                 _.forEach(finds, function (task) {
                     if (moment().isBetween(task.start, moment(task.start).add(afterMin, 'minutes'))) {
                         User.find({action: true, fired: false}).exec((err, usersFind) => {
                             "use strict";
-                            if (err) return res.serverError(err);
+                            //if (err) return res.serverError(err);
+                            if (err) return console.log('Ошибка 2 при поиске расписания: ', err);
                             if (!usersFind) return res.notFound('Schedule. Пользователи для получения рассылки не найдены.');
                             let strEmail = '';
                             if (_.isArray(usersFind) && (usersFind.length > 0)) {
@@ -58,9 +60,11 @@ module.exports = {
                                     worked: true,
                                     status: 'В работе'
                                 }).exec((err, upd) => {
-                                    if (err) return res.serverError();
+                                    //if (err) return res.serverError();
+                                    if (err) return console.log('Ошибка 3 при поиске расписания: ', err);
                                     Schedule.find().exec((err, findsSchedule) => {
-                                        if (err) return res.serverError(err);
+                                        //if (err) return res.serverError(err);
+                                        if (err) return console.log('Ошибка 4 при поиске расписания: ', err);
                                         sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
                                         sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'рассылка закончена'});
                                         sails.log.info('UPDATE OK!');
@@ -73,9 +77,11 @@ module.exports = {
                             Schedule.update({id: task.id}, {
                                 worked: true
                             }).exec((err, upd) => {
-                                if (err) return res.serverError();
+                                //if (err) return res.serverError();
+                                if (err) return console.log('Ошибка 5 при поиске расписания: ', err);
                                 Schedule.find().exec((err, findsSchedule) => {
-                                    if (err) return res.serverError(err);
+                                    //if (err) return res.serverError(err);
+                                    if (err) return console.log('Ошибка 6 при поиске расписания: ', err);
                                     sails.sockets.broadcast('schedule', 'hello', {howdy: findsSchedule});
                                     sails.sockets.broadcast('schedule', 'badges', {badges: upd, action: 'повреждён'});
                                     return sails.log.info('UPDATE OK+0!');
@@ -103,12 +109,14 @@ module.exports = {
         let afterMin = 5;
         Setting.find({checkSender: true})
             .exec((err, settingFinds)=> {
-                if (err) return res.serverError(err);
+                //if (err) return res.serverError(err);
+                if (err) return console.log('Ошибка при поиске настроек: ', err);
                 if (!settingFinds.length) return;
                 //if (!settingFinds.length) return sails.log('Внимание! Отключена рассылка в настройках модуля "Emergence".');
                 Emergence.find({action: true, worked: false})
                     .exec((err, finds) => {
-                        if (err) return res.serverError(err);
+                        //if (err) return res.serverError(err);
+                        if (err) return console.log('Ошибка при поиске в Emergence: ', err);
                         if (!finds.length) return;
                         sails.log.info('Cron tasks1: ', finds.length);
                         _.forEach(finds, function (task) {
@@ -139,7 +147,8 @@ module.exports = {
                                         status: 'В работе',
                                         logSender: task.recipient
                                     }).exec((err, upd) => {
-                                        if (err) return res.serverError();
+                                        //if (err) return res.serverError();
+                                        if (err) return console.log('Ошибка 2 при поиске в Emergence: ', err);
                                         Emergence.find({sort: 'start DESC'})
                                             .populate('positions')
                                             .populate('departments')
@@ -147,7 +156,8 @@ module.exports = {
                                             .populate('whomUpdated')
                                             .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                             .exec((err, findsEmergence) => {
-                                                if (err) return res.serverError(err);
+                                                //if (err) return res.serverError(err);
+                                                if (err) return console.log('Ошибка 3 при поиске в Emergence: ', err);
                                                 sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsEmergence});
                                                 sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
                                                 sails.sockets.broadcast('emergence', 'badges-emergence', {
@@ -167,7 +177,8 @@ module.exports = {
                                     Emergence.update({id: task.id}, {
                                         worked: true
                                     }).exec((err, upd) => {
-                                        if (err) return res.serverError();
+                                        //if (err) return res.serverError();
+                                        if (err) return console.log('Ошибка при обновлении в Emergence: ', err);
                                         Emergence.find()
                                             .populate('positions')
                                             .populate('departments')
@@ -175,7 +186,8 @@ module.exports = {
                                             .populate('whomUpdated')
                                             .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                             .exec((err, findsSchedule) => {
-                                                if (err) return res.serverError(err);
+                                                //if (err) return res.serverError(err);
+                                                if (err) return console.log('Ошибка 4 при поиске в Emergence: ', err);
                                                 sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsSchedule});
                                                 sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
                                                 sails.sockets.broadcast('emergence', 'badges-emergence', {
@@ -214,13 +226,16 @@ module.exports = {
         let afterMin = 5;
         Setting.find({checkSender: true})
             .exec((err, settingFinds)=> {
-                if (err) return res.serverError(err);
+                //if (err) return res.serverError(err);
+                if (err) return console.log('Ошибка при поиске в Setting: ', err);
                 if (!settingFinds.length) return;
                 //if (!settingFinds.length) return sails.log('Внимание! Отключена рассылка в настройках модуля "Emergence".');
 
                 Emergence.find({action: true, worked: true, sendService: false, startKadr: true})
                     .exec((err, finds) => {
-                        if (err) return res.serverError(err);
+                        //if (err) return res.serverError(err);
+                        if (err) return console.log('Ошибка 5 при поиске в Emergence: ', err);
+
                         if (!finds.length) return;
                         sails.log.info('Cron ' + taskName + ' ' + finds[0].section + ': ', finds.length);
                         let start = moment().add(2, 'minutes');
@@ -254,7 +269,8 @@ module.exports = {
                                     status: 'В работе',
                                     recipientService: recipientService
                                 }).exec((err, upd) => {
-                                    if (err) return res.serverError();
+                                    //if (err) return res.serverError();
+                                    if (err) return console.log('Ошибка при update в Emergence: ', err);
                                     Emergence.find({sort: 'start DESC'})
                                         .populate('positions')
                                         .populate('departments')
@@ -262,7 +278,8 @@ module.exports = {
                                         .populate('whomUpdated')
                                         .populate('ahoUpdate').populate('finUpdate').populate('itUpdate')
                                         .exec((err, findsEmergence) => {
-                                            if (err) return res.serverError(err);
+                                            //if (err) return res.serverError(err);
+                                            if (err) return console.log('Ошибка при find в Emergence: ', err);
                                             sails.sockets.broadcast('emergence', 'hello-emergence-list', {howdy: findsEmergence});
                                             sails.sockets.broadcast('emergence', 'hello-emergence-edit', {howdy: upd});
                                             sails.sockets.broadcast('emergence', 'badges-emergence', {
