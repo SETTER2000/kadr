@@ -24,7 +24,8 @@ angular.module('UserModule')
             };
             $scope.text = {
                 titleChange: 'История смены фамилии',
-                whyChange: 'Изменил'
+                whyChange: 'Изменил',
+                manager: 'Руководитель'
             };
 
             $scope.radioData = [

@@ -881,6 +881,7 @@ module.exports = {
                 patronymicName: req.param('patronymicName'),
                 birthday: birthday,
                 fired: req.param('fired'),
+                manager: req.param('manager'),
                 dateInWork: dateInWork,
                 decree: req.param('decree'),
                 subdivision: req.param('subdivision'),
@@ -1494,7 +1495,8 @@ module.exports = {
                         email:1,
                         login:1,
                         contacts:1,
-                        getShortName: 1
+                        getShortName: 1,
+                        manager:1
                     }
                 }])
                 .toArray(function (err, results) {

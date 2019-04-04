@@ -151,6 +151,10 @@ module.exports = {
             type: 'boolean',
             defaultsTo: false
         },
+        manager: {
+            type: 'boolean',
+            defaultsTo: false
+        },
 
         firedDate: {
             type: 'date',
